@@ -27,8 +27,8 @@ var CLOSURE_NO_DEPS = true;
 
 
 /**
- * @define {boolean} Overridden to true by the compiler when --closure_pass
- *     or --mark_as_compiled is specified.
+ * @define {boolean} Overridden to true by the compiler when
+ *     --process_closure_primitives is specified.
  */
 var COMPILED = false;
 
@@ -634,7 +634,8 @@ goog.logToConsole_ = function(msg) {
 /**
  * Implements a system for the dynamic resolution of dependencies that works in
  * parallel with the BUILD system. Note that all calls to goog.require will be
- * stripped by the JSCompiler when the --closure_pass option is used.
+ * stripped by the JSCompiler when the --process_closure_primitives option is
+ * used.
  * @see goog.provide
  * @param {string} name Namespace to include (as was given in goog.provide()) in
  *     the form "goog.package.part".
@@ -642,7 +643,6 @@ goog.logToConsole_ = function(msg) {
  *     module otherwise null.
  */
 goog.require = function(name) {
-
   // If the object already exists we do not need do do anything.
   if (!COMPILED) {
     if (goog.ENABLE_DEBUG_LOADER && goog.IS_OLD_IE_) {
@@ -660,8 +660,7 @@ goog.require = function(name) {
     if (goog.ENABLE_DEBUG_LOADER) {
       var path = goog.getPathFromDeps_(name);
       if (path) {
-        goog.included_[path] = true;
-        goog.writeScripts_();
+        goog.writeScripts_(path);
         return null;
       }
     }
@@ -796,13 +795,6 @@ goog.DEPENDENCIES_ENABLED = !COMPILED && goog.ENABLE_DEBUG_LOADER;
 
 
 if (goog.DEPENDENCIES_ENABLED) {
-  /**
-   * Object used to keep track of urls that have already been added. This record
-   * allows the prevention of circular dependencies.
-   * @private {!Object<string, boolean>}
-   */
-  goog.included_ = {};
-
 
   /**
    * This object is used to keep track of dependencies and other data that is
@@ -1088,6 +1080,7 @@ if (goog.DEPENDENCIES_ENABLED) {
 
   /**
    * @private @const {function(string):?}
+   * @suppress {newCheckTypes}
    */
   goog.loadModuleFromSource_ = function() {
     // NOTE: we avoid declaring parameters or local variables here to avoid
@@ -1229,9 +1222,11 @@ if (goog.DEPENDENCIES_ENABLED) {
   /**
    * Resolves dependencies based on the dependencies added using addDependency
    * and calls importScript_ in the correct order.
+   * @param {string} pathToLoad The path from which to start discovering
+   *     dependencies.
    * @private
    */
-  goog.writeScripts_ = function() {
+  goog.writeScripts_ = function(pathToLoad) {
     /** @type {!Array<string>} The scripts we need to write this time. */
     var scripts = [];
     var seenScript = {};
@@ -1246,10 +1241,6 @@ if (goog.DEPENDENCIES_ENABLED) {
       // We have already visited this one. We can get here if we have cyclic
       // dependencies.
       if (path in deps.visited) {
-        if (!(path in seenScript)) {
-          seenScript[path] = true;
-          scripts.push(path);
-        }
         return;
       }
 
@@ -1275,11 +1266,7 @@ if (goog.DEPENDENCIES_ENABLED) {
       }
     }
 
-    for (var path in goog.included_) {
-      if (!deps.written[path]) {
-        visitNode(path);
-      }
-    }
+    visitNode(pathToLoad);
 
     // record that we are going to load all these scripts.
     for (var i = 0; i < scripts.length; i++) {
@@ -1293,14 +1280,12 @@ if (goog.DEPENDENCIES_ENABLED) {
     var moduleState = goog.moduleLoaderState_;
     goog.moduleLoaderState_ = null;
 
-    var loadingModule = false;
     for (var i = 0; i < scripts.length; i++) {
       var path = scripts[i];
       if (path) {
         if (!deps.pathIsModule[path]) {
           goog.importScript_(goog.basePath + path);
         } else {
-          loadingModule = true;
           goog.importModule_(goog.basePath + path);
         }
       } else {
@@ -1817,7 +1802,7 @@ goog.bindJs_ = function(fn, selfObj, var_args) {
  * Also see: {@link #partial}.
  *
  * Usage:
- * <pre>var barMethBound = bind(myFunction, myObj, 'arg1', 'arg2');
+ * <pre>var barMethBound = goog.bind(myFunction, myObj, 'arg1', 'arg2');
  * barMethBound('arg3', 'arg4');</pre>
  *
  * @param {?function(this:T, ...)} fn A function to partially apply.
@@ -1825,7 +1810,7 @@ goog.bindJs_ = function(fn, selfObj, var_args) {
  *     function is run.
  * @param {...*} var_args Additional arguments that are partially applied to the
  *     function.
- * @return {!Function} A partially-applied form of the function bind() was
+ * @return {!Function} A partially-applied form of the function goog.bind() was
  *     invoked as a method of.
  * @template T
  * @suppress {deprecated} See above.
@@ -1849,17 +1834,17 @@ goog.bind = function(fn, selfObj, var_args) {
 
 
 /**
- * Like bind(), except that a 'this object' is not required. Useful when the
- * target function is already bound.
+ * Like goog.bind(), except that a 'this object' is not required. Useful when
+ * the target function is already bound.
  *
  * Usage:
- * var g = partial(f, arg1, arg2);
+ * var g = goog.partial(f, arg1, arg2);
  * g(arg3, arg4);
  *
  * @param {Function} fn A function to partially apply.
  * @param {...*} var_args Additional arguments that are partially applied to fn.
- * @return {!Function} A partially-applied form of the function bind() was
- *     invoked as a method of.
+ * @return {!Function} A partially-applied form of the function goog.partial()
+ *     was invoked as a method of.
  */
 goog.partial = function(fn, var_args) {
   var args = Array.prototype.slice.call(arguments, 1);
@@ -2057,7 +2042,7 @@ goog.getCssName = function(className, opt_modifier) {
  * </pre>
  * When declared as a map of string literals to string literals, the JSCompiler
  * will replace all calls to goog.getCssName() using the supplied map if the
- * --closure_pass flag is set.
+ * --process_closure_primitives flag is set.
  *
  * @param {!Object} mapping A map of strings to strings where keys are possible
  *     arguments to goog.getCssName() and values are the corresponding values
@@ -2196,8 +2181,8 @@ goog.exportProperty = function(object, publicName, symbol) {
  * child.foo(); // This works.
  * </pre>
  *
- * @param {Function} childCtor Child class.
- * @param {Function} parentCtor Parent class.
+ * @param {!Function} childCtor Child class.
+ * @param {!Function} parentCtor Parent class.
  */
 goog.inherits = function(childCtor, parentCtor) {
   /** @constructor */
@@ -3776,9 +3761,14 @@ goog.string.regExpEscape = function(s) {
  * @return {string} A string containing {@code length} repetitions of
  *     {@code string}.
  */
-goog.string.repeat = function(string, length) {
-  return new Array(length + 1).join(string);
-};
+goog.string.repeat = (String.prototype.repeat) ?
+    function(string, length) {
+      // The native method is over 100 times faster than the alternative.
+      return string.repeat(length);
+    } :
+    function(string, length) {
+      return new Array(length + 1).join(string);
+    };
 
 
 /**
@@ -3930,14 +3920,6 @@ goog.string.compareElements_ = function(left, right) {
 
 
 /**
- * Maximum value of #goog.string.hashCode, exclusive. 2^32.
- * @type {number}
- * @private
- */
-goog.string.HASHCODE_MAX_ = 0x100000000;
-
-
-/**
  * String hash function similar to java.lang.String.hashCode().
  * The hash code for a string is computed as
  * s[0] * 31 ^ (n - 1) + s[1] * 31 ^ (n - 2) + ... + s[n - 1],
@@ -3951,9 +3933,8 @@ goog.string.HASHCODE_MAX_ = 0x100000000;
 goog.string.hashCode = function(str) {
   var result = 0;
   for (var i = 0; i < str.length; ++i) {
-    result = 31 * result + str.charCodeAt(i);
     // Normalize to 4 byte range, 0 ... 2^32.
-    result %= goog.string.HASHCODE_MAX_;
+    result = (31 * result + str.charCodeAt(i)) >>> 0;
   }
   return result;
 };
@@ -6919,7 +6900,7 @@ goog.object.clone = function(obj) {
 goog.object.unsafeClone = function(obj) {
   var type = goog.typeOf(obj);
   if (type == 'object' || type == 'array') {
-    if (obj.clone) {
+    if (goog.isFunction(obj.clone)) {
       return obj.clone();
     }
     var clone = type == 'array' ? [] : {};
@@ -8128,6 +8109,22 @@ goog.userAgent.IPAD = goog.userAgent.PLATFORM_KNOWN_ ?
 /**
  * @return {string} The string that describes the version number of the user
  *     agent.
+ * Assumes user agent is opera.
+ * @private
+ */
+goog.userAgent.operaVersion_ = function() {
+  var version = goog.global.opera.version;
+  try {
+    return version();
+  } catch (e) {
+    return version;
+  }
+};
+
+
+/**
+ * @return {string} The string that describes the version number of the user
+ *     agent.
  * @private
  */
 goog.userAgent.determineVersion_ = function() {
@@ -8135,8 +8132,7 @@ goog.userAgent.determineVersion_ = function() {
   // different naming schemes.
 
   if (goog.userAgent.OPERA && goog.global['opera']) {
-    var operaVersion = goog.global['opera'].version;
-    return goog.isFunction(operaVersion) ? operaVersion() : operaVersion;
+    return goog.userAgent.operaVersion_();
   }
 
   // version is a string rather than a number because it may contain 'b', 'a',
@@ -8541,8 +8537,8 @@ ol.WEBGL_EXTENSIONS; // value is set in `ol.has`
  *       // Other code here.
  *     };
  *
- * @param {Function} childCtor Child constructor.
- * @param {Function} parentCtor Parent constructor.
+ * @param {!Function} childCtor Child constructor.
+ * @param {!Function} parentCtor Parent constructor.
  * @function
  * @api
  */
@@ -10408,8 +10404,7 @@ goog.provide('goog.reflect');
 /**
  * Syntax for object literal casts.
  * @see http://go/jscompiler-renaming
- * @see http://code.google.com/p/closure-compiler/wiki/
- *      ExperimentalTypeBasedPropertyRenaming
+ * @see https://github.com/google/closure-compiler/wiki/Type-Based-Property-Renaming
  *
  * Use this if you have an object literal whose keys need to have the same names
  * as the properties of some class even after they are renamed by the compiler.
@@ -10693,9 +10688,7 @@ goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
   var relevantTouch = e.changedTouches ? e.changedTouches[0] : null;
 
   // TODO(nicksantos): Change this.target to type EventTarget.
-  this.target = goog.isNull(relevantTouch) ?
-      /** @type {Node} */ (e.target) || e.srcElement :
-      /** @type {Node} */ (relevantTouch.target);
+  this.target = /** @type {Node} */ (e.target) || e.srcElement;
 
   // TODO(nicksantos): Change this.currentTarget to type EventTarget.
   this.currentTarget = /** @type {Node} */ (opt_currentTarget);
@@ -18265,6 +18258,82 @@ goog.functions.once = function(f) {
   };
 };
 
+
+/**
+ * Wraps a function to allow it to be called, at most, once for each sequence of
+ * calls fired repeatedly so long as they are fired less than a specified
+ * interval apart (in milliseconds). Whether it receives one signal or multiple,
+ * it will always wait until a full interval has elapsed since the last signal
+ * before performing the action.
+ *
+ * This is particularly useful for bulking up repeated user actions (e.g. only
+ * refreshing a view once a user finishes typing rather than updating with every
+ * keystroke). For more stateful debouncing with support for pausing, resuming,
+ * and canceling debounced actions, use {@code goog.async.Debouncer}.
+ *
+ * @param {function(this:SCOPE):*} f Function to call.
+ * @param {number} interval Interval over which to debounce. The function will
+ *     only be called after the full interval has elapsed since the last call.
+ * @param {SCOPE=} opt_scope Object in whose scope to call the function.
+ * @return {function():undefined} Wrapped function.
+ * @template SCOPE
+ */
+goog.functions.debounce = function(f, interval, opt_scope) {
+  if (opt_scope) {
+    f = goog.bind(f, opt_scope);
+  }
+  var timeout = null;
+  return function() {
+    goog.global.clearTimeout(timeout);
+    timeout = goog.global.setTimeout(f, interval);
+  };
+};
+
+
+/**
+ * Wraps a function to allow it to be called, at most, once per interval
+ * (specified in milliseconds). If it is called multiple times while it is
+ * waiting, it will only perform the action once at the end of the interval.
+ *
+ * This is particularly useful for limiting repeated user requests (e.g.
+ * preventing a user from spamming a server with frequent view refreshes). For
+ * more stateful throttling with support for pausing, resuming, and canceling
+ * throttled actions, use {@code goog.async.Throttle}.
+ *
+ * @param {function(this:SCOPE):*} f Function to call.
+ * @param {number} interval Interval over which to throttle. The function can
+ *     only be called once per interval.
+ * @param {SCOPE=} opt_scope Object in whose scope to call the function.
+ * @return {function():undefined} Wrapped function.
+ * @template SCOPE
+ */
+goog.functions.throttle = function(f, interval, opt_scope) {
+  if (opt_scope) {
+    f = goog.bind(f, opt_scope);
+  }
+  var timeout = null;
+  var shouldFire = false;
+  var fire = function() {
+    timeout = goog.global.setTimeout(handleTimeout, interval);
+    f();
+  };
+  var handleTimeout = function() {
+    timeout = null;
+    if (shouldFire) {
+      shouldFire = false;
+      fire();
+    }
+  };
+
+  return function() {
+    if (!timeout) {
+      fire();
+    } else {
+      shouldFire = true;
+    }
+  };
+};
+
 /**
  * @license
  * Latitude/longitude spherical geodesy formulae taken from
@@ -24025,6 +24094,8 @@ goog.provide('goog.color.names');
  * This list is way larger than the minimal one dictated by W3C.
  * The keys of this map are the lowercase "readable" names of the colors, while
  * the values are the "hex" values.
+ *
+ * @type {!Object<string, string>}
  */
 goog.color.names = {
   'aliceblue': '#f0f8ff',
@@ -25985,7 +26056,7 @@ goog.string.Const.from = function(s) {
 /**
  * Type marker for the Const type, used to implement additional run-time
  * type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.string.Const.TYPE_MARKER_ = {};
@@ -26150,7 +26221,7 @@ goog.html.SafeStyle.prototype.implementsGoogStringTypedString = true;
 /**
  * Type marker for the SafeStyle type, used to implement additional
  * run-time type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.html.SafeStyle.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
@@ -26550,7 +26621,7 @@ goog.html.SafeStyleSheet.prototype.implementsGoogStringTypedString = true;
 /**
  * Type marker for the SafeStyleSheet type, used to implement additional
  * run-time type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.html.SafeStyleSheet.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
@@ -26799,6 +26870,10 @@ goog.fs.url.getUrlObject_ = function() {
  *
  * @return {?goog.fs.url.UrlObject_} The object for this browser or null if the
  *     browser does not support Object Urls.
+ * @suppress {unnecessaryCasts} Depending on how the code is compiled, casting
+ *     goog.global to UrlObject_ may result in unnecessary cast warning.
+ *     However, the cast cannot be removed because with different set of
+ *     compiler flags, the cast is indeed necessary.  As such, silencing it.
  * @private
  */
 goog.fs.url.findUrlObject_ = function() {
@@ -28118,7 +28193,7 @@ goog.html.SafeUrl.sanitize = function(url) {
 /**
  * Type marker for the SafeUrl type, used to implement additional run-time
  * type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.html.SafeUrl.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
@@ -28340,7 +28415,7 @@ goog.html.TrustedResourceUrl.fromConstant = function(url) {
 /**
  * Type marker for the TrustedResourceUrl type, used to implement additional
  * run-time type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.html.TrustedResourceUrl.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
@@ -28961,7 +29036,7 @@ goog.html.SafeHtml.concatWithDir = function(dir, var_args) {
 /**
  * Type marker for the SafeHtml type, used to implement additional run-time
  * type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.html.SafeHtml.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
@@ -30673,19 +30748,18 @@ goog.dom.createDom_ = function(doc, args) {
   var tagName = args[0];
   var attributes = args[1];
 
-  // Internet Explorer is dumb: http://msdn.microsoft.com/workshop/author/
-  //                            dhtml/reference/properties/name_2.asp
+  // Internet Explorer is dumb:
+  // name: https://msdn.microsoft.com/en-us/library/ms534184(v=vs.85).aspx
+  // type: https://msdn.microsoft.com/en-us/library/ms534700(v=vs.85).aspx
   // Also does not allow setting of 'type' attribute on 'input' or 'button'.
   if (!goog.dom.BrowserFeature.CAN_ADD_NAME_OR_TYPE_ATTRIBUTES && attributes &&
       (attributes.name || attributes.type)) {
     var tagNameArr = ['<', tagName];
     if (attributes.name) {
-      tagNameArr.push(' name="', goog.string.htmlEscape(attributes.name),
-                      '"');
+      tagNameArr.push(' name="', goog.string.htmlEscape(attributes.name), '"');
     }
     if (attributes.type) {
-      tagNameArr.push(' type="', goog.string.htmlEscape(attributes.type),
-                      '"');
+      tagNameArr.push(' type="', goog.string.htmlEscape(attributes.type), '"');
 
       // Clone attributes map to remove 'type' without mutating the input.
       var clone = {};
@@ -30873,6 +30947,9 @@ goog.dom.safeHtmlToNode_ = function(doc, html) {
  * {@code goog.dom.htmlToDocumentFragment('&lt;img src=x onerror=alert(0)&gt;')}
  * triggers an alert in all browsers, even if the returned document fragment
  * is thrown away immediately.
+ *
+ * NOTE: This method doesn't work if your htmlString contains elements that
+ * can't be contained in a <div>. For example, <tr>.
  *
  * @param {string} htmlString The HTML string to convert.
  * @return {!Node} The resulting document fragment.
@@ -34792,22 +34869,39 @@ goog.style.getVisibleRectForElement = function(element) {
  * aligned as close to the container's top left corner as possible.
  *
  * @param {Element} element The element to make visible.
- * @param {Element} container The container to scroll.
+ * @param {Element=} opt_container The container to scroll. If not set, then the
+ *     document scroll element will be used.
  * @param {boolean=} opt_center Whether to center the element in the container.
  *     Defaults to false.
  * @return {!goog.math.Coordinate} The new scroll position of the container,
  *     in form of goog.math.Coordinate(scrollLeft, scrollTop).
  */
 goog.style.getContainerOffsetToScrollInto =
-    function(element, container, opt_center) {
+    function(element, opt_container, opt_center) {
+  var container = opt_container || goog.dom.getDocumentScrollElement();
   // Absolute position of the element's border's top left corner.
   var elementPos = goog.style.getPageOffset(element);
   // Absolute position of the container's border's top left corner.
   var containerPos = goog.style.getPageOffset(container);
   var containerBorder = goog.style.getBorderBox(container);
-  // Relative pos. of the element's border box to the container's content box.
-  var relX = elementPos.x - containerPos.x - containerBorder.left;
-  var relY = elementPos.y - containerPos.y - containerBorder.top;
+  if (container == goog.dom.getDocumentScrollElement()) {
+    // The element position is calculated based on the page offset, and the
+    // document scroll element holds the scroll position within the page. We can
+    // use the scroll position to calculate the relative position from the
+    // element.
+    var relX = elementPos.x - container.scrollLeft;
+    var relY = elementPos.y - container.scrollTop;
+    if (goog.userAgent.IE && !goog.userAgent.isDocumentModeOrHigher(10)) {
+      // In older versions of IE getPageOffset(element) does not include the
+      // container border so it has to be added to accomodate.
+      relX += containerBorder.left;
+      relY += containerBorder.top;
+    }
+  } else {
+    // Relative pos. of the element's border box to the container's content box.
+    var relX = elementPos.x - containerPos.x - containerBorder.left;
+    var relY = elementPos.y - containerPos.y - containerBorder.top;
+  }
   // How much the element can move in the container, i.e. the difference between
   // the element's bottom-right-most and top-left-most position where it's
   // fully visible.
@@ -34818,21 +34912,6 @@ goog.style.getContainerOffsetToScrollInto =
 
   var scrollLeft = container.scrollLeft;
   var scrollTop = container.scrollTop;
-  if (container == goog.dom.getDocument().body ||
-      container == goog.dom.getDocument().documentElement) {
-    // If the container is the document scroll element (usually <body>),
-    // getPageOffset(element) is already relative to it and there is no need to
-    // consider the current scroll.
-    scrollLeft = containerPos.x + containerBorder.left;
-    scrollTop = containerPos.y + containerBorder.top;
-
-    if (goog.userAgent.IE && !goog.userAgent.isDocumentModeOrHigher(10)) {
-      // In older versions of IE getPageOffset(element) does not include the
-      // continaer border so it has to be added to accomodate.
-      scrollLeft += containerBorder.left;
-      scrollTop += containerBorder.top;
-    }
-  }
   if (opt_center) {
     // All browsers round non-integer scroll positions down.
     scrollLeft += relX - spaceX / 2;
@@ -34859,11 +34938,14 @@ goog.style.getContainerOffsetToScrollInto =
  * aligned as close to the container's top left corner as possible.
  *
  * @param {Element} element The element to make visible.
- * @param {Element} container The container to scroll.
+ * @param {Element=} opt_container The container to scroll. If not set, then the
+ *     document scroll element will be used.
  * @param {boolean=} opt_center Whether to center the element in the container.
  *     Defaults to false.
  */
-goog.style.scrollIntoContainerView = function(element, container, opt_center) {
+goog.style.scrollIntoContainerView =
+    function(element, opt_container, opt_center) {
+  var container = opt_container || goog.dom.getDocumentScrollElement();
   var offset =
       goog.style.getContainerOffsetToScrollInto(element, container, opt_center);
   container.scrollLeft = offset.x;
@@ -36128,9 +36210,11 @@ goog.style.getFontSize = function(el) {
 goog.style.parseStyleAttribute = function(value) {
   var result = {};
   goog.array.forEach(value.split(/\s*;\s*/), function(pair) {
-    var keyValue = pair.split(/\s*:\s*/);
-    if (keyValue.length == 2) {
-      result[goog.string.toCamelCase(keyValue[0].toLowerCase())] = keyValue[1];
+    var keyValue = pair.match(/\s*([\w-]+)\s*\:(.+)/);
+    if (keyValue) {
+      var styleName = keyValue[1];
+      var styleValue = goog.string.trim(keyValue[2]);
+      result[goog.string.toCamelCase(styleName.toLowerCase())] = styleValue;
     }
   });
   return result;
@@ -39438,7 +39522,6 @@ goog.require('goog.functions');
  * @param {Object=} opt_handler The object scope to invoke the function in.
  * @constructor
  * @struct
- * @suppress {checkStructDictInheritance}
  * @extends {goog.Disposable}
  * @final
  */
@@ -39991,7 +40074,7 @@ goog.html.SafeScript.prototype.implementsGoogStringTypedString = true;
 /**
  * Type marker for the SafeScript type, used to implement additional
  * run-time type checking.
- * @const
+ * @const {!Object}
  * @private
  */
 goog.html.SafeScript.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
@@ -45637,6 +45720,7 @@ goog.events.KeyCodes = {
   UP: 38,          // also NUM_NORTH
   RIGHT: 39,       // also NUM_EAST
   DOWN: 40,        // also NUM_SOUTH
+  PLUS_SIGN: 43,   // NOT numpad plus
   PRINT_SCREEN: 44,
   INSERT: 45,      // also NUM_INSERT
   DELETE: 46,      // also NUM_DELETE
@@ -45926,6 +46010,7 @@ goog.events.KeyCodes.isCharacterKey = function(keyCode) {
 
   switch (keyCode) {
     case goog.events.KeyCodes.SPACE:
+    case goog.events.KeyCodes.PLUS_SIGN:
     case goog.events.KeyCodes.QUESTION_MARK:
     case goog.events.KeyCodes.AT_SIGN:
     case goog.events.KeyCodes.NUM_PLUS:
@@ -65727,12 +65812,25 @@ goog.Promise.returnEntry_ = function(entry) {
 };
 
 
+// NOTE: this is the same template expression as is used for
+// goog.IThenable.prototype.then
+
+
 /**
- * @param {(TYPE|goog.Thenable<TYPE>|Thenable)=} opt_value
- * @return {!goog.Promise<TYPE>} A new Promise that is immediately resolved
+ * @param {VALUE=} opt_value
+ * @return {RESULT} A new Promise that is immediately resolved
  *     with the given value. If the input value is already a goog.Promise, it
  *     will be returned immediately without creating a new instance.
- * @template TYPE
+ * @template VALUE
+ * @template RESULT := type('goog.Promise',
+ *     cond(isUnknown(VALUE), unknown(),
+ *       mapunion(VALUE, (V) =>
+ *         cond(isTemplatized(V) && sub(rawTypeOf(V), 'IThenable'),
+ *           templateTypeOf(V, 0),
+ *           cond(sub(V, 'Thenable'),
+ *              unknown(),
+ *              V)))))
+ * =:
  */
 goog.Promise.resolve = function(opt_value) {
   if (opt_value instanceof goog.Promise) {
@@ -68256,7 +68354,6 @@ goog.provide('goog.uri.utils.StandardQueryParam');
 
 goog.require('goog.asserts');
 goog.require('goog.string');
-goog.require('goog.userAgent');
 
 
 /**
@@ -68439,63 +68536,9 @@ goog.uri.utils.ComponentIndex = {
  *     arbitrary strings may still look like path names.
  */
 goog.uri.utils.split = function(uri) {
-  goog.uri.utils.phishingProtection_();
-
   // See @return comment -- never null.
   return /** @type {!Array<string|undefined>} */ (
       uri.match(goog.uri.utils.splitRe_));
-};
-
-
-/**
- * Safari has a nasty bug where if you have an http URL with a username, e.g.,
- * http://evil.com%2F@google.com/
- * Safari will report that window.location.href is
- * http://evil.com/google.com/
- * so that anyone who tries to parse the domain of that URL will get
- * the wrong domain. We've seen exploits where people use this to trick
- * Safari into loading resources from evil domains.
- *
- * To work around this, we run a little "Safari phishing check", and throw
- * an exception if we see this happening.
- *
- * There is no convenient place to put this check. We apply it to
- * anyone doing URI parsing on Webkit. We're not happy about this, but
- * it fixes the problem.
- *
- * This should be removed once Safari fixes their bug.
- *
- * Exploit reported by Masato Kinugawa.
- *
- * @type {boolean}
- * @private
- */
-goog.uri.utils.needsPhishingProtection_ = goog.userAgent.WEBKIT;
-
-
-/**
- * Check to see if the user is being phished.
- * @private
- */
-goog.uri.utils.phishingProtection_ = function() {
-  if (goog.uri.utils.needsPhishingProtection_) {
-    // Turn protection off, so that we don't recurse.
-    goog.uri.utils.needsPhishingProtection_ = false;
-
-    // Use quoted access, just in case the user isn't using location externs.
-    var location = goog.global['location'];
-    if (location) {
-      var href = location['href'];
-      if (href) {
-        var domain = goog.uri.utils.getDomain(href);
-        if (domain && domain != location['hostname']) {
-          // Phishing attack
-          goog.uri.utils.needsPhishingProtection_ = true;
-          throw Error();
-        }
-      }
-    }
-  }
 };
 
 
@@ -69344,16 +69387,24 @@ goog.uri.utils.makeUnique = function(uri) {
  * own XmlHttpRequest object and handles clearing of the event callback to
  * ensure no leaks.
  *
- * XhrIo is event based, it dispatches events when a request finishes, fails or
- * succeeds or when the ready-state changes. The ready-state or timeout event
- * fires first, followed by a generic completed event. Then the abort, error,
- * or success event is fired as appropriate. Lastly, the ready event will fire
- * to indicate that the object may be used to make another request.
+ * XhrIo is event based, it dispatches events on success, failure, finishing,
+ * ready-state change, or progress.
+ *
+ * The ready-state or timeout event fires first, followed by
+ * a generic completed event. Then the abort, error, or success event
+ * is fired as appropriate. Progress events are fired as they are
+ * received. Lastly, the ready event will fire to indicate that the
+ * object may be used to make another request.
  *
  * The error event may also be called before completed and
  * ready-state-change if the XmlHttpRequest.open() or .send() methods throw.
  *
  * This class does not support multiple requests, queuing, or prioritization.
+ *
+ * When progress events are supported by the browser, and progress is
+ * enabled via .setProgressEventsEnabled(true), the
+ * goog.net.EventType.PROGRESS event will be the re-dispatched browser
+ * progress event.
  *
  * Tested = IE6, FF1.5, Safari, Opera 8.5
  *
@@ -69367,6 +69418,7 @@ goog.provide('goog.net.XhrIo.ResponseType');
 
 goog.require('goog.Timer');
 goog.require('goog.array');
+goog.require('goog.asserts');
 goog.require('goog.debug.entryPointRegistry');
 goog.require('goog.events.EventTarget');
 goog.require('goog.json');
@@ -69514,6 +69566,27 @@ goog.net.XhrIo = function(opt_xmlHttpFactory) {
    * @private {boolean}
    */
   this.withCredentials_ = false;
+
+  /**
+   * Whether progress events are enabled for this request. This is
+   * disabled by default because setting a progress event handler
+   * causes pre-flight OPTIONS requests to be sent for CORS requests,
+   * even in cases where a pre-flight request would not otherwise be
+   * sent.
+   *
+   * @see http://xhr.spec.whatwg.org/#security-considerations
+   *
+   * Note that this can cause problems for Firefox 22 and below, as an
+   * older "LSProgressEvent" will be dispatched by the browser. That
+   * progress event is no longer supported, and can lead to failures,
+   * including throwing exceptions.
+   *
+   * @see http://bugzilla.mozilla.org/show_bug.cgi?id=845631
+   * @see b/23469793
+   *
+   * @private {boolean}
+   */
+  this.progressEventsEnabled_ = false;
 
   /**
    * True if we can use XMLHttpRequest's timeout directly.
@@ -69766,6 +69839,27 @@ goog.net.XhrIo.prototype.getWithCredentials = function() {
 
 
 /**
+ * Sets whether progress events are enabled for this request. Note
+ * that progress events require pre-flight OPTIONS request handling
+ * for CORS requests, and may cause trouble with older browsers. See
+ * progressEventsEnabled_ for details.
+ * @param {boolean} enabled Whether progress events should be enabled.
+ */
+goog.net.XhrIo.prototype.setProgressEventsEnabled = function(enabled) {
+  this.progressEventsEnabled_ = enabled;
+};
+
+
+/**
+ * Gets whether progress events are enabled.
+ * @return {boolean} Whether progress events are enabled for this request.
+ */
+goog.net.XhrIo.prototype.getProgressEventsEnabled = function() {
+  return this.progressEventsEnabled_;
+};
+
+
+/**
  * Instance send that actually uses XMLHttpRequest to make a server call.
  * @param {string|goog.Uri} url Uri to make request to.
  * @param {string=} opt_method Send method, default: GET.
@@ -69797,6 +69891,14 @@ goog.net.XhrIo.prototype.send = function(url, opt_method, opt_content,
 
   // Set up the onreadystatechange callback
   this.xhr_.onreadystatechange = goog.bind(this.onReadyStateChange_, this);
+
+  // Set up upload/download progress events, if progress events are supported.
+  if (this.getProgressEventsEnabled() && 'onprogress' in this.xhr_) {
+    this.xhr_.onprogress = goog.bind(this.onProgressHandler_, this);
+    if (this.xhr_.upload) {
+      this.xhr_.upload.onprogress = goog.bind(this.onProgressHandler_, this);
+    }
+  }
 
   /**
    * Try to open the XMLHttpRequest (always async), if an error occurs here it
@@ -70136,6 +70238,19 @@ goog.net.XhrIo.prototype.onReadyStateChangeHelper_ = function() {
       }
     }
   }
+};
+
+
+/**
+ * Internal handler for the XHR object's onprogress event.
+ * @param {!ProgressEvent} e XHR progress event.
+ * @private
+ */
+goog.net.XhrIo.prototype.onProgressHandler_ = function(e) {
+  goog.asserts.assert(e.type === goog.net.EventType.PROGRESS,
+      'goog.net.EventType.PROGRESS is of the same type as raw XHR progress.');
+  // Redispatch the progress event.
+  this.dispatchEvent(e);
 };
 
 
@@ -70583,6 +70698,7 @@ goog.provide('goog.dom.xml');
 
 goog.require('goog.dom');
 goog.require('goog.dom.NodeType');
+goog.require('goog.userAgent');
 
 
 /**
@@ -70600,20 +70716,62 @@ goog.dom.xml.MAX_ELEMENT_DEPTH = 256; // Same default as MSXML6.
 
 
 /**
+ * Check for ActiveXObject support by the browser.
+ * @return {boolean} true if browser has ActiveXObject support.
+ * @private
+ */
+goog.dom.xml.hasActiveXObjectSupport_ = function() {
+  if (!goog.userAgent.IE) {
+    // Avoid raising useless exception in case code is not compiled
+    // and browser is not MSIE.
+    return false;
+  }
+  try {
+    // Due to lot of changes in IE 9, 10 & 11 behaviour and ActiveX being
+    // totally disableable using MSIE's security level, trying to create the
+    // ActiveXOjbect is a lot more reliable than testing for the existance of
+    // window.ActiveXObject
+    new ActiveXObject('MSXML2.DOMDocument');
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+
+/**
+ * True if browser has ActiveXObject support.
+ * Possible override if this test become wrong in coming IE versions.
+ * @type {boolean}
+ */
+goog.dom.xml.ACTIVEX_SUPPORT =
+    goog.userAgent.IE && goog.dom.xml.hasActiveXObjectSupport_();
+
+
+/**
  * Creates an XML document appropriate for the current JS runtime
  * @param {string=} opt_rootTagName The root tag name.
  * @param {string=} opt_namespaceUri Namespace URI of the document element.
+ * @param {boolean=} opt_preferActiveX Whether to default to ActiveXObject to
+ * create Document in IE. Use this if you need xpath support in IE (e.g.,
+ * selectSingleNode or selectNodes), but be aware that the ActiveXObject does
+ * not support various DOM-specific Document methods and attributes.
  * @return {Document} The new document.
+ * @throws {Error} if browser does not support creating new documents or
+ * namespace is provided without a root tag name.
  */
-goog.dom.xml.createDocument = function(opt_rootTagName, opt_namespaceUri) {
+goog.dom.xml.createDocument = function(opt_rootTagName, opt_namespaceUri,
+                                       opt_preferActiveX) {
   if (opt_namespaceUri && !opt_rootTagName) {
     throw Error("Can't create document with namespace and no root tag");
   }
-  if (document.implementation && document.implementation.createDocument) {
+  // If document.implementation.createDocument is available and they haven't
+  // explicitly opted to use ActiveXObject when possible.
+  if (document.implementation && document.implementation.createDocument &&
+      !(goog.dom.xml.ACTIVEX_SUPPORT && opt_preferActiveX)) {
     return document.implementation.createDocument(opt_namespaceUri || '',
-                                                  opt_rootTagName || '',
-                                                  null);
-  } else if (typeof ActiveXObject != 'undefined') {
+                                                  opt_rootTagName || '', null);
+  } else if (goog.dom.xml.ACTIVEX_SUPPORT) {
     var doc = goog.dom.xml.createMsXmlDocument_();
     if (doc) {
       if (opt_rootTagName) {
@@ -70631,12 +70789,18 @@ goog.dom.xml.createDocument = function(opt_rootTagName, opt_namespaceUri) {
 /**
  * Creates an XML document from a string
  * @param {string} xml The text.
+ * @param {boolean=} opt_preferActiveX Whether to default to ActiveXObject to
+ * create Document in IE. Use this if you need xpath support in IE (e.g.,
+ * selectSingleNode or selectNodes), but be aware that the ActiveXObject does
+ * not support various DOM-specific Document methods and attributes.
  * @return {Document} XML document from the text.
+ * @throws {Error} if browser does not support loading XML documents.
  */
-goog.dom.xml.loadXml = function(xml) {
-  if (typeof DOMParser != 'undefined') {
+goog.dom.xml.loadXml = function(xml, opt_preferActiveX) {
+  if (typeof DOMParser != 'undefined' &&
+      !(goog.dom.xml.ACTIVEX_SUPPORT && opt_preferActiveX)) {
     return new DOMParser().parseFromString(xml, 'application/xml');
-  } else if (typeof ActiveXObject != 'undefined') {
+  } else if (goog.dom.xml.ACTIVEX_SUPPORT) {
     var doc = goog.dom.xml.createMsXmlDocument_();
     doc.loadXML(xml);
     return doc;
@@ -70649,16 +70813,17 @@ goog.dom.xml.loadXml = function(xml) {
  * Serializes an XML document or subtree to string.
  * @param {Document|Element} xml The document or the root node of the subtree.
  * @return {string} The serialized XML.
+ * @throws {Error} if browser does not support XML serialization.
  */
 goog.dom.xml.serialize = function(xml) {
-  // Compatible with Firefox, Opera and WebKit.
-  if (typeof XMLSerializer != 'undefined') {
-    return new XMLSerializer().serializeToString(xml);
-  }
-  // Compatible with Internet Explorer.
+  // Compatible with IE/ActiveXObject.
   var text = xml.xml;
   if (text) {
     return text;
+  }
+  // Compatible with Firefox, Opera and WebKit.
+  if (typeof XMLSerializer != 'undefined') {
+    return new XMLSerializer().serializeToString(xml);
   }
   throw Error('Your browser does not support serializing XML documents');
 };
@@ -70684,6 +70849,9 @@ goog.dom.xml.selectSingleNode = function(node, path) {
         XPathResult.FIRST_ORDERED_NODE_TYPE, null);
     return result.singleNodeValue;
   }
+  // This browser does not support xpath for the given node. If IE, ensure XML
+  // Document was created using ActiveXObject
+  // TODO(joeltine): This should throw instead of return null.
   return null;
 };
 
@@ -70714,6 +70882,9 @@ goog.dom.xml.selectNodes = function(node, path) {
     }
     return results;
   } else {
+    // This browser does not support xpath for the given node. If IE, ensure XML
+    // Document was created using ActiveXObject.
+    // TODO(joeltine): This should throw instead of return empty array.
     return [];
   }
 };
@@ -94464,7 +94635,7 @@ goog.Uri.prototype.toString = function() {
   }
 
   var domain = this.getDomain();
-  if (domain) {
+  if (domain || scheme == 'file') {
     out.push('//');
 
     var userInfo = this.getUserInfo();
@@ -111038,8 +111209,7 @@ goog.require('goog.object');
 /**
  * The name of the property of goog.global under which the JavaScript
  * verification object is stored by the loaded script.
- * @type {string}
- * @private
+ * @private {string}
  */
 goog.net.jsloader.GLOBAL_VERIFY_OBJS_ = 'closure_verification';
 
@@ -111075,10 +111245,18 @@ goog.net.jsloader.Options;
 
 /**
  * Scripts (URIs) waiting to be loaded.
- * @type {Array<string>}
- * @private
+ * @private {!Array<string>}
  */
 goog.net.jsloader.scriptsToLoad_ = [];
+
+
+/**
+ * The deferred result of loading the URIs in scriptsToLoad_.
+ * We need to return this to a caller that wants to load URIs while
+ * a deferred is already working on them.
+ * @private {!goog.async.Deferred<null>}
+ */
+goog.net.jsloader.scriptLoadingDeferred_;
 
 
 /**
@@ -111098,6 +111276,8 @@ goog.net.jsloader.scriptsToLoad_ = [];
  * @param {Array<string>} uris The URIs to load.
  * @param {goog.net.jsloader.Options=} opt_options Optional parameters. See
  *     goog.net.jsloader.options documentation for details.
+ * @return {!goog.async.Deferred} The deferred result, that may be used to add
+ *     callbacks
  */
 goog.net.jsloader.loadMany = function(uris, opt_options) {
   // Loading the scripts in serial introduces asynchronosity into the flow.
@@ -111107,7 +111287,7 @@ goog.net.jsloader.loadMany = function(uris, opt_options) {
   //
   // To work around this issue, all module loads share a queue.
   if (!uris.length) {
-    return;
+    return goog.async.Deferred.succeed(null);
   }
 
   var isAnotherModuleLoading = goog.net.jsloader.scriptsToLoad_.length;
@@ -111115,8 +111295,10 @@ goog.net.jsloader.loadMany = function(uris, opt_options) {
   if (isAnotherModuleLoading) {
     // jsloader is still loading some other scripts.
     // In order to prevent the race condition noted above, we just add
-    // these URIs to the end of the scripts' queue and return.
-    return;
+    // these URIs to the end of the scripts' queue and return the deferred
+    // result of the ongoing script load, so the caller knows when they
+    // finish loading.
+    return goog.net.jsloader.scriptLoadingDeferred_;
   }
 
   uris = goog.net.jsloader.scriptsToLoad_;
@@ -111126,8 +111308,10 @@ goog.net.jsloader.loadMany = function(uris, opt_options) {
     if (uris.length) {
       deferred.addBoth(popAndLoadNextScript);
     }
+    return deferred;
   };
-  popAndLoadNextScript();
+  goog.net.jsloader.scriptLoadingDeferred_ = popAndLoadNextScript();
+  return goog.net.jsloader.scriptLoadingDeferred_;
 };
 
 
