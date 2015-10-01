@@ -22247,7 +22247,7 @@ ol.geom.Polygon.makeRegular = function(polygon, center, radius, opt_angle) {
   goog.asserts.assert(ends.length === 1, 'only 1 ring is supported');
   var sides = flatCoordinates.length / stride - 1;
   var startAngle = opt_angle ? opt_angle : 0;
-  var angle, coord, offset;
+  var angle, offset;
   for (var i = 0; i <= sides; ++i) {
     offset = i * stride;
     angle = startAngle + (goog.math.modulo(i, sides) * 2 * Math.PI / sides);
@@ -53023,7 +53023,7 @@ ol.interaction.Interaction.zoomWithoutConstraints =
         resolution !== currentResolution &&
         opt_duration && opt_duration > 0) {
       map.beforeRender(ol.animation.zoom({
-        resolution: /** @type {number} */ (currentResolution),
+        resolution: currentResolution,
         duration: opt_duration,
         easing: ol.easing.easeOut
       }));
@@ -61153,7 +61153,7 @@ ol.render.canvas.ReplayGroup.prototype.replay = function(
   context.closePath();
   context.clip();
 
-  var i, ii, j, jj, replays, replay, result;
+  var i, ii, j, jj, replays, replay;
   for (i = 0, ii = zs.length; i < ii; ++i) {
     replays = this.replaysByZIndex_[zs[i].toString()];
     for (j = 0, jj = ol.render.REPLAY_ORDER.length; j < jj; ++j) {
@@ -74002,7 +74002,7 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
       [z, canvasTileRange.minX, canvasTileRange.maxY],
       tmpExtent));
   var currentZ, index, scale, tileCoordKey, tileExtent, tilesToDraw;
-  var ix, iy, interimTileExtent, interimTileRange, maxX, maxY;
+  var ix, iy, interimTileRange, maxX, maxY;
   var height, width;
   for (i = 0, ii = zs.length; i < ii; ++i) {
     currentZ = zs[i];
@@ -79838,7 +79838,7 @@ ol.render.webgl.ReplayGroup.prototype.isEmpty = function() {
 ol.render.webgl.ReplayGroup.prototype.replay = function(context,
     center, resolution, rotation, size, pixelRatio,
     opacity, skippedFeaturesHash) {
-  var i, ii, replay, result;
+  var i, ii, replay;
   for (i = 0, ii = ol.render.REPLAY_ORDER.length; i < ii; ++i) {
     replay = this.replays_[ol.render.REPLAY_ORDER[i]];
     if (replay !== undefined) {
@@ -90650,7 +90650,7 @@ ol.format.GML3 = function(opt_options) {
    * @type {boolean}
    */
   this.multiSurface_ = options.multiSurface !== undefined ?
-      /** @type {boolean} */ (options.multiSurface) : true;
+      options.multiSurface : true;
 
   /**
    * @inheritDoc
@@ -108445,7 +108445,7 @@ ol.interaction.Modify.prototype.insertVertex_ = function(segmentData, vertex) {
   goog.asserts.assert(segment !== undefined, 'segment should be defined');
   rTree.remove(segmentData);
   goog.asserts.assert(index !== undefined, 'index should be defined');
-  this.updateSegmentIndices_(geometry, /** @type {number} */ (index), depth, 1);
+  this.updateSegmentIndices_(geometry, index, depth, 1);
   var newSegmentData = /** @type {ol.interaction.SegmentDataType} */ ({
     segment: [segment[0], vertex],
     feature: feature,
@@ -109863,11 +109863,9 @@ ol.layer.Heatmap = function(opt_options) {
   this.setGradient(options.gradient ?
       options.gradient : ol.layer.Heatmap.DEFAULT_GRADIENT);
 
-  this.setBlur(options.blur !== undefined ?
-      /** @type {number} */ (options.blur) : 15);
+  this.setBlur(options.blur !== undefined ? options.blur : 15);
 
-  this.setRadius(options.radius !== undefined ?
-      /** @type {number} */ (options.radius) : 8);
+  this.setRadius(options.radius !== undefined ? options.radius : 8);
 
   goog.events.listen(this, [
     ol.Object.getChangeEventType(ol.layer.HeatmapLayerProperty.BLUR),
@@ -110039,7 +110037,7 @@ ol.layer.Heatmap.prototype.handleRender_ = function(event) {
   var canvas = context.canvas;
   var image = context.getImageData(0, 0, canvas.width, canvas.height);
   var view8 = image.data;
-  var i, ii, alpha, offset;
+  var i, ii, alpha;
   for (i = 0, ii = view8.length; i < ii; i += 4) {
     alpha = view8[i + 3] * 4;
     if (alpha) {
