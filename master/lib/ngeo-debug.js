@@ -36302,7 +36302,7 @@ ol.control.Control.prototype.setMap = function(map) {
   if (this.map_) {
     var target = this.target_ ?
         this.target_ : map.getOverlayContainerStopEvent();
-    goog.dom.appendChild(target, this.element);
+    target.appendChild(this.element);
     if (this.render !== ol.nullFunction) {
       this.listenerKeys.push(goog.events.listen(map,
           ol.MapEventType.POSTRENDER, this.render, false, this));
@@ -37969,7 +37969,7 @@ ol.control.Attribution = function(opt_options) {
    */
   this.logoLi_ = goog.dom.createElement(goog.dom.TagName.LI);
 
-  goog.dom.appendChild(this.ulElement_, this.logoLi_);
+  this.ulElement_.appendChild(this.logoLi_);
   goog.style.setElementShown(this.logoLi_, false);
 
   /**
@@ -38188,7 +38188,7 @@ ol.control.Attribution.prototype.updateElement_ = function(frameState) {
     attributionElement = goog.dom.createElement(goog.dom.TagName.LI);
     attributionElement.innerHTML =
         visibleAttributions[attributionKey].getHTML();
-    goog.dom.appendChild(this.ulElement_, attributionElement);
+    this.ulElement_.appendChild(attributionElement);
     this.attributionElements_[attributionKey] = attributionElement;
     this.attributionElementRenderedVisible_[attributionKey] = true;
   }
@@ -38197,7 +38197,7 @@ ol.control.Attribution.prototype.updateElement_ = function(frameState) {
     attributionElement.innerHTML =
         hiddenAttributions[attributionKey].getHTML();
     goog.style.setElementShown(attributionElement, false);
-    goog.dom.appendChild(this.ulElement_, attributionElement);
+    this.ulElement_.appendChild(attributionElement);
     this.attributionElements_[attributionKey] = attributionElement;
   }
 
@@ -38251,7 +38251,7 @@ ol.control.Attribution.prototype.insertLogos_ = function(frameState) {
         });
         logoElement.appendChild(image);
       }
-      goog.dom.appendChild(this.logoLi_, logoElement);
+      this.logoLi_.appendChild(logoElement);
       logoElements[logoKey] = logoElement;
     }
   }
@@ -47256,7 +47256,7 @@ ol.dom.canUseCssTransform = (function() {
               'MozTransform': '-moz-transform',
               'transform': 'transform'
             };
-        goog.dom.appendChild(document.body, el);
+        document.body.appendChild(el);
         for (var t in transforms) {
           if (t in el.style) {
             el.style[t] = 'translate(1px,1px)';
@@ -47299,7 +47299,7 @@ ol.dom.canUseCssTransform3D = (function() {
               'MozTransform': '-moz-transform',
               'transform': 'transform'
             };
-        goog.dom.appendChild(document.body, el);
+        document.body.appendChild(el);
         for (var t in transforms) {
           if (t in el.style) {
             el.style[t] = 'translate3d(1px,1px,1px)';
@@ -51591,6 +51591,9 @@ ol.style.IconImage_ = function(image, src, size, crossOrigin, imageState) {
    * @type {boolean}
    */
   this.tainting_ = false;
+  if (this.imageState_ == ol.style.ImageState.LOADED) {
+    this.determineTainting_();
+  }
 
 };
 goog.inherits(ol.style.IconImage_, goog.events.EventTarget);
@@ -51621,8 +51624,8 @@ ol.style.IconImage_.get = function(image, src, size, crossOrigin, imageState) {
  */
 ol.style.IconImage_.prototype.determineTainting_ = function() {
   var context = ol.dom.createCanvasContext2D(1, 1);
-  context.drawImage(this.image_, 0, 0);
   try {
+    context.drawImage(this.image_, 0, 0);
     context.getImageData(0, 0, 1, 1);
   } catch (e) {
     this.tainting_ = true;
@@ -60752,8 +60755,8 @@ ol.render.canvas.TextReplay.prototype.drawText =
   var myBegin = this.coordinates.length;
   var myEnd =
       this.appendFlatCoordinates(flatCoordinates, offset, end, stride, false);
-  var fill = this.textFillState_;
-  var stroke = this.textStrokeState_;
+  var fill = !!this.textFillState_;
+  var stroke = !!this.textStrokeState_;
   var drawTextInstruction = [
     ol.render.canvas.Instruction.DRAW_TEXT, myBegin, myEnd, this.text_,
     this.textOffsetX_, this.textOffsetY_, this.textRotation_, this.textScale_,
@@ -74853,7 +74856,7 @@ ol.renderer.dom.ImageLayer.prototype.prepareFrame =
       imageElement.style.maxWidth = 'none';
       imageElement.style.position = 'absolute';
       goog.dom.removeChildren(this.target);
-      goog.dom.appendChild(this.target, imageElement);
+      this.target.appendChild(imageElement);
       this.image_ = image;
     }
     this.setTransform_(transform);
@@ -75242,7 +75245,7 @@ ol.renderer.dom.TileLayerZ_.prototype.addTile = function(tile, tileGutter) {
     imageStyle.top = -tileGutter + 'px';
     imageStyle.width = (tileSize[0] + 2 * tileGutter) + 'px';
     imageStyle.height = (tileSize[1] + 2 * tileGutter) + 'px';
-    goog.dom.appendChild(tileElement, image);
+    tileElement.appendChild(image);
   } else {
     imageStyle.width = tileSize[0] + 'px';
     imageStyle.height = tileSize[1] + 'px';
@@ -75257,7 +75260,7 @@ ol.renderer.dom.TileLayerZ_.prototype.addTile = function(tile, tileGutter) {
   if (!this.documentFragment_) {
     this.documentFragment_ = document.createDocumentFragment();
   }
-  goog.dom.appendChild(this.documentFragment_, tileElement);
+  this.documentFragment_.appendChild(tileElement);
   this.tiles_[tileCoordKey] = tile;
 };
 
@@ -75267,7 +75270,7 @@ ol.renderer.dom.TileLayerZ_.prototype.addTile = function(tile, tileGutter) {
  */
 ol.renderer.dom.TileLayerZ_.prototype.finalizeAddTiles = function() {
   if (this.documentFragment_) {
-    goog.dom.appendChild(this.target, this.documentFragment_);
+    this.target.appendChild(this.documentFragment_);
     this.documentFragment_ = null;
   }
 };
@@ -82777,7 +82780,7 @@ ol.Map = function(options) {
    */
   this.overlayContainer_ = goog.dom.createDom(goog.dom.TagName.DIV,
       'ol-overlaycontainer');
-  goog.dom.appendChild(this.viewport_, this.overlayContainer_);
+  this.viewport_.appendChild(this.overlayContainer_);
 
   /**
    * @private
@@ -82794,7 +82797,7 @@ ol.Map = function(options) {
     ol.MapBrowserEvent.EventType.POINTERDOWN,
     goog.userAgent.GECKO ? 'DOMMouseScroll' : 'mousewheel'
   ], goog.events.Event.stopPropagation);
-  goog.dom.appendChild(this.viewport_, this.overlayContainerStopEvent_);
+  this.viewport_.appendChild(this.overlayContainerStopEvent_);
 
   var mapBrowserEventHandler = new ol.MapBrowserEventHandler(this);
   goog.events.listen(mapBrowserEventHandler,
@@ -83537,7 +83540,7 @@ ol.Map.prototype.handleTargetChanged_ = function() {
       this.viewportResizeListenerKey_ = null;
     }
   } else {
-    goog.dom.appendChild(targetElement, this.viewport_);
+    targetElement.appendChild(this.viewport_);
 
     var keyboardEventTarget = !this.keyboardEventTarget_ ?
         targetElement : this.keyboardEventTarget_;
@@ -90291,8 +90294,7 @@ ol.format.XSD.readNonNegativeIntegerString = function(string) {
  * @return {string|undefined} String.
  */
 ol.format.XSD.readString = function(node) {
-  var s = ol.xml.getAllTextContent(node, false);
-  return goog.string.trim(s);
+  return ol.xml.getAllTextContent(node, false).trim();
 };
 
 
@@ -93349,7 +93351,7 @@ ol.format.IGC.prototype.readFeatureFromText = function(text, opt_options) {
       } else {
         m = ol.format.IGC.H_RECORD_RE_.exec(line);
         if (m) {
-          properties[m[1]] = goog.string.trim(m[2]);
+          properties[m[1]] = m[2].trim();
           m = ol.format.IGC.HFDTE_RECORD_RE_.exec(line);
         }
       }
@@ -95242,7 +95244,6 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.dom.NodeType');
 goog.require('goog.math');
-goog.require('goog.string');
 goog.require('ol');
 goog.require('ol.Feature');
 goog.require('ol.FeatureStyleFunction');
@@ -95623,7 +95624,7 @@ ol.format.KML.readFlatCoordinates_ = function(node) {
  * @return {string|undefined} Style URL.
  */
 ol.format.KML.readStyleUrl_ = function(node) {
-  var s = goog.string.trim(ol.xml.getAllTextContent(node, false));
+  var s = ol.xml.getAllTextContent(node, false).trim();
   if (node.baseURI) {
     return goog.Uri.resolve(node.baseURI, s).toString();
   } else {
@@ -95641,9 +95642,9 @@ ol.format.KML.readStyleUrl_ = function(node) {
 ol.format.KML.readURI_ = function(node) {
   var s = ol.xml.getAllTextContent(node, false);
   if (node.baseURI) {
-    return goog.Uri.resolve(node.baseURI, goog.string.trim(s)).toString();
+    return goog.Uri.resolve(node.baseURI, s.trim()).toString();
   } else {
-    return goog.string.trim(s);
+    return s.trim();
   }
 };
 
@@ -101429,7 +101430,6 @@ goog.provide('ol.format.WMSCapabilities');
 goog.require('goog.asserts');
 goog.require('goog.dom.NodeType');
 goog.require('goog.object');
-goog.require('goog.string');
 goog.require('ol');
 goog.require('ol.format.XLink');
 goog.require('ol.format.XML');
@@ -101495,7 +101495,7 @@ ol.format.WMSCapabilities.prototype.readFromNode = function(node) {
   goog.asserts.assert(node.localName == 'WMS_Capabilities' ||
       node.localName == 'WMT_MS_Capabilities',
       'localName should be WMS_Capabilities or WMT_MS_Capabilities');
-  this.version = goog.string.trim(node.getAttribute('version'));
+  this.version = node.getAttribute('version').trim();
   goog.asserts.assertString(this.version, 'this.version should be a string');
   var wmsCapabilityObject = ol.xml.pushParseAndPop({
     'version': this.version
@@ -102301,7 +102301,6 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.dom.NodeType');
 goog.require('goog.object');
-goog.require('goog.string');
 goog.require('ol.format.GML2');
 goog.require('ol.format.XMLFeature');
 goog.require('ol.xml');
@@ -102385,8 +102384,8 @@ ol.format.WMSGetFeatureInfo.prototype.readFeatures_ =
           ol.format.WMSGetFeatureInfo.layerIdentifier_) >= 0,
           'localName of layer node should match layerIdentifier');
 
-      var featureType = goog.string.remove(layer.localName,
-          ol.format.WMSGetFeatureInfo.layerIdentifier_) +
+      var toRemove = ol.format.WMSGetFeatureInfo.layerIdentifier_;
+      var featureType = layer.localName.replace(toRemove, '') +
           ol.format.WMSGetFeatureInfo.featureIdentifier_;
 
       context['featureType'] = featureType;
@@ -102448,7 +102447,6 @@ goog.provide('ol.format.WMTSCapabilities');
 
 goog.require('goog.asserts');
 goog.require('goog.dom.NodeType');
-goog.require('goog.string');
 goog.require('ol.extent');
 goog.require('ol.format.OWS');
 goog.require('ol.format.XLink');
@@ -102514,7 +102512,7 @@ ol.format.WMTSCapabilities.prototype.readFromNode = function(node) {
       'node.nodeType should be ELEMENT');
   goog.asserts.assert(node.localName == 'Capabilities',
       'localName should be Capabilities');
-  this.version = goog.string.trim(node.getAttribute('version'));
+  this.version = node.getAttribute('version').trim();
   goog.asserts.assertString(this.version, 'this.version should be a string');
   var WMTSCapabilityObject = this.owsParser_.readFromNode(node);
   if (!WMTSCapabilityObject) {
@@ -115272,7 +115270,6 @@ goog.provide('ol.source.WMTSRequestEncoding');
 goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.object');
-goog.require('goog.string');
 goog.require('goog.uri.utils');
 goog.require('ol.TileUrlFunction');
 goog.require('ol.TileUrlFunctionType');
@@ -115730,7 +115727,7 @@ ol.source.WMTS.optionsFromCapabilities = function(wmtsCap, config) {
 
   if (!wmtsCap.hasOwnProperty('OperationsMetadata') ||
       !wmtsCap['OperationsMetadata'].hasOwnProperty('GetTile') ||
-      goog.string.startsWith(requestEncoding, 'REST')) {
+      requestEncoding.indexOf('REST') === 0) {
     // Add REST tile resource url
     requestEncoding = ol.source.WMTSRequestEncoding.REST;
     l['ResourceURL'].forEach(function(elt, index, array) {
