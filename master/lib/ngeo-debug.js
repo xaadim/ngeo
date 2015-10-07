@@ -23011,125 +23011,40 @@ ol.View.createRotationConstraint_ = function(options) {
   }
 };
 
-// Copyright 2006 The Closure Library Authors. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS-IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-/**
- * @fileoverview Easing functions for animations.
- *
- * @author arv@google.com (Erik Arvidsson)
- */
-
-goog.provide('goog.fx.easing');
-
-
-/**
- * Ease in - Start slow and speed up.
- * @param {number} t Input between 0 and 1.
- * @return {number} Output between 0 and 1.
- */
-goog.fx.easing.easeIn = function(t) {
-  return goog.fx.easing.easeInInternal_(t, 3);
-};
-
-
-/**
- * Ease in with specifiable exponent.
- * @param {number} t Input between 0 and 1.
- * @param {number} exp Ease exponent.
- * @return {number} Output between 0 and 1.
- * @private
- */
-goog.fx.easing.easeInInternal_ = function(t, exp) {
-  return Math.pow(t, exp);
-};
-
-
-/**
- * Ease out - Start fastest and slows to a stop.
- * @param {number} t Input between 0 and 1.
- * @return {number} Output between 0 and 1.
- */
-goog.fx.easing.easeOut = function(t) {
-  return goog.fx.easing.easeOutInternal_(t, 3);
-};
-
-
-/**
- * Ease out with specifiable exponent.
- * @param {number} t Input between 0 and 1.
- * @param {number} exp Ease exponent.
- * @return {number} Output between 0 and 1.
- * @private
- */
-goog.fx.easing.easeOutInternal_ = function(t, exp) {
-  return 1 - goog.fx.easing.easeInInternal_(1 - t, exp);
-};
-
-
-/**
- * Ease out long - Start fastest and slows to a stop with a long ease.
- * @param {number} t Input between 0 and 1.
- * @return {number} Output between 0 and 1.
- */
-goog.fx.easing.easeOutLong = function(t) {
-  return goog.fx.easing.easeOutInternal_(t, 4);
-};
-
-
-/**
- * Ease in and out - Start slow, speed up, then slow down.
- * @param {number} t Input between 0 and 1.
- * @return {number} Output between 0 and 1.
- */
-goog.fx.easing.inAndOut = function(t) {
-  return 3 * t * t - 2 * t * t * t;
-};
-
 goog.provide('ol.easing');
-
-goog.require('goog.fx.easing');
 
 
 /**
  * Start slow and speed up.
- * @function
  * @param {number} t Input between 0 and 1.
  * @return {number} Output between 0 and 1.
  * @api
  */
-ol.easing.easeIn = goog.fx.easing.easeIn;
+ol.easing.easeIn = function(t) {
+  return Math.pow(t, 3);
+};
 
 
 /**
  * Start fast and slow down.
- * @function
  * @param {number} t Input between 0 and 1.
  * @return {number} Output between 0 and 1.
  * @api
  */
-ol.easing.easeOut = goog.fx.easing.easeOut;
+ol.easing.easeOut = function(t) {
+  return 1 - ol.easing.easeIn(1 - t);
+};
 
 
 /**
  * Start slow, speed up, and then slow down again.
- * @function
  * @param {number} t Input between 0 and 1.
  * @return {number} Output between 0 and 1.
  * @api
  */
-ol.easing.inAndOut = goog.fx.easing.inAndOut;
+ol.easing.inAndOut = function(t) {
+  return 3 * t * t - 2 * t * t * t;
+};
 
 
 /**
@@ -37999,9 +37914,9 @@ ol.control.Attribution = function(opt_options) {
    * @private
    * @type {Node}
    */
-  this.collapseLabel_ = /** @type {Node} */ (goog.isString(collapseLabel) ?
+  this.collapseLabel_ = goog.isString(collapseLabel) ?
       goog.dom.createDom(goog.dom.TagName.SPAN, {}, collapseLabel) :
-      collapseLabel);
+      collapseLabel;
 
   var label = options.label ? options.label : 'i';
 
@@ -38009,9 +37924,9 @@ ol.control.Attribution = function(opt_options) {
    * @private
    * @type {Node}
    */
-  this.label_ = /** @type {Node} */ (goog.isString(label) ?
+  this.label_ = goog.isString(label) ?
       goog.dom.createDom(goog.dom.TagName.SPAN, {}, label) :
-      label);
+      label;
 
   var activeLabel = (this.collapsible_ && !this.collapsed_) ?
       this.collapseLabel_ : this.label_;
@@ -38344,7 +38259,6 @@ goog.require('goog.dom.TagName');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('goog.math');
 goog.require('ol');
 goog.require('ol.animation');
 goog.require('ol.control.Control');
@@ -38491,7 +38405,7 @@ ol.control.Rotate.render = function(mapEvent) {
   }
   var rotation = frameState.viewState.rotation;
   if (rotation != this.rotation_) {
-    var transform = 'rotate(' + goog.math.toDegrees(rotation) + 'deg)';
+    var transform = 'rotate(' + rotation + 'rad)';
     if (this.autoHide_) {
       goog.dom.classlist.enable(
           this.element, ol.css.CLASS_HIDDEN, rotation === 0);
@@ -38880,8 +38794,8 @@ ol.control.FullScreen = function(opt_options) {
    * @private
    * @type {Node}
    */
-  this.labelNode_ = /** @type {Node} */ (goog.isString(label) ?
-          goog.dom.createTextNode(label) : label);
+  this.labelNode_ = goog.isString(label) ?
+      goog.dom.createTextNode(label) : label;
 
   var labelActive = options.labelActive ? options.labelActive : '\u00d7';
 
@@ -38889,8 +38803,8 @@ ol.control.FullScreen = function(opt_options) {
    * @private
    * @type {Node}
    */
-  this.labelActiveNode_ = /** @type {Node} */ (goog.isString(labelActive) ?
-          goog.dom.createTextNode(labelActive) : labelActive);
+  this.labelActiveNode_ = goog.isString(labelActive) ?
+      goog.dom.createTextNode(labelActive) : labelActive;
 
   var tipLabel = options.tipLabel ? options.tipLabel : 'Toggle full-screen';
   var button = goog.dom.createDom(goog.dom.TagName.BUTTON, {
@@ -84707,9 +84621,9 @@ ol.control.OverviewMap = function(opt_options) {
    * @private
    * @type {Node}
    */
-  this.collapseLabel_ = /** @type {Node} */ (goog.isString(collapseLabel) ?
+  this.collapseLabel_ = goog.isString(collapseLabel) ?
       goog.dom.createDom(goog.dom.TagName.SPAN, {}, collapseLabel) :
-      collapseLabel);
+      collapseLabel;
 
   var label = options.label ? options.label : '\u00BB';
 
@@ -84717,9 +84631,9 @@ ol.control.OverviewMap = function(opt_options) {
    * @private
    * @type {Node}
    */
-  this.label_ = /** @type {Node} */ (goog.isString(label) ?
+  this.label_ = goog.isString(label) ?
       goog.dom.createDom(goog.dom.TagName.SPAN, {}, label) :
-      label);
+      label;
 
   var activeLabel = (this.collapsible_ && !this.collapsed_) ?
       this.collapseLabel_ : this.label_;
