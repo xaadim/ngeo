@@ -117825,7 +117825,6 @@ goog.require('ol.control.Control');
  * element of the HTML page.
  *
  * @example
- *
  * <div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map"></div>
  *
  * The expression passed to "ngeo-control" should evaluate to a control
@@ -117897,7 +117896,6 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * property referencing an array of child nodes.
  *
  * @example
- *
  * <div ngeo-layertree="ctrl.tree"
  *      ngeo-layertree-map="ctrl.map"
  *      ngeo-layertree-nodelayer="ctrl.getLayer(node)"
@@ -118129,7 +118127,6 @@ goog.require('ol.Map');
  * map in the DOM. The directive does not create an isolate scope.
  *
  * @example
- *
  * <div ngeo-map="ctrl.map"></div>
  *
  * @constructor
@@ -118313,7 +118310,6 @@ goog.require('ngeo.profile');
  * in the DOM.
  *
  * @example
- *
  * <div ngeo-profile="ctrl.profileData"
  *      ngeo-profile-options="ctrl.profileOptions"
  *      ngeo-profile-pois="ctrl.profilePois"
@@ -118525,7 +118521,6 @@ ngeo.ScaleselectorOptions;
  * selecting map scales.
  *
  * @example
- *
  * <div ngeo-scaleselector="ctrl.scales" ngeo-scaleselector-map="ctrl.map">
  * </div>
  *
@@ -118765,7 +118760,6 @@ goog.require('ngeo');
  * typeahead component to change an input text into a search field.
  *
  * @example
- *
  * <input type="text"
  *   ngeo-search="ctrl.typeaheadOptions"
  *   ngeo-search-datasets="ctrl.typeaheadDatasets"
@@ -120208,7 +120202,6 @@ ngeo.SortableOptions;
  * layers in a map.
  *
  * @example
- *
  * <ul ngeo-sortable="ctrl.layers"
  *     ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
  *   <li ng-repeat="layer in ctrl.layers">
@@ -122468,7 +122461,6 @@ goog.require('ol.format.GeoJSON');
  * `ol.Feature` objects as suggestions.
  *
  * @example
- *
  * var bloodhound = ngeoCreateGeoJSONBloodhound(
  *   'http://example.com/fulltextsearch?query=%QUERY',
  *   aFilterFunction,
@@ -122476,7 +122468,6 @@ goog.require('ol.format.GeoJSON');
  * bloodhound.initialize();
  *
  * @example
- *
  * var bloodhound = ngeoCreateGeoJSONBloodhound({
  *   remote: {
  *     url: mySearchEngineUrl,
@@ -123344,7 +123335,6 @@ ngeo.CreatePopup;
  * The factory returns a ngeo.Popup object.
  *
  * @example
- *
  * var popup = ngeoCreatePopup();
  * popup.setTitle("A title");
  * popup.setContent("Some content");
@@ -123518,7 +123508,6 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * - getCapabilities: get the capabilities of the server
  *
  * @example
- *
  * var printBaseUrl = 'http://example.com/print';
  * var print = new ngeo.Print(printBaseUrl);
  *
@@ -124377,7 +124366,6 @@ goog.require('ngeo');
  * the map, and the order of selected layers may change.
  *
  * @example
- *
  * var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
  *     true, scope, function(layer) {
  *       // exclude the layer at index 0 in the map
