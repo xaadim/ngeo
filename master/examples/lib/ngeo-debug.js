@@ -117079,12 +117079,17 @@ ol.style.RegularShape.prototype.getChecksum = function() {
   return this.checksums_[0];
 };
 
+goog.provide('ngeo.profile');
+
+goog.require('goog.object');
+
+
+
 /**
- * @fileoverview Provides a D3js component to be used to draw an elevation
+ * Provides a D3js component to be used to draw an elevation
  * profile chart.
  *
- * Example usage:
- *
+ * @example
  * var selection = d3.select('#element_id');
  * var profile = ngeo.profile({
  *  elevationExtractor: {
@@ -117114,14 +117119,8 @@ ol.style.RegularShape.prototype.getChecksum = function() {
  *         "x": 541620
  *     }, ...
  * ]
- */
-goog.provide('ngeo.profile');
-
-goog.require('goog.object');
-
-
-/**
  *
+ * @constructor
  * @return {Object}
  * @param {ngeox.profile.ProfileOptions} options
  * @export
@@ -117129,8 +117128,8 @@ goog.require('goog.object');
  */
 ngeo.profile = function(options) {
   /**
-   * @type {boolean}
    * Whether the simplified profile should be shown.
+   * @type {boolean}
    */
   var light = goog.isDef(options.light) ? options.light : false;
 
@@ -117150,15 +117149,15 @@ ngeo.profile = function(options) {
 
 
   /**
-   * @type {function(Object, number, string, number, string)}
    * Hover callback function.
+   * @type {function(Object, number, string, number, string)}
    */
   var hoverCallback = goog.isDef(options.hoverCallback) ?
       options.hoverCallback : goog.nullFunction;
 
   /**
-   * @type {function()}
    * Out callback function.
+   * @type {function()}
    */
   var outCallback = goog.isDef(options.outCallback) ?
       options.outCallback : goog.nullFunction;
@@ -117622,20 +117621,30 @@ ngeo.profile = function(options) {
   return profile;
 };
 
+/**
+ * @module ngeo
+ */
 goog.provide('ngeo');
 
 
 /** @type {!angular.Module} */
 var ngeoModule = angular.module('ngeo', []);
 
+goog.provide('ngeo.BtnGroupController');
+goog.provide('ngeo.btnDirective');
+goog.provide('ngeo.btngroupDirective');
+
+goog.require('ngeo');
+
+
+
 /**
- * @fileoverview Provides two directives: ngeo-btn-group and ngeo-btn.
+ * Provides two directives: ngeo-btn-group and ngeo-btn.
  *
  * The ngeo-btn-group directive allows creating "toggle" groups. It works with
  * the ngeo-btn directive.
  *
- * Example:
- *
+ * @example
  * <div ngeo-btn-group>
  *   <button ngeo-btn class="btn" ng-model="ctrl.drawPoint.active"></button>
  *   <button ngeo-btn class="btn" ng-model="ctrl.drawLine.active"></button>
@@ -117647,22 +117656,13 @@ var ngeoModule = angular.module('ngeo', []);
  * The ngeo-btn allows creating toggle buttons working with ng-model. It is
  * typically used with Bootstrap buttons (`btn`).
  *
- * Example:
- *
+ * @example
  * <button ngeo-btn class="btn" ng-model="ctrl.interaction.active"></button>
  *
  * This example is about creating a Bootstrap button that can pressed/depressed
  * to activate/deactivate an OpenLayers 3 interaction.
- */
-
-goog.provide('ngeo.BtnGroupController');
-goog.provide('ngeo.btnDirective');
-goog.provide('ngeo.btngroupDirective');
-
-goog.require('ngeo');
-
-
-/**
+ *
+ * @constructor
  * @return {angular.Directive} The directive specs.
  * @ngInject
  */
@@ -117778,19 +117778,6 @@ ngeo.btnDirective = function($parse) {
 
 ngeoModule.directive('ngeoBtn', ngeo.btnDirective);
 
-/**
- * @fileoverview Provides a directive can be used to add a control to a DOM
- * element of the HTML page.
- *
- * Example:
- *
- * <div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map"></div>
- *
- * The expression passed to "ngeo-control" should evaluate to a control
- * instance, and the expression passed to "ngeo-control-map" should
- * evaluate to a map instance.
- */
-
 goog.provide('ngeo.controlDirective');
 
 goog.require('goog.asserts');
@@ -117799,7 +117786,19 @@ goog.require('ol.Map');
 goog.require('ol.control.Control');
 
 
+
 /**
+ * Provides a directive can be used to add a control to a DOM
+ * element of the HTML page.
+ *
+ * @example
+ * <div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map"></div>
+ *
+ * The expression passed to "ngeo-control" should evaluate to a control
+ * instance, and the expression passed to "ngeo-control-map" should
+ * evaluate to a map instance.
+ *
+ * @constructor
  * @return {angular.Directive} The directive specs.
  * @ngInject
  */
@@ -117831,15 +117830,39 @@ ngeo.controlDirective = function() {
 
 ngeoModule.directive('ngeoControl', ngeo.controlDirective);
 
+goog.provide('ngeo.LayertreeController');
+goog.provide('ngeo.layertreeDirective');
+
+goog.require('ngeo');
+
+
 /**
- * @fileoverview Provides the "ngeoLayertree" directive, a directive for
+ * @const
+ * @type {string}
+ */
+ngeo.layertreeTemplateUrl = 'layertree.html';
+
+
+ngeoModule.value('ngeoLayertreeTemplateUrl',
+    /**
+     * @param {angular.JQLite} element Element.
+     * @param {angular.Attributes} attrs Attributes.
+     */
+    function(element, attrs) {
+      var templateUrl = attrs['ngeoLayertreeTemplateurl'];
+      return goog.isDef(templateUrl) ? templateUrl : ngeo.layertreeTemplateUrl;
+    });
+
+
+
+/**
+ * Provides the "ngeoLayertree" directive, a directive for
  * creating layer trees in application.
  *
  * The directive assumes that tree nodes that are not leaves have a "children"
  * property referencing an array of child nodes.
  *
- * Example usage:
- *
+ * @example
  * <div ngeo-layertree="ctrl.tree"
  *      ngeo-layertree-map="ctrl.map"
  *      ngeo-layertree-nodelayer="ctrl.getLayer(node)"
@@ -117880,33 +117903,8 @@ ngeoModule.directive('ngeoControl', ngeo.controlDirective);
  * has a "layertreeCtrl" property which is a reference to the directive's
  * controller: "layertreeCtrl". You can refer to that property in a custom
  * template for example.
- */
-
-goog.provide('ngeo.LayertreeController');
-goog.provide('ngeo.layertreeDirective');
-
-goog.require('ngeo');
-
-
-/**
- * @const
- * @type {string}
- */
-ngeo.layertreeTemplateUrl = 'layertree.html';
-
-
-ngeoModule.value('ngeoLayertreeTemplateUrl',
-    /**
-     * @param {angular.JQLite} element Element.
-     * @param {angular.Attributes} attrs Attributes.
-     */
-    function(element, attrs) {
-      var templateUrl = attrs['ngeoLayertreeTemplateurl'];
-      return goog.isDef(templateUrl) ? templateUrl : ngeo.layertreeTemplateUrl;
-    });
-
-
-/**
+ *
+ * @constructor
  * @param {angular.$compile} $compile Angular compile service.
  * @param {string|function(!angular.JQLite=, !angular.Attributes=)}
  *     ngeoLayertreeTemplateUrl Template URL for the directive.
@@ -118083,14 +118081,6 @@ ngeo.LayertreeController.prototype.getSetActive = function(val) {
 ngeoModule.controller('NgeoLayertreeController',
     ngeo.LayertreeController);
 
-/**
- * @fileoverview Provides a directive used to insert a user-defined OpenLayers
- * map in the DOM. The directive does not create an isolate scope.
- *
- * Example:
- *
- * <div ngeo-map="ctrl.map"></div>
- */
 goog.provide('ngeo.mapDirective');
 
 goog.require('goog.asserts');
@@ -118098,7 +118088,15 @@ goog.require('ngeo');
 goog.require('ol.Map');
 
 
+
 /**
+ * Provides a directive used to insert a user-defined OpenLayers
+ * map in the DOM. The directive does not create an isolate scope.
+ *
+ * @example
+ * <div ngeo-map="ctrl.map"></div>
+ *
+ * @constructor
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  */
@@ -118125,14 +118123,22 @@ ngeo.mapDirective = function() {
 
 ngeoModule.directive('ngeoMap', ngeo.mapDirective);
 
+
+goog.provide('ngeo.modalDirective');
+
+goog.require('ngeo');
+
+
+
 /**
- * @fileoverview Provides the "ngeoModal" directive. This directive allows
+ * Provides the "ngeoModal" directive. This directive allows
  * displaying a modal window. The directive takes care or the show/hide
  * actions.
  *
+ * This directive requires Bootstrap's `modal` classes and associated jQuery
+ * plugin.
  *
- * Example:
- *
+ * @example
  * <ngeo-modal ngeo-modal-shown="modalShown">
  *   <div class="modal-header">
  *     <button type="button" class="close" data-dismiss="modal"
@@ -118142,16 +118148,7 @@ ngeoModule.directive('ngeoMap', ngeo.mapDirective);
  *   <div class="modal-body">Some content</div>
  * </ngeo-modal>
  *
- * This directive requires Bootstrap's `modal` classes and associated jQuery
- * plugin.
- */
-
-goog.provide('ngeo.modalDirective');
-
-goog.require('ngeo');
-
-
-/**
+ * @constructor
  * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
@@ -118200,21 +118197,6 @@ ngeo.modalDirective = function($parse) {
 
 ngeoModule.directive('ngeoModal', ngeo.modalDirective);
 
-/**
- * @fileoverview Provides a directive used to show a popup over the page with
- * a title and content.
- *
- *
- * Things to know about this directive:
- *
- * - This directive is intented to be used along with the popup service.
- *
- * - By default the directive uses "popup.html" as its templateUrl. This can be
- *   changed by redefining the "ngeoPopupTemplateUrl" value.
- *
- * - The directive doesn't create any scope but relies on its parent scope.
- *   Properties like 'content', 'title' or 'open' come from the parent scope.
- */
 goog.provide('ngeo.popupDirective');
 
 goog.require('ngeo');
@@ -118230,7 +118212,23 @@ ngeo.popupTemplateUrl = 'partials/popup.html';
 ngeoModule.value('ngeoPopupTemplateUrl', ngeo.popupTemplateUrl);
 
 
+
 /**
+ * Provides a directive used to show a popup over the page with
+ * a title and content.
+ *
+ *
+ * Things to know about this directive:
+ *
+ * - This directive is intented to be used along with the popup service.
+ *
+ * - By default the directive uses "popup.html" as its templateUrl. This can be
+ *   changed by redefining the "ngeoPopupTemplateUrl" value.
+ *
+ * - The directive doesn't create any scope but relies on its parent scope.
+ *   Properties like 'content', 'title' or 'open' come from the parent scope.
+ *
+ * @constructor
  * @param {string} ngeoPopupTemplateUrl Url to popup template.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
@@ -118266,22 +118264,6 @@ ngeo.popupDirective = function(ngeoPopupTemplateUrl) {
 
 ngeoModule.directive('ngeoPopup', ngeo.popupDirective);
 
-/**
- * @fileoverview Provides a directive used to insert an elevation profile chart
- * in the DOM.
- *
- * Example:
- *
- * <div ngeo-profile="ctrl.profileData"
- *      ngeo-profile-options="ctrl.profileOptions"
- *      ngeo-profile-pois="ctrl.profilePois"
- * ></div>
- *
- * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions);
- * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
- * processed by {@link ngeox.profile.ElevationExtractor) and
- * {@link ngeox.profile.PoiExtractor).
- */
 goog.provide('ngeo.profileDirective');
 
 goog.require('goog.asserts');
@@ -118289,7 +118271,23 @@ goog.require('ngeo');
 goog.require('ngeo.profile');
 
 
+
 /**
+ * Provides a directive used to insert an elevation profile chart
+ * in the DOM.
+ *
+ * @example
+ * <div ngeo-profile="ctrl.profileData"
+ *      ngeo-profile-options="ctrl.profileOptions"
+ *      ngeo-profile-pois="ctrl.profilePois"
+ * ></div>
+ *
+ * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions};
+ * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
+ * processed by {@link ngeox.profile.ElevationExtractor} and
+ * {@link ngeox.profile.PoiExtractor}.
+ *
+ * @constructor
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  */
@@ -118384,20 +118382,6 @@ ngeo.profileDirective = function() {
 
 ngeoModule.directive('ngeoProfile', ngeo.profileDirective);
 
-/**
- * @fileoverview Provides a directive that resizes the map in an animation loop
- * during 1 second when the value of "state" changes. This is especially useful
- * when changing the size of other elements with a transition leads to a change
- * of the map size.
- *
- * Example:
- *
- *   <div ng-class="ctrl.open ? 'open' : 'close' ngeo-resizemap="ctrl.map"
- *        ngeo-resizemap-state="open"><div>
- *   <input type="checkbox" ng-model="ctrl.open" />
- *
- */
-
 goog.provide('ngeo.resizemapDirective');
 
 goog.require('goog.asserts');
@@ -118406,7 +118390,19 @@ goog.require('ngeo');
 goog.require('ol.Map');
 
 
+
 /**
+ * Provides a directive that resizes the map in an animation loop
+ * during 1 second when the value of "state" changes. This is especially useful
+ * when changing the size of other elements with a transition leads to a change
+ * of the map size.
+ *
+ * @example
+ *   <div ng-class="ctrl.open ? 'open' : 'close' ngeo-resizemap="ctrl.map"
+ *        ngeo-resizemap-state="open"><div>
+ *   <input type="checkbox" ng-model="ctrl.open" />
+ *
+ * @constructor
  * @param {angular.$window} $window Angular window service.
  * @param {angular.$animate} $animate Angular animate service.
  * @return {angular.Directive} The directive specs.
@@ -118458,12 +118454,40 @@ ngeo.resizemapDirective = function($window, $animate) {
 
 ngeoModule.directive('ngeoResizemap', ngeo.resizemapDirective);
 
+goog.provide('ngeo.ScaleselectorController');
+goog.provide('ngeo.ScaleselectorOptions');
+goog.provide('ngeo.scaleselectorDirective');
+
+goog.require('goog.events');
+goog.require('goog.events.Key');
+goog.require('ngeo');
+goog.require('ol.Map');
+goog.require('ol.Object');
+
+
 /**
- * @fileoverview Provides the "ngeoScaleselector" directive, a widget for
+ * @const
+ * @type {string}
+ */
+ngeo.scaleselectorTemplateUrl = 'scaleselector.html';
+
+
+ngeoModule.value('ngeoScaleselectorTemplateUrl',
+    ngeo.scaleselectorTemplateUrl);
+
+
+/**
+ * @typedef {{dropup: (boolean|undefined)}}
+ */
+ngeo.ScaleselectorOptions;
+
+
+
+/**
+ * Provides the "ngeoScaleselector" directive, a widget for
  * selecting map scales.
  *
- * Example usage:
- *
+ * @example
  * <div ngeo-scaleselector="ctrl.scales" ngeo-scaleselector-map="ctrl.map">
  * </div>
  *
@@ -118495,36 +118519,8 @@ ngeoModule.directive('ngeoResizemap', ngeo.resizemapDirective);
  *
  * The directive doesn't create any watcher. In particular the object including
  * the scales information is now watched.
- */
-goog.provide('ngeo.ScaleselectorController');
-goog.provide('ngeo.ScaleselectorOptions');
-goog.provide('ngeo.scaleselectorDirective');
-
-goog.require('goog.events');
-goog.require('goog.events.Key');
-goog.require('ngeo');
-goog.require('ol.Map');
-goog.require('ol.Object');
-
-
-/**
- * @const
- * @type {string}
- */
-ngeo.scaleselectorTemplateUrl = 'scaleselector.html';
-
-
-ngeoModule.value('ngeoScaleselectorTemplateUrl',
-    ngeo.scaleselectorTemplateUrl);
-
-
-/**
- * @typedef {{dropup: (boolean|undefined)}}
- */
-ngeo.ScaleselectorOptions;
-
-
-/**
+ *
+ * @constructor
  * @param {string|function(!angular.JQLite=, !angular.Attributes=)}
  *     ngeoScaleselectorTemplateUrl Template URL for the directive.
  * @return {angular.Directive} Directive Definition Object.
@@ -118720,23 +118716,23 @@ ngeo.ScaleselectorController.prototype.registerResolutionChangeListener_ =
 ngeoModule.controller('NgeoScaleselectorController',
     ngeo.ScaleselectorController);
 
-/**
- * @fileoverview Provides the "ngeoSearch" directive, which uses Twitter's
- * typeahead component to change an input text into a search field.
- *
- * Example:
- *
- * <input type="text"
- *   ngeo-search="ctrl.typeaheadOptions"
- *   ngeo-search-datasets="ctrl.typeaheadDatasets"
- *   ngeo-search-listeners="crtl.typeaheadListeners">
- */
 goog.provide('ngeo.searchDirective');
 
 goog.require('ngeo');
 
 
+
 /**
+ * Provides the "ngeoSearch" directive, which uses Twitter's
+ * typeahead component to change an input text into a search field.
+ *
+ * @example
+ * <input type="text"
+ *   ngeo-search="ctrl.typeaheadOptions"
+ *   ngeo-search-datasets="ctrl.typeaheadDatasets"
+ *   ngeo-search-listeners="crtl.typeaheadListeners">
+ *
+ * @constructor
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  */
@@ -120145,35 +120141,6 @@ goog.fx.DragListGroupEvent = function(
 };
 goog.inherits(goog.fx.DragListGroupEvent, goog.events.Event);
 
-/**
- * @fileoverview Provides the "ngeoSortable" directive. This directive allows
- * drag-and-dropping DOM items between them. The directive also changes the
- * order of elements in the array it is given.
- *
- * It is typically used together with `ng-repeat`, for example for re-ordering
- * layers in a map.
- *
- * Example:
- *
- * <ul ngeo-sortable="ctrl.layers"
- *     ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
- *   <li ng-repeat="layer in ctrl.layers">
- *     <span class="sortable-handle">handle</span>{{layer.get('name')}}
- *   </li>
- * </ul>
- *
- * The value of the "ngeo-sortable" attribute is an expression which evaluates
- * to an array (an array of layers in the above example). This is the array
- * that is re-ordered after a drag-and-drop.
- *
- * The element with the class "sortable-handle" is the "drag handle". It is
- * required.
- *
- * This directives uses `$watchCollection` to watch the "sortable" array. So
- * if some outside code adds/removes elements to/from the "sortable" array,
- * the "ngeoSortable" directive will pick it up.
- */
-
 goog.provide('ngeo.SortableOptions');
 goog.provide('ngeo.sortableDirective');
 
@@ -120192,7 +120159,35 @@ goog.require('ngeo');
 ngeo.SortableOptions;
 
 
+
 /**
+ * Provides the "ngeoSortable" directive. This directive allows
+ * drag-and-dropping DOM items between them. The directive also changes the
+ * order of elements in the array it is given.
+ *
+ * It is typically used together with `ng-repeat`, for example for re-ordering
+ * layers in a map.
+ *
+ * @example
+ * <ul ngeo-sortable="ctrl.layers"
+ *     ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
+ *   <li ng-repeat="layer in ctrl.layers">
+ *     <span class="sortable-handle">handle</span>{{layer.get('name')}}
+ *   </li>
+ * </ul>
+ *
+ * The value of the "ngeo-sortable" attribute is an expression which evaluates
+ * to an array (an array of layers in the above example). This is the array
+ * that is re-ordered after a drag-and-drop.
+ *
+ * The element with the class "sortable-handle" is the "drag handle". It is
+ * required.
+ *
+ * This directives uses `$watchCollection` to watch the "sortable" array. So
+ * if some outside code adds/removes elements to/from the "sortable" array,
+ * the "ngeoSortable" directive will pick it up.
+ *
+ * @constructor
  * @param {angular.$timeout} $timeout Angular timeout service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
@@ -120325,24 +120320,6 @@ ngeo.sortableDirective = function($timeout) {
 
 ngeoModule.directive('ngeoSortable', ngeo.sortableDirective);
 
-/**
- * @fileoverview This file provides an OpenLayers format for encoding
- * and decoding features for use in permalinks.
- *
- * The code is based on Stéphane Brunner's URLCompressed format:
- * <https://github.com/sbrunner/OpenLayers-URLCompressed>
- *
- * TODOs:
- *
- * - The OpenLayers-URLCompressed format has options where the user
- *   can define attribute and style transformers. This is currently
- *   not supported by this format.
- * - The OpenLayers-URLCompressed format has a "simplify" option.
- *   This format does not have it.
- * - ol.style.Icon styles are not supported.
- * - Transformation of coordinates during encoding and decoding is
- *   not supported.
- */
 goog.provide('ngeo.format.FeatureHash');
 
 goog.require('goog.asserts');
@@ -120397,6 +120374,23 @@ ngeo.format.FeatureHashStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
 
 
 /**
+ * This file provides an OpenLayers format for encoding
+ * and decoding features for use in permalinks.
+ *
+ * The code is based on Stéphane Brunner's URLCompressed format:
+ * <https://github.com/sbrunner/OpenLayers-URLCompressed>
+ *
+ * TODOs:
+ *
+ * - The OpenLayers-URLCompressed format has options where the user
+ *   can define attribute and style transformers. This is currently
+ *   not supported by this format.
+ * - The OpenLayers-URLCompressed format has a "simplify" option.
+ *   This format does not have it.
+ * - ol.style.Icon styles are not supported.
+ * - Transformation of coordinates during encoding and decoding is
+ *   not supported.
+ *
  * @constructor
  * @param {ngeox.format.FeatureHashOptions=} opt_options Options.
  * @extends {ol.format.TextFeature}
@@ -122281,41 +122275,6 @@ ngeo.interaction.MeasureLength.prototype.formatMeasure_ = function(line) {
   return this.formatLength(line);
 };
 
-/**
- * @fileoverview Provides a service for setting/unsetting background layers
- * in maps.
- *
- * The notion of background/base layers doesn't exist in OpenLayers 3. This
- * service adds that notion.
- *
- * Setting a background layer to map is done with the `set` function:
- *
- * ngeoBackgroundLayerMgr.set(map, layer);
- *
- * To unset the background layer pass `null` as the `layer` argument:
- *
- * ngeoBackgroundLayerMgr.set(map, null);
- *
- * The `get` function returns the current background layer of the map passed
- * as an argument. `null` is returned if the map doesn't have a background
- * layer.
- *
- * The background layer is always added at index 0 in the map's layers
- * collection. When a background layer is set it is inserted (at index 0)
- * if the map does not already have a background layer, otherwise the
- * new background layer replaces the previous one at index 0.
- *
- * Users can subscribe to a 'change' event to get notified when the background
- * layer changes:
- *
- * ngeoBackgroundLayerMgr.on('change', function(e) {
- *   // do something with the layer
- *   var layer = ngeoBackgroundLayerMgr.get();
- *   // know which layer was used before
- *   var previous = e.previous
- * });
- */
-
 goog.provide('ngeo.BackgroundEvent');
 goog.provide('ngeo.BackgroundEventType');
 goog.provide('ngeo.BackgroundLayerMgr');
@@ -122360,6 +122319,40 @@ goog.inherits(ngeo.BackgroundEvent, goog.events.Event);
 
 
 /**
+ * Provides a service for setting/unsetting background layers
+ * in maps.
+ *
+ * The notion of background/base layers doesn't exist in OpenLayers 3. This
+ * service adds that notion.
+ *
+ * Setting a background layer to map is done with the `set` function:
+ *
+ * ngeoBackgroundLayerMgr.set(map, layer);
+ *
+ * To unset the background layer pass `null` as the `layer` argument:
+ *
+ * ngeoBackgroundLayerMgr.set(map, null);
+ *
+ * The `get` function returns the current background layer of the map passed
+ * as an argument. `null` is returned if the map doesn't have a background
+ * layer.
+ *
+ * The background layer is always added at index 0 in the map's layers
+ * collection. When a background layer is set it is inserted (at index 0)
+ * if the map does not already have a background layer, otherwise the
+ * new background layer replaces the previous one at index 0.
+ *
+ * Users can subscribe to a 'change' event to get notified when the background
+ * layer changes:
+ *
+ * @example
+ * ngeoBackgroundLayerMgr.on('change', function(e) {
+ *   // do something with the layer
+ *   var layer = ngeoBackgroundLayerMgr.get();
+ *   // know which layer was used before
+ *   var previous = e.previous
+ * });
+ *
  * @extends {ol.Observable}
  * @constructor
  */
@@ -122421,21 +122414,27 @@ ngeo.BackgroundLayerMgr.prototype.set = function(map, layer) {
 
 ngeoModule.service('ngeoBackgroundLayerMgr', ngeo.BackgroundLayerMgr);
 
+
+goog.provide('ngeo.CreateGeoJSONBloodhound');
+
+goog.require('goog.array');
+goog.require('ngeo');
+goog.require('ol.format.GeoJSON');
+
+
 /**
- * @fileoverview Provides a function that creates a Bloodhound engine
+ * Provides a function that creates a Bloodhound engine
  * expecting GeoJSON responses from the search web service, and creating
  * `ol.Feature` objects as suggestions.
  *
- * Example #1:
- *
+ * @example
  * var bloodhound = ngeoCreateGeoJSONBloodhound(
  *   'http://example.com/fulltextsearch?query=%QUERY',
  *   aFilterFunction,
  *   ol.proj.get('EPSG:3857'));
  * bloodhound.initialize();
  *
- * Example #2:
- *
+ * @example
  * var bloodhound = ngeoCreateGeoJSONBloodhound({
  *   remote: {
  *     url: mySearchEngineUrl,
@@ -122447,16 +122446,7 @@ ngeoModule.service('ngeoBackgroundLayerMgr', ngeo.BackgroundLayerMgr);
  *   }
  * }, undefined, ol.proj.get('EPSG:3857'), ol.proj.get('EPSG:21781'));
  * bloodhound.initialize
- */
-
-goog.provide('ngeo.CreateGeoJSONBloodhound');
-
-goog.require('goog.array');
-goog.require('ngeo');
-goog.require('ol.format.GeoJSON');
-
-
-/**
+ *
  * @typedef {function(string, (function(GeoJSONFeature): boolean)=,
  * ol.proj.Projection=, ol.proj.Projection=):Bloodhound}
  */
@@ -122515,17 +122505,15 @@ ngeo.createGeoJSONBloodhound = function(options, opt_filter,
 
 ngeoModule.value('ngeoCreateGeoJSONBloodhound', ngeo.createGeoJSONBloodhound);
 
-/**
- * @fileoverview Provides a debounce service. That service is a function
- * used to debounce calls to a user-provided function.
- */
-
 goog.provide('ngeo.Debounce');
 
 goog.require('ngeo');
 
 
 /**
+ * Provides a debounce service. That service is a function
+ * used to debounce calls to a user-provided function.
+ *
  * @typedef {function(function(?), number, boolean):function()}
  */
 ngeo.Debounce;
@@ -122569,15 +122557,6 @@ ngeo.debounceServiceFactory = function($timeout) {
 
 ngeoModule.factory('ngeoDebounce', ngeo.debounceServiceFactory);
 
-/**
- * @fileoverview Provides a function that adds a "tracking" property (using
- * `Object.defineProperty`) to the `ol.Geolocation` instance, making it
- * possible to activate/deactivate the tracking mode.
- *
- * Example:
- * <input type="checkbox" ngModel="geolocation.tracking" />
- */
-
 goog.provide('ngeo.DecorateGeolocation');
 
 goog.require('goog.asserts');
@@ -122585,6 +122564,13 @@ goog.require('ngeo');
 
 
 /**
+ * Provides a function that adds a "tracking" property (using
+ * `Object.defineProperty`) to the `ol.Geolocation` instance, making it
+ * possible to activate/deactivate the tracking mode.
+ *
+ * @example
+ * <input type="checkbox" ngModel="geolocation.tracking" />
+ *
  * @typedef {function(ol.Geolocation)}
  */
 ngeo.DecorateGeolocation;
@@ -122610,15 +122596,6 @@ ngeo.decorateGeolocation = function(geolocation) {
 
 ngeoModule.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
 
-/**
- * @fileoverview Provides a function that adds an "active" property (using
- * `Object.defineProperty`) to an interaction, making it possible to use ngModel
- * to activate/deactivate interactions.
- *
- * Example:
- * <input type="checkbox" ngModel="interaction.active" />
- */
-
 goog.provide('ngeo.DecorateInteraction');
 
 goog.require('goog.asserts');
@@ -122626,6 +122603,13 @@ goog.require('ngeo');
 
 
 /**
+ * Provides a function that adds an "active" property (using
+ * `Object.defineProperty`) to an interaction, making it possible to use ngModel
+ * to activate/deactivate interactions.
+ *
+ * @example
+ * <input type="checkbox" ngModel="interaction.active" />
+ *
  * @typedef {function(ol.interaction.Interaction)}
  */
 ngeo.DecorateInteraction;
@@ -122650,15 +122634,6 @@ ngeo.decorateInteraction = function(interaction) {
 
 ngeoModule.value('ngeoDecorateInteraction', ngeo.decorateInteraction);
 
-/**
- * @fileoverview Provides a function that adds properties (using
- * `Object.defineProperty`) to the layer, making it possible to control layer
- * properties with ngModel.
- *
- * Example:
- * <input type="checkbox" ngModel="layer.visible" />
- */
-
 goog.provide('ngeo.DecorateLayer');
 
 goog.require('goog.asserts');
@@ -122666,6 +122641,13 @@ goog.require('ngeo');
 
 
 /**
+ * Provides a function that adds properties (using
+ * `Object.defineProperty`) to the layer, making it possible to control layer
+ * properties with ngModel.
+ *
+ * @example
+ * <input type="checkbox" ngModel="layer.visible" />
+ *
  * @typedef {function(ol.layer.Layer)}
  */
 ngeo.DecorateLayer;
@@ -122717,24 +122699,6 @@ ngeo.decorateLayer = function(layer) {
 
 ngeoModule.value('ngeoDecorateLayer', ngeo.decorateLayer);
 
-/**
- * @fileoverview Provides a service that wraps an "unmanaged" vector layer,
- * used as a shared vector layer accross the application.
- *
- * Example:
- *
- * The application's main component/controller initializes the feature
- * overlay manager with the map:
- *
- * ngeoFeatureOverlayMgr.init(map);
- *
- * Once initialized, components of the application can use the manager to
- * create a feature overlay, configuring it with specific styles:
- *
- * var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
- * featureOverlay.setStyle(myStyle);
- * featureOverlay.addFeature(myFeature);
- */
 goog.provide('ngeo.FeatureOverlay');
 goog.provide('ngeo.FeatureOverlayMgr');
 
@@ -122761,6 +122725,25 @@ ngeo.FeatureOverlayGroup;
 
 
 /**
+ * Provides a service that wraps an "unmanaged" vector layer,
+ * used as a shared vector layer accross the application.
+ *
+ * Example:
+ *
+ * The application's main component/controller initializes the feature
+ * overlay manager with the map:
+ *
+ * @example
+ * ngeoFeatureOverlayMgr.init(map);
+ *
+ * Once initialized, components of the application can use the manager to
+ * create a feature overlay, configuring it with specific styles:
+ *
+ * @example
+ * var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
+ * featureOverlay.setStyle(myStyle);
+ * featureOverlay.addFeature(myFeature);
+ *
  * @constructor
  */
 ngeo.FeatureOverlayMgr = function() {
@@ -123018,20 +123001,18 @@ ngeo.FeatureOverlay.prototype.handleFeatureRemove_ = function(evt) {
 
 ngeoModule.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
 
-/**
- * @fileoverview Provides a function that returns the most appropriate 2-letter
- * language code depending on the list of available languages and the browser
- * languages settings.
- * If you compile your code with the Closure Compiler, the externs file
- * `ngeo/externs/closure-compiler.js` has to be included.
- */
-
 goog.provide('ngeo.GetBrowserLanguage');
 
 goog.require('ngeo');
 
 
 /**
+ * Provides a function that returns the most appropriate 2-letter
+ * language code depending on the list of available languages and the browser
+ * languages settings.
+ * If you compile your code with the Closure Compiler, the externs file
+ * `ngeo/externs/closure-compiler.js` has to be included.
+ *
  * @typedef {function(Array.<string>):string}
  */
 ngeo.GetBrowserLanguage;
@@ -123074,24 +123055,6 @@ ngeo.getBrowserLanguageFactory = function($window) {
 
 ngeoModule.factory('ngeoGetBrowserLanguage', ngeo.getBrowserLanguageFactory);
 
-/**
- * @fileoverview Provides a service for interacting with the URL in the
- * browser address bar.
- *
- * WARNING: because of a bug in Angular this service is not compatible with
- * the $location service. This further means that service is not compatible
- * with the $anchorScroll and $route services, and with the ng-include and
- * ng-view directives (which are based on the $anchorScroll and $route
- * services). See <https://github.com/angular/angular.js/issues/1417>.
- *
- * This file also provides an ngeo.mockLocationProvider function that you can
- * use to mock Angular's $location provider and make it possible to use both
- * ngeoLocation and ng-include.
- *
- * app.module.config(ngeo.mockLocationProvider);
- *
- */
-
 goog.provide('ngeo.Location');
 goog.provide('ngeo.MockLocationProvider');
 
@@ -123108,7 +123071,23 @@ ngeo.MockLocationProvider;
 
 
 /**
+ * Provides a service for interacting with the URL in the
+ * browser address bar.
+ *
+ * WARNING: because of a bug in Angular this service is not compatible with
+ * the $location service. This further means that service is not compatible
+ * with the $anchorScroll and $route services, and with the ng-include and
+ * ng-view directives (which are based on the $anchorScroll and $route
+ * services). See <https://github.com/angular/angular.js/issues/1417>.
+ *
+ * This file also provides an ngeo.mockLocationProvider function that you can
+ * use to mock Angular's $location provider and make it possible to use both
+ * ngeoLocation and ng-include.
+ *
+ * app.module.config(ngeo.mockLocationProvider);
+ *
  * The ngeo Location type.
+ *
  * @param {Location} location Location.
  * @param {History} history History.
  * @constructor
@@ -123304,19 +123283,6 @@ ngeo.mockLocationProvider = function($locationProvider) {
   };
 };
 
-/**
- * @fileoverview Provides a factory to create a popup in the page.
- * The factory returns a ngeo.Popup object.
- *
- * Example:
- *
- * var popup = ngeoCreatePopup();
- * popup.setTitle("A title");
- * popup.setContent("Some content");
- * popup.setOpen(true);
- *
- */
-
 goog.provide('ngeo.CreatePopup');
 goog.provide('ngeo.Popup');
 
@@ -123332,6 +123298,15 @@ ngeo.CreatePopup;
 
 
 /**
+ * Provides a factory to create a popup in the page.
+ * The factory returns a ngeo.Popup object.
+ *
+ * @example
+ * var popup = ngeoCreatePopup();
+ * popup.setTitle("A title");
+ * popup.setContent("Some content");
+ * popup.setOpen(true);
+ *
  * @constructor
  * @param {angular.$compile} $compile The compile provider.
  * @param {angular.Scope} $rootScope The rootScope provider.
@@ -123423,40 +123398,6 @@ ngeo.createPopupServiceFactory = function($compile, $rootScope) {
 };
 ngeoModule.factory('ngeoCreatePopup', ngeo.createPopupServiceFactory);
 
-/**
- * @fileoverview Provides a function to create ngeo.Print objects used to
- * interact with MapFish Print v3 services.
- *
- * ngeo.Print objects expose the following methods:
- *
- * - createSpec: create a report specification object
- * - createReport: send a create report request
- * - getStatus: get the status of a report
- * - getReportUrl: get the URL of a report
- * - getCapabilities: get the capabilities of the server
- *
- * Example:
- *
- * var printBaseUrl = 'http://example.com/print';
- * var print = new ngeo.Print(printBaseUrl);
- *
- * var scale = 5000;
- * var dpi = 72;
- * var layout = 'A4 portrait';
- * var reportSpec = print.createSpec(map, scale, dpi, layout,
- *     {'title': 'A title for my report'});
- *
- * TODO and limitations:
- *
- * - createSpec should also accept a bbox instead of a center and a scale.
- * - Add support for ol.style.RegularShape. MapFish Print supports symbols
- *   like crosses, stars and squares, so printing regular shapes should be
- *   possible.
- * - ol.style.Icon may use a sprite image, and offsets to define to rectangle
- *   to use within the sprite. This type of icons won't be printed correctly
- *   as MapFish Print does not support sprite icons.
- */
-
 goog.provide('ngeo.CreatePrint');
 goog.provide('ngeo.Print');
 
@@ -123522,6 +123463,37 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
 
 
 /**
+ * Provides a function to create ngeo.Print objects used to
+ * interact with MapFish Print v3 services.
+ *
+ * ngeo.Print objects expose the following methods:
+ *
+ * - createSpec: create a report specification object
+ * - createReport: send a create report request
+ * - getStatus: get the status of a report
+ * - getReportUrl: get the URL of a report
+ * - getCapabilities: get the capabilities of the server
+ *
+ * @example
+ * var printBaseUrl = 'http://example.com/print';
+ * var print = new ngeo.Print(printBaseUrl);
+ *
+ * var scale = 5000;
+ * var dpi = 72;
+ * var layout = 'A4 portrait';
+ * var reportSpec = print.createSpec(map, scale, dpi, layout,
+ *     {'title': 'A title for my report'});
+ *
+ * TODO and limitations:
+ *
+ * - createSpec should also accept a bbox instead of a center and a scale.
+ * - Add support for ol.style.RegularShape. MapFish Print supports symbols
+ *   like crosses, stars and squares, so printing regular shapes should be
+ *   possible.
+ * - ol.style.Icon may use a sprite image, and offsets to define to rectangle
+ *   to use within the sprite. This type of icons won't be printed correctly
+ *   as MapFish Print does not support sprite icons.
+ *
  * @constructor
  * @param {string} url URL to MapFish print web service.
  * @param {angular.$http} $http Angular $http service.
@@ -124209,10 +124181,6 @@ ngeo.createPrintServiceFactory = function($http) {
 
 ngeoModule.factory('ngeoCreatePrint', ngeo.createPrintServiceFactory);
 
-/**
- * @fileoverview Provides a service with print utility functions.
- */
-
 goog.provide('ngeo.PrintUtils');
 
 goog.require('ngeo');
@@ -124220,6 +124188,8 @@ goog.require('ngeo');
 
 
 /**
+ * Provides a service with print utility functions.
+ *
  * @constructor
  */
 ngeo.PrintUtils = function() {
@@ -124345,8 +124315,14 @@ ngeo.PrintUtils.prototype.getOptimalScale = function(
 
 ngeoModule.service('ngeoPrintUtils', ngeo.PrintUtils);
 
+goog.provide('ngeo.SyncArrays');
+
+goog.require('goog.asserts');
+goog.require('ngeo');
+
+
 /**
- * @fileoverview Provides a function that synchronizes two arrays, arr1 and
+ * Provides a function that synchronizes two arrays, arr1 and
  * arr2. arr2 is a subset of arr1, it includes the elements of arr1 that passes
  * the filter. When elements are added to/removed from arr1, arr2 is updated to
  * include the elements of arr1 that pass the filter. When the order of
@@ -124356,8 +124332,7 @@ ngeoModule.service('ngeoPrintUtils', ngeo.PrintUtils);
  * with the array of selected layers, where layers may be added to/removed from
  * the map, and the order of selected layers may change.
  *
- * Example:
- *
+ * @example
  * var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
  *     true, scope, function(layer) {
  *       // exclude the layer at index 0 in the map
@@ -124366,15 +124341,6 @@ ngeoModule.service('ngeoPrintUtils', ngeo.PrintUtils);
  *
  * This will return a function that can be called to cancel synchronization.
  *
- */
-
-goog.provide('ngeo.SyncArrays');
-
-goog.require('goog.asserts');
-goog.require('ngeo');
-
-
-/**
  * @typedef {function(Array, Array, boolean, angular.Scope,
  *     function(?):boolean)}
  */
