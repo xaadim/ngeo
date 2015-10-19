@@ -2543,6 +2543,13 @@ ol.DEFAULT_MIN_ZOOM = 0;
 
 
 /**
+ * @define {number} Default maximum allowed threshold  (in pixels) for
+ *     reprojection triangulation. Default is `0.5`.
+ */
+ol.DEFAULT_RASTER_REPROJECTION_ERROR_THRESHOLD = 0.5;
+
+
+/**
  * @define {number} Default high water mark.
  */
 ol.DEFAULT_TILE_CACHE_HIGH_WATER_MARK = 2048;
@@ -2609,6 +2616,13 @@ ol.ENABLE_PROJ4JS = true;
 
 
 /**
+ * @define {boolean} Enable automatic reprojection of raster sources. Default is
+ *     `true`.
+ */
+ol.ENABLE_RASTER_REPROJECTION = true;
+
+
+/**
  * @define {boolean} Enable rendering of ol.layer.Tile based layers.  Default is
  *     `true`. Setting this to false at compile time in advanced mode removes
  *     all code supporting Tile layers from the build.
@@ -2671,6 +2685,41 @@ ol.OVERVIEWMAP_MAX_RATIO = 0.75;
  * when the overview map should be zoomed in.
  */
 ol.OVERVIEWMAP_MIN_RATIO = 0.1;
+
+
+/**
+ * @define {number} Maximum number of source tiles for raster reprojection of
+ *     a single tile.
+ *     If too many source tiles are determined to be loaded to create a single
+ *     reprojected tile the browser can become unresponsive or even crash.
+ *     This can happen if the developer defines projections improperly and/or
+ *     with unlimited extents.
+ *     If too many tiles are required, no tiles are loaded and
+ *     `ol.TileState.ERROR` state is set. Default is `100`.
+ */
+ol.RASTER_REPROJECTION_MAX_SOURCE_TILES = 100;
+
+
+/**
+ * @define {number} Maximum number of subdivision steps during raster
+ *     reprojection triangulation. Prevents high memory usage and large
+ *     number of proj4 calls (for certain transformations and areas).
+ *     At most `2*(2^this)` triangles are created for each triangulated
+ *     extent (tile/image). Default is `10`.
+ */
+ol.RASTER_REPROJECTION_MAX_SUBDIVISION = 10;
+
+
+/**
+ * @define {number} Maximum allowed size of triangle relative to world width.
+ *     When transforming corners of world extent between certain projections,
+ *     the resulting triangulation seems to have zero error and no subdivision
+ *     is performed.
+ *     If the triangle width is more than this (relative to world width; 0-1),
+ *     subdivison is forced (up to `ol.RASTER_REPROJECTION_MAX_SUBDIVISION`).
+ *     Default is `0.25`.
+ */
+ol.RASTER_REPROJECTION_MAX_TRIANGLE_WIDTH = 0.25;
 
 
 /**
@@ -4826,12 +4875,30 @@ ol.math.clamp = function(value, min, max) {
 
 
 /**
+ * Return the hyperbolic cosine of a given number. The method will use the
+ * native `Math.cosh` function if it is available, otherwise the hyperbolic
+ * cosine will be calculated via the reference implementation of the Mozilla
+ * developer network.
+ *
  * @param {number} x X.
  * @return {number} Hyperbolic cosine of x.
  */
-ol.math.cosh = function(x) {
-  return (Math.exp(x) + Math.exp(-x)) / 2;
-};
+ol.math.cosh = (function() {
+  // Wrapped in a iife, to save the overhead of checking for the native
+  // implementation on every invocation.
+  var cosh;
+  if ('cosh' in Math) {
+    // The environment supports the native Math.cosh function, use it…
+    cosh = Math.cosh;
+  } else {
+    // … else, use the reference implementation of MDN:
+    cosh = function(x) {
+      var y = Math.exp(x);
+      return (y + 1 / y) / 2;
+    };
+  }
+  return cosh;
+}());
 
 
 /**
@@ -4884,6 +4951,69 @@ ol.math.squaredDistance = function(x1, y1, x2, y2) {
   var dx = x2 - x1;
   var dy = y2 - y1;
   return dx * dx + dy * dy;
+};
+
+
+/**
+ * Solves system of linear equations using Gaussian elimination method.
+ *
+ * @param {Array.<Array.<number>>} mat Augmented matrix (n x n + 1 column)
+ *                                     in row-major order.
+ * @return {Array.<number>} The resulting vector.
+ */
+ol.math.solveLinearSystem = function(mat) {
+  var n = mat.length;
+
+  if (goog.asserts.ENABLE_ASSERTS) {
+    for (var row = 0; row < n; row++) {
+      goog.asserts.assert(mat[row].length == n + 1,
+                          'every row should have correct number of columns');
+    }
+  }
+
+  for (var i = 0; i < n; i++) {
+    // Find max in the i-th column (ignoring i - 1 first rows)
+    var maxRow = i;
+    var maxEl = Math.abs(mat[i][i]);
+    for (var r = i + 1; r < n; r++) {
+      var absValue = Math.abs(mat[r][i]);
+      if (absValue > maxEl) {
+        maxEl = absValue;
+        maxRow = r;
+      }
+    }
+
+    if (maxEl === 0) {
+      return null; // matrix is singular
+    }
+
+    // Swap max row with i-th (current) row
+    var tmp = mat[maxRow];
+    mat[maxRow] = mat[i];
+    mat[i] = tmp;
+
+    // Subtract the i-th row to make all the remaining rows 0 in the i-th column
+    for (var j = i + 1; j < n; j++) {
+      var coef = -mat[j][i] / mat[i][i];
+      for (var k = i; k < n + 1; k++) {
+        if (i == k) {
+          mat[j][k] = 0;
+        } else {
+          mat[j][k] += coef * mat[i][k];
+        }
+      }
+    }
+  }
+
+  // Solve Ax=b for upper triangular matrix A (mat)
+  var x = new Array(n);
+  for (var l = n - 1; l >= 0; l--) {
+    x[l] = mat[l][n] / mat[l][l];
+    for (var m = l - 1; m >= 0; m--) {
+      mat[m][n] -= mat[m][l] * x[l];
+    }
+  }
+  return x;
 };
 
 
@@ -37229,9 +37359,12 @@ ol.tilegrid.TileGrid.prototype.getTileCoordCenter = function(tileCoord) {
 
 
 /**
+ * Get the extent of a tile coordinate.
+ *
  * @param {ol.TileCoord} tileCoord Tile coordinate.
  * @param {ol.Extent=} opt_extent Temporary extent object.
  * @return {ol.Extent} Extent.
+ * @api
  */
 ol.tilegrid.TileGrid.prototype.getTileCoordExtent =
     function(tileCoord, opt_extent) {
@@ -37531,6 +37664,7 @@ goog.require('ol.Extent');
 goog.require('ol.TileCache');
 goog.require('ol.TileRange');
 goog.require('ol.TileState');
+goog.require('ol.proj');
 goog.require('ol.size');
 goog.require('ol.source.Source');
 goog.require('ol.tilecoord');
@@ -37618,14 +37752,19 @@ ol.source.Tile.prototype.canExpireCache = function() {
 
 
 /**
+ * @param {ol.proj.Projection} projection Projection.
  * @param {Object.<string, ol.TileRange>} usedTiles Used tiles.
  */
-ol.source.Tile.prototype.expireCache = function(usedTiles) {
-  this.tileCache.expireCache(usedTiles);
+ol.source.Tile.prototype.expireCache = function(projection, usedTiles) {
+  var tileCache = this.getTileCacheForProjection(projection);
+  if (tileCache) {
+    tileCache.expireCache(usedTiles);
+  }
 };
 
 
 /**
+ * @param {ol.proj.Projection} projection Projection.
  * @param {number} z Zoom level.
  * @param {ol.TileRange} tileRange Tile range.
  * @param {function(ol.Tile):(boolean|undefined)} callback Called with each
@@ -37633,15 +37772,21 @@ ol.source.Tile.prototype.expireCache = function(usedTiles) {
  *     considered loaded.
  * @return {boolean} The tile range is fully covered with loaded tiles.
  */
-ol.source.Tile.prototype.forEachLoadedTile = function(z, tileRange, callback) {
+ol.source.Tile.prototype.forEachLoadedTile =
+    function(projection, z, tileRange, callback) {
+  var tileCache = this.getTileCacheForProjection(projection);
+  if (!tileCache) {
+    return false;
+  }
+
   var covered = true;
   var tile, tileCoordKey, loaded;
   for (var x = tileRange.minX; x <= tileRange.maxX; ++x) {
     for (var y = tileRange.minY; y <= tileRange.maxY; ++y) {
       tileCoordKey = this.getKeyZXY(z, x, y);
       loaded = false;
-      if (this.tileCache.containsKey(tileCoordKey)) {
-        tile = /** @type {!ol.Tile} */ (this.tileCache.get(tileCoordKey));
+      if (tileCache.containsKey(tileCoordKey)) {
+        tile = /** @type {!ol.Tile} */ (tileCache.get(tileCoordKey));
         loaded = tile.getState() === ol.TileState.LOADED;
         if (loaded) {
           loaded = (callback(tile) !== false);
@@ -37695,7 +37840,7 @@ ol.source.Tile.prototype.getResolutions = function() {
  * @param {number} x Tile coordinate x.
  * @param {number} y Tile coordinate y.
  * @param {number} pixelRatio Pixel ratio.
- * @param {ol.proj.Projection=} opt_projection Projection.
+ * @param {ol.proj.Projection} projection Projection.
  * @return {!ol.Tile} Tile.
  */
 ol.source.Tile.prototype.getTile = goog.abstractMethod;
@@ -37721,6 +37866,29 @@ ol.source.Tile.prototype.getTileGridForProjection = function(projection) {
   } else {
     return this.tileGrid;
   }
+};
+
+
+/**
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {ol.TileCache} Tile cache.
+ * @protected
+ */
+ol.source.Tile.prototype.getTileCacheForProjection = function(projection) {
+  var thisProj = this.getProjection();
+  if (thisProj && !ol.proj.equivalent(thisProj, projection)) {
+    return null;
+  } else {
+    return this.tileCache;
+  }
+};
+
+
+/**
+ * @return {number} Tile pixel ratio.
+ */
+ol.source.Tile.prototype.getTilePixelRatio = function() {
+  return this.tilePixelRatio_;
 };
 
 
@@ -37765,6 +37933,7 @@ ol.source.Tile.prototype.getTileCoordForTileUrlFunction =
  * @param {number} z Tile coordinate z.
  * @param {number} x Tile coordinate x.
  * @param {number} y Tile coordinate y.
+ * @param {ol.proj.Projection} projection Projection.
  */
 ol.source.Tile.prototype.useTile = ol.nullFunction;
 
@@ -50561,6 +50730,7 @@ ol.renderer.Layer.prototype.hasFeatureAtCoordinate = goog.functions.FALSE;
 /**
  * Create a function that adds loaded tiles to the tile lookup.
  * @param {ol.source.Tile} source Tile source.
+ * @param {ol.proj.Projection} projection Projection of the tiles.
  * @param {Object.<number, Object.<string, ol.Tile>>} tiles Lookup of loaded
  *     tiles by zoom level.
  * @return {function(number, ol.TileRange):boolean} A function that can be
@@ -50568,7 +50738,8 @@ ol.renderer.Layer.prototype.hasFeatureAtCoordinate = goog.functions.FALSE;
  *     lookup.
  * @protected
  */
-ol.renderer.Layer.prototype.createLoadedTileFinder = function(source, tiles) {
+ol.renderer.Layer.prototype.createLoadedTileFinder =
+    function(source, projection, tiles) {
   return (
       /**
        * @param {number} zoom Zoom level.
@@ -50576,12 +50747,13 @@ ol.renderer.Layer.prototype.createLoadedTileFinder = function(source, tiles) {
        * @return {boolean} The tile range is fully loaded.
        */
       function(zoom, tileRange) {
-        return source.forEachLoadedTile(zoom, tileRange, function(tile) {
-          if (!tiles[zoom]) {
-            tiles[zoom] = {};
-          }
-          tiles[zoom][tile.tileCoord.toString()] = tile;
-        });
+        return source.forEachLoadedTile(projection, zoom,
+                                        tileRange, function(tile) {
+              if (!tiles[zoom]) {
+                tiles[zoom] = {};
+              }
+              tiles[zoom][tile.tileCoord.toString()] = tile;
+            });
       });
 };
 
@@ -50630,8 +50802,9 @@ ol.renderer.Layer.prototype.loadImage = function(image) {
   if (imageState == ol.ImageState.IDLE) {
     image.load();
     imageState = image.getState();
-    goog.asserts.assert(imageState == ol.ImageState.LOADING,
-        'imageState is "loading"');
+    goog.asserts.assert(imageState == ol.ImageState.LOADING ||
+        imageState == ol.ImageState.LOADED,
+        'imageState is "loading" or "loaded"');
   }
   return imageState == ol.ImageState.LOADED;
 };
@@ -50665,7 +50838,8 @@ ol.renderer.Layer.prototype.scheduleExpireCache =
              */
             function(tileSource, map, frameState) {
               var tileSourceKey = goog.getUid(tileSource).toString();
-              tileSource.expireCache(frameState.usedTiles[tileSourceKey]);
+              tileSource.expireCache(frameState.viewState.projection,
+                                     frameState.usedTiles[tileSourceKey]);
             }, tileSource));
   }
 };
@@ -50798,7 +50972,7 @@ ol.renderer.Layer.prototype.manageTilePyramid = function(
             opt_tileCallback.call(opt_this, tile);
           }
         } else {
-          tileSource.useTile(z, x, y);
+          tileSource.useTile(z, x, y, projection);
         }
       }
     }
@@ -53207,13 +53381,11 @@ ol.events.condition.targetNotEditable = function(mapBrowserEvent) {
 /**
  * Return `true` if the event originates from a mouse device.
  *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Map browser event.
  * @return {boolean} True if the event originates from a mouse device.
  * @api stable
  */
 ol.events.condition.mouseOnly = function(mapBrowserEvent) {
-  goog.asserts.assertInstanceof(mapBrowserEvent, ol.MapBrowserPointerEvent,
-      'mapBrowserEvent should be an instance of ol.MapBrowserPointerEvent');
   // see http://www.w3.org/TR/pointerevents/#widl-PointerEvent-pointerType
   return mapBrowserEvent.pointerEvent.pointerType == 'mouse';
 };
@@ -63602,6 +63774,818 @@ ol.ImageCanvas.prototype.getImage = function(opt_context) {
  */
 ol.ImageCanvasLoader;
 
+goog.provide('ol.reproj');
+
+goog.require('goog.labs.userAgent.browser');
+goog.require('goog.labs.userAgent.platform');
+goog.require('goog.math');
+goog.require('ol.dom');
+goog.require('ol.extent');
+goog.require('ol.math');
+goog.require('ol.proj');
+
+
+/**
+ * We need to employ more sophisticated solution
+ * if the web browser antialiases clipping edges on canvas.
+ *
+ * Currently only Chrome does not antialias the edges, but this is probably
+ * going to be "fixed" in the future: http://crbug.com/424291
+ *
+ * @type {boolean}
+ * @private
+ */
+ol.reproj.browserAntialiasesClip_ = !goog.labs.userAgent.browser.isChrome() ||
+                                    goog.labs.userAgent.platform.isIos();
+
+
+/**
+ * Calculates ideal resolution to use from the source in order to achieve
+ * pixel mapping as close as possible to 1:1 during reprojection.
+ * The resolution is calculated regardless of what resolutions
+ * are actually available in the dataset (TileGrid, Image, ...).
+ *
+ * @param {ol.proj.Projection} sourceProj Source projection.
+ * @param {ol.proj.Projection} targetProj Target projection.
+ * @param {ol.Coordinate} targetCenter Target center.
+ * @param {number} targetResolution Target resolution.
+ * @return {number} The best resolution to use. Can be +-Infinity, NaN or 0.
+ */
+ol.reproj.calculateSourceResolution = function(sourceProj, targetProj,
+    targetCenter, targetResolution) {
+
+  var sourceCenter = ol.proj.transform(targetCenter, targetProj, sourceProj);
+
+  // calculate the ideal resolution of the source data
+  var sourceResolution =
+      targetProj.getPointResolution(targetResolution, targetCenter);
+
+  var targetMetersPerUnit = targetProj.getMetersPerUnit();
+  if (targetMetersPerUnit !== undefined) {
+    sourceResolution *= targetMetersPerUnit;
+  }
+  var sourceMetersPerUnit = sourceProj.getMetersPerUnit();
+  if (sourceMetersPerUnit !== undefined) {
+    sourceResolution /= sourceMetersPerUnit;
+  }
+
+  // Based on the projection properties, the point resolution at the specified
+  // coordinates may be slightly different. We need to reverse-compensate this
+  // in order to achieve optimal results.
+
+  var compensationFactor =
+      sourceProj.getPointResolution(sourceResolution, sourceCenter) /
+      sourceResolution;
+
+  if (goog.math.isFiniteNumber(compensationFactor) && compensationFactor > 0) {
+    sourceResolution /= compensationFactor;
+  }
+
+  return sourceResolution;
+};
+
+
+/**
+ * Enlarge the clipping triangle point by 1 pixel to ensure the edges overlap
+ * in order to mask gaps caused by antialiasing.
+ *
+ * @param {number} centroidX Centroid of the triangle (x coordinate in pixels).
+ * @param {number} centroidY Centroid of the triangle (y coordinate in pixels).
+ * @param {number} x X coordinate of the point (in pixels).
+ * @param {number} y Y coordinate of the point (in pixels).
+ * @return {ol.Coordinate} New point 1 px farther from the centroid.
+ * @private
+ */
+ol.reproj.enlargeClipPoint_ = function(centroidX, centroidY, x, y) {
+  var dX = x - centroidX, dY = y - centroidY;
+  var distance = Math.sqrt(dX * dX + dY * dY);
+  return [Math.round(x + dX / distance), Math.round(y + dY / distance)];
+};
+
+
+/**
+ * Renders the source data into new canvas based on the triangulation.
+ *
+ * @param {number} width Width of the canvas.
+ * @param {number} height Height of the canvas.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {number} sourceResolution Source resolution.
+ * @param {ol.Extent} sourceExtent Extent of the data source.
+ * @param {number} targetResolution Target resolution.
+ * @param {ol.Extent} targetExtent Target extent.
+ * @param {ol.reproj.Triangulation} triangulation Calculated triangulation.
+ * @param {Array.<{extent: ol.Extent,
+ *                 image: (HTMLCanvasElement|Image|HTMLVideoElement)}>} sources
+ *             Array of sources.
+ * @param {boolean=} opt_renderEdges Render reprojection edges.
+ * @return {HTMLCanvasElement} Canvas with reprojected data.
+ */
+ol.reproj.render = function(width, height, pixelRatio,
+    sourceResolution, sourceExtent, targetResolution, targetExtent,
+    triangulation, sources, opt_renderEdges) {
+
+  var context = ol.dom.createCanvasContext2D(Math.round(pixelRatio * width),
+                                             Math.round(pixelRatio * height));
+
+  if (sources.length === 0) {
+    return context.canvas;
+  }
+
+  context.scale(pixelRatio, pixelRatio);
+
+  var sourceDataExtent = ol.extent.createEmpty();
+  sources.forEach(function(src, i, arr) {
+    ol.extent.extend(sourceDataExtent, src.extent);
+  });
+
+  var canvasWidthInUnits = ol.extent.getWidth(sourceDataExtent);
+  var canvasHeightInUnits = ol.extent.getHeight(sourceDataExtent);
+  var stitchContext = ol.dom.createCanvasContext2D(
+      Math.round(pixelRatio * canvasWidthInUnits / sourceResolution),
+      Math.round(pixelRatio * canvasHeightInUnits / sourceResolution));
+
+  stitchContext.scale(pixelRatio / sourceResolution,
+                      pixelRatio / sourceResolution);
+  stitchContext.translate(-sourceDataExtent[0], sourceDataExtent[3]);
+
+  sources.forEach(function(src, i, arr) {
+    var xPos = src.extent[0];
+    var yPos = -src.extent[3];
+    var srcWidth = ol.extent.getWidth(src.extent);
+    var srcHeight = ol.extent.getHeight(src.extent);
+
+    stitchContext.drawImage(src.image, xPos, yPos, srcWidth, srcHeight);
+  });
+
+  var targetTopLeft = ol.extent.getTopLeft(targetExtent);
+
+  triangulation.getTriangles().forEach(function(triangle, i, arr) {
+    /* Calculate affine transform (src -> dst)
+     * Resulting matrix can be used to transform coordinate
+     * from `sourceProjection` to destination pixels.
+     *
+     * To optimize number of context calls and increase numerical stability,
+     * we also do the following operations:
+     * trans(-topLeftExtentCorner), scale(1 / targetResolution), scale(1, -1)
+     * here before solving the linear system so [ui, vi] are pixel coordinates.
+     *
+     * Src points: xi, yi
+     * Dst points: ui, vi
+     * Affine coefficients: aij
+     *
+     * | x0 y0 1  0  0 0 |   |a00|   |u0|
+     * | x1 y1 1  0  0 0 |   |a01|   |u1|
+     * | x2 y2 1  0  0 0 | x |a02| = |u2|
+     * |  0  0 0 x0 y0 1 |   |a10|   |v0|
+     * |  0  0 0 x1 y1 1 |   |a11|   |v1|
+     * |  0  0 0 x2 y2 1 |   |a12|   |v2|
+     */
+    var source = triangle.source, target = triangle.target;
+    var x0 = source[0][0], y0 = source[0][1],
+        x1 = source[1][0], y1 = source[1][1],
+        x2 = source[2][0], y2 = source[2][1];
+    var u0 = (target[0][0] - targetTopLeft[0]) / targetResolution,
+        v0 = -(target[0][1] - targetTopLeft[1]) / targetResolution;
+    var u1 = (target[1][0] - targetTopLeft[0]) / targetResolution,
+        v1 = -(target[1][1] - targetTopLeft[1]) / targetResolution;
+    var u2 = (target[2][0] - targetTopLeft[0]) / targetResolution,
+        v2 = -(target[2][1] - targetTopLeft[1]) / targetResolution;
+
+    // Shift all the source points to improve numerical stability
+    // of all the subsequent calculations. The [x0, y0] is used here.
+    // This is also used to simplify the linear system.
+    var sourceNumericalShiftX = x0, sourceNumericalShiftY = y0;
+    x0 = 0;
+    y0 = 0;
+    x1 -= sourceNumericalShiftX;
+    y1 -= sourceNumericalShiftY;
+    x2 -= sourceNumericalShiftX;
+    y2 -= sourceNumericalShiftY;
+
+    var augmentedMatrix = [
+      [x1, y1, 0, 0, u1 - u0],
+      [x2, y2, 0, 0, u2 - u0],
+      [0, 0, x1, y1, v1 - v0],
+      [0, 0, x2, y2, v2 - v0]
+    ];
+    var affineCoefs = ol.math.solveLinearSystem(augmentedMatrix);
+    if (!affineCoefs) {
+      return;
+    }
+
+    context.save();
+    context.beginPath();
+    if (ol.reproj.browserAntialiasesClip_) {
+      var centroidX = (u0 + u1 + u2) / 3, centroidY = (v0 + v1 + v2) / 3;
+      var p0 = ol.reproj.enlargeClipPoint_(centroidX, centroidY, u0, v0);
+      var p1 = ol.reproj.enlargeClipPoint_(centroidX, centroidY, u1, v1);
+      var p2 = ol.reproj.enlargeClipPoint_(centroidX, centroidY, u2, v2);
+
+      context.moveTo(p0[0], p0[1]);
+      context.lineTo(p1[0], p1[1]);
+      context.lineTo(p2[0], p2[1]);
+    } else {
+      context.moveTo(u0, v0);
+      context.lineTo(u1, v1);
+      context.lineTo(u2, v2);
+    }
+    context.closePath();
+    context.clip();
+
+    context.transform(
+        affineCoefs[0], affineCoefs[2], affineCoefs[1], affineCoefs[3], u0, v0);
+
+    context.translate(sourceDataExtent[0] - sourceNumericalShiftX,
+                      sourceDataExtent[3] - sourceNumericalShiftY);
+
+    context.scale(sourceResolution / pixelRatio,
+                  -sourceResolution / pixelRatio);
+
+    context.drawImage(stitchContext.canvas, 0, 0);
+    context.restore();
+  });
+
+  if (opt_renderEdges) {
+    context.save();
+
+    context.strokeStyle = 'black';
+    context.lineWidth = 1;
+
+    triangulation.getTriangles().forEach(function(triangle, i, arr) {
+      var target = triangle.target;
+      var u0 = (target[0][0] - targetTopLeft[0]) / targetResolution,
+          v0 = -(target[0][1] - targetTopLeft[1]) / targetResolution;
+      var u1 = (target[1][0] - targetTopLeft[0]) / targetResolution,
+          v1 = -(target[1][1] - targetTopLeft[1]) / targetResolution;
+      var u2 = (target[2][0] - targetTopLeft[0]) / targetResolution,
+          v2 = -(target[2][1] - targetTopLeft[1]) / targetResolution;
+
+      context.beginPath();
+      context.moveTo(u0, v0);
+      context.lineTo(u1, v1);
+      context.lineTo(u2, v2);
+      context.closePath();
+      context.stroke();
+    });
+
+    context.restore();
+  }
+  return context.canvas;
+};
+
+goog.provide('ol.reproj.Triangulation');
+
+goog.require('goog.asserts');
+goog.require('goog.math');
+goog.require('ol.extent');
+goog.require('ol.proj');
+
+
+/**
+ * Single triangle; consists of 3 source points and 3 target points.
+ *
+ * @typedef {{source: Array.<ol.Coordinate>,
+ *            target: Array.<ol.Coordinate>}}
+ */
+ol.reproj.Triangle;
+
+
+
+/**
+ * @classdesc
+ * Class containing triangulation of the given target extent.
+ * Used for determining source data and the reprojection itself.
+ *
+ * @param {ol.proj.Projection} sourceProj Source projection.
+ * @param {ol.proj.Projection} targetProj Target projection.
+ * @param {ol.Extent} targetExtent Target extent to triangulate.
+ * @param {ol.Extent} maxSourceExtent Maximal source extent that can be used.
+ * @param {number} errorThreshold Acceptable error (in source units).
+ * @constructor
+ */
+ol.reproj.Triangulation = function(sourceProj, targetProj, targetExtent,
+    maxSourceExtent, errorThreshold) {
+
+  /**
+   * @type {ol.proj.Projection}
+   * @private
+   */
+  this.sourceProj_ = sourceProj;
+
+  /**
+   * @type {ol.proj.Projection}
+   * @private
+   */
+  this.targetProj_ = targetProj;
+
+  /** @type {!Object.<string, ol.Coordinate>} */
+  var transformInvCache = {};
+  var transformInv = ol.proj.getTransform(this.targetProj_, this.sourceProj_);
+
+  /**
+   * @param {ol.Coordinate} c
+   * @return {ol.Coordinate}
+   * @private
+   */
+  this.transformInv_ = function(c) {
+    var key = c[0] + '/' + c[1];
+    if (!transformInvCache[key]) {
+      transformInvCache[key] = transformInv(c);
+    }
+    return transformInvCache[key];
+  };
+
+  /**
+   * @type {ol.Extent}
+   * @private
+   */
+  this.maxSourceExtent_ = maxSourceExtent;
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.errorThresholdSquared_ = errorThreshold * errorThreshold;
+
+  /**
+   * @type {Array.<ol.reproj.Triangle>}
+   * @private
+   */
+  this.triangles_ = [];
+
+  /**
+   * Indicates that the triangulation crosses edge of the source projection.
+   * @type {boolean}
+   * @private
+   */
+  this.wrapsXInSource_ = false;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.canWrapXInSource_ = this.sourceProj_.canWrapX() &&
+      !!maxSourceExtent &&
+      !!this.sourceProj_.getExtent() &&
+      (ol.extent.getWidth(maxSourceExtent) ==
+       ol.extent.getWidth(this.sourceProj_.getExtent()));
+
+  /**
+   * @type {?number}
+   * @private
+   */
+  this.sourceWorldWidth_ = this.sourceProj_.getExtent() ?
+      ol.extent.getWidth(this.sourceProj_.getExtent()) : null;
+
+  /**
+   * @type {?number}
+   * @private
+   */
+  this.targetWorldWidth_ = this.targetProj_.getExtent() ?
+      ol.extent.getWidth(this.targetProj_.getExtent()) : null;
+
+  var destinationTopLeft = ol.extent.getTopLeft(targetExtent);
+  var destinationTopRight = ol.extent.getTopRight(targetExtent);
+  var destinationBottomRight = ol.extent.getBottomRight(targetExtent);
+  var destinationBottomLeft = ol.extent.getBottomLeft(targetExtent);
+  var sourceTopLeft = this.transformInv_(destinationTopLeft);
+  var sourceTopRight = this.transformInv_(destinationTopRight);
+  var sourceBottomRight = this.transformInv_(destinationBottomRight);
+  var sourceBottomLeft = this.transformInv_(destinationBottomLeft);
+
+  this.addQuad_(
+      destinationTopLeft, destinationTopRight,
+      destinationBottomRight, destinationBottomLeft,
+      sourceTopLeft, sourceTopRight, sourceBottomRight, sourceBottomLeft,
+      ol.RASTER_REPROJECTION_MAX_SUBDIVISION);
+
+  if (this.wrapsXInSource_) {
+    // Fix coordinates (ol.proj returns wrapped coordinates, "unwrap" here).
+    // This significantly simplifies the rest of the reprojection process.
+
+    goog.asserts.assert(this.sourceWorldWidth_ !== null);
+    var leftBound = Infinity;
+    this.triangles_.forEach(function(triangle, i, arr) {
+      leftBound = Math.min(leftBound,
+          triangle.source[0][0], triangle.source[1][0], triangle.source[2][0]);
+    });
+
+    // Shift triangles to be as close to `leftBound` as possible
+    // (if the distance is more than `worldWidth / 2` it can be closer.
+    this.triangles_.forEach(function(triangle) {
+      if (Math.max(triangle.source[0][0], triangle.source[1][0],
+          triangle.source[2][0]) - leftBound > this.sourceWorldWidth_ / 2) {
+        var newTriangle = [[triangle.source[0][0], triangle.source[0][1]],
+                           [triangle.source[1][0], triangle.source[1][1]],
+                           [triangle.source[2][0], triangle.source[2][1]]];
+        if ((newTriangle[0][0] - leftBound) > this.sourceWorldWidth_ / 2) {
+          newTriangle[0][0] -= this.sourceWorldWidth_;
+        }
+        if ((newTriangle[1][0] - leftBound) > this.sourceWorldWidth_ / 2) {
+          newTriangle[1][0] -= this.sourceWorldWidth_;
+        }
+        if ((newTriangle[2][0] - leftBound) > this.sourceWorldWidth_ / 2) {
+          newTriangle[2][0] -= this.sourceWorldWidth_;
+        }
+
+        // Rarely (if the extent contains both the dateline and prime meridian)
+        // the shift can in turn break some triangles.
+        // Detect this here and don't shift in such cases.
+        var minX = Math.min(
+            newTriangle[0][0], newTriangle[1][0], newTriangle[2][0]);
+        var maxX = Math.max(
+            newTriangle[0][0], newTriangle[1][0], newTriangle[2][0]);
+        if ((maxX - minX) < this.sourceWorldWidth_ / 2) {
+          triangle.source = newTriangle;
+        }
+      }
+    }, this);
+  }
+
+  transformInvCache = {};
+};
+
+
+/**
+ * Adds triangle to the triangulation.
+ * @param {ol.Coordinate} a
+ * @param {ol.Coordinate} b
+ * @param {ol.Coordinate} c
+ * @param {ol.Coordinate} aSrc
+ * @param {ol.Coordinate} bSrc
+ * @param {ol.Coordinate} cSrc
+ * @private
+ */
+ol.reproj.Triangulation.prototype.addTriangle_ = function(a, b, c,
+    aSrc, bSrc, cSrc) {
+  this.triangles_.push({
+    source: [aSrc, bSrc, cSrc],
+    target: [a, b, c]
+  });
+};
+
+
+/**
+ * Adds quad (points in clock-wise order) to the triangulation
+ * (and reprojects the vertices) if valid.
+ * Performs quad subdivision if needed to increase precision.
+ *
+ * @param {ol.Coordinate} a
+ * @param {ol.Coordinate} b
+ * @param {ol.Coordinate} c
+ * @param {ol.Coordinate} d
+ * @param {ol.Coordinate} aSrc
+ * @param {ol.Coordinate} bSrc
+ * @param {ol.Coordinate} cSrc
+ * @param {ol.Coordinate} dSrc
+ * @param {number} maxSubdivision Maximal allowed subdivision of the quad.
+ * @private
+ */
+ol.reproj.Triangulation.prototype.addQuad_ = function(a, b, c, d,
+    aSrc, bSrc, cSrc, dSrc, maxSubdivision) {
+
+  var sourceQuadExtent = ol.extent.boundingExtent([aSrc, bSrc, cSrc, dSrc]);
+  var sourceCoverageX = this.sourceWorldWidth_ ?
+      ol.extent.getWidth(sourceQuadExtent) / this.sourceWorldWidth_ : null;
+
+  // when the quad is wrapped in the source projection
+  // it covers most of the projection extent, but not fully
+  var wrapsX = this.sourceProj_.canWrapX() &&
+               sourceCoverageX > 0.5 && sourceCoverageX < 1;
+
+  var needsSubdivision = false;
+
+  if (maxSubdivision > 0) {
+    if (this.targetProj_.isGlobal() && this.targetWorldWidth_) {
+      var targetQuadExtent = ol.extent.boundingExtent([a, b, c, d]);
+      var targetCoverageX =
+          ol.extent.getWidth(targetQuadExtent) / this.targetWorldWidth_;
+      needsSubdivision |=
+          targetCoverageX > ol.RASTER_REPROJECTION_MAX_TRIANGLE_WIDTH;
+    }
+    if (!wrapsX && this.sourceProj_.isGlobal() && sourceCoverageX) {
+      needsSubdivision |=
+          sourceCoverageX > ol.RASTER_REPROJECTION_MAX_TRIANGLE_WIDTH;
+    }
+  }
+
+  if (!needsSubdivision && this.maxSourceExtent_) {
+    if (!ol.extent.intersects(sourceQuadExtent, this.maxSourceExtent_)) {
+      // whole quad outside source projection extent -> ignore
+      return;
+    }
+  }
+
+  if (!needsSubdivision) {
+    if (!isFinite(aSrc[0]) || !isFinite(aSrc[1]) ||
+        !isFinite(bSrc[0]) || !isFinite(bSrc[1]) ||
+        !isFinite(cSrc[0]) || !isFinite(cSrc[1]) ||
+        !isFinite(dSrc[0]) || !isFinite(dSrc[1])) {
+      if (maxSubdivision > 0) {
+        needsSubdivision = true;
+      } else {
+        return;
+      }
+    }
+  }
+
+  if (maxSubdivision > 0) {
+    if (!needsSubdivision) {
+      var center = [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2];
+      var centerSrc = this.transformInv_(center);
+
+      var dx;
+      if (wrapsX) {
+        goog.asserts.assert(this.sourceWorldWidth_);
+        var centerSrcEstimX =
+            (goog.math.modulo(aSrc[0], this.sourceWorldWidth_) +
+             goog.math.modulo(cSrc[0], this.sourceWorldWidth_)) / 2;
+        dx = centerSrcEstimX -
+            goog.math.modulo(centerSrc[0], this.sourceWorldWidth_);
+      } else {
+        dx = (aSrc[0] + cSrc[0]) / 2 - centerSrc[0];
+      }
+      var dy = (aSrc[1] + cSrc[1]) / 2 - centerSrc[1];
+      var centerSrcErrorSquared = dx * dx + dy * dy;
+      needsSubdivision = centerSrcErrorSquared > this.errorThresholdSquared_;
+    }
+    if (needsSubdivision) {
+      if (Math.abs(a[0] - c[0]) <= Math.abs(a[1] - c[1])) {
+        // split horizontally (top & bottom)
+        var bc = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
+        var bcSrc = this.transformInv_(bc);
+        var da = [(d[0] + a[0]) / 2, (d[1] + a[1]) / 2];
+        var daSrc = this.transformInv_(da);
+
+        this.addQuad_(
+            a, b, bc, da, aSrc, bSrc, bcSrc, daSrc, maxSubdivision - 1);
+        this.addQuad_(
+            da, bc, c, d, daSrc, bcSrc, cSrc, dSrc, maxSubdivision - 1);
+      } else {
+        // split vertically (left & right)
+        var ab = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+        var abSrc = this.transformInv_(ab);
+        var cd = [(c[0] + d[0]) / 2, (c[1] + d[1]) / 2];
+        var cdSrc = this.transformInv_(cd);
+
+        this.addQuad_(
+            a, ab, cd, d, aSrc, abSrc, cdSrc, dSrc, maxSubdivision - 1);
+        this.addQuad_(
+            ab, b, c, cd, abSrc, bSrc, cSrc, cdSrc, maxSubdivision - 1);
+      }
+      return;
+    }
+  }
+
+  if (wrapsX) {
+    if (!this.canWrapXInSource_) {
+      return;
+    }
+    this.wrapsXInSource_ = true;
+  }
+
+  this.addTriangle_(a, c, d, aSrc, cSrc, dSrc);
+  this.addTriangle_(a, b, c, aSrc, bSrc, cSrc);
+};
+
+
+/**
+ * Calculates extent of the 'source' coordinates from all the triangles.
+ *
+ * @return {ol.Extent} Calculated extent.
+ */
+ol.reproj.Triangulation.prototype.calculateSourceExtent = function() {
+  var extent = ol.extent.createEmpty();
+
+  this.triangles_.forEach(function(triangle, i, arr) {
+    var src = triangle.source;
+    ol.extent.extendCoordinate(extent, src[0]);
+    ol.extent.extendCoordinate(extent, src[1]);
+    ol.extent.extendCoordinate(extent, src[2]);
+  });
+
+  return extent;
+};
+
+
+/**
+ * @return {Array.<ol.reproj.Triangle>} Array of the calculated triangles.
+ */
+ol.reproj.Triangulation.prototype.getTriangles = function() {
+  return this.triangles_;
+};
+
+goog.provide('ol.reproj.Image');
+goog.provide('ol.reproj.ImageFunctionType');
+
+goog.require('goog.asserts');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
+goog.require('ol.ImageBase');
+goog.require('ol.ImageState');
+goog.require('ol.extent');
+goog.require('ol.proj');
+goog.require('ol.reproj');
+goog.require('ol.reproj.Triangulation');
+
+
+/**
+ * @typedef {function(ol.Extent, number, number) : ol.ImageBase}
+ */
+ol.reproj.ImageFunctionType;
+
+
+
+/**
+ * @classdesc
+ * Class encapsulating single reprojected image.
+ * See {@link ol.source.Image}.
+ *
+ * @constructor
+ * @extends {ol.ImageBase}
+ * @param {ol.proj.Projection} sourceProj Source projection (of the data).
+ * @param {ol.proj.Projection} targetProj Target projection.
+ * @param {ol.Extent} targetExtent Target extent.
+ * @param {number} targetResolution Target resolution.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.reproj.ImageFunctionType} getImageFunction
+ *     Function returning source images (extent, resolution, pixelRatio).
+ */
+ol.reproj.Image = function(sourceProj, targetProj,
+    targetExtent, targetResolution, pixelRatio, getImageFunction) {
+
+  /**
+   * @private
+   * @type {ol.proj.Projection}
+   */
+  this.targetProj_ = targetProj;
+
+  /**
+   * @private
+   * @type {ol.Extent}
+   */
+  this.maxSourceExtent_ = sourceProj.getExtent();
+  var maxTargetExtent = targetProj.getExtent();
+
+  var limitedTargetExtent = maxTargetExtent ?
+      ol.extent.getIntersection(targetExtent, maxTargetExtent) : targetExtent;
+
+  var targetCenter = ol.extent.getCenter(limitedTargetExtent);
+  var sourceResolution = ol.reproj.calculateSourceResolution(
+      sourceProj, targetProj, targetCenter, targetResolution);
+
+  var errorThresholdInPixels = ol.DEFAULT_RASTER_REPROJECTION_ERROR_THRESHOLD;
+
+  /**
+   * @private
+   * @type {!ol.reproj.Triangulation}
+   */
+  this.triangulation_ = new ol.reproj.Triangulation(
+      sourceProj, targetProj, limitedTargetExtent, this.maxSourceExtent_,
+      sourceResolution * errorThresholdInPixels);
+
+  /**
+   * @private
+   * @type {number}
+   */
+  this.targetResolution_ = targetResolution;
+
+  /**
+   * @private
+   * @type {ol.Extent}
+   */
+  this.targetExtent_ = targetExtent;
+
+  var sourceExtent = this.triangulation_.calculateSourceExtent();
+
+  /**
+   * @private
+   * @type {ol.ImageBase}
+   */
+  this.sourceImage_ =
+      getImageFunction(sourceExtent, sourceResolution, pixelRatio);
+
+  /**
+   * @private
+   * @type {number}
+   */
+  this.sourcePixelRatio_ =
+      this.sourceImage_ ? this.sourceImage_.getPixelRatio() : 1;
+
+  /**
+   * @private
+   * @type {HTMLCanvasElement}
+   */
+  this.canvas_ = null;
+
+  /**
+   * @private
+   * @type {goog.events.Key}
+   */
+  this.sourceListenerKey_ = null;
+
+
+  var state = ol.ImageState.LOADED;
+  var attributions = [];
+
+  if (this.sourceImage_) {
+    state = ol.ImageState.IDLE;
+    attributions = this.sourceImage_.getAttributions();
+  }
+
+  goog.base(this, targetExtent, targetResolution, this.sourcePixelRatio_,
+            state, attributions);
+};
+goog.inherits(ol.reproj.Image, ol.ImageBase);
+
+
+/**
+ * @inheritDoc
+ */
+ol.reproj.Image.prototype.disposeInternal = function() {
+  if (this.state == ol.ImageState.LOADING) {
+    this.unlistenSource_();
+  }
+  goog.base(this, 'disposeInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.reproj.Image.prototype.getImage = function(opt_context) {
+  return this.canvas_;
+};
+
+
+/**
+ * @return {ol.proj.Projection} Projection.
+ */
+ol.reproj.Image.prototype.getProjection = function() {
+  return this.targetProj_;
+};
+
+
+/**
+ * @private
+ */
+ol.reproj.Image.prototype.reproject_ = function() {
+  var sourceState = this.sourceImage_.getState();
+  if (sourceState == ol.ImageState.LOADED) {
+    var width = ol.extent.getWidth(this.targetExtent_) / this.targetResolution_;
+    var height =
+        ol.extent.getHeight(this.targetExtent_) / this.targetResolution_;
+
+    this.canvas_ = ol.reproj.render(width, height, this.sourcePixelRatio_,
+        this.sourceImage_.getResolution(), this.maxSourceExtent_,
+        this.targetResolution_, this.targetExtent_, this.triangulation_, [{
+          extent: this.sourceImage_.getExtent(),
+          image: this.sourceImage_.getImage()
+        }]);
+  }
+  this.state = sourceState;
+  this.changed();
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.reproj.Image.prototype.load = function() {
+  if (this.state == ol.ImageState.IDLE) {
+    this.state = ol.ImageState.LOADING;
+    this.changed();
+
+    var sourceState = this.sourceImage_.getState();
+    if (sourceState == ol.ImageState.LOADED ||
+        sourceState == ol.ImageState.ERROR) {
+      this.reproject_();
+    } else {
+      this.sourceListenerKey_ = this.sourceImage_.listen(
+          goog.events.EventType.CHANGE, function(e) {
+            var sourceState = this.sourceImage_.getState();
+            if (sourceState == ol.ImageState.LOADED ||
+                sourceState == ol.ImageState.ERROR) {
+              this.unlistenSource_();
+              this.reproject_();
+            }
+          }, false, this);
+      this.sourceImage_.load();
+    }
+  }
+};
+
+
+/**
+ * @private
+ */
+ol.reproj.Image.prototype.unlistenSource_ = function() {
+  goog.asserts.assert(this.sourceListenerKey_,
+      'this.sourceListenerKey_ should not be null');
+  goog.events.unlistenByKey(this.sourceListenerKey_);
+  this.sourceListenerKey_ = null;
+};
+
 goog.provide('ol.source.Image');
 goog.provide('ol.source.ImageEvent');
 
@@ -63609,9 +64593,11 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.events.Event');
 goog.require('ol.Attribution');
-goog.require('ol.Extent');
 goog.require('ol.ImageState');
 goog.require('ol.array');
+goog.require('ol.extent');
+goog.require('ol.proj');
+goog.require('ol.reproj.Image');
 goog.require('ol.source.Source');
 
 
@@ -63660,6 +64646,20 @@ ol.source.Image = function(options) {
             return b - a;
           }, true), 'resolutions must be null or sorted in descending order');
 
+
+  /**
+   * @private
+   * @type {ol.reproj.Image}
+   */
+  this.reprojectedImage_ = null;
+
+
+  /**
+   * @private
+   * @type {number}
+   */
+  this.reprojectedRevision_ = 0;
+
 };
 goog.inherits(ol.source.Image, ol.source.Source);
 
@@ -63694,7 +64694,53 @@ ol.source.Image.prototype.findNearestResolution =
  * @param {ol.proj.Projection} projection Projection.
  * @return {ol.ImageBase} Single image.
  */
-ol.source.Image.prototype.getImage = goog.abstractMethod;
+ol.source.Image.prototype.getImage =
+    function(extent, resolution, pixelRatio, projection) {
+  var sourceProjection = this.getProjection();
+  if (!ol.ENABLE_RASTER_REPROJECTION ||
+      !sourceProjection ||
+      !projection ||
+      ol.proj.equivalent(sourceProjection, projection)) {
+    if (sourceProjection) {
+      projection = sourceProjection;
+    }
+    return this.getImageInternal(extent, resolution, pixelRatio, projection);
+  } else {
+    if (this.reprojectedImage_) {
+      if (this.reprojectedRevision_ == this.getRevision() &&
+          ol.proj.equivalent(
+              this.reprojectedImage_.getProjection(), projection) &&
+          this.reprojectedImage_.getResolution() == resolution &&
+          this.reprojectedImage_.getPixelRatio() == pixelRatio &&
+          ol.extent.equals(this.reprojectedImage_.getExtent(), extent)) {
+        return this.reprojectedImage_;
+      }
+      this.reprojectedImage_.dispose();
+      this.reprojectedImage_ = null;
+    }
+
+    this.reprojectedImage_ = new ol.reproj.Image(
+        sourceProjection, projection, extent, resolution, pixelRatio,
+        goog.bind(function(extent, resolution, pixelRatio) {
+          return this.getImageInternal(extent, resolution,
+              pixelRatio, sourceProjection);
+        }, this));
+    this.reprojectedRevision_ = this.getRevision();
+
+    return this.reprojectedImage_;
+  }
+};
+
+
+/**
+ * @param {ol.Extent} extent Extent.
+ * @param {number} resolution Resolution.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {ol.ImageBase} Single image.
+ * @protected
+ */
+ol.source.Image.prototype.getImageInternal = goog.abstractMethod;
 
 
 /**
@@ -63851,7 +64897,7 @@ goog.inherits(ol.source.ImageCanvas, ol.source.Image);
 /**
  * @inheritDoc
  */
-ol.source.ImageCanvas.prototype.getImage =
+ol.source.ImageCanvas.prototype.getImageInternal =
     function(extent, resolution, pixelRatio, projection) {
   resolution = this.findNearestResolution(resolution);
 
@@ -73464,11 +74510,13 @@ ol.renderer.canvas.ImageLayer.prototype.prepareFrame =
   if (!hints[ol.ViewHint.ANIMATING] && !hints[ol.ViewHint.INTERACTING] &&
       !ol.extent.isEmpty(renderedExtent)) {
     var projection = viewState.projection;
-    var sourceProjection = imageSource.getProjection();
-    if (sourceProjection) {
-      goog.asserts.assert(ol.proj.equivalent(projection, sourceProjection),
-          'projection and sourceProjection are equivalent');
-      projection = sourceProjection;
+    if (!ol.ENABLE_RASTER_REPROJECTION) {
+      var sourceProjection = imageSource.getProjection();
+      if (sourceProjection) {
+        goog.asserts.assert(ol.proj.equivalent(projection, sourceProjection),
+            'projection and sourceProjection are equivalent');
+        projection = sourceProjection;
+      }
     }
     image = imageSource.getImage(
         renderedExtent, viewResolution, pixelRatio, projection);
@@ -73813,7 +74861,8 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
   /** @type {Array.<ol.Tile>} */
   var tilesToClear = [];
 
-  var findLoadedTiles = this.createLoadedTileFinder(tileSource, tilesToDrawByZ);
+  var findLoadedTiles = this.createLoadedTileFinder(
+      tileSource, projection, tilesToDrawByZ);
 
   var useInterimTilesOnError = tileLayer.getUseInterimTilesOnError();
 
@@ -74680,11 +75729,13 @@ ol.renderer.dom.ImageLayer.prototype.prepareFrame =
   if (!hints[ol.ViewHint.ANIMATING] && !hints[ol.ViewHint.INTERACTING] &&
       !ol.extent.isEmpty(renderedExtent)) {
     var projection = viewState.projection;
-    var sourceProjection = imageSource.getProjection();
-    if (sourceProjection) {
-      goog.asserts.assert(ol.proj.equivalent(projection, sourceProjection),
-          'projection and sourceProjection are equivalent');
-      projection = sourceProjection;
+    if (!ol.ENABLE_RASTER_REPROJECTION) {
+      var sourceProjection = imageSource.getProjection();
+      if (sourceProjection) {
+        goog.asserts.assert(ol.proj.equivalent(projection, sourceProjection),
+            'projection and sourceProjection are equivalent');
+        projection = sourceProjection;
+      }
     }
     var image_ = imageSource.getImage(renderedExtent, viewResolution,
         frameState.pixelRatio, projection);
@@ -74860,7 +75911,8 @@ ol.renderer.dom.TileLayer.prototype.prepareFrame =
   var tilesToDrawByZ = {};
   tilesToDrawByZ[z] = {};
 
-  var findLoadedTiles = this.createLoadedTileFinder(tileSource, tilesToDrawByZ);
+  var findLoadedTiles = this.createLoadedTileFinder(
+      tileSource, projection, tilesToDrawByZ);
 
   var useInterimTilesOnError = tileLayer.getUseInterimTilesOnError();
 
@@ -80673,11 +81725,13 @@ ol.renderer.webgl.ImageLayer.prototype.prepareFrame =
   if (!hints[ol.ViewHint.ANIMATING] && !hints[ol.ViewHint.INTERACTING] &&
       !ol.extent.isEmpty(renderedExtent)) {
     var projection = viewState.projection;
-    var sourceProjection = imageSource.getProjection();
-    if (sourceProjection) {
-      goog.asserts.assert(ol.proj.equivalent(projection, sourceProjection),
-          'projection and sourceProjection are equivalent');
-      projection = sourceProjection;
+    if (!ol.ENABLE_RASTER_REPROJECTION) {
+      var sourceProjection = imageSource.getProjection();
+      if (sourceProjection) {
+        goog.asserts.assert(ol.proj.equivalent(projection, sourceProjection),
+            'projection and sourceProjection are equivalent');
+        projection = sourceProjection;
+      }
     }
     var image_ = imageSource.getImage(renderedExtent, viewResolution,
         pixelRatio, projection);
@@ -81100,6 +82154,7 @@ ol.renderer.webgl.TileLayer.prototype.disposeInternal = function() {
 /**
  * Create a function that adds loaded tiles to the tile lookup.
  * @param {ol.source.Tile} source Tile source.
+ * @param {ol.proj.Projection} projection Projection of the tiles.
  * @param {Object.<number, Object.<string, ol.Tile>>} tiles Lookup of loaded
  *     tiles by zoom level.
  * @return {function(number, ol.TileRange):boolean} A function that can be
@@ -81108,7 +82163,7 @@ ol.renderer.webgl.TileLayer.prototype.disposeInternal = function() {
  * @protected
  */
 ol.renderer.webgl.TileLayer.prototype.createLoadedTileFinder =
-    function(source, tiles) {
+    function(source, projection, tiles) {
   var mapRenderer = this.mapRenderer;
 
   return (
@@ -81118,16 +82173,17 @@ ol.renderer.webgl.TileLayer.prototype.createLoadedTileFinder =
        * @return {boolean} The tile range is fully loaded.
        */
       function(zoom, tileRange) {
-        return source.forEachLoadedTile(zoom, tileRange, function(tile) {
-          var loaded = mapRenderer.isTileTextureLoaded(tile);
-          if (loaded) {
-            if (!tiles[zoom]) {
-              tiles[zoom] = {};
-            }
-            tiles[zoom][tile.tileCoord.toString()] = tile;
-          }
-          return loaded;
-        });
+        return source.forEachLoadedTile(projection, zoom,
+                                        tileRange, function(tile) {
+              var loaded = mapRenderer.isTileTextureLoaded(tile);
+              if (loaded) {
+                if (!tiles[zoom]) {
+                  tiles[zoom] = {};
+                }
+                tiles[zoom][tile.tileCoord.toString()] = tile;
+              }
+              return loaded;
+            });
       });
 };
 
@@ -81234,7 +82290,7 @@ ol.renderer.webgl.TileLayer.prototype.prepareFrame =
     tilesToDrawByZ[z] = {};
 
     var findLoadedTiles = this.createLoadedTileFinder(
-        tileSource, tilesToDrawByZ);
+        tileSource, projection, tilesToDrawByZ);
 
     var useInterimTilesOnError = tileLayer.getUseInterimTilesOnError();
     var allTilesLoaded = true;
@@ -110247,6 +111303,339 @@ goog.provide('ol.raster.Pixel');
  */
 ol.raster.Pixel;
 
+goog.provide('ol.reproj.Tile');
+goog.provide('ol.reproj.TileFunctionType');
+
+goog.require('goog.asserts');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
+goog.require('goog.math');
+goog.require('goog.object');
+goog.require('ol.Tile');
+goog.require('ol.TileState');
+goog.require('ol.extent');
+goog.require('ol.math');
+goog.require('ol.proj');
+goog.require('ol.reproj');
+goog.require('ol.reproj.Triangulation');
+
+
+/**
+ * @typedef {function(number, number, number, number) : ol.Tile}
+ */
+ol.reproj.TileFunctionType;
+
+
+
+/**
+ * @classdesc
+ * Class encapsulating single reprojected tile.
+ * See {@link ol.source.TileImage}.
+ *
+ * @constructor
+ * @extends {ol.Tile}
+ * @param {ol.proj.Projection} sourceProj Source projection.
+ * @param {ol.tilegrid.TileGrid} sourceTileGrid Source tile grid.
+ * @param {ol.proj.Projection} targetProj Target projection.
+ * @param {ol.tilegrid.TileGrid} targetTileGrid Target tile grid.
+ * @param {number} z Zoom level.
+ * @param {number} x X.
+ * @param {number} y Y.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.reproj.TileFunctionType} getTileFunction
+ *     Function returning source tiles (z, x, y, pixelRatio).
+ * @param {number=} opt_errorThreshold Acceptable reprojection error (in px).
+ * @param {boolean=} opt_renderEdges Render reprojection edges.
+ */
+ol.reproj.Tile = function(sourceProj, sourceTileGrid,
+    targetProj, targetTileGrid, z, x, y, pixelRatio, getTileFunction,
+    opt_errorThreshold,
+    opt_renderEdges) {
+  goog.base(this, [z, x, y], ol.TileState.IDLE);
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.renderEdges_ = opt_renderEdges !== undefined ? opt_renderEdges : false;
+
+  /**
+   * @private
+   * @type {number}
+   */
+  this.pixelRatio_ = pixelRatio;
+
+  /**
+   * @private
+   * @type {HTMLCanvasElement}
+   */
+  this.canvas_ = null;
+
+  /**
+   * @private
+   * @type {Object.<number, HTMLCanvasElement>}
+   */
+  this.canvasByContext_ = {};
+
+  /**
+   * @private
+   * @type {ol.tilegrid.TileGrid}
+   */
+  this.sourceTileGrid_ = sourceTileGrid;
+
+  /**
+   * @private
+   * @type {ol.tilegrid.TileGrid}
+   */
+  this.targetTileGrid_ = targetTileGrid;
+
+  /**
+   * @private
+   * @type {!Array.<ol.Tile>}
+   */
+  this.sourceTiles_ = [];
+
+  /**
+   * @private
+   * @type {Array.<goog.events.Key>}
+   */
+  this.sourcesListenerKeys_ = null;
+
+  /**
+   * @private
+   * @type {number}
+   */
+  this.sourceZ_ = 0;
+
+  var targetExtent = targetTileGrid.getTileCoordExtent(this.getTileCoord());
+  var maxTargetExtent = this.targetTileGrid_.getExtent();
+  var maxSourceExtent = this.sourceTileGrid_.getExtent();
+
+  var limitedTargetExtent = maxTargetExtent ?
+      ol.extent.getIntersection(targetExtent, maxTargetExtent) : targetExtent;
+
+  if (ol.extent.getArea(limitedTargetExtent) === 0) {
+    // Tile is completely outside range -> EMPTY
+    // TODO: is it actually correct that the source even creates the tile ?
+    this.state = ol.TileState.EMPTY;
+    return;
+  }
+
+  var sourceProjExtent = sourceProj.getExtent();
+  if (sourceProjExtent) {
+    if (!maxSourceExtent) {
+      maxSourceExtent = sourceProjExtent;
+    } else {
+      maxSourceExtent = ol.extent.getIntersection(
+          maxSourceExtent, sourceProjExtent);
+    }
+  }
+
+  var targetResolution = targetTileGrid.getResolution(z);
+
+  var targetCenter = ol.extent.getCenter(limitedTargetExtent);
+  var sourceResolution = ol.reproj.calculateSourceResolution(
+      sourceProj, targetProj, targetCenter, targetResolution);
+
+  if (!goog.math.isFiniteNumber(sourceResolution) || sourceResolution <= 0) {
+    // invalid sourceResolution -> EMPTY
+    // probably edges of the projections when no extent is defined
+    this.state = ol.TileState.EMPTY;
+    return;
+  }
+
+  var errorThresholdInPixels = opt_errorThreshold !== undefined ?
+      opt_errorThreshold : ol.DEFAULT_RASTER_REPROJECTION_ERROR_THRESHOLD;
+
+  /**
+   * @private
+   * @type {!ol.reproj.Triangulation}
+   */
+  this.triangulation_ = new ol.reproj.Triangulation(
+      sourceProj, targetProj, limitedTargetExtent, maxSourceExtent,
+      sourceResolution * errorThresholdInPixels);
+
+  if (this.triangulation_.getTriangles().length === 0) {
+    // no valid triangles -> EMPTY
+    this.state = ol.TileState.EMPTY;
+    return;
+  }
+
+  this.sourceZ_ = sourceTileGrid.getZForResolution(sourceResolution);
+  var sourceExtent = this.triangulation_.calculateSourceExtent();
+
+  if (maxSourceExtent) {
+    if (sourceProj.canWrapX()) {
+      sourceExtent[1] = ol.math.clamp(
+          sourceExtent[1], maxSourceExtent[1], maxSourceExtent[3]);
+      sourceExtent[3] = ol.math.clamp(
+          sourceExtent[3], maxSourceExtent[1], maxSourceExtent[3]);
+    } else {
+      sourceExtent = ol.extent.getIntersection(sourceExtent, maxSourceExtent);
+    }
+  }
+
+  if (!ol.extent.getArea(sourceExtent)) {
+    this.state = ol.TileState.EMPTY;
+  } else {
+    var sourceRange = sourceTileGrid.getTileRangeForExtentAndZ(
+        sourceExtent, this.sourceZ_);
+
+    var tilesRequired = sourceRange.getWidth() * sourceRange.getHeight();
+    if (!goog.asserts.assert(
+        tilesRequired < ol.RASTER_REPROJECTION_MAX_SOURCE_TILES,
+        'reasonable number of tiles is required')) {
+      this.state = ol.TileState.ERROR;
+      return;
+    }
+    for (var srcX = sourceRange.minX; srcX <= sourceRange.maxX; srcX++) {
+      for (var srcY = sourceRange.minY; srcY <= sourceRange.maxY; srcY++) {
+        var tile = getTileFunction(this.sourceZ_, srcX, srcY, pixelRatio);
+        if (tile) {
+          this.sourceTiles_.push(tile);
+        }
+      }
+    }
+
+    if (this.sourceTiles_.length === 0) {
+      this.state = ol.TileState.EMPTY;
+    }
+  }
+};
+goog.inherits(ol.reproj.Tile, ol.Tile);
+
+
+/**
+ * @inheritDoc
+ */
+ol.reproj.Tile.prototype.disposeInternal = function() {
+  if (this.state == ol.TileState.LOADING) {
+    this.unlistenSources_();
+  }
+  goog.base(this, 'disposeInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.reproj.Tile.prototype.getImage = function(opt_context) {
+  if (opt_context !== undefined) {
+    var image;
+    var key = goog.getUid(opt_context);
+    if (key in this.canvasByContext_) {
+      return this.canvasByContext_[key];
+    } else if (goog.object.isEmpty(this.canvasByContext_)) {
+      image = this.canvas_;
+    } else {
+      image = /** @type {HTMLCanvasElement} */ (this.canvas_.cloneNode(false));
+    }
+    this.canvasByContext_[key] = image;
+    return image;
+  } else {
+    return this.canvas_;
+  }
+};
+
+
+/**
+ * @private
+ */
+ol.reproj.Tile.prototype.reproject_ = function() {
+  var sources = [];
+  this.sourceTiles_.forEach(function(tile, i, arr) {
+    if (tile && tile.getState() == ol.TileState.LOADED) {
+      sources.push({
+        extent: this.sourceTileGrid_.getTileCoordExtent(tile.tileCoord),
+        image: tile.getImage()
+      });
+    }
+  }, this);
+  this.sourceTiles_.length = 0;
+
+  var tileCoord = this.getTileCoord();
+  var z = tileCoord[0];
+  var size = this.targetTileGrid_.getTileSize(z);
+  var width = goog.isNumber(size) ? size : size[0];
+  var height = goog.isNumber(size) ? size : size[1];
+  var targetResolution = this.targetTileGrid_.getResolution(z);
+  var sourceResolution = this.sourceTileGrid_.getResolution(this.sourceZ_);
+
+  var targetExtent = this.targetTileGrid_.getTileCoordExtent(tileCoord);
+  this.canvas_ = ol.reproj.render(width, height, this.pixelRatio_,
+      sourceResolution, this.sourceTileGrid_.getExtent(),
+      targetResolution, targetExtent, this.triangulation_, sources,
+      this.renderEdges_);
+
+  this.state = ol.TileState.LOADED;
+  this.changed();
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.reproj.Tile.prototype.load = function() {
+  if (this.state == ol.TileState.IDLE) {
+    this.state = ol.TileState.LOADING;
+    this.changed();
+
+    var leftToLoad = 0;
+
+    goog.asserts.assert(!this.sourcesListenerKeys_,
+        'this.sourcesListenerKeys_ should be null');
+
+    this.sourcesListenerKeys_ = [];
+    this.sourceTiles_.forEach(function(tile, i, arr) {
+      var state = tile.getState();
+      if (state == ol.TileState.IDLE || state == ol.TileState.LOADING) {
+        leftToLoad++;
+
+        var sourceListenKey;
+        sourceListenKey = tile.listen(goog.events.EventType.CHANGE,
+            function(e) {
+              var state = tile.getState();
+              if (state == ol.TileState.LOADED ||
+                  state == ol.TileState.ERROR ||
+                  state == ol.TileState.EMPTY) {
+                goog.events.unlistenByKey(sourceListenKey);
+                leftToLoad--;
+                goog.asserts.assert(leftToLoad >= 0,
+                    'leftToLoad should not be negative');
+                if (leftToLoad === 0) {
+                  this.unlistenSources_();
+                  this.reproject_();
+                }
+              }
+            }, false, this);
+        this.sourcesListenerKeys_.push(sourceListenKey);
+      }
+    }, this);
+
+    this.sourceTiles_.forEach(function(tile, i, arr) {
+      var state = tile.getState();
+      if (state == ol.TileState.IDLE) {
+        tile.load();
+      }
+    });
+
+    if (leftToLoad === 0) {
+      this.reproject_();
+    }
+  }
+};
+
+
+/**
+ * @private
+ */
+ol.reproj.Tile.prototype.unlistenSources_ = function() {
+  goog.asserts.assert(this.sourcesListenerKeys_,
+      'this.sourcesListenerKeys_ should not be null');
+  this.sourcesListenerKeys_.forEach(goog.events.unlistenByKey);
+  this.sourcesListenerKeys_ = null;
+};
+
 // Copyright 2011 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -111128,12 +112517,16 @@ goog.provide('ol.source.TileImage');
 goog.require('goog.asserts');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('goog.object');
 goog.require('ol.ImageTile');
+goog.require('ol.TileCache');
 goog.require('ol.TileCoord');
 goog.require('ol.TileLoadFunctionType');
 goog.require('ol.TileState');
 goog.require('ol.TileUrlFunction');
 goog.require('ol.TileUrlFunctionType');
+goog.require('ol.proj');
+goog.require('ol.reproj.Tile');
 goog.require('ol.source.Tile');
 goog.require('ol.source.TileEvent');
 
@@ -111194,6 +112587,29 @@ ol.source.TileImage = function(options) {
   this.tileClass = options.tileClass !== undefined ?
       options.tileClass : ol.ImageTile;
 
+  /**
+   * @protected
+   * @type {Object.<string, ol.TileCache>}
+   */
+  this.tileCacheForProjection = {};
+
+  /**
+   * @protected
+   * @type {Object.<string, ol.tilegrid.TileGrid>}
+   */
+  this.tileGridForProjection = {};
+
+  /**
+   * @private
+   * @type {number|undefined}
+   */
+  this.reprojectionErrorThreshold_ = options.reprojectionErrorThreshold;
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.renderReprojectionEdges_ = false;
 };
 goog.inherits(ol.source.TileImage, ol.source.Tile);
 
@@ -111210,7 +112626,125 @@ ol.source.TileImage.defaultTileLoadFunction = function(imageTile, src) {
 /**
  * @inheritDoc
  */
+ol.source.TileImage.prototype.canExpireCache = function() {
+  if (!ol.ENABLE_RASTER_REPROJECTION) {
+    return goog.base(this, 'canExpireCache');
+  }
+  var canExpire = this.tileCache.canExpireCache();
+  if (canExpire) {
+    return true;
+  } else {
+    return goog.object.some(this.tileCacheForProjection, function(tileCache) {
+      return tileCache.canExpireCache();
+    });
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.TileImage.prototype.expireCache = function(projection, usedTiles) {
+  if (!ol.ENABLE_RASTER_REPROJECTION) {
+    goog.base(this, 'expireCache', projection, usedTiles);
+    return;
+  }
+  var usedTileCache = this.getTileCacheForProjection(projection);
+
+  this.tileCache.expireCache(this.tileCache == usedTileCache ? usedTiles : {});
+  goog.object.forEach(this.tileCacheForProjection, function(tileCache) {
+    tileCache.expireCache(tileCache == usedTileCache ? usedTiles : {});
+  });
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.TileImage.prototype.getTileGridForProjection = function(projection) {
+  if (!ol.ENABLE_RASTER_REPROJECTION) {
+    return goog.base(this, 'getTileGridForProjection', projection);
+  }
+  var thisProj = this.getProjection();
+  if (this.tileGrid &&
+      (!thisProj || ol.proj.equivalent(thisProj, projection))) {
+    return this.tileGrid;
+  } else {
+    var projKey = goog.getUid(projection).toString();
+    if (!(projKey in this.tileGridForProjection)) {
+      this.tileGridForProjection[projKey] =
+          ol.tilegrid.getForProjection(projection);
+    }
+    return this.tileGridForProjection[projKey];
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.TileImage.prototype.getTileCacheForProjection = function(projection) {
+  if (!ol.ENABLE_RASTER_REPROJECTION) {
+    return goog.base(this, 'getTileCacheForProjection', projection);
+  }
+  var thisProj = this.getProjection();
+  if (!thisProj || ol.proj.equivalent(thisProj, projection)) {
+    return this.tileCache;
+  } else {
+    var projKey = goog.getUid(projection).toString();
+    if (!(projKey in this.tileCacheForProjection)) {
+      this.tileCacheForProjection[projKey] = new ol.TileCache();
+    }
+    return this.tileCacheForProjection[projKey];
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
 ol.source.TileImage.prototype.getTile =
+    function(z, x, y, pixelRatio, projection) {
+  if (!ol.ENABLE_RASTER_REPROJECTION ||
+      !this.getProjection() ||
+      !projection ||
+      ol.proj.equivalent(this.getProjection(), projection)) {
+    return this.getTileInternal(z, x, y, pixelRatio, projection);
+  } else {
+    var cache = this.getTileCacheForProjection(projection);
+    var tileCoordKey = this.getKeyZXY(z, x, y);
+    if (cache.containsKey(tileCoordKey)) {
+      return /** @type {!ol.Tile} */(cache.get(tileCoordKey));
+    } else {
+      var sourceProjection = this.getProjection();
+      var sourceTileGrid = this.getTileGridForProjection(sourceProjection);
+      var targetTileGrid = this.getTileGridForProjection(projection);
+      var tile = new ol.reproj.Tile(
+          sourceProjection, sourceTileGrid,
+          projection, targetTileGrid,
+          z, x, y, this.getTilePixelRatio(),
+          goog.bind(function(z, x, y, pixelRatio) {
+            return this.getTileInternal(z, x, y, pixelRatio, sourceProjection);
+          }, this), this.reprojectionErrorThreshold_,
+          this.renderReprojectionEdges_);
+
+      cache.set(tileCoordKey, tile);
+      return tile;
+    }
+  }
+};
+
+
+/**
+ * @param {number} z Tile coordinate z.
+ * @param {number} x Tile coordinate x.
+ * @param {number} y Tile coordinate y.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {!ol.Tile} Tile.
+ * @protected
+ */
+ol.source.TileImage.prototype.getTileInternal =
     function(z, x, y, pixelRatio, projection) {
   var tileCoordKey = this.getKeyZXY(z, x, y);
   if (this.tileCache.containsKey(tileCoordKey)) {
@@ -111282,12 +112816,57 @@ ol.source.TileImage.prototype.handleTileChange_ = function(event) {
 
 
 /**
+ * Sets whether to render reprojection edges or not (usually for debugging).
+ * @param {boolean} render Render the edges.
+ * @api
+ */
+ol.source.TileImage.prototype.setRenderReprojectionEdges = function(render) {
+  if (!ol.ENABLE_RASTER_REPROJECTION ||
+      this.renderReprojectionEdges_ == render) {
+    return;
+  }
+  this.renderReprojectionEdges_ = render;
+  goog.object.forEach(this.tileCacheForProjection, function(tileCache) {
+    tileCache.clear();
+  });
+  this.changed();
+};
+
+
+/**
+ * Sets the tile grid to use when reprojecting the tiles to the given
+ * projection instead of the default tile grid for the projection.
+ *
+ * This can be useful when the default tile grid cannot be created
+ * (e.g. projection has no extent defined) or
+ * for optimization reasons (custom tile size, resolutions, ...).
+ *
+ * @param {ol.proj.ProjectionLike} projection Projection.
+ * @param {ol.tilegrid.TileGrid} tilegrid Tile grid to use for the projection.
+ * @api
+ */
+ol.source.TileImage.prototype.setTileGridForProjection =
+    function(projection, tilegrid) {
+  if (ol.ENABLE_RASTER_REPROJECTION) {
+    var proj = ol.proj.get(projection);
+    if (proj) {
+      var projKey = goog.getUid(proj).toString();
+      if (!(projKey in this.tileGridForProjection)) {
+        this.tileGridForProjection[projKey] = tilegrid;
+      }
+    }
+  }
+};
+
+
+/**
  * Set the tile load function of the source.
  * @param {ol.TileLoadFunctionType} tileLoadFunction Tile load function.
  * @api
  */
 ol.source.TileImage.prototype.setTileLoadFunction = function(tileLoadFunction) {
   this.tileCache.clear();
+  this.tileCacheForProjection = {};
   this.tileLoadFunction = tileLoadFunction;
   this.changed();
 };
@@ -111303,6 +112882,7 @@ ol.source.TileImage.prototype.setTileUrlFunction = function(tileUrlFunction) {
   // FIXME cache.  The tile URL function would need to be incorporated into the
   // FIXME cache key somehow.
   this.tileCache.clear();
+  this.tileCacheForProjection = {};
   this.tileUrlFunction = tileUrlFunction;
   this.changed();
 };
@@ -111311,10 +112891,11 @@ ol.source.TileImage.prototype.setTileUrlFunction = function(tileUrlFunction) {
 /**
  * @inheritDoc
  */
-ol.source.TileImage.prototype.useTile = function(z, x, y) {
+ol.source.TileImage.prototype.useTile = function(z, x, y, projection) {
+  var tileCache = this.getTileCacheForProjection(projection);
   var tileCoordKey = this.getKeyZXY(z, x, y);
-  if (this.tileCache.containsKey(tileCoordKey)) {
-    this.tileCache.get(tileCoordKey);
+  if (tileCache && tileCache.containsKey(tileCoordKey)) {
+    tileCache.get(tileCoordKey);
   }
 };
 
@@ -111349,6 +112930,7 @@ ol.source.BingMaps = function(options) {
     crossOrigin: 'anonymous',
     opaque: true,
     projection: ol.proj.get('EPSG:3857'),
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     state: ol.source.State.LOADING,
     tileLoadFunction: options.tileLoadFunction,
     wrapX: options.wrapX !== undefined ? options.wrapX : true
@@ -111795,7 +113377,7 @@ ol.source.ImageMapGuide.prototype.getParams = function() {
 /**
  * @inheritDoc
  */
-ol.source.ImageMapGuide.prototype.getImage =
+ol.source.ImageMapGuide.prototype.getImageInternal =
     function(extent, resolution, pixelRatio, projection) {
   resolution = this.findNearestResolution(resolution);
   pixelRatio = this.hidpi_ ? pixelRatio : 1;
@@ -111983,7 +113565,7 @@ goog.inherits(ol.source.ImageStatic, ol.source.Image);
 /**
  * @inheritDoc
  */
-ol.source.ImageStatic.prototype.getImage =
+ol.source.ImageStatic.prototype.getImageInternal =
     function(extent, resolution, pixelRatio, projection) {
   if (ol.extent.intersects(extent, this.image_.getExtent())) {
     return this.image_;
@@ -112196,7 +113778,7 @@ ol.source.ImageWMS.prototype.getParams = function() {
 /**
  * @inheritDoc
  */
-ol.source.ImageWMS.prototype.getImage =
+ol.source.ImageWMS.prototype.getImageInternal =
     function(extent, resolution, pixelRatio, projection) {
 
   if (this.url_ === undefined) {
@@ -112451,6 +114033,7 @@ ol.source.XYZ = function(options) {
     crossOrigin: options.crossOrigin,
     logo: options.logo,
     projection: projection,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileGrid: tileGrid,
     tileLoadFunction: options.tileLoadFunction,
     tilePixelRatio: options.tilePixelRatio,
@@ -112542,6 +114125,7 @@ ol.source.OSM = function(opt_options) {
     crossOrigin: crossOrigin,
     opaque: true,
     maxZoom: options.maxZoom !== undefined ? options.maxZoom : 19,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileLoadFunction: options.tileLoadFunction,
     url: url,
     wrapX: options.wrapX
@@ -112606,6 +114190,7 @@ ol.source.MapQuest = function(opt_options) {
     crossOrigin: 'anonymous',
     logo: 'https://developer.mapquest.com/content/osm/mq_logo.png',
     maxZoom: layerConfig.maxZoom,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     opaque: true,
     tileLoadFunction: options.tileLoadFunction,
     url: url
@@ -113591,6 +115176,7 @@ ol.source.Stamen = function(options) {
     // FIXME uncomment the following when tilegrid supports minZoom
     //minZoom: providerConfig.minZoom,
     opaque: layerConfig.opaque,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileLoadFunction: options.tileLoadFunction,
     url: url
   });
@@ -113655,6 +115241,7 @@ ol.source.TileArcGISRest = function(opt_options) {
     crossOrigin: options.crossOrigin,
     logo: options.logo,
     projection: options.projection,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileGrid: options.tileGrid,
     tileLoadFunction: options.tileLoadFunction,
     tileUrlFunction: goog.bind(this.tileUrlFunction_, this),
@@ -114010,6 +115597,7 @@ ol.source.TileJSON = function(options) {
     attributions: options.attributions,
     crossOrigin: options.crossOrigin,
     projection: ol.proj.get('EPSG:3857'),
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     state: ol.source.State.LOADING,
     tileLoadFunction: options.tileLoadFunction,
     wrapX: options.wrapX !== undefined ? options.wrapX : true
@@ -114866,6 +116454,7 @@ ol.source.TileWMS = function(opt_options) {
     logo: options.logo,
     opaque: !transparent,
     projection: options.projection,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileGrid: options.tileGrid,
     tileLoadFunction: options.tileLoadFunction,
     tileUrlFunction: goog.bind(this.tileUrlFunction_, this),
@@ -115575,6 +117164,7 @@ ol.source.WMTS = function(options) {
     crossOrigin: options.crossOrigin,
     logo: options.logo,
     projection: options.projection,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileClass: options.tileClass,
     tileGrid: tileGrid,
     tileLoadFunction: options.tileLoadFunction,
@@ -116020,6 +117610,7 @@ ol.source.Zoomify = function(opt_options) {
     attributions: options.attributions,
     crossOrigin: options.crossOrigin,
     logo: options.logo,
+    reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileClass: ol.source.ZoomifyTile_,
     tileGrid: tileGrid,
     tileUrlFunction: tileUrlFunction
@@ -132513,6 +134104,11 @@ goog.exportProperty(
     'unByKey',
     ol.renderer.webgl.VectorLayer.prototype.unByKey);
 
+goog.exportProperty(
+    ol.reproj.Tile.prototype,
+    'getTileCoord',
+    ol.reproj.Tile.prototype.getTileCoord);
+
 goog.exportSymbol(
     'ol.size.toSize',
     ol.size.toSize);
@@ -132610,6 +134206,16 @@ goog.exportProperty(
     ol.source.BingMaps.prototype,
     'setProperties',
     ol.source.BingMaps.prototype.setProperties);
+
+goog.exportProperty(
+    ol.source.BingMaps.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.BingMaps.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.BingMaps.prototype,
+    'setTileGridForProjection',
+    ol.source.BingMaps.prototype.setTileGridForProjection);
 
 goog.exportProperty(
     ol.source.BingMaps.prototype,
@@ -133559,6 +135165,16 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.source.MapQuest.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.MapQuest.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.MapQuest.prototype,
+    'setTileGridForProjection',
+    ol.source.MapQuest.prototype.setTileGridForProjection);
+
+goog.exportProperty(
+    ol.source.MapQuest.prototype,
     'setTileLoadFunction',
     ol.source.MapQuest.prototype.setTileLoadFunction);
 
@@ -133685,6 +135301,16 @@ goog.exportProperty(
     ol.source.OSM.prototype,
     'setProperties',
     ol.source.OSM.prototype.setProperties);
+
+goog.exportProperty(
+    ol.source.OSM.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.OSM.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.OSM.prototype,
+    'setTileGridForProjection',
+    ol.source.OSM.prototype.setTileGridForProjection);
 
 goog.exportProperty(
     ol.source.OSM.prototype,
@@ -134029,6 +135655,16 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.source.Stamen.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.Stamen.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.Stamen.prototype,
+    'setTileGridForProjection',
+    ol.source.Stamen.prototype.setTileGridForProjection);
+
+goog.exportProperty(
+    ol.source.Stamen.prototype,
     'setTileLoadFunction',
     ol.source.Stamen.prototype.setTileLoadFunction);
 
@@ -134259,6 +135895,16 @@ goog.exportProperty(
     ol.source.TileArcGISRest.prototype,
     'setProperties',
     ol.source.TileArcGISRest.prototype.setProperties);
+
+goog.exportProperty(
+    ol.source.TileArcGISRest.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.TileArcGISRest.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.TileArcGISRest.prototype,
+    'setTileGridForProjection',
+    ol.source.TileArcGISRest.prototype.setTileGridForProjection);
 
 goog.exportProperty(
     ol.source.TileArcGISRest.prototype,
@@ -134500,6 +136146,16 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.source.TileImage.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.TileImage.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.TileImage.prototype,
+    'setTileGridForProjection',
+    ol.source.TileImage.prototype.setTileGridForProjection);
+
+goog.exportProperty(
+    ol.source.TileImage.prototype,
     'setTileLoadFunction',
     ol.source.TileImage.prototype.setTileLoadFunction);
 
@@ -134616,6 +136272,16 @@ goog.exportProperty(
     ol.source.TileJSON.prototype,
     'setProperties',
     ol.source.TileJSON.prototype.setProperties);
+
+goog.exportProperty(
+    ol.source.TileJSON.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.TileJSON.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.TileJSON.prototype,
+    'setTileGridForProjection',
+    ol.source.TileJSON.prototype.setTileGridForProjection);
 
 goog.exportProperty(
     ol.source.TileJSON.prototype,
@@ -135036,6 +136702,16 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.source.TileWMS.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.TileWMS.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.TileWMS.prototype,
+    'setTileGridForProjection',
+    ol.source.TileWMS.prototype.setTileGridForProjection);
+
+goog.exportProperty(
+    ol.source.TileWMS.prototype,
     'setTileLoadFunction',
     ol.source.TileWMS.prototype.setTileLoadFunction);
 
@@ -135379,6 +137055,16 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.source.WMTS.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.WMTS.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.WMTS.prototype,
+    'setTileGridForProjection',
+    ol.source.WMTS.prototype.setTileGridForProjection);
+
+goog.exportProperty(
+    ol.source.WMTS.prototype,
     'setTileLoadFunction',
     ol.source.WMTS.prototype.setTileLoadFunction);
 
@@ -135512,6 +137198,16 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.source.XYZ.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.XYZ.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.XYZ.prototype,
+    'setTileGridForProjection',
+    ol.source.XYZ.prototype.setTileGridForProjection);
+
+goog.exportProperty(
+    ol.source.XYZ.prototype,
     'setTileLoadFunction',
     ol.source.XYZ.prototype.setTileLoadFunction);
 
@@ -135633,6 +137329,16 @@ goog.exportProperty(
     ol.source.Zoomify.prototype,
     'setProperties',
     ol.source.Zoomify.prototype.setProperties);
+
+goog.exportProperty(
+    ol.source.Zoomify.prototype,
+    'setRenderReprojectionEdges',
+    ol.source.Zoomify.prototype.setRenderReprojectionEdges);
+
+goog.exportProperty(
+    ol.source.Zoomify.prototype,
+    'setTileGridForProjection',
+    ol.source.Zoomify.prototype.setTileGridForProjection);
 
 goog.exportProperty(
     ol.source.Zoomify.prototype,
@@ -136191,6 +137897,11 @@ goog.exportProperty(
 
 goog.exportProperty(
     ol.tilegrid.TileGrid.prototype,
+    'getTileCoordExtent',
+    ol.tilegrid.TileGrid.prototype.getTileCoordExtent);
+
+goog.exportProperty(
+    ol.tilegrid.TileGrid.prototype,
     'getTileCoordForCoordAndResolution',
     ol.tilegrid.TileGrid.prototype.getTileCoordForCoordAndResolution);
 
@@ -136237,6 +137948,11 @@ goog.exportProperty(
     ol.tilegrid.WMTS.prototype,
     'getResolutions',
     ol.tilegrid.WMTS.prototype.getResolutions);
+
+goog.exportProperty(
+    ol.tilegrid.WMTS.prototype,
+    'getTileCoordExtent',
+    ol.tilegrid.WMTS.prototype.getTileCoordExtent);
 
 goog.exportProperty(
     ol.tilegrid.WMTS.prototype,
