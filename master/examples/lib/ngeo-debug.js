@@ -122913,7 +122913,7 @@ ngeo.interaction.MeasureBaseOptions;
 ngeo.MeasureEventType = {
   /**
    * Triggered upon feature draw end
-   * @event ol.MeasureEvent#measureend
+   * @event ngeo.MeasureEvent#measureend
    */
   MEASUREEND: 'measureend'
 };
