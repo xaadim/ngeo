@@ -322,6 +322,205 @@ listener.</p>
 
     
 
+    <h4 class="name" id="getOptimalResolution"><span class="type-signature"></span>getOptimalResolution<span class="signature">(mapSize, printMapSize, printMapScale)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the optimal map resolution for a print scale and a map size.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mapSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.Size</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Size of the map on the screen (px).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>printMapSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.Size</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Size of the map on the paper (dots).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>printMapScale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Map scale on the paper.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line141">line 141</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The optimal map resolution.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="getOptimalScale"><span class="type-signature"></span>getOptimalScale<span class="signature">(mapSize, mapResolution, printMapSize, printMapScales)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
@@ -329,7 +528,8 @@ listener.</p>
 
 
 <div class="description">
-    <p>Get the optimal print scale for a map.</p>
+    <p>Get the optimal print scale for a map, the map being defined by its
+size (in pixels) and resolution (in map units per pixel).</p>
 </div>
 
 
@@ -493,7 +693,7 @@ E.g. <code>[500, 1000, 2000, 4000]</code>.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line109">line 109</a>
+        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
