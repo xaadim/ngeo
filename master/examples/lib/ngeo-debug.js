@@ -91334,7 +91334,7 @@ ol.format.GeoJSON.prototype.writeFeatureObject = function(
     'type': 'Feature'
   };
   var id = feature.getId();
-  if (id) {
+  if (id !== undefined) {
     object['id'] = id;
   }
   var geometry = feature.getGeometry();
@@ -102982,7 +102982,7 @@ goog.require('ol.proj');
 
 /**
  * @classdesc
- * Feature format for reading and writing data in the TopoJSON format.
+ * Feature format for reading data in the TopoJSON format.
  *
  * @constructor
  * @extends {ol.format.JSONFeature}
@@ -103225,7 +103225,7 @@ ol.format.TopoJSON.readFeatureFromGeometry_ = function(object, arcs,
   var feature = new ol.Feature();
   feature.setGeometry(/** @type {ol.geom.Geometry} */ (
       ol.format.Feature.transformWithOptions(geometry, false, opt_options)));
-  if (object.id) {
+  if (object.id !== undefined) {
     feature.setId(object.id);
   }
   if (object.properties) {
@@ -121357,7 +121357,6 @@ goog.provide('ngeo.btngroupDirective');
 goog.require('ngeo');
 
 
-
 /**
  * Provides two directives: ngeo-btn-group and ngeo-btn.
  *
@@ -121382,7 +121381,6 @@ goog.require('ngeo');
  * This example is about creating a Bootstrap button that can pressed/depressed
  * to activate/deactivate an OpenLayers 3 interaction.
  *
- * @constructor
  * @return {angular.Directive} The directive specs.
  * @ngInject
  */
@@ -121506,7 +121504,6 @@ goog.require('ol.Map');
 goog.require('ol.control.Control');
 
 
-
 /**
  * Provides a directive can be used to add a control to a DOM
  * element of the HTML page.
@@ -121518,7 +121515,6 @@ goog.require('ol.control.Control');
  * instance, and the expression passed to "ngeo-control-map" should
  * evaluate to a map instance.
  *
- * @constructor
  * @return {angular.Directive} The directive specs.
  * @ngInject
  */
@@ -121574,7 +121570,6 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
     });
 
 
-
 /**
  * Provides the "ngeoLayertree" directive, a directive for
  * creating layer trees in application.
@@ -121624,7 +121619,6 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * controller: "layertreeCtrl". You can refer to that property in a custom
  * template for example.
  *
- * @constructor
  * @param {angular.$compile} $compile Angular compile service.
  * @param {string|function(!angular.JQLite=, !angular.Attributes=)}
  *     ngeoLayertreeTemplateUrl Template URL for the directive.
@@ -121808,7 +121802,6 @@ goog.require('ngeo');
 goog.require('ol.Map');
 
 
-
 /**
  * Provides a directive used to insert a user-defined OpenLayers
  * map in the DOM. The directive does not create an isolate scope.
@@ -121816,7 +121809,6 @@ goog.require('ol.Map');
  * @example
  * <div ngeo-map="ctrl.map"></div>
  *
- * @constructor
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  */
@@ -121843,11 +121835,9 @@ ngeo.mapDirective = function() {
 
 ngeoModule.directive('ngeoMap', ngeo.mapDirective);
 
-
 goog.provide('ngeo.modalDirective');
 
 goog.require('ngeo');
-
 
 
 /**
@@ -121871,7 +121861,6 @@ goog.require('ngeo');
  * Note: for z-indexing purpose, the modal DOM element is automatically moved
  * to document body element.
  *
- * @constructor
  * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
@@ -121938,7 +121927,6 @@ ngeo.popupTemplateUrl = 'partials/popup.html';
 ngeoModule.value('ngeoPopupTemplateUrl', ngeo.popupTemplateUrl);
 
 
-
 /**
  * Provides a directive used to show a popup over the page with
  * a title and content.
@@ -121954,7 +121942,6 @@ ngeoModule.value('ngeoPopupTemplateUrl', ngeo.popupTemplateUrl);
  * - The directive doesn't create any scope but relies on its parent scope.
  *   Properties like 'content', 'title' or 'open' come from the parent scope.
  *
- * @constructor
  * @param {string} ngeoPopupTemplateUrl Url to popup template.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
@@ -121997,7 +121984,6 @@ goog.require('ngeo');
 goog.require('ngeo.profile');
 
 
-
 /**
  * Provides a directive used to insert an elevation profile chart
  * in the DOM.
@@ -122013,7 +121999,6 @@ goog.require('ngeo.profile');
  * processed by {@link ngeox.profile.ElevationExtractor} and
  * {@link ngeox.profile.PoiExtractor}.
  *
- * @constructor
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  */
@@ -122116,7 +122101,6 @@ goog.require('ngeo');
 goog.require('ol.Map');
 
 
-
 /**
  * Provides a directive that resizes the map in an animation loop
  * during 1 second when the value of "state" changes. This is especially useful
@@ -122128,7 +122112,6 @@ goog.require('ol.Map');
  *        ngeo-resizemap-state="open"><div>
  *   <input type="checkbox" ng-model="ctrl.open" />
  *
- * @constructor
  * @param {angular.$window} $window Angular window service.
  * @param {angular.$animate} $animate Angular animate service.
  * @return {angular.Directive} The directive specs.
@@ -122208,7 +122191,6 @@ ngeoModule.value('ngeoScaleselectorTemplateUrl',
 ngeo.ScaleselectorOptions;
 
 
-
 /**
  * Provides the "ngeoScaleselector" directive, a widget for
  * selecting map scales.
@@ -122246,7 +122228,6 @@ ngeo.ScaleselectorOptions;
  * The directive doesn't create any watcher. In particular the object including
  * the scales information is now watched.
  *
- * @constructor
  * @param {string|function(!angular.JQLite=, !angular.Attributes=)}
  *     ngeoScaleselectorTemplateUrl Template URL for the directive.
  * @return {angular.Directive} Directive Definition Object.
@@ -122447,7 +122428,6 @@ goog.provide('ngeo.searchDirective');
 goog.require('ngeo');
 
 
-
 /**
  * Provides the "ngeoSearch" directive, which uses Twitter's
  * typeahead component to change an input text into a search field.
@@ -122458,7 +122438,6 @@ goog.require('ngeo');
  *   ngeo-search-datasets="ctrl.typeaheadDatasets"
  *   ngeo-search-listeners="crtl.typeaheadListeners">
  *
- * @constructor
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  */
@@ -123885,7 +123864,6 @@ goog.require('ngeo');
 ngeo.SortableOptions;
 
 
-
 /**
  * Provides the "ngeoSortable" directive. This directive allows
  * drag-and-dropping DOM items between them. The directive also changes the
@@ -123913,7 +123891,6 @@ ngeo.SortableOptions;
  * if some outside code adds/removes elements to/from the "sortable" array,
  * the "ngeoSortable" directive will pick it up.
  *
- * @constructor
  * @param {angular.$timeout} $timeout Angular timeout service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
