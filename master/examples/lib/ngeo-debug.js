@@ -59679,8 +59679,10 @@ ol.render.canvas.Replay.prototype.replay_ = function(
             context.globalAlpha = alpha * opacity;
           }
 
-          context.drawImage(image, originX, originY, width, height,
-              x, y, width * pixelRatio, height * pixelRatio);
+          var w = width - originX;
+          var h = height - originY;
+          context.drawImage(image, originX, originY, w, h, x, y,
+              w * pixelRatio, h * pixelRatio);
 
           if (opacity != 1) {
             context.globalAlpha = alpha;
@@ -116423,14 +116425,6 @@ ol.source.ImageWMS.prototype.getImageInternal =
   extent = extent.slice();
   var centerX = (extent[0] + extent[2]) / 2;
   var centerY = (extent[1] + extent[3]) / 2;
-  if (this.ratio_ != 1) {
-    var halfWidth = this.ratio_ * ol.extent.getWidth(extent) / 2;
-    var halfHeight = this.ratio_ * ol.extent.getHeight(extent) / 2;
-    extent[0] = centerX - halfWidth;
-    extent[1] = centerY - halfHeight;
-    extent[2] = centerX + halfWidth;
-    extent[3] = centerY + halfHeight;
-  }
 
   var imageResolution = resolution / pixelRatio;
 
@@ -116451,6 +116445,15 @@ ol.source.ImageWMS.prototype.getImageInternal =
       image.getPixelRatio() == pixelRatio &&
       ol.extent.containsExtent(image.getExtent(), extent)) {
     return image;
+  }
+
+  if (this.ratio_ != 1) {
+    var halfWidth = this.ratio_ * ol.extent.getWidth(extent) / 2;
+    var halfHeight = this.ratio_ * ol.extent.getHeight(extent) / 2;
+    extent[0] = centerX - halfWidth;
+    extent[1] = centerY - halfHeight;
+    extent[2] = centerX + halfWidth;
+    extent[3] = centerY + halfHeight;
   }
 
   var params = {
@@ -121837,19 +121840,25 @@ ngeoModule.directive('ngeoMap', ngeo.mapDirective);
 
 goog.provide('ngeo.modalDirective');
 
+goog.require('goog.asserts');
 goog.require('ngeo');
 
 
 /**
- * Provides the "ngeoModal" directive. This directive allows
- * displaying a modal window. The directive takes care or the show/hide
- * actions.
+ * Provides the "ngeoModal" directive.
  *
- * This directive requires Bootstrap's `modal` classes and associated jQuery
- * plugin.
+ * This directive shows a Bootstrap modal when the `ngModel` expression
+ * evaluates to `true`, and it hides it when the `ngModel` expression
+ * evaluates to `false`.
+ *
+ * The directives also changes the `ngModel` value when the user manually
+ * closes the modal.
+ *
+ * This directive is based on Bootstrap's `modal` classes and associated
+ * jQuery plugin.
  *
  * @example
- * <ngeo-modal ngeo-modal-shown="modalShown">
+ * <ngeo-modal ng-model="modalShown">
  *   <div class="modal-header">
  *     <button type="button" class="close" data-dismiss="modal"
  *         aria-hidden="true">&times;</button>
@@ -121875,35 +121884,31 @@ ngeo.modalDirective = function($parse) {
         '</div>' +
         '</div>',
     restrict: 'E',
+    require: 'ngModel',
     transclude: true,
     link:
         /**
          * @param {!angular.Scope} scope Scope.
          * @param {angular.JQLite} element Element.
          * @param {angular.Attributes} attrs Attributes.
+         * @param {angular.NgModelController} ngModelController The ngModel
+         * controller.
          */
-        function(scope, element, attrs) {
+        function(scope, element, attrs, ngModelController) {
           var modal = element.children();
           // move the modal to document body to ensure that it is on top of
           // other elements even if in a positioned element initially.
           angular.element(document.body).append(modal);
 
-          var shownGet = $parse(attrs['ngeoModalShown']);
-          var shownSet = shownGet.assign;
+          ngModelController.$render = function() {
+            modal.modal(ngModelController.$viewValue ? 'show' : 'hide');
+          };
 
-          scope.$watch(attrs['ngeoModalShown'], function(value) {
-            modal.modal(value ? 'show' : 'hide');
-          });
-
-          modal.on('shown.bs.modal', function() {
+          modal.on('shown.bs.modal hidden.bs.modal', function(e) {
+            var type = e.type;
+            goog.asserts.assert(type == 'shown' || type == 'hidden');
             scope.$apply(function() {
-              shownSet(scope, true);
-            });
-          });
-
-          modal.on('hidden.bs.modal', function() {
-            scope.$apply(function() {
-              shownSet(scope, false);
+              ngModelController.$setViewValue(type == 'shown');
             });
           });
         }
