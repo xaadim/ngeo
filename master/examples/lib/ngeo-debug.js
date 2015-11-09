@@ -50266,6 +50266,11 @@ goog.require('ol.source.State');
  * Layers group together those properties that pertain to how the data is to be
  * displayed, irrespective of the source of that data.
  *
+ * Layers are usually added to a map with {@link ol.Map#addLayer}. Components
+ * like {@link ol.interaction.Select} use unmanaged layers internally. These
+ * unmanaged layers are associated with the map using
+ * {@link ol.layer.Layer#setMap} instead.
+ *
  * A generic `change` event is fired when the state of the source changes.
  *
  * @constructor
@@ -52109,7 +52114,9 @@ ol.renderer.Map.prototype.forEachFeatureAtCoordinate =
       if (layer.getSource()) {
         result = layerRenderer.forEachFeatureAtCoordinate(
             layer.getSource().getWrapX() ? translatedCoordinate : coordinate,
-            frameState, callback, thisArg);
+            frameState,
+            layerState.managed ? callback : forEachFeatureAtCoordinate,
+            thisArg);
       }
       if (result) {
         return result;
@@ -83425,8 +83432,9 @@ ol.Map.prototype.disposeInternal = function() {
  *     called with two arguments. The first argument is one
  *     {@link ol.Feature feature} or
  *     {@link ol.render.Feature render feature} at the pixel, the second is
- *     the {@link ol.layer.Layer layer} of the feature. To stop detection,
- *     callback functions can return a truthy value.
+ *     the {@link ol.layer.Layer layer} of the feature and will be null for
+ *     unmanaged layers. To stop detection, callback functions can return a
+ *     truthy value.
  * @param {S=} opt_this Value to use as `this` when executing `callback`.
  * @param {(function(this: U, ol.layer.Layer): boolean)=} opt_layerFilter Layer
  *     filter function. The filter function will receive one argument, the
@@ -98065,6 +98073,9 @@ ol.format.KML.IconStyleParser_ = function(node, objectStack) {
       (object['scale']);
   if (src == ol.format.KML.DEFAULT_IMAGE_STYLE_SRC_) {
     size = ol.format.KML.DEFAULT_IMAGE_STYLE_SIZE_;
+    if (scale === undefined) {
+      scale = ol.format.KML.DEFAULT_IMAGE_SCALE_MULTIPLIER_;
+    }
   }
 
   var imageStyle = new ol.style.Icon({
@@ -98076,7 +98087,7 @@ ol.format.KML.IconStyleParser_ = function(node, objectStack) {
     offset: offset,
     offsetOrigin: ol.style.IconOrigin.BOTTOM_LEFT,
     rotation: rotation,
-    scale: ol.format.KML.DEFAULT_IMAGE_SCALE_MULTIPLIER_ * scale,
+    scale: scale,
     size: size,
     src: src
   });
@@ -99920,7 +99931,7 @@ ol.format.KML.writeStyle_ = function(node, style, objectStack) {
   var strokeStyle = style.getStroke();
   var imageStyle = style.getImage();
   var textStyle = style.getText();
-  if (imageStyle) {
+  if (imageStyle instanceof ol.style.Icon) {
     properties['IconStyle'] = imageStyle;
   }
   if (textStyle) {
@@ -112689,6 +112700,8 @@ goog.inherits(ol.interaction.SelectEvent, goog.events.Event);
  * `toggle`, `add`/`remove`, and `multi` options; a `layers` filter; and a
  * further feature filter using the `filter` option.
  *
+ * Selected features are added to an internal unmanaged layer.
+ *
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @param {olx.interaction.SelectOptions=} opt_options Options.
@@ -112873,7 +112886,7 @@ ol.interaction.Select.handleEvent = function(mapBrowserEvent) {
          * @param {ol.layer.Layer} layer Layer.
          */
         function(feature, layer) {
-          if (this.filter_(feature, layer)) {
+          if (layer && this.filter_(feature, layer)) {
             selected.push(feature);
             this.addFeatureLayerAssociation_(feature, layer);
             return !this.multi_;
