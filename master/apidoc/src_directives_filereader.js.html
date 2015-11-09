@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/ol-ext/interaction/measurearea.js</title>
+    <title>JSDoc: Source: src/directives/filereader.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/ol-ext/interaction/measurearea.js</h1>
+    <h1 class="page-title">Source: src/directives/filereader.js</h1>
 
     
 
@@ -26,75 +26,65 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.interaction.MeasureArea');
+            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.filereaderDirective');
 
-goog.require('ngeo.interaction.Measure');
-goog.require('ol.geom.Polygon');
-goog.require('ol.interaction.Draw');
-goog.require('ol.sphere.WGS84');
-
+goog.require('ngeo');
 
 
 /**
- * @classdesc
- * Interaction dedicated to measure length.
+ * This directive is to used on an input file element. When a file is selected
+ * the directive uses the browser `FileReader` API to read the file. The file
+ * content is provided to the directive user through the assignable expression.
+ * Only works for text files (`readAsText` used for reading the file). And does
+ * not work in Internet Explorer 9.
  *
- * @constructor
- * @extends {ngeo.interaction.Measure}
- * @param {ngeox.interaction.MeasureOptions=} opt_options Options
+ * @example
+ * &lt;input type="file" ngeo-filereader="ctrl.fileContent"
+ *        ngeo-filereader-supported="ctrl.supported"/>
+ *
+ * @param {angular.$window} $window The Angular $window service.
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngInject
  */
-ngeo.interaction.MeasureArea = function(opt_options) {
-
-  var options = goog.isDef(opt_options) ? opt_options : {};
-
-  goog.base(this, options);
-
-
-  /**
-   * Message to show after the first point is clicked.
-   * @type {Element}
-   */
-  this.continueMsg = goog.isDef(options.continueMsg) ? options.continueMsg :
-      goog.dom.createDom(goog.dom.TagName.SPAN, {},
-          'Click to continue drawing the polygon.',
-          goog.dom.createDom(goog.dom.TagName.BR),
-          'Double-click or click starting point to finish.');
-
+ngeo.filereaderDirective = function($window) {
+  return {
+    restrict: 'A',
+    scope: {
+      'fileContent': '=ngeoFilereader',
+      'supported': '=ngeoFilereaderSupported'
+    },
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         */
+        function(scope, element, attrs) {
+          var supported = 'FileReader' in $window;
+          scope['supported'] = supported;
+          if (!supported) {
+            return;
+          }
+          element.bind('change', function(changeEvent) {
+            /** @type {!FileReader} */
+            var fileReader = new $window.FileReader();
+            fileReader.onload = (
+                /**
+                 * @param {!ProgressEvent} evt Event.
+                 */
+                function(evt) {
+                  scope.$apply(function() {
+                    scope['fileContent'] = evt.target.result;
+                  });
+                });
+            fileReader.readAsText(changeEvent.target.files[0]);
+          });
+        }
+  };
 };
-goog.inherits(ngeo.interaction.MeasureArea, ngeo.interaction.Measure);
 
 
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureArea.prototype.getDrawInteraction = function(style,
-    source) {
-
-  return new ol.interaction.Draw(
-      /** @type {olx.interaction.DrawOptions} */ ({
-        type: 'Polygon',
-        source: source,
-        style: style
-      }));
-
-};
-
-
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
-  var geom = /** @type {ol.geom.Polygon} */
-      (this.sketchFeature.getGeometry());
-  var proj = this.getMap().getView().getProjection();
-  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj);
-  var verticesCount = geom.getCoordinates()[0].length;
-  var coord = null;
-  if (verticesCount > 2) {
-    coord = geom.getInteriorPoint().getCoordinates();
-  }
-  callback(output, coord);
-};
+ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
 </code></pre>
         </article>
     </section>

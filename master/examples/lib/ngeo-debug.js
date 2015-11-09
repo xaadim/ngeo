@@ -121621,6 +121621,66 @@ ngeo.controlDirective = function() {
 
 ngeoModule.directive('ngeoControl', ngeo.controlDirective);
 
+goog.provide('ngeo.filereaderDirective');
+
+goog.require('ngeo');
+
+
+/**
+ * This directive is to used on an input file element. When a file is selected
+ * the directive uses the browser `FileReader` API to read the file. The file
+ * content is provided to the directive user through the assignable expression.
+ * Only works for text files (`readAsText` used for reading the file). And does
+ * not work in Internet Explorer 9.
+ *
+ * @example
+ * <input type="file" ngeo-filereader="ctrl.fileContent"
+ *        ngeo-filereader-supported="ctrl.supported"/>
+ *
+ * @param {angular.$window} $window The Angular $window service.
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngInject
+ */
+ngeo.filereaderDirective = function($window) {
+  return {
+    restrict: 'A',
+    scope: {
+      'fileContent': '=ngeoFilereader',
+      'supported': '=ngeoFilereaderSupported'
+    },
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         */
+        function(scope, element, attrs) {
+          var supported = 'FileReader' in $window;
+          scope['supported'] = supported;
+          if (!supported) {
+            return;
+          }
+          element.bind('change', function(changeEvent) {
+            /** @type {!FileReader} */
+            var fileReader = new $window.FileReader();
+            fileReader.onload = (
+                /**
+                 * @param {!ProgressEvent} evt Event.
+                 */
+                function(evt) {
+                  scope.$apply(function() {
+                    scope['fileContent'] = evt.target.result;
+                  });
+                });
+            fileReader.readAsText(changeEvent.target.files[0]);
+          });
+        }
+  };
+};
+
+
+ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
+
 goog.provide('ngeo.LayertreeController');
 goog.provide('ngeo.layertreeDirective');
 
@@ -125262,6 +125322,57 @@ goog.inherits(ngeo.interaction.Measure, ol.interaction.Interaction);
 
 
 /**
+ * Calculate the area of the passed polygon and return a formatted string
+ * of the area.
+ * @param {ol.geom.Polygon} polygon Polygon.
+ * @param {ol.proj.Projection} projection Projection of the polygon coords.
+ * @return {string} Formatted string of the area.
+ */
+ngeo.interaction.Measure.getFormattedArea = function(polygon, projection) {
+  var geom = /** @type {ol.geom.Polygon} */ (
+      polygon.clone().transform(projection, 'EPSG:4326'));
+  var coordinates = geom.getLinearRing(0).getCoordinates();
+  var area = Math.abs(ol.sphere.WGS84.geodesicArea(coordinates));
+  var output;
+  if (area > 1000000) {
+    output = parseFloat((area / 1000000).toPrecision(3)) +
+        ' ' + 'km<sup>2</sup>';
+  } else {
+    output = parseFloat(area.toPrecision(3)) + ' ' + 'm<sup>2</sup>';
+  }
+  return output;
+};
+
+
+/**
+ * Calculate the length of the passed line string and return a formatted
+ * string of the length.
+ * @param {ol.geom.LineString} lineString Line string.
+ * @param {ol.proj.Projection} projection Projection of the line string coords.
+ * @return {string} Formatted string of length.
+ */
+ngeo.interaction.Measure.getFormattedLength =
+    function(lineString, projection) {
+  var length = 0;
+  var coordinates = lineString.getCoordinates();
+  for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+    var c1 = ol.proj.transform(coordinates[i], projection, 'EPSG:4326');
+    var c2 = ol.proj.transform(coordinates[i + 1], projection, 'EPSG:4326');
+    length += ol.sphere.WGS84.haversineDistance(c1, c2);
+  }
+  var output;
+  if (length > 1000) {
+    output = parseFloat((length / 1000).toPrecision(3)) +
+        ' ' + 'km';
+  } else {
+    output = parseFloat(length.toPrecision(3)) +
+        ' ' + 'm';
+  }
+  return output;
+};
+
+
+/**
  * Handle map browser event.
  * @param {ol.MapBrowserEvent} evt Map browser event.
  * @return {boolean} `false` if event propagation should be stopped.
@@ -125442,34 +125553,6 @@ ngeo.interaction.Measure.prototype.updateState_ = function() {
 
 
 /**
- * Format measure output.
- * @param {ol.geom.LineString} line
- * @return {string}
- * @protected
- */
-ngeo.interaction.Measure.prototype.formatLength = function(line) {
-  var length = 0;
-  var map = this.getMap();
-  var sourceProj = map.getView().getProjection();
-  var coordinates = line.getCoordinates();
-  for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-    var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
-    var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
-    length += ol.sphere.WGS84.haversineDistance(c1, c2);
-  }
-  var output;
-  if (length > 1000) {
-    output = parseFloat((length / 1000).toPrecision(3)) +
-        ' ' + 'km';
-  } else {
-    output = parseFloat(length.toPrecision(3)) +
-        ' ' + 'm';
-  }
-  return output;
-};
-
-
-/**
  * Function implemented in inherited classes to compute measurement, determine
  * where to place the tooltip and determine which help message to display.
  * @param {function(string, ?ol.Coordinate)} callback The function
@@ -125547,37 +125630,14 @@ ngeo.interaction.MeasureArea.prototype.getDrawInteraction = function(style,
 ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
   var geom = /** @type {ol.geom.Polygon} */
       (this.sketchFeature.getGeometry());
-  var output = this.formatMeasure_(geom);
+  var proj = this.getMap().getView().getProjection();
+  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj);
   var verticesCount = geom.getCoordinates()[0].length;
   var coord = null;
   if (verticesCount > 2) {
     coord = geom.getInteriorPoint().getCoordinates();
   }
   callback(output, coord);
-};
-
-
-/**
- * Format measure output.
- * @param {ol.geom.Polygon} polygon
- * @return {string}
- * @private
- */
-ngeo.interaction.MeasureArea.prototype.formatMeasure_ = function(polygon) {
-  var map = this.getMap();
-  var sourceProj = map.getView().getProjection();
-  var geom = /** @type {ol.geom.Polygon} */ (polygon.clone().transform(
-      sourceProj, 'EPSG:4326'));
-  var coordinates = geom.getLinearRing(0).getCoordinates();
-  var area = Math.abs(ol.sphere.WGS84.geodesicArea(coordinates));
-  var output;
-  if (area > 1000000) {
-    output = parseFloat((area / 1000000).toPrecision(3)) +
-        ' ' + 'km<sup>2</sup>';
-  } else {
-    output = parseFloat(area.toPrecision(3)) + ' ' + 'm<sup>2</sup>';
-  }
-  return output;
 };
 
 goog.provide('ngeo.interaction.DrawAzimut');
@@ -125670,8 +125730,8 @@ ngeo.interaction.MeasureAzimut.prototype.formatMeasure_ = function(line) {
   var factor = dx > 0 ? 1 : -1;
   var azimut = Math.round(factor * rad * 180 / Math.PI) % 360;
   var output = azimut + '°';
-
-  output += '<br/>' + this.formatLength(line);
+  var proj = this.getMap().getView().getProjection();
+  output += '<br/>' + ngeo.interaction.Measure.getFormattedLength(line, proj);
   return output;
 };
 
@@ -126039,20 +126099,10 @@ ngeo.interaction.MeasureLength.prototype.getDrawInteraction = function(style,
 ngeo.interaction.MeasureLength.prototype.handleMeasure = function(callback) {
   var geom = /** @type {ol.geom.LineString} */
       (this.sketchFeature.getGeometry());
-  var output = this.formatMeasure_(geom);
+  var proj = this.getMap().getView().getProjection();
+  var output = ngeo.interaction.Measure.getFormattedLength(geom, proj);
   var coord = geom.getLastCoordinate();
   callback(output, coord);
-};
-
-
-/**
- * Format measure output.
- * @param {ol.geom.LineString} line
- * @return {string}
- * @private
- */
-ngeo.interaction.MeasureLength.prototype.formatMeasure_ = function(line) {
-  return this.formatLength(line);
 };
 
 goog.provide('ngeo.BackgroundEvent');
