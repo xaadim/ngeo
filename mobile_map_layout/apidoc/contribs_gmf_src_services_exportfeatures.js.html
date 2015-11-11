@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/ol-ext/interaction/measurearea.js</title>
+    <title>JSDoc: Source: contribs/gmf/src/services/exportfeatures.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/ol-ext/interaction/measurearea.js</h1>
+    <h1 class="page-title">Source: contribs/gmf/src/services/exportfeatures.js</h1>
 
     
 
@@ -26,75 +26,73 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.interaction.MeasureArea');
+            <pre class="prettyprint source linenums"><code>goog.provide('gmf.ExportFeatures');
+goog.provide('gmf.ExportFormat');
 
-goog.require('ngeo.interaction.Measure');
-goog.require('ol.geom.Polygon');
-goog.require('ol.interaction.Draw');
-goog.require('ol.sphere.WGS84');
-
+goog.require('gmf');
+goog.require('goog.asserts');
 
 
 /**
- * @classdesc
- * Interaction dedicated to measure length.
- *
- * @constructor
- * @extends {ngeo.interaction.Measure}
- * @param {ngeox.interaction.MeasureOptions=} opt_options Options
+ * @enum {string}
  */
-ngeo.interaction.MeasureArea = function(opt_options) {
-
-  var options = goog.isDef(opt_options) ? opt_options : {};
-
-  goog.base(this, options);
-
-
-  /**
-   * Message to show after the first point is clicked.
-   * @type {Element}
-   */
-  this.continueMsg = goog.isDef(options.continueMsg) ? options.continueMsg :
-      goog.dom.createDom(goog.dom.TagName.SPAN, {},
-          'Click to continue drawing the polygon.',
-          goog.dom.createDom(goog.dom.TagName.BR),
-          'Double-click or click starting point to finish.');
-
-};
-goog.inherits(ngeo.interaction.MeasureArea, ngeo.interaction.Measure);
-
-
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureArea.prototype.getDrawInteraction = function(style,
-    source) {
-
-  return new ol.interaction.Draw(
-      /** @type {olx.interaction.DrawOptions} */ ({
-        type: 'Polygon',
-        source: source,
-        style: style
-      }));
-
+gmf.ExportFormat = {
+  GPX: 'gpx',
+  KML: 'kml'
 };
 
 
 /**
- * @inheritDoc
+ * @typedef {function(string, gmf.ExportFormat, string)}
  */
-ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
-  var geom = /** @type {ol.geom.Polygon} */
-      (this.sketchFeature.getGeometry());
-  var proj = this.getMap().getView().getProjection();
-  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj);
-  var verticesCount = geom.getCoordinates()[0].length;
-  var coord = null;
-  if (verticesCount > 2) {
-    coord = geom.getInteriorPoint().getCoordinates();
-  }
-  callback(output, coord);
+gmf.ExportFeatures;
+
+
+/**
+ * @param {Document} $document Angular $document service.
+ * @param {gmfx.ServiceUrls} gmfServiceUrls GMF URLs objects.
+ * @return {gmf.ExportFeatures} The "export features" function.
+ * @ngInject
+ * @private
+ */
+gmf.exportFeaturesFactory_ = function($document, gmfServiceUrls) {
+  goog.asserts.assert(gmfServiceUrls.exportgpxkml);
+  var exportgpxkmlUrl = gmfServiceUrls.exportgpxkml;
+
+  return (
+      /**
+       * @param {string} doc The document to export/download.
+       * @param {gmf.ExportFormat} format The document format.
+       * @param {string} filename File name for the exported document.
+       */
+      function exportFeatures(doc, format, filename) {
+        var formatInput = $('&lt;input>').attr({
+          type: 'hidden',
+          name: 'format',
+          value: format
+        });
+        var nameInput = $('&lt;input>').attr({
+          type: 'hidden',
+          name: 'name',
+          value: filename
+        });
+        var docInput = $('&lt;input>').attr({
+          type: 'hidden',
+          name: 'doc',
+          value: doc
+        });
+        var form = $('&lt;form>').attr({
+          method: 'POST',
+          action: exportgpxkmlUrl
+        });
+        form.append(formatInput, nameInput, docInput);
+        angular.element($document[0].body).append(form);
+        form[0].submit();
+        form.remove();
+      });
 };
+
+gmfModule.factory('gmfExportFeatures', gmf.exportFeaturesFactory_);
 </code></pre>
         </article>
     </section>

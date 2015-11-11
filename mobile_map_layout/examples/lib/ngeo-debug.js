@@ -50266,6 +50266,11 @@ goog.require('ol.source.State');
  * Layers group together those properties that pertain to how the data is to be
  * displayed, irrespective of the source of that data.
  *
+ * Layers are usually added to a map with {@link ol.Map#addLayer}. Components
+ * like {@link ol.interaction.Select} use unmanaged layers internally. These
+ * unmanaged layers are associated with the map using
+ * {@link ol.layer.Layer#setMap} instead.
+ *
  * A generic `change` event is fired when the state of the source changes.
  *
  * @constructor
@@ -52109,7 +52114,9 @@ ol.renderer.Map.prototype.forEachFeatureAtCoordinate =
       if (layer.getSource()) {
         result = layerRenderer.forEachFeatureAtCoordinate(
             layer.getSource().getWrapX() ? translatedCoordinate : coordinate,
-            frameState, callback, thisArg);
+            frameState,
+            layerState.managed ? callback : forEachFeatureAtCoordinate,
+            thisArg);
       }
       if (result) {
         return result;
@@ -59584,6 +59591,7 @@ ol.render.canvas.Replay.prototype.replay_ = function(
     goog.asserts.assert(pixelCoordinates === this.pixelCoordinates_,
         'pixelCoordinates should be the same as this.pixelCoordinates_');
   }
+  var skipFeatures = !goog.object.isEmpty(skippedFeaturesHash);
   var i = 0; // instruction index
   var ii = instructions.length; // end of instructions
   var d = 0; // data index
@@ -59597,8 +59605,8 @@ ol.render.canvas.Replay.prototype.replay_ = function(
     switch (type) {
       case ol.render.canvas.Instruction.BEGIN_GEOMETRY:
         feature = /** @type {ol.Feature|ol.render.Feature} */ (instruction[1]);
-        var featureUid = goog.getUid(feature).toString();
-        if (skippedFeaturesHash[featureUid] !== undefined ||
+        if ((skipFeatures &&
+            skippedFeaturesHash[goog.getUid(feature).toString()]) ||
             !feature.getGeometry()) {
           i = /** @type {number} */ (instruction[2]);
         } else if (opt_hitExtent !== undefined && !ol.extent.intersects(
@@ -83425,8 +83433,9 @@ ol.Map.prototype.disposeInternal = function() {
  *     called with two arguments. The first argument is one
  *     {@link ol.Feature feature} or
  *     {@link ol.render.Feature render feature} at the pixel, the second is
- *     the {@link ol.layer.Layer layer} of the feature. To stop detection,
- *     callback functions can return a truthy value.
+ *     the {@link ol.layer.Layer layer} of the feature and will be null for
+ *     unmanaged layers. To stop detection, callback functions can return a
+ *     truthy value.
  * @param {S=} opt_this Value to use as `this` when executing `callback`.
  * @param {(function(this: U, ol.layer.Layer): boolean)=} opt_layerFilter Layer
  *     filter function. The filter function will receive one argument, the
@@ -97505,6 +97514,13 @@ ol.format.KML = function(opt_options) {
 
   /**
    * @private
+   * @type {boolean}
+   */
+  this.writeStyles_ = options.writeStyles !== undefined ?
+      options.writeStyles : true;
+
+  /**
+   * @private
    * @type {Object.<string, (Array.<ol.style.Style>|string)>}
    */
   this.sharedStyles_ = {};
@@ -97753,11 +97769,7 @@ ol.format.KML.createNameStyleFunction_ = function(foundStyle, name) {
     });
   }
   var nameStyle = new ol.style.Style({
-    fill: undefined,
-    image: undefined,
-    text: textStyle,
-    stroke: undefined,
-    zIndex: undefined
+    text: textStyle
   });
   return nameStyle;
 };
@@ -97805,7 +97817,7 @@ ol.format.KML.createFeatureStyleFunction_ = function(style, styleUrl,
           if (drawName) {
             nameStyle = ol.format.KML.createNameStyleFunction_(style[0],
                 name);
-            return [style, nameStyle];
+            return style.concat(nameStyle);
           }
           return style;
         }
@@ -98062,6 +98074,9 @@ ol.format.KML.IconStyleParser_ = function(node, objectStack) {
       (object['scale']);
   if (src == ol.format.KML.DEFAULT_IMAGE_STYLE_SRC_) {
     size = ol.format.KML.DEFAULT_IMAGE_STYLE_SIZE_;
+    if (scale === undefined) {
+      scale = ol.format.KML.DEFAULT_IMAGE_SCALE_MULTIPLIER_;
+    }
   }
 
   var imageStyle = new ol.style.Icon({
@@ -98073,7 +98088,7 @@ ol.format.KML.IconStyleParser_ = function(node, objectStack) {
     offset: offset,
     offsetOrigin: ol.style.IconOrigin.BOTTOM_LEFT,
     rotation: rotation,
-    scale: ol.format.KML.DEFAULT_IMAGE_SCALE_MULTIPLIER_ * scale,
+    scale: scale,
     size: size,
     src: src
   });
@@ -99584,6 +99599,7 @@ ol.format.KML.writeCoordinatesTextNode_ =
  * @param {Node} node Node.
  * @param {Array.<ol.Feature>} features Features.
  * @param {Array.<*>} objectStack Object stack.
+ * @this {ol.format.KML}
  * @private
  */
 ol.format.KML.writeDocument_ = function(node, features, objectStack) {
@@ -99781,6 +99797,7 @@ ol.format.KML.writeBoundaryIs_ = function(node, linearRing, objectStack) {
  * @param {Node} node Node.
  * @param {ol.Feature} feature Feature.
  * @param {Array.<*>} objectStack Object stack.
+ * @this {ol.format.KML}
  * @private
  */
 ol.format.KML.writePlacemark_ = function(node, feature, objectStack) {
@@ -99793,14 +99810,18 @@ ol.format.KML.writePlacemark_ = function(node, feature, objectStack) {
 
   // serialize properties (properties unknown to KML are not serialized)
   var properties = feature.getProperties();
+
   var styleFunction = feature.getStyleFunction();
   if (styleFunction) {
     // FIXME the styles returned by the style function are supposed to be
     // resolution-independent here
     var styles = styleFunction.call(feature, 0);
     if (styles && styles.length > 0) {
-      properties['Style'] = styles[0];
-      var textStyle = styles[0].getText();
+      var style = styles[0];
+      if (this.writeStyles_) {
+        properties['Style'] = styles[0];
+      }
+      var textStyle = style.getText();
       if (textStyle) {
         properties['name'] = textStyle.getText();
       }
@@ -99911,7 +99932,7 @@ ol.format.KML.writeStyle_ = function(node, style, objectStack) {
   var strokeStyle = style.getStroke();
   var imageStyle = style.getImage();
   var textStyle = style.getText();
-  if (imageStyle) {
+  if (imageStyle instanceof ol.style.Icon) {
     properties['IconStyle'] = imageStyle;
   }
   if (textStyle) {
@@ -100403,7 +100424,8 @@ ol.format.KML.prototype.writeFeaturesNode = function(features, opt_options) {
   var orderedKeys = ol.format.KML.KML_SEQUENCE_[kml.namespaceURI];
   var values = ol.xml.makeSequence(properties, orderedKeys);
   ol.xml.pushSerializeAndPop(context, ol.format.KML.KML_SERIALIZERS_,
-      ol.xml.OBJECT_PROPERTY_NODE_FACTORY, values, [opt_options], orderedKeys);
+      ol.xml.OBJECT_PROPERTY_NODE_FACTORY, values, [opt_options], orderedKeys,
+      this);
   return kml;
 };
 
@@ -112679,6 +112701,8 @@ goog.inherits(ol.interaction.SelectEvent, goog.events.Event);
  * `toggle`, `add`/`remove`, and `multi` options; a `layers` filter; and a
  * further feature filter using the `filter` option.
  *
+ * Selected features are added to an internal unmanaged layer.
+ *
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @param {olx.interaction.SelectOptions=} opt_options Options.
@@ -112817,7 +112841,9 @@ ol.interaction.Select.prototype.getFeatures = function() {
 
 /**
  * Returns the associated {@link ol.layer.Vector vectorlayer} of
- * the (last) selected feature.
+ * the (last) selected feature. Note that this will not work with any
+ * programmatic method like pushing features to
+ * {@link ol.interaction.Select#getFeatures collection}.
  * @param {ol.Feature|ol.render.Feature} feature Feature
  * @return {ol.layer.Vector} Layer.
  * @api
@@ -112861,7 +112887,7 @@ ol.interaction.Select.handleEvent = function(mapBrowserEvent) {
          * @param {ol.layer.Layer} layer Layer.
          */
         function(feature, layer) {
-          if (this.filter_(feature, layer)) {
+          if (layer && this.filter_(feature, layer)) {
             selected.push(feature);
             this.addFeatureLayerAssociation_(feature, layer);
             return !this.multi_;
@@ -121596,6 +121622,66 @@ ngeo.controlDirective = function() {
 
 ngeoModule.directive('ngeoControl', ngeo.controlDirective);
 
+goog.provide('ngeo.filereaderDirective');
+
+goog.require('ngeo');
+
+
+/**
+ * This directive is to used on an input file element. When a file is selected
+ * the directive uses the browser `FileReader` API to read the file. The file
+ * content is provided to the directive user through the assignable expression.
+ * Only works for text files (`readAsText` used for reading the file). And does
+ * not work in Internet Explorer 9.
+ *
+ * @example
+ * <input type="file" ngeo-filereader="ctrl.fileContent"
+ *        ngeo-filereader-supported="ctrl.supported"/>
+ *
+ * @param {angular.$window} $window The Angular $window service.
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngInject
+ */
+ngeo.filereaderDirective = function($window) {
+  return {
+    restrict: 'A',
+    scope: {
+      'fileContent': '=ngeoFilereader',
+      'supported': '=ngeoFilereaderSupported'
+    },
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         */
+        function(scope, element, attrs) {
+          var supported = 'FileReader' in $window;
+          scope['supported'] = supported;
+          if (!supported) {
+            return;
+          }
+          element.bind('change', function(changeEvent) {
+            /** @type {!FileReader} */
+            var fileReader = new $window.FileReader();
+            fileReader.onload = (
+                /**
+                 * @param {!ProgressEvent} evt Event.
+                 */
+                function(evt) {
+                  scope.$apply(function() {
+                    scope['fileContent'] = evt.target.result;
+                  });
+                });
+            fileReader.readAsText(changeEvent.target.files[0]);
+          });
+        }
+  };
+};
+
+
+ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
+
 goog.provide('ngeo.LayertreeController');
 goog.provide('ngeo.layertreeDirective');
 
@@ -125237,6 +125323,57 @@ goog.inherits(ngeo.interaction.Measure, ol.interaction.Interaction);
 
 
 /**
+ * Calculate the area of the passed polygon and return a formatted string
+ * of the area.
+ * @param {ol.geom.Polygon} polygon Polygon.
+ * @param {ol.proj.Projection} projection Projection of the polygon coords.
+ * @return {string} Formatted string of the area.
+ */
+ngeo.interaction.Measure.getFormattedArea = function(polygon, projection) {
+  var geom = /** @type {ol.geom.Polygon} */ (
+      polygon.clone().transform(projection, 'EPSG:4326'));
+  var coordinates = geom.getLinearRing(0).getCoordinates();
+  var area = Math.abs(ol.sphere.WGS84.geodesicArea(coordinates));
+  var output;
+  if (area > 1000000) {
+    output = parseFloat((area / 1000000).toPrecision(3)) +
+        ' ' + 'km<sup>2</sup>';
+  } else {
+    output = parseFloat(area.toPrecision(3)) + ' ' + 'm<sup>2</sup>';
+  }
+  return output;
+};
+
+
+/**
+ * Calculate the length of the passed line string and return a formatted
+ * string of the length.
+ * @param {ol.geom.LineString} lineString Line string.
+ * @param {ol.proj.Projection} projection Projection of the line string coords.
+ * @return {string} Formatted string of length.
+ */
+ngeo.interaction.Measure.getFormattedLength =
+    function(lineString, projection) {
+  var length = 0;
+  var coordinates = lineString.getCoordinates();
+  for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+    var c1 = ol.proj.transform(coordinates[i], projection, 'EPSG:4326');
+    var c2 = ol.proj.transform(coordinates[i + 1], projection, 'EPSG:4326');
+    length += ol.sphere.WGS84.haversineDistance(c1, c2);
+  }
+  var output;
+  if (length > 1000) {
+    output = parseFloat((length / 1000).toPrecision(3)) +
+        ' ' + 'km';
+  } else {
+    output = parseFloat(length.toPrecision(3)) +
+        ' ' + 'm';
+  }
+  return output;
+};
+
+
+/**
  * Handle map browser event.
  * @param {ol.MapBrowserEvent} evt Map browser event.
  * @return {boolean} `false` if event propagation should be stopped.
@@ -125417,34 +125554,6 @@ ngeo.interaction.Measure.prototype.updateState_ = function() {
 
 
 /**
- * Format measure output.
- * @param {ol.geom.LineString} line
- * @return {string}
- * @protected
- */
-ngeo.interaction.Measure.prototype.formatLength = function(line) {
-  var length = 0;
-  var map = this.getMap();
-  var sourceProj = map.getView().getProjection();
-  var coordinates = line.getCoordinates();
-  for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-    var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
-    var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
-    length += ol.sphere.WGS84.haversineDistance(c1, c2);
-  }
-  var output;
-  if (length > 1000) {
-    output = parseFloat((length / 1000).toPrecision(3)) +
-        ' ' + 'km';
-  } else {
-    output = parseFloat(length.toPrecision(3)) +
-        ' ' + 'm';
-  }
-  return output;
-};
-
-
-/**
  * Function implemented in inherited classes to compute measurement, determine
  * where to place the tooltip and determine which help message to display.
  * @param {function(string, ?ol.Coordinate)} callback The function
@@ -125522,37 +125631,14 @@ ngeo.interaction.MeasureArea.prototype.getDrawInteraction = function(style,
 ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
   var geom = /** @type {ol.geom.Polygon} */
       (this.sketchFeature.getGeometry());
-  var output = this.formatMeasure_(geom);
+  var proj = this.getMap().getView().getProjection();
+  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj);
   var verticesCount = geom.getCoordinates()[0].length;
   var coord = null;
   if (verticesCount > 2) {
     coord = geom.getInteriorPoint().getCoordinates();
   }
   callback(output, coord);
-};
-
-
-/**
- * Format measure output.
- * @param {ol.geom.Polygon} polygon
- * @return {string}
- * @private
- */
-ngeo.interaction.MeasureArea.prototype.formatMeasure_ = function(polygon) {
-  var map = this.getMap();
-  var sourceProj = map.getView().getProjection();
-  var geom = /** @type {ol.geom.Polygon} */ (polygon.clone().transform(
-      sourceProj, 'EPSG:4326'));
-  var coordinates = geom.getLinearRing(0).getCoordinates();
-  var area = Math.abs(ol.sphere.WGS84.geodesicArea(coordinates));
-  var output;
-  if (area > 1000000) {
-    output = parseFloat((area / 1000000).toPrecision(3)) +
-        ' ' + 'km<sup>2</sup>';
-  } else {
-    output = parseFloat(area.toPrecision(3)) + ' ' + 'm<sup>2</sup>';
-  }
-  return output;
 };
 
 goog.provide('ngeo.interaction.DrawAzimut');
@@ -125645,8 +125731,8 @@ ngeo.interaction.MeasureAzimut.prototype.formatMeasure_ = function(line) {
   var factor = dx > 0 ? 1 : -1;
   var azimut = Math.round(factor * rad * 180 / Math.PI) % 360;
   var output = azimut + '°';
-
-  output += '<br/>' + this.formatLength(line);
+  var proj = this.getMap().getView().getProjection();
+  output += '<br/>' + ngeo.interaction.Measure.getFormattedLength(line, proj);
   return output;
 };
 
@@ -126014,20 +126100,10 @@ ngeo.interaction.MeasureLength.prototype.getDrawInteraction = function(style,
 ngeo.interaction.MeasureLength.prototype.handleMeasure = function(callback) {
   var geom = /** @type {ol.geom.LineString} */
       (this.sketchFeature.getGeometry());
-  var output = this.formatMeasure_(geom);
+  var proj = this.getMap().getView().getProjection();
+  var output = ngeo.interaction.Measure.getFormattedLength(geom, proj);
   var coord = geom.getLastCoordinate();
   callback(output, coord);
-};
-
-
-/**
- * Format measure output.
- * @param {ol.geom.LineString} line
- * @return {string}
- * @private
- */
-ngeo.interaction.MeasureLength.prototype.formatMeasure_ = function(line) {
-  return this.formatLength(line);
 };
 
 goog.provide('ngeo.BackgroundEvent');
@@ -128211,9 +128287,9 @@ goog.require('ngeo');
    * @ngInject
    */
   var runner = function($templateCache) {
-    $templateCache.put('../src/directives/partials/layertree.html', '<span ng-if="::!layertreeCtrl.isRoot">{{::layertreeCtrl.node.name}}</span><input type="checkbox" ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model="layertreeCtrl.getSetActive" ng-model-options="{getterSetter: true}"/><ul ng-if="::layertreeCtrl.node.children"><li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree="::node" ngeo-layertree-notroot ngeo-layertree-map="layertreeCtrl.map" ngeo-layertree-nodelayerexpr="layertreeCtrl.nodelayerExpr"></li></ul>');
-    $templateCache.put('../src/directives/partials/popup.html', '<h4 class="popover-title ngeo-popup-title"><span>{{title}}</span><button type="button" class="close" ng-click="open = false"> &times;</button></h4><div class="popover-content" ng-bind-html="content"></div>');
-    $templateCache.put('../src/directives/partials/scaleselector.html', '<div ng-class="::{\'dropdown\': true, \'dropup\': scaleselectorCtrl.options.dropup}"><button type="button" class="btn btn-primary" data-toggle="dropdown"><span ng-bind-html="scaleselectorCtrl.currentScale"></span>&nbsp;<span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"><a href ng-click="scaleselectorCtrl.changeZoom(zoomLevel)" ng-bind-html="scaleselectorCtrl.getScale(zoomLevel)"></a></li></ul></div>');
+    $templateCache.put('../src/directives/partials/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr> </li> </ul> ');
+    $templateCache.put('../src/directives/partials/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span>{{title}}</span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
+    $templateCache.put('../src/directives/partials/scaleselector.html', '<div ng-class="::{\'dropdown\': true, \'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-primary" data-toggle=dropdown> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<span class=caret></span> </button> <ul class=dropdown-menu role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
   };
 
   ngeoModule.run(runner);

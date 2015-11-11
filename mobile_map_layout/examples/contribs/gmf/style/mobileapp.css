@@ -7016,6 +7016,38 @@ body {
 a {
   text-decoration: none;
 }
+@font-face {
+  font-family: "gmf-icons";
+  src: url("webfonts/gmf-icons.eot");
+  src: url("webfonts/gmf-icons.eot?#iefix") format("embedded-opentype"), url("webfonts/gmf-icons.woff") format("woff"), url("webfonts/gmf-icons.ttf") format("truetype"), url("webfonts/gmf-icons.svg#gmf-icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+main > * {
+  position: absolute;
+}
+main button {
+  height: 29px;
+  width: 29px;
+  background-color: white;
+  border: solid 1px black;
+  color: black;
+  padding: 0;
+}
+main button:after,
+main button:before {
+  font-family: gmf-icons;
+  color: black;
+  font-size: 29px;
+  margin-left: 4px;
+}
+main button:hover {
+  background-color: #808080;
+  cursor: pointer;
+}
+gmf-map {
+  position: initial;
+}
 gmf-map > div {
   position: absolute;
   top: 0;
@@ -7023,35 +7055,130 @@ gmf-map > div {
   bottom: 0;
   left: 0;
 }
-gmf-map .ol-zoom {
+.ol-zoom {
   background-color: transparent;
-  position: absolute;
   right: 0;
   left: auto;
-  top: 30px;
+  top: 52px;
   margin: 10px;
 }
-gmf-map .ol-zoom button {
+.ol-zoom button {
+  margin-bottom: 3px;
+  height: 29px;
+  width: 29px;
   background-color: white;
   border: solid 1px black;
   color: black;
-  padding: 0;
-  margin-bottom: 3px;
 }
-gmf-map .ol-attribution {
+.ol-zoom button:hover {
+  background-color: #808080;
+}
+.ol-zoom:hover {
+  background-color: transparent;
+}
+.ol-attribution {
   display: none;
 }
-gmf-map .ol-scale-line,
-gmf-map .ol-scale-line-inner {
+.ol-scale-line,
+.ol-scale-line-inner {
   background-color: white;
   border-color: black;
   border-width: 2px;
   color: black;
 }
-@media (min-width: 767px) {
-  gmf-map .ol-zoom {
+.geolocation {
+  right: 0;
+  left: auto;
+  top: 137px;
+  margin-right: 13px;
+  z-index: 3;
+}
+.geolocation:after {
+  content: 'b';
+}
+.search {
+  top: 13px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 6px 10px;
+  background-color: white;
+  width: 220px;
+  border-radius: 25px;
+  border: solid 1px black;
+  z-index: 2;
+}
+.search input {
+  width: 150px;
+  margin: 0 10px;
+  padding: 0 5px;
+  border-width: 0 1px;
+  border-radius: 0;
+}
+.nav-trigger {
+  top: 13px;
+  left: 50vw;
+  margin-top: 2px;
+  background-color: transparent;
+  border: none;
+  z-index: 3;
+}
+.nav-left-trigger {
+  margin-left: -102px;
+}
+.nav-left-trigger:after {
+  content: 'a';
+}
+.nav-right-trigger {
+  margin-left: 77px;
+}
+.nav-right-trigger:after {
+  content: 'd';
+}
+@media (min-width: 768px) {
+  .ol-zoom {
     top: auto;
-    bottom: 0;
+    bottom: 36px;
+  }
+  .geolocation {
+    top: auto;
+    bottom: 0px;
+    margin-bottom: 10px;
+  }
+  .search {
+    left: 55px;
+    padding: 3px 10px;
+    right: auto;
+    height: 29px;
+    width: 200px;
+  }
+  .search input {
+    width: 150px;
+    margin: 0;
+    border: none;
+  }
+  .search:before {
+    content: 'c';
+    float: left;
+    font-family: gmf-icons;
+    color: grey;
+    font-size: 1.5em;
+    width: 0.5em;
+  }
+  .nav-trigger {
+    top: 13px;
+    margin: 0;
+    background-color: white;
+    border: solid 1px black;
+  }
+  .nav-left-trigger {
+    left: 13px;
+    right: auto;
+  }
+  .nav-right-trigger {
+    left: auto;
+    right: 13px;
   }
 }
 main {
@@ -7063,8 +7190,8 @@ main {
   text-align: center;
   -webkit-transform: translateZ(0);
           transform: translateZ(0);
-  -webkit-transition: -webkit-transform .3s;
-          transition: transform .3s;
+  -webkit-transition: -webkit-transform 0.3s;
+          transition: transform 0.3s;
   will-change: transform;
 }
 .nav-left-is-visible main {
@@ -7098,18 +7225,8 @@ main .overlay {
   visibility: visible;
   opacity: 1;
 }
-.nav-trigger {
-  position: absolute;
-  top: 10px;
-}
-.nav-left-trigger {
-  left: 10px;
-}
-.nav-right-trigger {
-  right: 10px;
-}
-nav,
-nav ul {
+nav.nav-left,
+nav.nav-right {
   position: fixed;
   top: 0;
   width: 260px;
@@ -7118,76 +7235,110 @@ nav ul {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 1;
-  -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-  -webkit-transition: -webkit-transform .3s;
-          transition: transform .3s;
 }
-nav > ul {
-  margin-top: 50px;
-}
-.nav-left-is-visible nav.nav-left,
-.nav-left-is-visible nav.nav-left > ul {
-  visibility: visible;
-  -webkit-transition: visibility 0s;
-  transition: visibility 0s;
-}
-.nav-right-is-visible nav.nav-right,
-.nav-right-is-visible nav.nav-right > ul {
-  visibility: visible;
-  -webkit-transition: visibility 0s;
-  transition: visibility 0s;
-}
-nav,
-nav > ul {
-  /* by default .cd-primary-nav is hidden - trick for iOS devices where you can see the navigation if you pull down */
-  visibility: hidden;
-  -webkit-transition: visibility 0s 0.3s;
-  transition: visibility 0s 0.3s;
-}
-nav header {
+nav.nav-left header,
+nav.nav-right header {
   display: block;
   height: 50px;
   line-height: 50px;
   background-color: #808080;
+}
+nav.nav-left header .go-back,
+nav.nav-right header .go-back {
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  -webkit-transition: opacity 1s;
+          transition: opacity 1s;
+  will-change: opacity, visibility;
+  opacity: 0;
+  visibility: hidden;
+  height: 50px;
+  width: 30px;
+}
+nav.nav-left header .go-back.active,
+nav.nav-right header .go-back.active {
+  opacity: 1;
+  visibility: visible;
+}
+nav.nav-left header .go-back::before,
+nav.nav-right header .go-back::before,
+nav.nav-left header .go-back::after,
+nav.nav-right header .go-back::after {
+  -webkit-transform-origin: 1px 50%;
+      -ms-transform-origin: 1px 50%;
+          transform-origin: 1px 50%;
+  left: 10px;
+}
+nav.nav-left header > nav,
+nav.nav-right header > nav {
+  position: absolute;
+  width: 260px;
+  left: 260px;
+  -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+          transform: translateX(0);
+  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+          transition: transform 0.3s, opacity 0.3s;
+  will-change: transform, opacity;
+  opacity: 0;
   text-align: center;
 }
-nav ul a {
-  display: block;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 20px;
-  color: #808080;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+nav.nav-left header > nav.active,
+nav.nav-right header > nav.active {
+  -webkit-transform: translateX(-100%);
+      -ms-transform: translateX(-100%);
+          transform: translateX(-100%);
+  opacity: 1;
 }
-nav a {
-  -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-  will-change: transform, opacity;
-  -webkit-transition: -webkit-transform .3s, opacity .3s;
-          transition: transform .3s, opacity .3s;
-}
-nav .is-hidden {
-  -webkit-transform: translateX(100%);
-      -ms-transform: translateX(100%);
-          transform: translateX(100%);
-}
-nav .moves-out > li > a {
-  -webkit-transform: translateX(-20%);
-      -ms-transform: translateX(-20%);
-          transform: translateX(-20%);
+nav.nav-left header > nav.slide-out,
+nav.nav-right header > nav.slide-out {
+  -webkit-transform: translateX(-120%);
+      -ms-transform: translateX(-120%);
+          transform: translateX(-120%);
   opacity: 0;
 }
-nav .has-children > a,
-nav .go-back {
-  position: relative;
+nav.nav-left header.back > nav,
+nav.nav-right header.back > nav {
+  -webkit-transform: translate(-120%);
+      -ms-transform: translate(-120%);
+          transform: translate(-120%);
 }
-nav .has-children > a::before,
-nav .go-back::before,
-nav .has-children > a::after,
-nav .go-back::after {
+nav.nav-left header.back > nav.active,
+nav.nav-right header.back > nav.active {
+  -webkit-transform: translateX(-100%);
+      -ms-transform: translateX(-100%);
+          transform: translateX(-100%);
+}
+nav.nav-left header.back > nav.slide-out,
+nav.nav-right header.back > nav.slide-out {
+  -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+          transform: translateX(0);
+}
+nav.nav-left a[data-toggle],
+nav.nav-right a[data-toggle] {
+  position: relative;
+  padding-right: 40px;
+}
+nav.nav-left a[data-toggle]::before,
+nav.nav-right a[data-toggle]::before,
+nav.nav-left a[data-toggle]::after,
+nav.nav-right a[data-toggle]::after {
+  /* arrow goes on the right side - children navigation */
+  right: 20px;
+  -webkit-transform-origin: 9px 50%;
+      -ms-transform-origin: 9px 50%;
+          transform-origin: 9px 50%;
+}
+nav.nav-left .go-back::before,
+nav.nav-right .go-back::before,
+nav.nav-left a[data-toggle]::before,
+nav.nav-right a[data-toggle]::before,
+nav.nav-left .go-back::after,
+nav.nav-right .go-back::after,
+nav.nav-left a[data-toggle]::after,
+nav.nav-right a[data-toggle]::after {
   /* arrow icon in CSS - for element with nested unordered lists */
   content: '';
   position: absolute;
@@ -7200,42 +7351,59 @@ nav .go-back::after {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-nav .has-children > a::before,
-nav .go-back::before {
+nav.nav-left .go-back::before,
+nav.nav-right .go-back::before,
+nav.nav-left a[data-toggle]::before,
+nav.nav-right a[data-toggle]::before {
   -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
           transform: rotate(45deg);
 }
-nav .has-children > a::after,
-nav .go-back::after {
+nav.nav-left .go-back::after,
+nav.nav-right .go-back::after,
+nav.nav-left a[data-toggle]::after,
+nav.nav-right a[data-toggle]::after {
   -webkit-transform: rotate(-45deg);
       -ms-transform: rotate(-45deg);
           transform: rotate(-45deg);
 }
-nav .has-children > a {
-  padding-right: 40px;
-}
-nav .has-children > a::before,
-nav .has-children > a::after {
-  /* arrow goes on the right side - children navigation */
-  right: 20px;
-  -webkit-transform-origin: 9px 50%;
-      -ms-transform-origin: 9px 50%;
-          transform-origin: 9px 50%;
-}
-nav .go-back {
-  position: absolute;
-  left: 0;
+nav.nav-left ul a,
+nav.nav-right ul a {
+  display: block;
   height: 50px;
-  padding-left: 40px;
+  line-height: 50px;
+  padding: 0 20px;
+  color: #808080;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-nav .go-back::before,
-nav .go-back::after {
-  /* arrow goes on the right side - children navigation */
-  left: 20px;
-  -webkit-transform-origin: 1px 50%;
-      -ms-transform-origin: 1px 50%;
-          transform-origin: 1px 50%;
+nav.nav-left .slide,
+nav.nav-right .slide {
+  position: fixed;
+  height: 100%;
+  width: 260px;
+  -webkit-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+          transform: translateX(100%);
+  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+          transition: transform 0.3s, opacity 0.3s;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+nav.nav-left .slide.active,
+nav.nav-right .slide.active {
+  -webkit-transform: translateX(0%);
+      -ms-transform: translateX(0%);
+          transform: translateX(0%);
+  opacity: 1;
+}
+nav.nav-left .slide.slide-out,
+nav.nav-right .slide.slide-out {
+  -webkit-transform: translateX(-20%);
+      -ms-transform: translateX(-20%);
+          transform: translateX(-20%);
+  opacity: 0;
 }
 .nav-left {
   left: 0;

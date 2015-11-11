@@ -325,7 +325,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line230">line 230</a>
+        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -388,7 +388,7 @@ where to place the tooltip and determine which help message to display.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line412">line 412</a>
+        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line435">line 435</a>
     </li></ul></dd>
     
 
@@ -559,14 +559,15 @@ where to place the tooltip and determine which help message to display.</p>
 
     
 
-    <h4 class="name" id="formatLength"><span class="type-signature">(protected) </span>formatLength<span class="signature">(line)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id=".getFormattedArea"><span class="type-signature">(static) </span>getFormattedArea<span class="signature">(polygon, projection)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Format measure output.</p>
+    <p>Calculate the area of the passed polygon and return a formatted string
+of the area.</p>
 </div>
 
 
@@ -602,13 +603,13 @@ where to place the tooltip and determine which help message to display.</p>
 
         <tr>
             
-                <td class="name"><code>line</code></td>
+                <td class="name"><code>polygon</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">ol.geom.LineString</span>
+<span class="param-type">ol.geom.Polygon</span>
 
 
             
@@ -618,7 +619,30 @@ where to place the tooltip and determine which help message to display.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Polygon.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>projection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.proj.Projection</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Projection of the polygon coords.</p></td>
         </tr>
 
     
@@ -659,7 +683,7 @@ where to place the tooltip and determine which help message to display.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line383">line 383</a>
+        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line204">line 204</a>
     </li></ul></dd>
     
 
@@ -685,6 +709,187 @@ where to place the tooltip and determine which help message to display.</p>
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>Formatted string of the area.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getFormattedLength"><span class="type-signature">(static) </span>getFormattedLength<span class="signature">(lineString, projection)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Calculate the length of the passed line string and return a formatted
+string of the length.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lineString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.geom.LineString</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Line string.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>projection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.proj.Projection</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Projection of the line string coords.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line227">line 227</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Formatted string of length.</p>
+</div>
+
 
 
 <dl>
@@ -759,7 +964,7 @@ where to place the tooltip and determine which help message to display.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line419">line 419</a>
+        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line442">line 442</a>
     </li></ul></dd>
     
 
@@ -855,7 +1060,7 @@ where to place the tooltip and determine which help message to display.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line236">line 236</a>
+        <a href="src_ol-ext_interaction_measure.js.html">src/ol-ext/interaction/measure.js</a>, <a href="src_ol-ext_interaction_measure.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
