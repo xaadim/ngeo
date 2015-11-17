@@ -7086,16 +7086,6 @@ gmf-map > div {
   border-width: 2px;
   color: black;
 }
-.geolocation {
-  right: 0;
-  left: auto;
-  top: 137px;
-  margin-right: 13px;
-  z-index: 3;
-}
-.geolocation:after {
-  content: 'b';
-}
 .search {
   top: 13px;
   left: 0;
@@ -7138,10 +7128,6 @@ gmf-map > div {
   .ol-zoom {
     top: auto;
     bottom: 36px;
-  }
-  .geolocation {
-    top: auto;
-    bottom: 10px;
   }
   .search {
     left: 55px;
