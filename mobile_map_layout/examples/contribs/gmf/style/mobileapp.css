@@ -7111,14 +7111,12 @@ gmf-map > div {
 }
 .search input {
   width: 150px;
-  margin: 0 10px;
   padding: 0 5px;
   border-width: 0 1px;
   border-radius: 0;
 }
 .nav-trigger {
   top: 13px;
-  left: 50vw;
   margin-top: 2px;
   background-color: transparent;
   border: none;
@@ -7143,8 +7141,7 @@ gmf-map > div {
   }
   .geolocation {
     top: auto;
-    bottom: 0px;
-    margin-bottom: 10px;
+    bottom: 10px;
   }
   .search {
     left: 55px;
@@ -7174,7 +7171,6 @@ gmf-map > div {
   }
   .nav-left-trigger {
     left: 13px;
-    right: auto;
   }
   .nav-right-trigger {
     left: auto;
