@@ -195,7 +195,11 @@ app.MainController = function() {
     view: new ol.View({
       center: [0, 0],
       zoom: 2
-    })
+    }),
+    controls: [
+      new ol.control.ScaleLine(),
+      new ol.control.Zoom()
+    ]
   });
 };
 
