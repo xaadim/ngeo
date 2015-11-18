@@ -164,32 +164,11 @@ app.module.directive('appNav', app.navDirective);
 
 
 /**
- * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
- *     overlay manager service.
  * @constructor
  * @ngInject
  * @export
  */
-app.MainController = function(ngeoFeatureOverlayMgr) {
-
-  proj4.defs('EPSG:21781',
-      '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 ' +
-      '+x_0=600000 +y_0=200000 +ellps=bessel ' +
-      '+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs');
-
-  /**
-   * @type {Array.<gmfx.SearchDirectiveDatasource>}
-   * @export
-   */
-  this.searchDatasources = [{
-    datasetTitle: 'From demo 2.0',
-    labelKey: 'label',
-    groupsKey: 'layer_name',
-    groupValues: ['osm'],
-    projection: 'EPSG:21781',
-    url: 'http://geomapfish-demo.camptocamp.net/2.0/wsgi/fulltextsearch?' +
-        'query=%QUERY'
-  }];
+app.MainController = function() {
 
   /**
    * @type {boolean}
@@ -222,9 +201,6 @@ app.MainController = function(ngeoFeatureOverlayMgr) {
       new ol.control.Zoom()
     ]
   });
-
-  ngeoFeatureOverlayMgr.init(this.map);
-
 };
 
 

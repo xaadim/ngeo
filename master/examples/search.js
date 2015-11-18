@@ -120,7 +120,7 @@ app.SearchController = function($rootScope, $compile,
    * @export
    */
   this.listeners = /** @type {ngeox.SearchDirectiveListeners} */ ({
-    select: angular.bind(this, app.SearchController.select_)
+    selected: angular.bind(this, app.SearchController.selected_)
   });
 
 };
@@ -164,7 +164,7 @@ app.SearchController.prototype.createAndInitBloodhound_ =
  * @this {app.SearchController}
  * @private
  */
-app.SearchController.select_ = function(event, suggestion, dataset) {
+app.SearchController.selected_ = function(event, suggestion, dataset) {
   var map = /** @type {ol.Map} */ (this.map);
   var feature = /** @type {ol.Feature} */ (suggestion);
   var featureGeometry = /** @type {ol.geom.SimpleGeometry} */
