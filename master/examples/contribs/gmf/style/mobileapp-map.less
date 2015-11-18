@@ -9,7 +9,7 @@
   font-style: normal;
 }
 
-main>* {
+main > * {
   position: absolute;
 }
 
@@ -27,7 +27,6 @@ main button {
     margin-left: 4px;
   }
   &:hover {
-    background-color: @onhover-color;
     cursor: pointer;
   }
 }
@@ -57,7 +56,7 @@ gmf-map {
     border: solid 1px @map-tools-color;
     color: @map-tools-color;
     &:hover {
-      background-color: @onhover-color;
+      background-color: @map-tools-bg-color;
     }
   }
   &:hover {
@@ -94,6 +93,24 @@ gmf-map {
     border-width: 0 1px;
     border-radius: 0;
   }
+  .clear-button {
+    position: absolute;
+    top: @app-margin;
+    left: 0;
+    right: 0;
+    margin: -6px auto 0 165px;
+    width: 1.5em;
+    &:after {
+      content: 'e';
+      color: grey;
+      font-family: gmf-icons;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .nav-trigger {
@@ -120,9 +137,16 @@ gmf-map {
 
 //For tablet only
 @media (min-width: @screen-sm-min) {
+  main button:hover{
+    background-color: @onhover-color;
+  }
+
   .ol-zoom {
     top: auto;
     bottom: 36px;
+    button:hover {
+      background-color: @onhover-color;
+    }
   }
 
   .search {
@@ -143,6 +167,9 @@ gmf-map {
       color: grey;
       font-size: 1.5em;
       width: 0.5em;
+    }
+    .clear-button {
+      margin: -9px auto 0 175px;
     }
   }
 

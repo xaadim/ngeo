@@ -13144,9 +13144,7 @@ ol.Object.prototype.set = function(key, value, opt_silent) {
   } else {
     var oldValue = this.values_[key];
     this.values_[key] = value;
-    if (oldValue !== value) {
-      this.notify(key, oldValue);
-    }
+    this.notify(key, oldValue);
   }
 };
 
@@ -25299,7 +25297,8 @@ ol.color.fromStringInternal_ = function(s) {
 
   var isHex = false;
   if (ol.ENABLE_NAMED_COLORS && goog.color.names.hasOwnProperty(s)) {
-    s = goog.color.names[s];
+    // goog.color.names does not have a type declaration, so add a typecast
+    s = /** @type {string} */ (goog.color.names[s]);
     isHex = true;
   }
 
@@ -74521,7 +74520,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.composeFrame =
   var tilesToDraw = this.renderedTiles_;
   var tileGrid = source.getTileGrid();
 
-  var currentZ, i, ii, origin, tile, tileSize;
+  var currentZ, i, ii, origin, scale, tile, tileExtent, tileSize;
   var tilePixelRatio, tilePixelResolution, tilePixelSize, tileResolution;
   for (i = 0, ii = tilesToDraw.length; i < ii; ++i) {
     tile = tilesToDraw[i];
@@ -74663,7 +74662,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.forEachFeatureAtCoordinate =
   var tileGrid = source.getTileGrid();
   var found, tileSpaceCoordinate;
   var i, ii, origin, replayGroup;
-  var tile, tileCoord, tileExtent, tilePixelRatio, tileResolution;
+  var tile, tileCoord, tileExtent, tilePixelRatio, tileResolution, tileSize;
   for (i = 0, ii = replayables.length; i < ii; ++i) {
     tile = replayables[i];
     tileCoord = tile.getTileCoord();
@@ -74676,6 +74675,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.forEachFeatureAtCoordinate =
       origin = ol.extent.getTopLeft(tileExtent);
       tilePixelRatio = source.getTilePixelRatio();
       tileResolution = tileGrid.getResolution(tileCoord[0]) / tilePixelRatio;
+      tileSize = ol.size.toSize(tileGrid.getTileSize(tileCoord[0]));
       tileSpaceCoordinate = [
         (coordinate[0] - origin[0]) / tileResolution,
         (origin[1] - coordinate[1]) / tileResolution
@@ -116359,11 +116359,23 @@ ol.source.ImageStatic = function(options) {
   this.image_ = new ol.Image(imageExtent, undefined, 1, attributions,
       options.url, crossOrigin, imageLoadFunction);
 
-  /**
-   * @private
-   * @type {ol.Size}
-   */
-  this.imageSize_ = options.imageSize ? options.imageSize : null;
+  goog.events.listen(this.image_, goog.events.EventType.CHANGE, function() {
+    if (this.image_.getState() == ol.ImageState.LOADED) {
+      var image = this.image_.getImage();
+      var resolution = ol.extent.getHeight(imageExtent) / image.height;
+      var pxWidth = Math.ceil(ol.extent.getWidth(imageExtent) / resolution);
+      var pxHeight = Math.ceil(ol.extent.getHeight(imageExtent) / resolution);
+      if (pxWidth !== image.width || pxHeight !== image.height) {
+        var canvas = /** @type {HTMLCanvasElement} */
+            (document.createElement('canvas'));
+        canvas.width = pxWidth;
+        canvas.height = pxHeight;
+        var context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        this.image_.setImage(canvas);
+      }
+    }
+  }, false, this);
 
   goog.events.listen(this.image_, goog.events.EventType.CHANGE,
       this.handleImageChange, false, this);
@@ -116381,38 +116393,6 @@ ol.source.ImageStatic.prototype.getImageInternal =
     return this.image_;
   }
   return null;
-};
-
-
-/**
- * @inheritDoc
- */
-ol.source.ImageStatic.prototype.handleImageChange = function(evt) {
-  if (this.image_.getState() == ol.ImageState.LOADED) {
-    var imageExtent = this.image_.getExtent();
-    var image = this.image_.getImage();
-    var imageWidth, imageHeight;
-    if (this.imageSize_) {
-      imageWidth = this.imageSize_[0];
-      imageHeight = this.imageSize_[1];
-    } else {
-      imageWidth = image.width;
-      imageHeight = image.height;
-    }
-    var resolution = ol.extent.getHeight(imageExtent) / imageHeight;
-    var targetWidth = Math.ceil(ol.extent.getWidth(imageExtent) / resolution);
-    if (targetWidth != imageWidth) {
-      var canvas = /** @type {HTMLCanvasElement} */
-          (document.createElement('canvas'));
-      canvas.width = targetWidth;
-      canvas.height = /** @type {number} */ (imageHeight);
-      var context = canvas.getContext('2d');
-      context.drawImage(image, 0, 0, imageWidth, imageHeight,
-          0, 0, canvas.width, canvas.height);
-      this.image_.setImage(canvas);
-    }
-  }
-  goog.base(this, 'handleImageChange', evt);
 };
 
 goog.provide('ol.source.wms');
@@ -122744,19 +122724,19 @@ ngeo.searchDirective = function() {
           var typeaheadListeners = ngeo.searchDirective.adaptListeners_(
               typeaheadListeners_);
 
-          element.on('typeahead:opened', function() {
+          element.on('typeahead:open', function() {
             scope.$apply(function() {
-              typeaheadListeners.opened();
+              typeaheadListeners.open();
             });
           });
 
-          element.on('typeahead:closed', function() {
+          element.on('typeahead:close', function() {
             scope.$apply(function() {
-              typeaheadListeners.closed();
+              typeaheadListeners.close();
             });
           });
 
-          element.on('typeahead:cursorchanged',
+          element.on('typeahead:cursorchange',
               /**
                * @param {jQuery.Event} event Event.
                * @param {Object} suggestion Suggestion.
@@ -122764,11 +122744,11 @@ ngeo.searchDirective = function() {
                */
               function(event, suggestion, dataset) {
                 scope.$apply(function() {
-                  typeaheadListeners.cursorchanged(event, suggestion, dataset);
+                  typeaheadListeners.cursorchange(event, suggestion, dataset);
                 });
               });
 
-          element.on('typeahead:selected',
+          element.on('typeahead:select',
               /**
                * @param {jQuery.Event} event Event.
                * @param {Object} suggestion Suggestion.
@@ -122776,11 +122756,11 @@ ngeo.searchDirective = function() {
                */
               function(event, suggestion, dataset) {
                 scope.$apply(function() {
-                  typeaheadListeners.selected(event, suggestion, dataset);
+                  typeaheadListeners.select(event, suggestion, dataset);
                 });
               });
 
-          element.on('typeahead:autocompleted',
+          element.on('typeahead:autocomplete',
               /**
                * @param {jQuery.Event} event Event.
                * @param {Object} suggestion Suggestion.
@@ -122788,7 +122768,7 @@ ngeo.searchDirective = function() {
                */
               function(event, suggestion, dataset) {
                 scope.$apply(function() {
-                  typeaheadListeners.autocompleted(event, suggestion, dataset);
+                  typeaheadListeners.autocomplete(event, suggestion, dataset);
                 });
               });
         }
@@ -122808,24 +122788,24 @@ ngeo.searchDirective.adaptListeners_ = function(object) {
   var typeaheadListeners;
   if (!goog.isDef(object)) {
     typeaheadListeners = {
-      opened: goog.nullFunction,
-      closed: goog.nullFunction,
-      cursorchanged: goog.nullFunction,
-      selected: goog.nullFunction,
-      autocompleted: goog.nullFunction
+      open: goog.nullFunction,
+      close: goog.nullFunction,
+      cursorchange: goog.nullFunction,
+      select: goog.nullFunction,
+      autocomplete: goog.nullFunction
     };
   } else {
     typeaheadListeners = {
-      opened: goog.isDef(object.opened) ?
-          object.opened : goog.nullFunction,
-      closed: goog.isDef(object.closed) ?
-          object.closed : goog.nullFunction,
-      cursorchanged: goog.isDef(object.cursorchanged) ?
-          object.cursorchanged : goog.nullFunction,
-      selected: goog.isDef(object.selected) ?
-          object.selected : goog.nullFunction,
-      autocompleted: goog.isDef(object.autocompleted) ?
-          object.autocompleted : goog.nullFunction
+      open: goog.isDef(object.open) ?
+          object.open : goog.nullFunction,
+      close: goog.isDef(object.close) ?
+          object.close : goog.nullFunction,
+      cursorchange: goog.isDef(object.cursorchange) ?
+          object.cursorchange : goog.nullFunction,
+      select: goog.isDef(object.select) ?
+          object.select : goog.nullFunction,
+      autocomplete: goog.isDef(object.autocomplete) ?
+          object.autocomplete : goog.nullFunction
     };
   }
   return typeaheadListeners;
