@@ -13144,7 +13144,9 @@ ol.Object.prototype.set = function(key, value, opt_silent) {
   } else {
     var oldValue = this.values_[key];
     this.values_[key] = value;
-    this.notify(key, oldValue);
+    if (oldValue !== value) {
+      this.notify(key, oldValue);
+    }
   }
 };
 
@@ -25297,8 +25299,7 @@ ol.color.fromStringInternal_ = function(s) {
 
   var isHex = false;
   if (ol.ENABLE_NAMED_COLORS && goog.color.names.hasOwnProperty(s)) {
-    // goog.color.names does not have a type declaration, so add a typecast
-    s = /** @type {string} */ (goog.color.names[s]);
+    s = goog.color.names[s];
     isHex = true;
   }
 
@@ -51703,7 +51704,7 @@ ol.style.IconImage_ = function(image, src, size, crossOrigin, imageState) {
    */
   this.image_ = !image ? new Image() : image;
 
-  if (crossOrigin) {
+  if (crossOrigin !== null) {
     this.image_.crossOrigin = crossOrigin;
   }
 
@@ -74520,7 +74521,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.composeFrame =
   var tilesToDraw = this.renderedTiles_;
   var tileGrid = source.getTileGrid();
 
-  var currentZ, i, ii, origin, scale, tile, tileExtent, tileSize;
+  var currentZ, i, ii, origin, tile, tileSize;
   var tilePixelRatio, tilePixelResolution, tilePixelSize, tileResolution;
   for (i = 0, ii = tilesToDraw.length; i < ii; ++i) {
     tile = tilesToDraw[i];
@@ -74662,7 +74663,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.forEachFeatureAtCoordinate =
   var tileGrid = source.getTileGrid();
   var found, tileSpaceCoordinate;
   var i, ii, origin, replayGroup;
-  var tile, tileCoord, tileExtent, tilePixelRatio, tileResolution, tileSize;
+  var tile, tileCoord, tileExtent, tilePixelRatio, tileResolution;
   for (i = 0, ii = replayables.length; i < ii; ++i) {
     tile = replayables[i];
     tileCoord = tile.getTileCoord();
@@ -74675,7 +74676,6 @@ ol.renderer.canvas.VectorTileLayer.prototype.forEachFeatureAtCoordinate =
       origin = ol.extent.getTopLeft(tileExtent);
       tilePixelRatio = source.getTilePixelRatio();
       tileResolution = tileGrid.getResolution(tileCoord[0]) / tilePixelRatio;
-      tileSize = ol.size.toSize(tileGrid.getTileSize(tileCoord[0]));
       tileSpaceCoordinate = [
         (coordinate[0] - origin[0]) / tileResolution,
         (origin[1] - coordinate[1]) / tileResolution
@@ -108047,7 +108047,7 @@ ol.Image = function(extent, resolution, pixelRatio, attributions, src,
    * @type {HTMLCanvasElement|Image|HTMLVideoElement}
    */
   this.image_ = new Image();
-  if (crossOrigin) {
+  if (crossOrigin !== null) {
     this.image_.crossOrigin = crossOrigin;
   }
 
@@ -108232,7 +108232,7 @@ ol.ImageTile = function(tileCoord, state, src, crossOrigin, tileLoadFunction) {
    * @type {Image}
    */
   this.image_ = new Image();
-  if (crossOrigin) {
+  if (crossOrigin !== null) {
     this.image_.crossOrigin = crossOrigin;
   }
 
@@ -116359,23 +116359,11 @@ ol.source.ImageStatic = function(options) {
   this.image_ = new ol.Image(imageExtent, undefined, 1, attributions,
       options.url, crossOrigin, imageLoadFunction);
 
-  goog.events.listen(this.image_, goog.events.EventType.CHANGE, function() {
-    if (this.image_.getState() == ol.ImageState.LOADED) {
-      var image = this.image_.getImage();
-      var resolution = ol.extent.getHeight(imageExtent) / image.height;
-      var pxWidth = Math.ceil(ol.extent.getWidth(imageExtent) / resolution);
-      var pxHeight = Math.ceil(ol.extent.getHeight(imageExtent) / resolution);
-      if (pxWidth !== image.width || pxHeight !== image.height) {
-        var canvas = /** @type {HTMLCanvasElement} */
-            (document.createElement('canvas'));
-        canvas.width = pxWidth;
-        canvas.height = pxHeight;
-        var context = canvas.getContext('2d');
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        this.image_.setImage(canvas);
-      }
-    }
-  }, false, this);
+  /**
+   * @private
+   * @type {ol.Size}
+   */
+  this.imageSize_ = options.imageSize ? options.imageSize : null;
 
   goog.events.listen(this.image_, goog.events.EventType.CHANGE,
       this.handleImageChange, false, this);
@@ -116393,6 +116381,38 @@ ol.source.ImageStatic.prototype.getImageInternal =
     return this.image_;
   }
   return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.ImageStatic.prototype.handleImageChange = function(evt) {
+  if (this.image_.getState() == ol.ImageState.LOADED) {
+    var imageExtent = this.image_.getExtent();
+    var image = this.image_.getImage();
+    var imageWidth, imageHeight;
+    if (this.imageSize_) {
+      imageWidth = this.imageSize_[0];
+      imageHeight = this.imageSize_[1];
+    } else {
+      imageWidth = image.width;
+      imageHeight = image.height;
+    }
+    var resolution = ol.extent.getHeight(imageExtent) / imageHeight;
+    var targetWidth = Math.ceil(ol.extent.getWidth(imageExtent) / resolution);
+    if (targetWidth != imageWidth) {
+      var canvas = /** @type {HTMLCanvasElement} */
+          (document.createElement('canvas'));
+      canvas.width = targetWidth;
+      canvas.height = /** @type {number} */ (imageHeight);
+      var context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0, imageWidth, imageHeight,
+          0, 0, canvas.width, canvas.height);
+      this.image_.setImage(canvas);
+    }
+  }
+  goog.base(this, 'handleImageChange', evt);
 };
 
 goog.provide('ol.source.wms');
@@ -126377,40 +126397,46 @@ goog.require('ol.format.GeoJSON');
  * bloodhound.initialize();
  *
  * @example
- * var bloodhound = ngeoCreateGeoJSONBloodhound({
- *   remote: {
- *     url: mySearchEngineUrl,
- *     replace: function(url, query) {
- *       return url +
- *           '?qtext=' + encodeURIComponent(query) +
- *           '&lang=' + gettextCatalog.currentLanguage;
+ * var bloodhound = ngeoCreateGeoJSONBloodhound(
+ *   '',
+ *   undefined,
+ *   ol.proj.get('EPSG:3857'),
+ *   ol.proj.get('EPSG:21781'),
+ *   {
+ *     remote: {
+ *       url: mySearchEngineUrl,
+ *       replace: function(url, query) {
+ *         return url +
+ *             '?qtext=' + encodeURIComponent(query) +
+ *             '&lang=' + gettextCatalog.currentLanguage;
+ *       }
  *     }
  *   }
- * }, undefined, ol.proj.get('EPSG:3857'), ol.proj.get('EPSG:21781'));
+ * );
  * bloodhound.initialize
  *
  * @typedef {function(string, (function(GeoJSONFeature): boolean)=,
- * ol.proj.Projection=, ol.proj.Projection=):Bloodhound}
+ * ol.proj.Projection=, ol.proj.Projection=, BloodhoundOptions=):Bloodhound}
  */
 ngeo.CreateGeoJSONBloodhound;
 
 
 /**
- * @param {BloodhoundOptions|string} options Bloodhound options or a URL to the
- *     search service. If a URL is provided then default Bloodhound options are
- *     used.
+ * @param {string} url an URL to a search service.
  * @param {(function(GeoJSONFeature): boolean)=} opt_filter function to filter
- * results.
+ *     results.
  * @param {ol.proj.Projection=} opt_featureProjection Feature projection.
  * @param {ol.proj.Projection=} opt_dataProjection Data projection.
+ * @param {BloodhoundOptions=} opt_options optional Bloodhound options. If
+ *     undefined, the default Bloodhound config will be used.
  * @return {Bloodhound} The Bloodhound object.
  */
-ngeo.createGeoJSONBloodhound = function(options, opt_filter,
-    opt_featureProjection, opt_dataProjection) {
+ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
+    opt_dataProjection, opt_options) {
   var geojsonFormat = new ol.format.GeoJSON();
   var bloodhoundOptions = /** @type {BloodhoundOptions} */ ({
     remote: {
-      url: goog.isString(options) ? options : '',
+      url: url,
       prepare: function(query, settings) {
         settings.url = settings.url.replace('%QUERY', query);
         settings.dataType = 'jsonp';
@@ -126438,8 +126464,8 @@ ngeo.createGeoJSONBloodhound = function(options, opt_filter,
     datumTokenizer: goog.nullFunction,
     queryTokenizer: Bloodhound.tokenizers.whitespace
   });
-  if (!goog.isString(options)) {
-    goog.object.extend(bloodhoundOptions, options);
+  if (opt_options) {
+    goog.object.extend(bloodhoundOptions, opt_options);
   }
   return new Bloodhound(bloodhoundOptions);
 };
