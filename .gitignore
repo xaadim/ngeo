@@ -1,3 +1,4 @@
+ngdoc/*
 /.build
 /node_modules
 /examples/simple.min.js
