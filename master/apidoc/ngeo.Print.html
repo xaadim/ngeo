@@ -59,6 +59,24 @@ interact with MapFish Print v3 services.</p>
 <li>getReportUrl: get the URL of a report</li>
 <li>getCapabilities: get the capabilities of the server</li>
 </ul>
+<pre class="prettyprint source"><code>var printBaseUrl = 'http://example.com/print';
+var print = new ngeo.Print(printBaseUrl);
+
+var scale = 5000;
+var dpi = 72;
+var layout = 'A4 portrait';
+var reportSpec = print.createSpec(map, scale, dpi, layout, {
+  'title': 'A title for my report'
+});</code></pre><p>TODO and limitations:</p>
+<ul>
+<li>createSpec should also accept a bbox instead of a center and a scale.</li>
+<li>Add support for ol.style.RegularShape. MapFish Print supports symbols
+like crosses, stars and squares, so printing regular shapes should be
+possible.</li>
+<li>ol.style.Icon may use a sprite image, and offsets to define to rectangle
+to use within the sprite. This type of icons won't be printed correctly
+as MapFish Print does not support sprite icons.</li>
+</ul>
 </div>
 
 
@@ -174,7 +192,7 @@ interact with MapFish Print v3 services.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line101">line 101</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -197,28 +215,6 @@ interact with MapFish Print v3 services.</p>
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>var printBaseUrl = 'http://example.com/print';
-var print = new ngeo.Print(printBaseUrl);
-
-var scale = 5000;
-var dpi = 72;
-var layout = 'A4 portrait';
-var reportSpec = print.createSpec(map, scale, dpi, layout,
-    {'title': 'A title for my report'});
-
-TODO and limitations:
-
-- createSpec should also accept a bbox instead of a center and a scale.
-- Add support for ol.style.RegularShape. MapFish Print supports symbols
-  like crosses, stars and squares, so printing regular shapes should be
-  possible.
-- ol.style.Icon may use a sprite image, and offsets to define to rectangle
-  to use within the sprite. This type of icons won't be printed correctly
-  as MapFish Print does not support sprite icons.</code></pre>
 
 
 
@@ -388,7 +384,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line129">line 129</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -584,7 +580,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line716">line 716</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line717">line 717</a>
     </li></ul></dd>
     
 
@@ -829,7 +825,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line147">line 147</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line148">line 148</a>
     </li></ul></dd>
     
 
@@ -1024,7 +1020,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line216">line 216</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -1167,7 +1163,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line758">line 758</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line759">line 759</a>
     </li></ul></dd>
     
 
@@ -1320,7 +1316,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line748">line 748</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line749">line 749</a>
     </li></ul></dd>
     
 
@@ -1516,7 +1512,7 @@ TODO and limitations:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line735">line 735</a>
+        <a href="src_services_print.js.html">src/services/print.js</a>, <a href="src_services_print.js.html#line736">line 736</a>
     </li></ul></dd>
     
 

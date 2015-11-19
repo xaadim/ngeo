@@ -49069,7 +49069,7 @@ ol.pointer.PointerEventHandler.prototype.cloneEvent =
 /**
  * Triggers a 'pointerdown' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.down =
     function(pointerEventData, browserEvent) {
@@ -49081,7 +49081,7 @@ ol.pointer.PointerEventHandler.prototype.down =
 /**
  * Triggers a 'pointermove' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.move =
     function(pointerEventData, browserEvent) {
@@ -49093,7 +49093,7 @@ ol.pointer.PointerEventHandler.prototype.move =
 /**
  * Triggers a 'pointerup' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.up =
     function(pointerEventData, browserEvent) {
@@ -49105,7 +49105,7 @@ ol.pointer.PointerEventHandler.prototype.up =
 /**
  * Triggers a 'pointerenter' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.enter =
     function(pointerEventData, browserEvent) {
@@ -49118,7 +49118,7 @@ ol.pointer.PointerEventHandler.prototype.enter =
 /**
  * Triggers a 'pointerleave' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.leave =
     function(pointerEventData, browserEvent) {
@@ -49131,7 +49131,7 @@ ol.pointer.PointerEventHandler.prototype.leave =
 /**
  * Triggers a 'pointerover' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.over =
     function(pointerEventData, browserEvent) {
@@ -49144,7 +49144,7 @@ ol.pointer.PointerEventHandler.prototype.over =
 /**
  * Triggers a 'pointerout' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.out =
     function(pointerEventData, browserEvent) {
@@ -49157,7 +49157,7 @@ ol.pointer.PointerEventHandler.prototype.out =
 /**
  * Triggers a 'pointercancel' event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.cancel =
     function(pointerEventData, browserEvent) {
@@ -49169,7 +49169,7 @@ ol.pointer.PointerEventHandler.prototype.cancel =
 /**
  * Triggers a combination of 'pointerout' and 'pointerleave' events.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.leaveOut =
     function(pointerEventData, browserEvent) {
@@ -49185,7 +49185,7 @@ ol.pointer.PointerEventHandler.prototype.leaveOut =
 /**
  * Triggers a combination of 'pointerover' and 'pointerevents' events.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.enterOver =
     function(pointerEventData, browserEvent) {
@@ -49221,7 +49221,7 @@ ol.pointer.PointerEventHandler.prototype.contains_ =
  *
  * @param {string} inType A string representing the type of event to create.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  * @return {ol.pointer.PointerEvent} A PointerEvent of type `inType`.
  */
 ol.pointer.PointerEventHandler.prototype.makeEvent =
@@ -49234,7 +49234,7 @@ ol.pointer.PointerEventHandler.prototype.makeEvent =
  * Make and dispatch an event in one call.
  * @param {string} inType A string representing the type of event.
  * @param {Object} pointerEventData
- * @param {goog.events.BrowserEvent } browserEvent
+ * @param {goog.events.BrowserEvent} browserEvent
  */
 ol.pointer.PointerEventHandler.prototype.fireEvent =
     function(inType, pointerEventData, browserEvent) {
@@ -111855,7 +111855,7 @@ ol.interaction.Modify = function(options) {
   /**
   * @const
   * @private
-  * @type {Object.<string, function(ol.Feature, ol.geom.Geometry)> }
+  * @type {Object.<string, function(ol.Feature, ol.geom.Geometry)>}
   */
   this.SEGMENT_WRITERS_ = {
     'Point': this.writePointGeometry_,
@@ -113236,7 +113236,7 @@ ol.interaction.Snap = function(opt_options) {
   /**
   * @const
   * @private
-  * @type {Object.<string, function(ol.Feature, ol.geom.Geometry)> }
+  * @type {Object.<string, function(ol.Feature, ol.geom.Geometry)>}
   */
   this.SEGMENT_WRITERS_ = {
     'Point': this.writePointGeometry_,
@@ -121017,20 +121017,19 @@ goog.require('goog.object');
  * Provides a D3js component to be used to draw an elevation
  * profile chart.
  *
- * @example
- * var selection = d3.select('#element_id');
- * var profile = ngeo.profile({
- *  elevationExtractor: {
- *    z: function (item) {return item['values']['z'];)},
- *    dist: function (item) {return item['dist'];)}
- *  },
- *  hoverCallback: function(point, dist, xUnits, ele, yUnits) {
- *    console.log(point.x, point.y);
- *  },
- *  outCallback: function() {
- *    console.log("out");
- *  }});
- * selection.datum(data).call(profile);
+ *     var selection = d3.select('#element_id');
+ *     var profile = ngeo.profile({
+ *      elevationExtractor: {
+ *        z: function (item) {return item['values']['z'];)},
+ *        dist: function (item) {return item['dist'];)}
+ *      },
+ *      hoverCallback: function(point, dist, xUnits, ele, yUnits) {
+ *        console.log(point.x, point.y);
+ *      },
+ *      outCallback: function() {
+ *        console.log("out");
+ *      }});
+ *     selection.datum(data).call(profile);
  *
  * The selection data must be an array.
  * The layout for the items of this array is unconstrained: the elevation
@@ -121039,14 +121038,15 @@ goog.require('goog.object');
  * config option.
  *
  * The data below will work for the above example:
- * [
- *     {
- *         "y": 199340,
- *         "values": {"z": 788.7},
- *         "dist": 0.0,
- *         "x": 541620
- *     }, ...
- * ]
+ *
+ *     [
+ *         {
+ *             "y": 199340,
+ *             "values": {"z": 788.7},
+ *             "dist": 0.0,
+ *             "x": 541620
+ *         }, ...
+ *     ]
  *
  * @constructor
  * @return {Object}
@@ -122074,8 +122074,7 @@ goog.require('ol.Map');
  * Provides a directive used to insert a user-defined OpenLayers
  * map in the DOM. The directive does not create an isolate scope.
  *
- * @example
- * <div ngeo-map="ctrl.map"></div>
+ *     <div ngeo-map="ctrl.map"></div>
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
@@ -122122,15 +122121,14 @@ goog.require('ngeo');
  * This directive is based on Bootstrap's `modal` classes and associated
  * jQuery plugin.
  *
- * @example
- * <ngeo-modal ng-model="modalShown">
- *   <div class="modal-header">
- *     <button type="button" class="close" data-dismiss="modal"
- *         aria-hidden="true">&times;</button>
- *     <h4 class="modal-title">The Title</h4>
- *   </div>
- *   <div class="modal-body">Some content</div>
- * </ngeo-modal>
+ *     <ngeo-modal ng-model="modalShown">
+ *       <div class="modal-header">
+ *         <button type="button" class="close" data-dismiss="modal"
+ *                 aria-hidden="true">&times;</button>
+ *         <h4 class="modal-title">The Title</h4>
+ *       </div>
+ *       <div class="modal-body">Some content</div>
+ *     </ngeo-modal>
  *
  * Note: for z-indexing purpose, the modal DOM element is automatically moved
  * to document body element.
@@ -122702,11 +122700,10 @@ goog.require('ngeo');
  * Provides the "ngeoSearch" directive, which uses Twitter's
  * typeahead component to change an input text into a search field.
  *
- * @example
- * <input type="text"
- *   ngeo-search="ctrl.typeaheadOptions"
- *   ngeo-search-datasets="ctrl.typeaheadDatasets"
- *   ngeo-search-listeners="crtl.typeaheadListeners">
+ *     <input type="text"
+ *       ngeo-search="ctrl.typeaheadOptions"
+ *       ngeo-search-datasets="ctrl.typeaheadDatasets"
+ *       ngeo-search-listeners="crtl.typeaheadListeners">
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
@@ -126291,11 +126288,11 @@ goog.inherits(ngeo.BackgroundEvent, goog.events.Event);
  *
  * Setting a background layer to map is done with the `set` function:
  *
- * ngeoBackgroundLayerMgr.set(map, layer);
+ *     ngeoBackgroundLayerMgr.set(map, layer);
  *
  * To unset the background layer pass `null` as the `layer` argument:
  *
- * ngeoBackgroundLayerMgr.set(map, null);
+ *     ngeoBackgroundLayerMgr.set(map, null);
  *
  * The `get` function returns the current background layer of the map passed
  * as an argument. `null` is returned if the map doesn't have a background
@@ -126309,13 +126306,12 @@ goog.inherits(ngeo.BackgroundEvent, goog.events.Event);
  * Users can subscribe to a 'change' event to get notified when the background
  * layer changes:
  *
- * @example
- * ngeoBackgroundLayerMgr.on('change', function(e) {
- *   // do something with the layer
- *   var layer = ngeoBackgroundLayerMgr.get();
- *   // know which layer was used before
- *   var previous = e.previous
- * });
+ *     ngeoBackgroundLayerMgr.on('change', function(e) {
+ *       // do something with the layer
+ *       var layer = ngeoBackgroundLayerMgr.get();
+ *       // know which layer was used before
+ *       var previous = e.previous
+ *     });
  *
  * @extends {ol.Observable}
  * @constructor
@@ -126703,16 +126699,14 @@ ngeo.FeatureOverlayGroup;
  * The application's main component/controller initializes the feature
  * overlay manager with the map:
  *
- * @example
- * ngeoFeatureOverlayMgr.init(map);
+ *     ngeoFeatureOverlayMgr.init(map);
  *
  * Once initialized, components of the application can use the manager to
  * create a feature overlay, configuring it with specific styles:
  *
- * @example
- * var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
- * featureOverlay.setStyle(myStyle);
- * featureOverlay.addFeature(myFeature);
+ *     var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
+ *     featureOverlay.setStyle(myStyle);
+ *     featureOverlay.addFeature(myFeature);
  *
  * @constructor
  */
@@ -127054,7 +127048,7 @@ ngeo.MockLocationProvider;
  * use to mock Angular's $location provider and make it possible to use both
  * ngeoLocation and ng-include.
  *
- * app.module.config(ngeo.mockLocationProvider);
+ *     app.module.config(ngeo.mockLocationProvider);
  *
  * The ngeo Location type.
  *
@@ -127271,11 +127265,10 @@ ngeo.CreatePopup;
  * Provides a factory to create a popup in the page.
  * The factory returns a ngeo.Popup object.
  *
- * @example
- * var popup = ngeoCreatePopup();
- * popup.setTitle("A title");
- * popup.setContent("Some content");
- * popup.setOpen(true);
+ *     var popup = ngeoCreatePopup();
+ *     popup.setTitle("A title");
+ *     popup.setContent("Some content");
+ *     popup.setOpen(true);
  *
  * @constructor
  * @param {angular.$compile} $compile The compile provider.
@@ -127444,15 +127437,16 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * - getReportUrl: get the URL of a report
  * - getCapabilities: get the capabilities of the server
  *
- * @example
- * var printBaseUrl = 'http://example.com/print';
- * var print = new ngeo.Print(printBaseUrl);
  *
- * var scale = 5000;
- * var dpi = 72;
- * var layout = 'A4 portrait';
- * var reportSpec = print.createSpec(map, scale, dpi, layout,
- *     {'title': 'A title for my report'});
+ *     var printBaseUrl = 'http://example.com/print';
+ *     var print = new ngeo.Print(printBaseUrl);
+ *
+ *     var scale = 5000;
+ *     var dpi = 72;
+ *     var layout = 'A4 portrait';
+ *     var reportSpec = print.createSpec(map, scale, dpi, layout, {
+ *       'title': 'A title for my report'
+ *     });
  *
  * TODO and limitations:
  *
@@ -128327,12 +128321,11 @@ goog.require('ngeo');
  * with the array of selected layers, where layers may be added to/removed from
  * the map, and the order of selected layers may change.
  *
- * @example
- * var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
- *     true, scope, function(layer) {
- *       // exclude the layer at index 0 in the map
- *       return map.getLayers().indexOf(layer) !== 0;
- *     });
+ *     var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
+ *         true, scope, function(layer) {
+ *           // exclude the layer at index 0 in the map
+ *           return map.getLayers().indexOf(layer) !== 0;
+ *         });
  *
  * This will return a function that can be called to cancel synchronization.
  *

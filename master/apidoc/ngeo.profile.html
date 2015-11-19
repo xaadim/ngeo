@@ -51,6 +51,32 @@
 <div class="description">
     <p>Provides a D3js component to be used to draw an elevation
 profile chart.</p>
+<pre class="prettyprint source"><code>var selection = d3.select('#element_id');
+var profile = ngeo.profile({
+ elevationExtractor: {
+   z: function (item) {return item['values']['z'];)},
+   dist: function (item) {return item['dist'];)}
+ },
+ hoverCallback: function(point, dist, xUnits, ele, yUnits) {
+   console.log(point.x, point.y);
+ },
+ outCallback: function() {
+   console.log(&quot;out&quot;);
+ }});
+selection.datum(data).call(profile);</code></pre><p>The selection data must be an array.
+The layout for the items of this array is unconstrained: the elevation
+and distance values are extracted using the elevationExtractor config
+option. Optionally, POIs can be displayed and depend on a poiExtractor
+config option.</p>
+<p>The data below will work for the above example:</p>
+<pre class="prettyprint source"><code>[
+    {
+        &quot;y&quot;: 199340,
+        &quot;values&quot;: {&quot;z&quot;: 788.7},
+        &quot;dist&quot;: 0.0,
+        &quot;x&quot;: 541620
+    }, ...
+]</code></pre>
 </div>
 
 
@@ -184,39 +210,6 @@ profile chart.</p>
 </dl>
 
     
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>var selection = d3.select('#element_id');
-var profile = ngeo.profile({
- elevationExtractor: {
-   z: function (item) {return item['values']['z'];)},
-   dist: function (item) {return item['dist'];)}
- },
- hoverCallback: function(point, dist, xUnits, ele, yUnits) {
-   console.log(point.x, point.y);
- },
- outCallback: function() {
-   console.log("out");
- }});
-selection.datum(data).call(profile);
-
-The selection data must be an array.
-The layout for the items of this array is unconstrained: the elevation
-and distance values are extracted using the elevationExtractor config
-option. Optionally, POIs can be displayed and depend on a poiExtractor
-config option.
-
-The data below will work for the above example:
-[
-    {
-        "y": 199340,
-        "values": {"z": 788.7},
-        "dist": 0.0,
-        "x": 541620
-    }, ...
-]</code></pre>
 
 
 

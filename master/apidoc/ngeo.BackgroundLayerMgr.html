@@ -54,10 +54,8 @@ in maps.</p>
 <p>The notion of background/base layers doesn't exist in OpenLayers 3. This
 service adds that notion.</p>
 <p>Setting a background layer to map is done with the <code>set</code> function:</p>
-<p>ngeoBackgroundLayerMgr.set(map, layer);</p>
-<p>To unset the background layer pass <code>null</code> as the <code>layer</code> argument:</p>
-<p>ngeoBackgroundLayerMgr.set(map, null);</p>
-<p>The <code>get</code> function returns the current background layer of the map passed
+<pre class="prettyprint source"><code>ngeoBackgroundLayerMgr.set(map, layer);</code></pre><p>To unset the background layer pass <code>null</code> as the <code>layer</code> argument:</p>
+<pre class="prettyprint source"><code>ngeoBackgroundLayerMgr.set(map, null);</code></pre><p>The <code>get</code> function returns the current background layer of the map passed
 as an argument. <code>null</code> is returned if the map doesn't have a background
 layer.</p>
 <p>The background layer is always added at index 0 in the map's layers
@@ -66,6 +64,12 @@ if the map does not already have a background layer, otherwise the
 new background layer replaces the previous one at index 0.</p>
 <p>Users can subscribe to a 'change' event to get notified when the background
 layer changes:</p>
+<pre class="prettyprint source"><code>ngeoBackgroundLayerMgr.on('change', function(e) {
+  // do something with the layer
+  var layer = ngeoBackgroundLayerMgr.get();
+  // know which layer was used before
+  var previous = e.previous
+});</code></pre>
 </div>
 
 
@@ -109,7 +113,7 @@ layer changes:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_backgroundlayermgr.js.html">src/services/backgroundlayermgr.js</a>, <a href="src_services_backgroundlayermgr.js.html#line82">line 82</a>
+        <a href="src_services_backgroundlayermgr.js.html">src/services/backgroundlayermgr.js</a>, <a href="src_services_backgroundlayermgr.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -132,16 +136,6 @@ layer changes:</p>
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>ngeoBackgroundLayerMgr.on('change', function(e) {
-  // do something with the layer
-  var layer = ngeoBackgroundLayerMgr.get();
-  // know which layer was used before
-  var previous = e.previous
-});</code></pre>
 
 
 
@@ -280,7 +274,7 @@ the map does not have a background layer.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_backgroundlayermgr.js.html">src/services/backgroundlayermgr.js</a>, <a href="src_services_backgroundlayermgr.js.html#line103">line 103</a>
+        <a href="src_services_backgroundlayermgr.js.html">src/services/backgroundlayermgr.js</a>, <a href="src_services_backgroundlayermgr.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -457,7 +451,7 @@ is removed.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_backgroundlayermgr.js.html">src/services/backgroundlayermgr.js</a>, <a href="src_services_backgroundlayermgr.js.html#line116">line 116</a>
+        <a href="src_services_backgroundlayermgr.js.html">src/services/backgroundlayermgr.js</a>, <a href="src_services_backgroundlayermgr.js.html#line115">line 115</a>
     </li></ul></dd>
     
 

@@ -54,6 +54,11 @@ used as a shared vector layer accross the application.</p>
 <p>Example:</p>
 <p>The application's main component/controller initializes the feature
 overlay manager with the map:</p>
+<pre class="prettyprint source"><code>ngeoFeatureOverlayMgr.init(map);</code></pre><p>Once initialized, components of the application can use the manager to
+create a feature overlay, configuring it with specific styles:</p>
+<pre class="prettyprint source"><code>var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
+featureOverlay.setStyle(myStyle);
+featureOverlay.addFeature(myFeature);</code></pre>
 </div>
 
 
@@ -97,7 +102,7 @@ overlay manager with the map:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line48">line 48</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -120,18 +125,6 @@ overlay manager with the map:</p>
 
 
 
-
-
-    <h5>Examples</h5>
-    
-    <pre class="prettyprint"><code>ngeoFeatureOverlayMgr.init(map);
-
-Once initialized, components of the application can use the manager to
-create a feature overlay, configuring it with specific styles:</code></pre>
-
-    <pre class="prettyprint"><code>var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
-featureOverlay.setStyle(myStyle);
-featureOverlay.addFeature(myFeature);</code></pre>
 
 
 
@@ -277,7 +270,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line89">line 89</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -404,7 +397,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line118">line 118</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -482,7 +475,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line140">line 140</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -582,7 +575,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line132">line 132</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -731,7 +724,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line153">line 153</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -881,7 +874,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line104">line 104</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -1037,7 +1030,7 @@ featureOverlay.addFeature(myFeature);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line164">line 164</a>
+        <a href="src_services_featureoverlay.js.html">src/services/featureoverlay.js</a>, <a href="src_services_featureoverlay.js.html#line162">line 162</a>
     </li></ul></dd>
     
 
