@@ -1,0 +1,542 @@
+<!doctype html>
+<html>
+  <head>
+    <base href="../">
+    <title>JSDoc: source : search.js</title>
+    <link type="text/css" rel="stylesheet" href="css/jsdoc-default.css">
+    <link href="css/prettify-tomorrow.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,700" rel="stylesheet" type="text/css">
+    <link href="css/custom.css" type="text/css" rel="stylesheet">
+    <script src="js/prettify.js"></script>
+    <script src="js/angular.min.js"></script>
+  </head>
+  <body ng-app="">
+    <nav>
+      <h2><a href="index.html">Index</a></h2>
+      <ul class="module">
+        <!-- gmf -->
+        <h3>
+          <a href="" ng-click="modulegmf = !modulegmf">
+            module: gmf
+          </a>
+          <i ng-cloak="" ng-show="modulegmf">+</i>
+        </h3>
+        <li id="gmf" ng-hide="modulegmf">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="gmfservice = !gmfservice">
+                service
+              </a>
+              <i ng-cloak="" ng-show="gmfservice">+</i>
+            </h3>
+            <ul ng-hide="gmfservice">
+              <li>
+                <a href="gmf.gmfExportFeatures.html">gmfExportFeatures</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="gmfdirective = !gmfdirective">
+                directive
+              </a>
+              <i ng-cloak="" ng-show="gmfdirective">+</i>
+            </h3>
+            <ul ng-hide="gmfdirective">
+              <li>
+                <a href="gmf.gmfLocationchooser.html">gmfLocationchooser</a>
+              </li><li>
+                <a href="gmf.gmfMap.html">gmfMap</a>
+              </li><li>
+                <a href="gmf.gmfSearch.html">gmfSearch</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="gmfcontroller = !gmfcontroller">
+                controller
+              </a>
+              <i ng-cloak="" ng-show="gmfcontroller">+</i>
+            </h3>
+            <ul ng-hide="gmfcontroller">
+              <li>
+                <a href="gmf.gmfLocationchooserController.html">gmfLocationchooserController</a>
+              </li><li>
+                <a href="gmf.GmfMapController.html">GmfMapController</a>
+              </li><li>
+                <a href="gmf.GmfSearchController.html">GmfSearchController</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- gmf_source -->
+        <h3>
+          <a href="" ng-click="modulegmf_source = !modulegmf_source">
+            module: gmf.source
+          </a>
+          <i ng-cloak="" ng-show="modulegmf_source">+</i>
+        </h3>
+        <li id="gmf.source" ng-hide="modulegmf_source">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="gmf_sourceother = !gmf_sourceother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="gmf_sourceother">+</i>
+            </h3>
+            <ul ng-hide="gmf_sourceother">
+              <li>
+                <a href="gmf.source.AsitVD.html">AsitVD</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- ngeo -->
+        <h3>
+          <a href="" ng-click="modulengeo = !modulengeo">
+            module: ngeo
+          </a>
+          <i ng-cloak="" ng-show="modulengeo">+</i>
+        </h3>
+        <li id="ngeo" ng-hide="modulengeo">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="ngeoother = !ngeoother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="ngeoother">+</i>
+            </h3>
+            <ul ng-hide="ngeoother">
+              <li>
+                <a href="ngeo.BackgroundEvent.html">BackgroundEvent</a>
+              </li><li>
+                <a href="ngeo.FeatureOverlay.html">FeatureOverlay</a>
+              </li><li>
+                <a href="ngeo.MeasureEvent.html">MeasureEvent</a>
+              </li><li>
+                <a href="ngeo.Print.html">Print</a>
+              </li><li>
+                <a href="ngeo.profile.html">profile</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="ngeoservice = !ngeoservice">
+                service
+              </a>
+              <i ng-cloak="" ng-show="ngeoservice">+</i>
+            </h3>
+            <ul ng-hide="ngeoservice">
+              <li>
+                <a href="ngeo.ngeoBackgroundLayerMgr.html">ngeoBackgroundLayerMgr</a>
+              </li><li>
+                <a href="ngeo.ngeoCreateGeoJSONBloodhound.html">ngeoCreateGeoJSONBloodhound</a>
+              </li><li>
+                <a href="ngeo.ngeoCreatePopup.html">ngeoCreatePopup</a>
+              </li><li>
+                <a href="ngeo.ngeoCreatePrint.html">ngeoCreatePrint</a>
+              </li><li>
+                <a href="ngeo.ngeoDebounce.html">ngeoDebounce</a>
+              </li><li>
+                <a href="ngeo.ngeoDecorateGeolocation.html">ngeoDecorateGeolocation</a>
+              </li><li>
+                <a href="ngeo.ngeoDecorateInteraction.html">ngeoDecorateInteraction</a>
+              </li><li>
+                <a href="ngeo.ngeoDecorateLayer.html">ngeoDecorateLayer</a>
+              </li><li>
+                <a href="ngeo.ngeoFeatureOverlayMgr.html">ngeoFeatureOverlayMgr</a>
+              </li><li>
+                <a href="ngeo.ngeoGetBrowserLanguage.html">ngeoGetBrowserLanguage</a>
+              </li><li>
+                <a href="ngeo.ngeoLocation.html">ngeoLocation</a>
+              </li><li>
+                <a href="ngeo.ngeoPrintUtils.html">ngeoPrintUtils</a>
+              </li><li>
+                <a href="ngeo.ngeoSyncArrays.html">ngeoSyncArrays</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="ngeodirective = !ngeodirective">
+                directive
+              </a>
+              <i ng-cloak="" ng-show="ngeodirective">+</i>
+            </h3>
+            <ul ng-hide="ngeodirective">
+              <li>
+                <a href="ngeo.ngeoBtn.html">ngeoBtn</a>
+              </li><li>
+                <a href="ngeo.ngeoBtnGroup.html">ngeoBtnGroup</a>
+              </li><li>
+                <a href="ngeo.ngeoControl.html">ngeoControl</a>
+              </li><li>
+                <a href="ngeo.ngeoFilereader.html">ngeoFilereader</a>
+              </li><li>
+                <a href="ngeo.ngeoLayertree.html">ngeoLayertree</a>
+              </li><li>
+                <a href="ngeo.ngeoMap.html">ngeoMap</a>
+              </li><li>
+                <a href="ngeo.ngeoModal.html">ngeoModal</a>
+              </li><li>
+                <a href="ngeo.ngeoPopup.html">ngeoPopup</a>
+              </li><li>
+                <a href="ngeo.ngeoProfile.html">ngeoProfile</a>
+              </li><li>
+                <a href="ngeo.ngeoResizemap.html">ngeoResizemap</a>
+              </li><li>
+                <a href="ngeo.ngeoScaleselector.html">ngeoScaleselector</a>
+              </li><li>
+                <a href="ngeo.ngeoSearch.html">ngeoSearch</a>
+              </li><li>
+                <a href="ngeo.ngeoSortable.html">ngeoSortable</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="ngeocontroller = !ngeocontroller">
+                controller
+              </a>
+              <i ng-cloak="" ng-show="ngeocontroller">+</i>
+            </h3>
+            <ul ng-hide="ngeocontroller">
+              <li>
+                <a href="ngeo.ngeoBtnGroupController.html">ngeoBtnGroupController</a>
+              </li><li>
+                <a href="ngeo.NgeoLayertreeController.html">NgeoLayertreeController</a>
+              </li><li>
+                <a href="ngeo.NgeoScaleselectorController.html">NgeoScaleselectorController</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- ngeo_format -->
+        <h3>
+          <a href="" ng-click="modulengeo_format = !modulengeo_format">
+            module: ngeo.format
+          </a>
+          <i ng-cloak="" ng-show="modulengeo_format">+</i>
+        </h3>
+        <li id="ngeo.format" ng-hide="modulengeo_format">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="ngeo_formatother = !ngeo_formatother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="ngeo_formatother">+</i>
+            </h3>
+            <ul ng-hide="ngeo_formatother">
+              <li>
+                <a href="ngeo.format.FeatureHash.html">FeatureHash</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- ngeo_interaction -->
+        <h3>
+          <a href="" ng-click="modulengeo_interaction = !modulengeo_interaction">
+            module: ngeo.interaction
+          </a>
+          <i ng-cloak="" ng-show="modulengeo_interaction">+</i>
+        </h3>
+        <li id="ngeo.interaction" ng-hide="modulengeo_interaction">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="ngeo_interactionother = !ngeo_interactionother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="ngeo_interactionother">+</i>
+            </h3>
+            <ul ng-hide="ngeo_interactionother">
+              <li>
+                <a href="ngeo.interaction.DrawAzimut.html">DrawAzimut</a>
+              </li><li>
+                <a href="ngeo.interaction.Measure.html">Measure</a>
+              </li><li>
+                <a href="ngeo.interaction.MeasureArea.html">MeasureArea</a>
+              </li><li>
+                <a href="ngeo.interaction.MeasureAzimut.html">MeasureAzimut</a>
+              </li><li>
+                <a href="ngeo.interaction.MeasureLength.html">MeasureLength</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <div id="content" class="page-wrap">
+      <h1 class="title">
+        source : search.js
+      </h1>
+      <div id="main" class="big-container">
+        <!-- source code html -->
+        <article>
+          <pre class="prettyprint source linenums"><code>goog.provide('gmf.SearchController');
+goog.provide('gmf.searchDirective');
+goog.require('gmf');
+goog.require('ngeo.CreateGeoJSONBloodhound');
+goog.require('ngeo.FeatureOverlay');
+goog.require('ngeo.FeatureOverlayMgr');
+goog.require('ngeo.searchDirective');
+goog.require('ol.Map');
+goog.require('ol.proj');
+/**
+ * This file provides the "search" directive and controller for
+ * a GeoMapFish application.
+ *
+ * FIXME: The 'placeholder' in the input field is hard-coded and can't currently
+ * be internationalised.
+ *
+ * This directive uses the ngeoFeatureOverlayMgr to create a feature overlay
+ * for drawing features on the map. The application is responsible to
+ * initialize the ngeoFeatureOverlayMgr with the map.
+ *
+ * @example
+ * &lt;gmf-search gmf-search-map="ctrl.map"
+ *             gmf-search-datasources="ctrl.searchDatasources">
+ * &lt;/gmf-search>
+ *
+ * @return {angular.Directive} The Directive Definition Object.
+ * @ngInject
+ * @ngdoc directive
+ * @memberof gmf
+ * @name gmfSearch
+ */
+gmf.searchDirective = function() {
+  return {
+    restrict: 'E',
+    scope: {
+      'getMapFn': '&gmfSearchMap',
+      'getDatasourcesFn': '&gmfSearchDatasources'
+    },
+    controller: 'GmfSearchController',
+    controllerAs: 'ctrl',
+    template:
+        '&lt;input type="text" placeholder="search…" ' +
+        'ngeo-search="ctrl.options" ' +
+        'ngeo-search-datasets="ctrl.datasets" ' +
+        'ngeo-search-listeners="ctrl.listeners">',
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Atttributes.
+         */
+        function(scope, element, attrs) {
+          // Empty the search field on focus and blur.
+          element.find('input').on('focus blur', function() {
+            $(this).val('');
+          });
+        }
+  };
+};
+gmfModule.directive('gmfSearch', gmf.searchDirective);
+/**
+ * @constructor
+ * @param {angular.Scope} $scope The directive's scope.
+ * @param {angular.$compile} $compile Angular compile service.
+ * @param {ngeo.CreateGeoJSONBloodhound} ngeoCreateGeoJSONBloodhound The ngeo
+ *     create GeoJSON Bloodhound service.
+ * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
+ *     overlay manager service.
+ * @export
+ * @ngInject
+ * @ngdoc controller
+ * @memberof gmf
+ * @name GmfSearchController
+ */
+gmf.SearchController = function($scope, $compile,
+    ngeoCreateGeoJSONBloodhound, ngeoFeatureOverlayMgr) {
+  /**
+   * @type {angular.Scope}
+   * @private
+   */
+  this.scope_ = $scope;
+  /**
+   * @type {angular.$compile}
+   * @private
+   */
+  this.compile_ = $compile;
+  /**
+   * @type {ngeo.CreateGeoJSONBloodhound}
+   * @private
+   */
+  this.ngeoCreateGeoJSONBloodhound_ = ngeoCreateGeoJSONBloodhound;
+  var map = this.scope_['getMapFn']();
+  goog.asserts.assertInstanceof(map, ol.Map);
+  /**
+   * @type {!ol.Map}
+   * @private
+   */
+  this.map_ = map;
+  /**
+   * @type {ngeo.FeatureOverlay}
+   * @private
+   */
+  this.featureOverlay_ = ngeoFeatureOverlayMgr.getFeatureOverlay();
+  var datasources = this.scope_['getDatasourcesFn']();
+  goog.asserts.assertArray(datasources);
+  /**
+   * @type {Array.&lt;gmfx.SearchDirectiveDatasource>}
+   * @private
+   */
+  this.datasources_ = datasources;
+  /**
+   * @type {TypeaheadOptions}
+   * @export
+   */
+  this.options = /** @type {TypeaheadOptions} */ ({
+    highlight: true,
+    hint: undefined,
+    minLength: undefined
+  });
+  /**
+   * @type {Array.&lt;TypeaheadDataset>}
+   * @export
+   */
+  this.datasets = [];
+  for (var i = 0; i &lt; this.datasources_.length; i++) {
+    var datasource = this.datasources_[i];
+    /** @type {Array.&lt;string>} */
+    var groupValues = goog.isDef(datasource.groupValues) &&
+        goog.isDef(datasource.groupsKey) ? datasource.groupValues : [];
+    var filter;
+    do {
+      var title = datasource.datasetTitle;
+      if (groupValues.length > 0) {
+        // Add an optional filter function to keep objects only from one
+        // "layername" from a GMF's fulltextsearch service.
+        filter = this.filterLayername_(datasource.groupsKey, groupValues[0]);
+        title = title + groupValues[0];
+        groupValues.shift();
+      } else {
+        filter = undefined;
+      }
+      this.datasets.push(this.createDataset_({
+        bloodhoundOptions: datasource.bloodhoundOptions,
+        datasetTitle: title,
+        labelKey: datasource.labelKey,
+        projection: datasource.projection,
+        typeaheadDatasetOptions: datasource.typeaheadDatasetOptions,
+        url: datasource.url
+      }, filter));
+    } while (groupValues.length > 0);
+  }
+  /**
+   * @type {ngeox.SearchDirectiveListeners}
+   * @export
+   */
+  this.listeners = /** @type {ngeox.SearchDirectiveListeners} */ ({
+    selected: goog.bind(gmf.SearchController.selected_, this)
+  });
+};
+/**
+ * @param {gmfx.SearchDirectiveDatasource} config The config of the dataset.
+ * @param {(function(GeoJSONFeature): boolean)=} opt_filter A filter function
+ *     based on a GeoJSONFeaturesCollection's array.
+ * @return {TypeaheadDataset} A typeahead dataset.
+ * @private
+ */
+gmf.SearchController.prototype.createDataset_ = function(config, opt_filter) {
+  var directiveScope = this.scope_;
+  var compile = this.compile_;
+  var bloodhoundEngine = this.createAndInitBloodhound_(config, opt_filter);
+  var typeaheadDataset = /** @type {TypeaheadDataset} */ ({
+    source: bloodhoundEngine.ttAdapter(),
+    display: function(suggestion) {
+      var feature = /** @type {ol.Feature} */ (suggestion);
+      return feature.get(config.labelKey);
+    },
+    templates: /* TypeaheadTemplates */ ({
+      header: function() {
+        return '&lt;div class="header">' + config.datasetTitle + '&lt;/div>';
+      },
+      suggestion: function(suggestion) {
+        var feature = /** @type {ol.Feature} */ (suggestion);
+        var scope = directiveScope.$new(true);
+        scope['feature'] = feature;
+        var html = '&lt;p>' + feature.get(config.labelKey) + '&lt;/p>';
+        return compile(html)(scope);
+      }
+    })
+  });
+  if (config.typeaheadDatasetOptions) {
+    goog.object.extend(typeaheadDataset, config.typeaheadDatasetOptions);
+  }
+  return typeaheadDataset;
+};
+/**
+ * @param {string} groupsKey key used to group this set of data.
+ * @param {string} groupValue The dataset "type" to keep.
+ * @return {(function(GeoJSONFeature): boolean)} A filter function based on a
+ *     GeoJSONFeaturesCollection's array.
+ * @private
+ */
+gmf.SearchController.prototype.filterLayername_ = function(groupsKey,
+                                                           groupValue) {
+  return (
+      /**
+       * @param {GeoJSONFeature} feature
+       * @return {boolean}
+       */
+      function(feature) {
+        return (feature['properties'][groupsKey] === groupValue);
+      });
+};
+/**
+ * @param {gmfx.SearchDirectiveDatasource} config The config of the dataset.
+ * @param {(function(GeoJSONFeature): boolean)=} opt_filter Afilter function
+ *     based on a GeoJSONFeaturesCollection's array.
+ * @return {Bloodhound} The bloodhound engine.
+ * @private
+ */
+gmf.SearchController.prototype.createAndInitBloodhound_ = function(config,
+    opt_filter) {
+  var mapProjectionCode = this.map_.getView().getProjection().getCode();
+  var bloodhound = this.ngeoCreateGeoJSONBloodhound_(config.url, opt_filter,
+      ol.proj.get(mapProjectionCode), ol.proj.get(config.projection),
+      config.bloodhoundOptions);
+  bloodhound.initialize();
+  return bloodhound;
+};
+/**
+ * @param {jQuery.Event} event Event.
+ * @param {ol.Feature} feature Feature.
+ * @param {TypeaheadDataset} dataset Dataset.
+ * @this {gmf.SearchController}
+ * @private
+ */
+gmf.SearchController.selected_ = function(event, feature, dataset) {
+  var featureGeometry = /** @type {ol.geom.SimpleGeometry} */
+      (feature.getGeometry());
+  this.featureOverlay_.clear();
+  this.featureOverlay_.addFeature(feature);
+  var fitArray = featureGeometry.getType() === 'GeometryCollection' ?
+      featureGeometry.getExtent() : featureGeometry;
+  var mapSize = /** @type {ol.Size} */ (this.map_.getSize());
+  this.map_.getView().fit(fitArray, mapSize,
+      /** @type {olx.view.FitOptions} */ ({maxZoom: 16}));
+};
+gmfModule.controller('GmfSearchController', gmf.SearchController);
+</code></pre>
+        </article>
+        <!-- index.html -->
+        <!-- class files -->
+      </div>
+      <footer style="clear:both">
+        Documentation generated by
+        <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+        using
+        <a href="https://github.com/allenhwkim/angular-jsdoc">Angular-JSDoc template</a>
+      </footer>
+    </div>
+    <!--%= prettyJson %-->
+    <script>
+      prettyPrint();
+      var lineNo = window.location.hash.match(/#line([0-9]+)$/);
+      lineNo && document.querySelector("ol li:nth-child("+(lineNo[1])+")").scrollIntoView();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,452 @@
+<!doctype html>
+<html>
+  <head>
+    <base href="../">
+    <title>JSDoc: source : sortable.js</title>
+    <link type="text/css" rel="stylesheet" href="css/jsdoc-default.css">
+    <link href="css/prettify-tomorrow.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,700" rel="stylesheet" type="text/css">
+    <link href="css/custom.css" type="text/css" rel="stylesheet">
+    <script src="js/prettify.js"></script>
+    <script src="js/angular.min.js"></script>
+  </head>
+  <body ng-app="">
+    <nav>
+      <h2><a href="index.html">Index</a></h2>
+      <ul class="module">
+        <!-- gmf -->
+        <h3>
+          <a href="" ng-click="modulegmf = !modulegmf">
+            module: gmf
+          </a>
+          <i ng-cloak="" ng-show="modulegmf">+</i>
+        </h3>
+        <li id="gmf" ng-hide="modulegmf">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="gmfservice = !gmfservice">
+                service
+              </a>
+              <i ng-cloak="" ng-show="gmfservice">+</i>
+            </h3>
+            <ul ng-hide="gmfservice">
+              <li>
+                <a href="gmf.gmfExportFeatures.html">gmfExportFeatures</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="gmfdirective = !gmfdirective">
+                directive
+              </a>
+              <i ng-cloak="" ng-show="gmfdirective">+</i>
+            </h3>
+            <ul ng-hide="gmfdirective">
+              <li>
+                <a href="gmf.gmfLocationchooser.html">gmfLocationchooser</a>
+              </li><li>
+                <a href="gmf.gmfMap.html">gmfMap</a>
+              </li><li>
+                <a href="gmf.gmfSearch.html">gmfSearch</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="gmfcontroller = !gmfcontroller">
+                controller
+              </a>
+              <i ng-cloak="" ng-show="gmfcontroller">+</i>
+            </h3>
+            <ul ng-hide="gmfcontroller">
+              <li>
+                <a href="gmf.gmfLocationchooserController.html">gmfLocationchooserController</a>
+              </li><li>
+                <a href="gmf.GmfMapController.html">GmfMapController</a>
+              </li><li>
+                <a href="gmf.GmfSearchController.html">GmfSearchController</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- gmf_source -->
+        <h3>
+          <a href="" ng-click="modulegmf_source = !modulegmf_source">
+            module: gmf.source
+          </a>
+          <i ng-cloak="" ng-show="modulegmf_source">+</i>
+        </h3>
+        <li id="gmf.source" ng-hide="modulegmf_source">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="gmf_sourceother = !gmf_sourceother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="gmf_sourceother">+</i>
+            </h3>
+            <ul ng-hide="gmf_sourceother">
+              <li>
+                <a href="gmf.source.AsitVD.html">AsitVD</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- ngeo -->
+        <h3>
+          <a href="" ng-click="modulengeo = !modulengeo">
+            module: ngeo
+          </a>
+          <i ng-cloak="" ng-show="modulengeo">+</i>
+        </h3>
+        <li id="ngeo" ng-hide="modulengeo">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="ngeoother = !ngeoother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="ngeoother">+</i>
+            </h3>
+            <ul ng-hide="ngeoother">
+              <li>
+                <a href="ngeo.BackgroundEvent.html">BackgroundEvent</a>
+              </li><li>
+                <a href="ngeo.FeatureOverlay.html">FeatureOverlay</a>
+              </li><li>
+                <a href="ngeo.MeasureEvent.html">MeasureEvent</a>
+              </li><li>
+                <a href="ngeo.Print.html">Print</a>
+              </li><li>
+                <a href="ngeo.profile.html">profile</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="ngeoservice = !ngeoservice">
+                service
+              </a>
+              <i ng-cloak="" ng-show="ngeoservice">+</i>
+            </h3>
+            <ul ng-hide="ngeoservice">
+              <li>
+                <a href="ngeo.ngeoBackgroundLayerMgr.html">ngeoBackgroundLayerMgr</a>
+              </li><li>
+                <a href="ngeo.ngeoCreateGeoJSONBloodhound.html">ngeoCreateGeoJSONBloodhound</a>
+              </li><li>
+                <a href="ngeo.ngeoCreatePopup.html">ngeoCreatePopup</a>
+              </li><li>
+                <a href="ngeo.ngeoCreatePrint.html">ngeoCreatePrint</a>
+              </li><li>
+                <a href="ngeo.ngeoDebounce.html">ngeoDebounce</a>
+              </li><li>
+                <a href="ngeo.ngeoDecorateGeolocation.html">ngeoDecorateGeolocation</a>
+              </li><li>
+                <a href="ngeo.ngeoDecorateInteraction.html">ngeoDecorateInteraction</a>
+              </li><li>
+                <a href="ngeo.ngeoDecorateLayer.html">ngeoDecorateLayer</a>
+              </li><li>
+                <a href="ngeo.ngeoFeatureOverlayMgr.html">ngeoFeatureOverlayMgr</a>
+              </li><li>
+                <a href="ngeo.ngeoGetBrowserLanguage.html">ngeoGetBrowserLanguage</a>
+              </li><li>
+                <a href="ngeo.ngeoLocation.html">ngeoLocation</a>
+              </li><li>
+                <a href="ngeo.ngeoPrintUtils.html">ngeoPrintUtils</a>
+              </li><li>
+                <a href="ngeo.ngeoSyncArrays.html">ngeoSyncArrays</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="ngeodirective = !ngeodirective">
+                directive
+              </a>
+              <i ng-cloak="" ng-show="ngeodirective">+</i>
+            </h3>
+            <ul ng-hide="ngeodirective">
+              <li>
+                <a href="ngeo.ngeoBtn.html">ngeoBtn</a>
+              </li><li>
+                <a href="ngeo.ngeoBtnGroup.html">ngeoBtnGroup</a>
+              </li><li>
+                <a href="ngeo.ngeoControl.html">ngeoControl</a>
+              </li><li>
+                <a href="ngeo.ngeoFilereader.html">ngeoFilereader</a>
+              </li><li>
+                <a href="ngeo.ngeoLayertree.html">ngeoLayertree</a>
+              </li><li>
+                <a href="ngeo.ngeoMap.html">ngeoMap</a>
+              </li><li>
+                <a href="ngeo.ngeoModal.html">ngeoModal</a>
+              </li><li>
+                <a href="ngeo.ngeoPopup.html">ngeoPopup</a>
+              </li><li>
+                <a href="ngeo.ngeoProfile.html">ngeoProfile</a>
+              </li><li>
+                <a href="ngeo.ngeoResizemap.html">ngeoResizemap</a>
+              </li><li>
+                <a href="ngeo.ngeoScaleselector.html">ngeoScaleselector</a>
+              </li><li>
+                <a href="ngeo.ngeoSearch.html">ngeoSearch</a>
+              </li><li>
+                <a href="ngeo.ngeoSortable.html">ngeoSortable</a>
+              </li>
+            </ul>
+          </ul><ul class="group">
+            <h3>
+              <a href="" ng-click="ngeocontroller = !ngeocontroller">
+                controller
+              </a>
+              <i ng-cloak="" ng-show="ngeocontroller">+</i>
+            </h3>
+            <ul ng-hide="ngeocontroller">
+              <li>
+                <a href="ngeo.ngeoBtnGroupController.html">ngeoBtnGroupController</a>
+              </li><li>
+                <a href="ngeo.NgeoLayertreeController.html">NgeoLayertreeController</a>
+              </li><li>
+                <a href="ngeo.NgeoScaleselectorController.html">NgeoScaleselectorController</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- ngeo_format -->
+        <h3>
+          <a href="" ng-click="modulengeo_format = !modulengeo_format">
+            module: ngeo.format
+          </a>
+          <i ng-cloak="" ng-show="modulengeo_format">+</i>
+        </h3>
+        <li id="ngeo.format" ng-hide="modulengeo_format">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="ngeo_formatother = !ngeo_formatother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="ngeo_formatother">+</i>
+            </h3>
+            <ul ng-hide="ngeo_formatother">
+              <li>
+                <a href="ngeo.format.FeatureHash.html">FeatureHash</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul><ul class="module">
+        <!-- ngeo_interaction -->
+        <h3>
+          <a href="" ng-click="modulengeo_interaction = !modulengeo_interaction">
+            module: ngeo.interaction
+          </a>
+          <i ng-cloak="" ng-show="modulengeo_interaction">+</i>
+        </h3>
+        <li id="ngeo.interaction" ng-hide="modulengeo_interaction">
+          <ul class="group">
+            <h3>
+              <a href="" ng-click="ngeo_interactionother = !ngeo_interactionother">
+                other
+              </a>
+              <i ng-cloak="" ng-show="ngeo_interactionother">+</i>
+            </h3>
+            <ul ng-hide="ngeo_interactionother">
+              <li>
+                <a href="ngeo.interaction.DrawAzimut.html">DrawAzimut</a>
+              </li><li>
+                <a href="ngeo.interaction.Measure.html">Measure</a>
+              </li><li>
+                <a href="ngeo.interaction.MeasureArea.html">MeasureArea</a>
+              </li><li>
+                <a href="ngeo.interaction.MeasureAzimut.html">MeasureAzimut</a>
+              </li><li>
+                <a href="ngeo.interaction.MeasureLength.html">MeasureLength</a>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <div id="content" class="page-wrap">
+      <h1 class="title">
+        source : sortable.js
+      </h1>
+      <div id="main" class="big-container">
+        <!-- source code html -->
+        <article>
+          <pre class="prettyprint source linenums"><code>goog.provide('ngeo.SortableOptions');
+goog.provide('ngeo.sortableDirective');
+goog.require('goog.dom');
+goog.require('goog.fx.DragListDirection');
+goog.require('goog.fx.DragListGroup');
+goog.require('ngeo');
+/**
+ * @typedef {{
+ *     handleClassName: (string|undefined),
+ *     draggerClassName: (string|undefined)
+ * }}
+ */
+ngeo.SortableOptions;
+/**
+ * Provides the "ngeoSortable" directive. This directive allows
+ * drag-and-dropping DOM items between them. The directive also changes the
+ * order of elements in the array it is given.
+ *
+ * It is typically used together with `ng-repeat`, for example for re-ordering
+ * layers in a map.
+ *
+ * @example
+ * &lt;ul ngeo-sortable="ctrl.layers"
+ *     ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
+ *   &lt;li ng-repeat="layer in ctrl.layers">
+ *     &lt;span class="sortable-handle">handle&lt;/span>{{layer.get('name')}}
+ *   &lt;/li>
+ * &lt;/ul>
+ *
+ * The value of the "ngeo-sortable" attribute is an expression which evaluates
+ * to an array (an array of layers in the above example). This is the array
+ * that is re-ordered after a drag-and-drop.
+ *
+ * The element with the class "sortable-handle" is the "drag handle". It is
+ * required.
+ *
+ * This directives uses `$watchCollection` to watch the "sortable" array. So
+ * if some outside code adds/removes elements to/from the "sortable" array,
+ * the "ngeoSortable" directive will pick it up.
+ *
+ * @param {angular.$timeout} $timeout Angular timeout service.
+ * @return {angular.Directive} The directive specs.
+ * @ngInject
+ * @ngdoc directive
+ * @memberof ngeo
+ * @name ngeoSortable
+ */
+ngeo.sortableDirective = function($timeout) {
+  return {
+    restrict: 'A',
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         */
+        function(scope, element, attrs) {
+          var sortable = /** @type {Array} */
+              (scope.$eval(attrs['ngeoSortable']));
+          goog.asserts.assert(goog.isArray(sortable));
+          var optionsObject = scope.$eval(attrs['ngeoSortableOptions']);
+          var options = getOptions(optionsObject);
+          /**
+           * @type {goog.fx.DragListGroup}
+           */
+          var dragListGroup = null;
+          scope.$watchCollection(function() {
+            return sortable;
+          }, function() {
+            resetUpDragDrop();
+          });
+          /**
+           * This function resets drag&drop for the list. It is called each
+           * time the sortable array changes (see $watchCollection above).
+           */
+          function resetUpDragDrop() {
+            var children = element.children();
+            for (var i = 0; i &lt; children.length; ++i) {
+              angular.element(children[i]).data('idx', i);
+            }
+            if (!goog.isNull(dragListGroup)) {
+              dragListGroup.dispose();
+            }
+            dragListGroup = new goog.fx.DragListGroup();
+            dragListGroup.addDragList(element[0],
+                goog.fx.DragListDirection.DOWN);
+            dragListGroup.setFunctionToGetHandleForDragItem(
+                /**
+                 * @param {Element} dragItem Drag item.
+                 * @return {Element} The handle.
+                 */
+                function(dragItem) {
+                  var className = options['handleClassName'];
+                  return goog.dom.getElementByClass(className, dragItem);
+                });
+            if (goog.isDef(options['draggerClassName'])) {
+              dragListGroup.setDraggerElClass(options['draggerClassName']);
+            }
+            /** @type {number} */
+            var hoverNextItemIdx = -1;
+            /** @type {Element} */
+            var hoverList = null;
+            goog.events.listen(dragListGroup, 'dragstart', function(e) {
+              hoverNextItemIdx = -1;
+              hoverList = null;
+            });
+            goog.events.listen(dragListGroup, 'dragmove', function(e) {
+              var next = e.hoverNextItem;
+              hoverNextItemIdx = goog.isNull(next) ? -1 :
+                  /** @type {number} */ (angular.element(next).data('idx'));
+              hoverList = e.hoverList;
+            });
+            goog.events.listen(dragListGroup, 'dragend', function(e) {
+              var li = e.currDragItem;
+              var idx = /** @type {number} */
+                  (angular.element(li).data('idx'));
+              if (hoverNextItemIdx != -1) {
+                // there's a next item, so insert
+                if (hoverNextItemIdx != idx) {
+                  if (hoverNextItemIdx > idx) {
+                    hoverNextItemIdx--;
+                  }
+                  scope.$apply(function() {
+                    sortable.splice(hoverNextItemIdx, 0,
+                        sortable.splice(idx, 1)[0]);
+                  });
+                }
+              } else if (!goog.isNull(hoverList)) {
+                // there's no next item, so push
+                scope.$apply(function() {
+                  sortable.push(sortable.splice(idx, 1)[0]);
+                });
+              }
+            });
+            dragListGroup.init();
+          }
+          /**
+           * @param {?} options Options after expression evaluation.
+           * @return {!ngeo.SortableOptions} Options object.
+           * @private
+           */
+          function getOptions(options) {
+            var ret;
+            if (!goog.isDef(options)) {
+              ret = {'handleClassName': 'handle'};
+            } else {
+              if (!goog.isDef(options['handleClassName'])) {
+                options['handleClassName'] = 'handle';
+              }
+              ret = /** @type {ngeo.SortableOptions} */ (options);
+            }
+            return ret;
+          }
+        }
+  };
+};
+ngeoModule.directive('ngeoSortable', ngeo.sortableDirective);
+</code></pre>
+        </article>
+        <!-- index.html -->
+        <!-- class files -->
+      </div>
+      <footer style="clear:both">
+        Documentation generated by
+        <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+        using
+        <a href="https://github.com/allenhwkim/angular-jsdoc">Angular-JSDoc template</a>
+      </footer>
+    </div>
+    <!--%= prettyJson %-->
+    <script>
+      prettyPrint();
+      var lineNo = window.location.hash.match(/#line([0-9]+)$/);
+      lineNo && document.querySelector("ol li:nth-child("+(lineNo[1])+")").scrollIntoView();
+    </script>
+  </body>
+</html>
