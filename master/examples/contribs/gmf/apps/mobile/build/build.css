@@ -7039,10 +7039,9 @@ main button:before {
   font-family: gmf-icons;
   color: black;
   font-size: 29px;
-  margin-left: 4px;
+  line-height: 0.5em;
 }
 main button:hover {
-  background-color: #808080;
   cursor: pointer;
 }
 gmf-map {
@@ -7071,7 +7070,7 @@ gmf-map > div {
   color: black;
 }
 .ol-zoom button:hover {
-  background-color: #808080;
+  background-color: white;
 }
 .ol-zoom:hover {
   background-color: transparent;
@@ -7105,6 +7104,25 @@ gmf-map > div {
   border-width: 0 1px;
   border-radius: 0;
 }
+.search .clear-button {
+  position: absolute;
+  top: 13px;
+  left: 0;
+  right: 0;
+  margin: -6px auto 0 158px;
+  width: 1.5em;
+}
+.search .clear-button:after {
+  content: 'e';
+  color: grey;
+  font-family: gmf-icons;
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 0.5em;
+}
+.search .clear-button:hover {
+  cursor: pointer;
+}
 .nav-trigger {
   top: 13px;
   margin-top: 2px;
@@ -7113,21 +7131,27 @@ gmf-map > div {
   z-index: 3;
 }
 .nav-left-trigger {
-  margin-left: -102px;
+  margin-left: -104px;
 }
 .nav-left-trigger:after {
   content: 'a';
 }
 .nav-right-trigger {
-  margin-left: 77px;
+  margin-left: 76px;
 }
 .nav-right-trigger:after {
   content: 'd';
 }
 @media (min-width: 768px) {
+  main button:hover {
+    background-color: #cccccc;
+  }
   .ol-zoom {
     top: auto;
     bottom: 36px;
+  }
+  .ol-zoom button:hover {
+    background-color: #cccccc;
   }
   .search {
     left: 55px;
@@ -7147,7 +7171,11 @@ gmf-map > div {
     font-family: gmf-icons;
     color: grey;
     font-size: 1.5em;
+    line-height: 0.6em;
     width: 0.5em;
+  }
+  .search .clear-button {
+    margin: -8px auto 0 170px;
   }
   .nav-trigger {
     top: 13px;
@@ -7400,4 +7428,45 @@ nav.nav-right .slide.slide-out {
 }
 .nav-right {
   right: 0;
+}
+.tt-menu {
+  position: fixed!important;
+  left: 0;
+  right: 0;
+  top: 48px!important;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100vw;
+  background-color: white;
+  border: solid 1px black;
+}
+.tt-menu .search-header {
+  display: none;
+}
+.tt-menu .search-datum {
+  border-bottom: solid 1px black;
+  margin: 0;
+  padding: 10px 13px;
+  text-align: left;
+}
+.tt-menu .search-datum:hover {
+  cursor: pointer;
+  background-color: #cccccc;
+}
+.tt-menu .search-datum p {
+  margin: 0;
+}
+.tt-menu .search-datum .search-label {
+  color: black;
+}
+.tt-menu .search-datum .search-group {
+  color: #808080;
+  font-size: 0.8em;
+}
+@media (min-width: 768px) {
+  .tt-menu {
+    top: 43px!important;
+    width: 33vw;
+  }
 }
