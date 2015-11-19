@@ -78,12 +78,11 @@
         <li id="gmf.source" ng-hide="modulegmf_source">
           <ul class="group">
             <h3>
-              <a href="" ng-click="gmf_sourceother = !gmf_sourceother">
-                other
+              <a href="" ng-click="gmf_source = !gmf_source">
               </a>
-              <i ng-cloak="" ng-show="gmf_sourceother">+</i>
+              <i ng-cloak="" ng-show="gmf_source">+</i>
             </h3>
-            <ul ng-hide="gmf_sourceother">
+            <ul ng-hide="gmf_source">
               <li>
                 <a href="gmf.source.AsitVD.html">AsitVD</a>
               </li>
@@ -101,12 +100,11 @@
         <li id="ngeo" ng-hide="modulengeo">
           <ul class="group">
             <h3>
-              <a href="" ng-click="ngeoother = !ngeoother">
-                other
+              <a href="" ng-click="ngeo = !ngeo">
               </a>
-              <i ng-cloak="" ng-show="ngeoother">+</i>
+              <i ng-cloak="" ng-show="ngeo">+</i>
             </h3>
-            <ul ng-hide="ngeoother">
+            <ul ng-hide="ngeo">
               <li>
                 <a href="ngeo.BackgroundEvent.html">BackgroundEvent</a>
               </li><li>
@@ -220,12 +218,11 @@
         <li id="ngeo.format" ng-hide="modulengeo_format">
           <ul class="group">
             <h3>
-              <a href="" ng-click="ngeo_formatother = !ngeo_formatother">
-                other
+              <a href="" ng-click="ngeo_format = !ngeo_format">
               </a>
-              <i ng-cloak="" ng-show="ngeo_formatother">+</i>
+              <i ng-cloak="" ng-show="ngeo_format">+</i>
             </h3>
-            <ul ng-hide="ngeo_formatother">
+            <ul ng-hide="ngeo_format">
               <li>
                 <a href="ngeo.format.FeatureHash.html">FeatureHash</a>
               </li>
@@ -243,12 +240,11 @@
         <li id="ngeo.interaction" ng-hide="modulengeo_interaction">
           <ul class="group">
             <h3>
-              <a href="" ng-click="ngeo_interactionother = !ngeo_interactionother">
-                other
+              <a href="" ng-click="ngeo_interaction = !ngeo_interaction">
               </a>
-              <i ng-cloak="" ng-show="ngeo_interactionother">+</i>
+              <i ng-cloak="" ng-show="ngeo_interaction">+</i>
             </h3>
-            <ul ng-hide="ngeo_interactionother">
+            <ul ng-hide="ngeo_interaction">
               <li>
                 <a href="ngeo.interaction.DrawAzimut.html">DrawAzimut</a>
               </li><li>
@@ -266,12 +262,9 @@
       </ul>
     </nav>
     <div id="content" class="page-wrap">
-      <h3 style="float:right; color:#ccc">
-        Angular other
-      </h3>
       <h1 class="title">
         FeatureHash
-        <a class="name-link signature-attributes" href="source/ngeo.format.FeatureHash.html#line77">source</a>
+        <a class="name-link signature-attributes" href="source/ngeo.format.FeatureHash.html#line76">source</a>
       </h1>
       <div id="main" class="big-container">
         <!-- source code html -->
@@ -420,8 +413,20 @@ not supported.</li>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>The feature properties to
-serialize.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      Object.&lt;string, (string|number)>
+                    </span></td>
+                    <td class="description last"><p>The feature properties to
+serialize.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -458,7 +463,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>String.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>String.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -486,7 +503,7 @@ serialize.</p></div>
                   <tr>
                     <td class="name">flatCoordinates</td>
                     <td class="type"><span class="param-type">
-                      Array.<number>
+                      Array.&lt;number>
                     </span></td>
                     <td class="description last"><p>Flat coordinates.</p></td>
                   </tr><tr>
@@ -504,13 +521,13 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">ends</td>
                     <td class="type"><span class="param-type">
-                      Array.<number>
+                      Array.&lt;number>
                     </span></td>
                     <td class="description last"><p>Ends.</p></td>
                   </tr><tr>
                     <td class="name">textArray</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Text array.</p></td>
                   </tr>
@@ -519,7 +536,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>The new offset.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      number
+                    </span></td>
+                    <td class="description last"><p>The new offset.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -556,7 +585,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>String.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>String.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -587,7 +628,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr><tr>
@@ -629,7 +670,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr>
@@ -665,7 +706,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr>
@@ -707,7 +748,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr>
@@ -737,7 +778,7 @@ serialize.</p></div>
                   <tr>
                     <td class="name">styles</td>
                     <td class="type"><span class="param-type">
-                      Array.<ol.style.Style>
+                      Array.&lt;ol.style.Style>
                     </span></td>
                     <td class="description last"><p>Styles.</p></td>
                   </tr><tr>
@@ -749,7 +790,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr>
@@ -785,7 +826,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr>
@@ -821,7 +862,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">encodedStyles</td>
                     <td class="type"><span class="param-type">
-                      Array.<string>
+                      Array.&lt;string>
                     </span></td>
                     <td class="description last"><p>Encoded styles array.</p></td>
                   </tr>
@@ -863,7 +904,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Line string.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      ol.geom.LineString
+                    </span></td>
+                    <td class="description last"><p>Line string.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -900,7 +953,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Line string.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      ol.geom.MultiLineString
+                    </span></td>
+                    <td class="description last"><p>Line string.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -937,7 +1002,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>MultiPoint.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      ol.geom.MultiPoint
+                    </span></td>
+                    <td class="description last"><p>MultiPoint.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -974,7 +1051,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>MultiPolygon.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      ol.geom.MultiPolygon
+                    </span></td>
+                    <td class="description last"><p>MultiPolygon.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1011,7 +1100,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Point.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      ol.geom.Point
+                    </span></td>
+                    <td class="description last"><p>Point.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1048,7 +1149,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Polygon.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      ol.geom.Polygon
+                    </span></td>
+                    <td class="description last"><p>Polygon.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1121,7 +1234,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Encoded geometry.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>Encoded geometry.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1158,7 +1283,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Encoded geometry.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>Encoded geometry.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1195,7 +1332,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Encoded geometry.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>Encoded geometry.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1232,7 +1381,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Encoded geometry.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>Encoded geometry.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1269,7 +1430,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Encoded geometry.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>Encoded geometry.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1306,7 +1479,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Encoded geometry.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>Encoded geometry.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1340,7 +1525,7 @@ serialize.</p></div>
                   </tr><tr>
                     <td class="name">opt_flatCoordinates</td>
                     <td class="type"><span class="param-type">
-                      Array.<number>
+                      Array.&lt;number>
                     </span></td>
                     <td class="description last"><p>Flat coordinates array.</p></td>
                   </tr>
@@ -1349,7 +1534,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>Flat coordinates.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      Array.&lt;number>
+                    </span></td>
+                    <td class="description last"><p>Flat coordinates.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>
@@ -1377,7 +1574,7 @@ serialize.</p></div>
                   <tr>
                     <td class="name">flatCoordinates</td>
                     <td class="type"><span class="param-type">
-                      Array.<number>
+                      Array.&lt;number>
                     </span></td>
                     <td class="description last"><p>Flat coordinates.</p></td>
                   </tr><tr>
@@ -1404,7 +1601,19 @@ serialize.</p></div>
             </div>
             <div>
               <h5>Returns:</h5>
-              <div class="param-desc"><p>String.</p></div>
+              <table class="params">
+                <thead>
+                  <tr><th>Type</th><th class="last">Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="type"><span class="param-type">
+                      string
+                    </span></td>
+                    <td class="description last"><p>String.</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </dd>
         </dl><dl>

@@ -121052,7 +121052,6 @@ goog.require('goog.object');
  * @return {Object}
  * @param {ngeox.profile.ProfileOptions} options
  * @export
- * @ngdoc other
  */
 ngeo.profile = function(options) {
   /**
@@ -124415,7 +124414,6 @@ ngeo.format.FeatureHashStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * @constructor
  * @param {ngeox.format.FeatureHashOptions=} opt_options Options.
  * @extends {ol.format.TextFeature}
- * @ngdoc other
  */
 ngeo.format.FeatureHash = function(opt_options) {
   goog.base(this);
@@ -125363,7 +125361,6 @@ ngeo.MeasureEventType = {
  * @implements {ngeox.MeasureEvent}
  * @param {ngeo.MeasureEventType} type Type.
  * @param {ol.Feature} feature The feature drawn.
- * @ngdoc other
  */
 ngeo.MeasureEvent = function(type, feature) {
 
@@ -125387,7 +125384,6 @@ goog.inherits(ngeo.MeasureEvent, goog.events.Event);
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @param {ngeo.interaction.MeasureBaseOptions=} opt_options Options
- * @ngdoc other
  */
 ngeo.interaction.Measure = function(opt_options) {
 
@@ -125771,7 +125767,6 @@ goog.require('ol.interaction.Draw');
  * @constructor
  * @extends {ngeo.interaction.Measure}
  * @param {ngeox.interaction.MeasureOptions=} opt_options Options
- * @ngdoc other
  */
 ngeo.interaction.MeasureArea = function(opt_options) {
 
@@ -125856,7 +125851,6 @@ goog.require('ol.source.Vector');
  * @fires ol.interaction.DrawEvent
  * @extends {ngeo.interaction.Measure}
  * @param {ngeox.interaction.MeasureOptions=} opt_options Options
- * @ngdoc other
  */
 ngeo.interaction.MeasureAzimut = function(opt_options) {
 
@@ -125932,7 +125926,6 @@ ngeo.interaction.MeasureAzimut.prototype.formatMeasure_ = function(line) {
  * @extends {ol.interaction.Pointer}
  * @param {olx.interaction.PointerOptions} options Options.
  * @export
- @ngdoc other
  */
 ngeo.interaction.DrawAzimut = function(options) {
 
@@ -126243,7 +126236,6 @@ goog.require('ol.interaction.Draw');
  * @constructor
  * @extends {ngeo.interaction.Measure}
  * @param {ngeox.interaction.MeasureOptions=} opt_options Options
- * @ngdoc other
  */
 ngeo.interaction.MeasureLength = function(opt_options) {
 
@@ -126322,7 +126314,6 @@ ngeo.BackgroundEventType = {
  * @param {ngeo.BackgroundEventType} type Type.
  * @param {ol.layer.Base} previous
  * @implements {ngeox.BackgroundEvent}
- * @ngdoc other
  */
 ngeo.BackgroundEvent = function(type, previous) {
 
@@ -126938,7 +126929,6 @@ ngeo.FeatureOverlayMgr.prototype.styleFunction_ =
  * @constructor
  * @param {ngeo.FeatureOverlayMgr} manager The feature overlay manager.
  * @param {number} index This feature overlay's index.
- * @ngdoc other
  */
 ngeo.FeatureOverlay = function(manager, index) {
 
@@ -127554,7 +127544,6 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * @constructor
  * @param {string} url URL to MapFish print web service.
  * @param {angular.$http} $http Angular $http service.
- * @ngdoc other
  */
 ngeo.Print = function(url, $http) {
   /**

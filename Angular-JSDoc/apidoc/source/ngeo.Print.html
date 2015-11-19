@@ -79,12 +79,11 @@
         <li id="gmf.source" ng-hide="modulegmf_source">
           <ul class="group">
             <h3>
-              <a href="" ng-click="gmf_sourceother = !gmf_sourceother">
-                other
+              <a href="" ng-click="gmf_source = !gmf_source">
               </a>
-              <i ng-cloak="" ng-show="gmf_sourceother">+</i>
+              <i ng-cloak="" ng-show="gmf_source">+</i>
             </h3>
-            <ul ng-hide="gmf_sourceother">
+            <ul ng-hide="gmf_source">
               <li>
                 <a href="gmf.source.AsitVD.html">AsitVD</a>
               </li>
@@ -102,12 +101,11 @@
         <li id="ngeo" ng-hide="modulengeo">
           <ul class="group">
             <h3>
-              <a href="" ng-click="ngeoother = !ngeoother">
-                other
+              <a href="" ng-click="ngeo = !ngeo">
               </a>
-              <i ng-cloak="" ng-show="ngeoother">+</i>
+              <i ng-cloak="" ng-show="ngeo">+</i>
             </h3>
-            <ul ng-hide="ngeoother">
+            <ul ng-hide="ngeo">
               <li>
                 <a href="ngeo.BackgroundEvent.html">BackgroundEvent</a>
               </li><li>
@@ -221,12 +219,11 @@
         <li id="ngeo.format" ng-hide="modulengeo_format">
           <ul class="group">
             <h3>
-              <a href="" ng-click="ngeo_formatother = !ngeo_formatother">
-                other
+              <a href="" ng-click="ngeo_format = !ngeo_format">
               </a>
-              <i ng-cloak="" ng-show="ngeo_formatother">+</i>
+              <i ng-cloak="" ng-show="ngeo_format">+</i>
             </h3>
-            <ul ng-hide="ngeo_formatother">
+            <ul ng-hide="ngeo_format">
               <li>
                 <a href="ngeo.format.FeatureHash.html">FeatureHash</a>
               </li>
@@ -244,12 +241,11 @@
         <li id="ngeo.interaction" ng-hide="modulengeo_interaction">
           <ul class="group">
             <h3>
-              <a href="" ng-click="ngeo_interactionother = !ngeo_interactionother">
-                other
+              <a href="" ng-click="ngeo_interaction = !ngeo_interaction">
               </a>
-              <i ng-cloak="" ng-show="ngeo_interactionother">+</i>
+              <i ng-cloak="" ng-show="ngeo_interaction">+</i>
             </h3>
-            <ul ng-hide="ngeo_interactionother">
+            <ul ng-hide="ngeo_interaction">
               <li>
                 <a href="ngeo.interaction.DrawAzimut.html">DrawAzimut</a>
               </li><li>
@@ -361,7 +357,6 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * @constructor
  * @param {string} url URL to MapFish print web service.
  * @param {angular.$http} $http Angular $http service.
- * @ngdoc other
  */
 ngeo.Print = function(url, $http) {
   /**
