@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/directives/search.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/directives/search.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.searchDirective');
+
+goog.require('ngeo');
+
+
+/**
+ * Provides the "ngeoSearch" directive, which uses Twitter's
+ * typeahead component to change an input text into a search field.
+ *
+ * @example
+ * &lt;input type="text"
+ *   ngeo-search="ctrl.typeaheadOptions"
+ *   ngeo-search-datasets="ctrl.typeaheadDatasets"
+ *   ngeo-search-listeners="crtl.typeaheadListeners">
+ *
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngInject
+ * @ngdoc directive
+ * @memberof ngeo
+ * @name ngeoSearch
+ */
+ngeo.searchDirective = function() {
+  return {
+    restrict: 'A',
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         */
+        function(scope, element, attrs) {
+
+          var typeaheadOptionsExpr = attrs['ngeoSearch'];
+          var typeaheadOptions = /** @type {TypeaheadOptions} */
+              (scope.$eval(typeaheadOptionsExpr));
+
+          var typeaheadDatasetsExpr = attrs['ngeoSearchDatasets'];
+          var typeaheadDatasets = /** @type {Array.&lt;TypeaheadDataset>} */
+              (scope.$eval(typeaheadDatasetsExpr));
+
+          var args = typeaheadDatasets.slice();
+          args.unshift(typeaheadOptions);
+
+          element.typeahead.apply(element, args);
+
+          var typeaheadListenersExpr = attrs['ngeoSearchListeners'];
+          var typeaheadListeners_ =
+              /** @type {ngeox.SearchDirectiveListeners} */
+              (scope.$eval(typeaheadListenersExpr));
+
+          /**
+           * @type {ngeox.SearchDirectiveListeners}
+           */
+          var typeaheadListeners = ngeo.searchDirective.adaptListeners_(
+              typeaheadListeners_);
+
+          element.on('typeahead:opened', function() {
+            scope.$apply(function() {
+              typeaheadListeners.opened();
+            });
+          });
+
+          element.on('typeahead:closed', function() {
+            scope.$apply(function() {
+              typeaheadListeners.closed();
+            });
+          });
+
+          element.on('typeahead:cursorchanged',
+              /**
+               * @param {jQuery.Event} event Event.
+               * @param {Object} suggestion Suggestion.
+               * @param {TypeaheadDataset} dataset Dataset.
+               */
+              function(event, suggestion, dataset) {
+                scope.$apply(function() {
+                  typeaheadListeners.cursorchanged(event, suggestion, dataset);
+                });
+              });
+
+          element.on('typeahead:selected',
+              /**
+               * @param {jQuery.Event} event Event.
+               * @param {Object} suggestion Suggestion.
+               * @param {TypeaheadDataset} dataset Dataset.
+               */
+              function(event, suggestion, dataset) {
+                scope.$apply(function() {
+                  typeaheadListeners.selected(event, suggestion, dataset);
+                });
+              });
+
+          element.on('typeahead:autocompleted',
+              /**
+               * @param {jQuery.Event} event Event.
+               * @param {Object} suggestion Suggestion.
+               * @param {TypeaheadDataset} dataset Dataset.
+               */
+              function(event, suggestion, dataset) {
+                scope.$apply(function() {
+                  typeaheadListeners.autocompleted(event, suggestion, dataset);
+                });
+              });
+        }
+  };
+};
+
+
+/**
+ * Create a real ngeox.SearchDirectiveListeners object out of the object
+ * returned by $eval.
+ * @param {ngeox.SearchDirectiveListeners} object Object.
+ * @return {ngeox.SearchDirectiveListeners} The listeners object.
+ * @private
+ */
+ngeo.searchDirective.adaptListeners_ = function(object) {
+  /** @type {ngeox.SearchDirectiveListeners} */
+  var typeaheadListeners;
+  if (!goog.isDef(object)) {
+    typeaheadListeners = {
+      opened: goog.nullFunction,
+      closed: goog.nullFunction,
+      cursorchanged: goog.nullFunction,
+      selected: goog.nullFunction,
+      autocompleted: goog.nullFunction
+    };
+  } else {
+    typeaheadListeners = {
+      opened: goog.isDef(object.opened) ?
+          object.opened : goog.nullFunction,
+      closed: goog.isDef(object.closed) ?
+          object.closed : goog.nullFunction,
+      cursorchanged: goog.isDef(object.cursorchanged) ?
+          object.cursorchanged : goog.nullFunction,
+      selected: goog.isDef(object.selected) ?
+          object.selected : goog.nullFunction,
+      autocompleted: goog.isDef(object.autocompleted) ?
+          object.autocompleted : goog.nullFunction
+    };
+  }
+  return typeaheadListeners;
+};
+
+
+ngeoModule.directive('ngeoSearch', ngeo.searchDirective);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h2>gmf</h2><h3>Classes</h3><ul><li><a href="gmf.gmfLocationchooser.html">gmfLocationchooser</a></li><li><a href="gmf.gmfLocationchooserController.html">gmfLocationchooserController</a></li><li><a href="gmf.gmfMap.html">gmfMap</a></li><li><a href="gmf.GmfMapController.html">GmfMapController</a></li><li><a href="gmf.gmfSearch.html">gmfSearch</a></li><li><a href="gmf.GmfSearchController.html">GmfSearchController</a></li></ul><h2>gmf.source</h2><h3>Classes</h3><ul><li><a href="gmf.source.AsitVD.html">AsitVD</a></li></ul><h2>ngeo</h2><h3>Classes</h3><ul><li><a href="ngeo.BackgroundEvent.html">BackgroundEvent</a></li><li><a href="ngeo.FeatureOverlay.html">FeatureOverlay</a></li><li><a href="ngeo.MeasureEvent.html">MeasureEvent</a></li><li><a href="ngeo.ngeoBackgroundLayerMgr.html">ngeoBackgroundLayerMgr</a></li><li><a href="ngeo.ngeoBtn.html">ngeoBtn</a></li><li><a href="ngeo.ngeoBtnGroup.html">ngeoBtnGroup</a></li><li><a href="ngeo.ngeoBtnGroupController.html">ngeoBtnGroupController</a></li><li><a href="ngeo.ngeoControl.html">ngeoControl</a></li><li><a href="ngeo.ngeoCreateGeoJSONBloodhound.html">ngeoCreateGeoJSONBloodhound</a></li><li><a href="ngeo.ngeoCreatePopup.html">ngeoCreatePopup</a></li><li><a href="ngeo.ngeoCreatePrint.html">ngeoCreatePrint</a></li><li><a href="ngeo.ngeoDebounce.html">ngeoDebounce</a></li><li><a href="ngeo.ngeoDecorateGeolocation.html">ngeoDecorateGeolocation</a></li><li><a href="ngeo.ngeoDecorateInteraction.html">ngeoDecorateInteraction</a></li><li><a href="ngeo.ngeoDecorateLayer.html">ngeoDecorateLayer</a></li><li><a href="ngeo.ngeoFeatureOverlayMgr.html">ngeoFeatureOverlayMgr</a></li><li><a href="ngeo.ngeoFilereader.html">ngeoFilereader</a></li><li><a href="ngeo.ngeoGetBrowserLanguage.html">ngeoGetBrowserLanguage</a></li><li><a href="ngeo.ngeoLayertree.html">ngeoLayertree</a></li><li><a href="ngeo.NgeoLayertreeController.html">NgeoLayertreeController</a></li><li><a href="ngeo.ngeoLocation.html">ngeoLocation</a></li><li><a href="ngeo.ngeoMap.html">ngeoMap</a></li><li><a href="ngeo.ngeoModal.html">ngeoModal</a></li><li><a href="ngeo.ngeoPopup.html">ngeoPopup</a></li><li><a href="ngeo.ngeoPrintUtils.html">ngeoPrintUtils</a></li><li><a href="ngeo.ngeoProfile.html">ngeoProfile</a></li><li><a href="ngeo.ngeoResizemap.html">ngeoResizemap</a></li><li><a href="ngeo.ngeoScaleselector.html">ngeoScaleselector</a></li><li><a href="ngeo.NgeoScaleselectorController.html">NgeoScaleselectorController</a></li><li><a href="ngeo.ngeoSearch.html">ngeoSearch</a></li><li><a href="ngeo.ngeoSortable.html">ngeoSortable</a></li><li><a href="ngeo.ngeoSyncArrays.html">ngeoSyncArrays</a></li><li><a href="ngeo.Print.html">Print</a></li><li><a href="ngeo.profile.html">profile</a></li></ul><h2>ngeo.format</h2><h3>Classes</h3><ul><li><a href="ngeo.format.FeatureHash.html">FeatureHash</a></li></ul><h2>ngeo.interaction</h2><h3>Classes</h3><ul><li><a href="ngeo.interaction.DrawAzimut.html">DrawAzimut</a></li><li><a href="ngeo.interaction.Measure.html">Measure</a></li><li><a href="ngeo.interaction.MeasureArea.html">MeasureArea</a></li><li><a href="ngeo.interaction.MeasureAzimut.html">MeasureAzimut</a></li><li><a href="ngeo.interaction.MeasureLength.html">MeasureLength</a></li></ul><h2>ngeo.MeasureEvent</h2><h3>Events</h3><ul><li><a href="ngeo.MeasureEvent.html#event:measureend">measureend</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
