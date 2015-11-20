@@ -121009,20 +121009,19 @@ goog.require('goog.object');
  * Provides a D3js component to be used to draw an elevation
  * profile chart.
  *
- * @example
- * var selection = d3.select('#element_id');
- * var profile = ngeo.profile({
- *  elevationExtractor: {
- *    z: function (item) {return item['values']['z'];)},
- *    dist: function (item) {return item['dist'];)}
- *  },
- *  hoverCallback: function(point, dist, xUnits, ele, yUnits) {
- *    console.log(point.x, point.y);
- *  },
- *  outCallback: function() {
- *    console.log("out");
- *  }});
- * selection.datum(data).call(profile);
+ *     var selection = d3.select('#element_id');
+ *     var profile = ngeo.profile({
+ *      elevationExtractor: {
+ *        z: function (item) {return item['values']['z'];)},
+ *        dist: function (item) {return item['dist'];)}
+ *      },
+ *      hoverCallback: function(point, dist, xUnits, ele, yUnits) {
+ *        console.log(point.x, point.y);
+ *      },
+ *      outCallback: function() {
+ *        console.log("out");
+ *      }});
+ *     selection.datum(data).call(profile);
  *
  * The selection data must be an array.
  * The layout for the items of this array is unconstrained: the elevation
@@ -121031,14 +121030,15 @@ goog.require('goog.object');
  * config option.
  *
  * The data below will work for the above example:
- * [
- *     {
- *         "y": 199340,
- *         "values": {"z": 788.7},
- *         "dist": 0.0,
- *         "x": 541620
- *     }, ...
- * ]
+ *
+ *     [
+ *         {
+ *             "y": 199340,
+ *             "values": {"z": 788.7},
+ *             "dist": 0.0,
+ *             "x": 541620
+ *         }, ...
+ *     ]
  *
  * @constructor
  * @return {Object}
@@ -121583,8 +121583,7 @@ goog.require('ngeo');
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoBtnGroup
+ * @ngname ngeoBtnGroup
  */
 ngeo.btngroupDirective = function() {
   return {
@@ -121603,8 +121602,7 @@ ngeoModule.directive('ngeoBtnGroup', ngeo.btngroupDirective);
  * @constructor
  * @ngInject
  * @ngdoc controller
- * @memberof ngeo
- * @name ngeoBtnGroupController
+ * @ngname ngeoBtnGroupController
  */
 ngeo.BtnGroupController = function($scope) {
   /**
@@ -121652,8 +121650,7 @@ ngeoModule.controller('ngeoBtnGroupController', ngeo.BtnGroupController);
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoBtn
+ * @ngname ngeoBtn
  */
 ngeo.btnDirective = function($parse) {
   return {
@@ -121726,8 +121723,7 @@ goog.require('ol.control.Control');
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoControl
+ * @ngname ngeoControl
  */
 ngeo.controlDirective = function() {
   return {
@@ -121777,8 +121773,7 @@ goog.require('ngeo');
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoFilereader
+ * @ngname ngeoFilereader
  */
 ngeo.filereaderDirective = function($window) {
   return {
@@ -121899,8 +121894,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * @return {angular.Directive} The Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoLayertree
+ * @ngname ngeoLayertree
  */
 ngeo.layertreeDirective = function(
     $compile, ngeoLayertreeTemplateUrl) {
@@ -121956,8 +121950,7 @@ ngeoModule.directive('ngeoLayertree', ngeo.layertreeDirective);
  * @ngInject
  * @export
  * @ngdoc controller
- * @memberof ngeo
- * @name NgeoLayertreeController
+ * @ngname NgeoLayertreeController
  */
 ngeo.LayertreeController = function($scope, $element, $attrs) {
 
@@ -122086,14 +122079,12 @@ goog.require('ol.Map');
  * Provides a directive used to insert a user-defined OpenLayers
  * map in the DOM. The directive does not create an isolate scope.
  *
- * @example
- * <div ngeo-map="ctrl.map"></div>
+ *     <div ngeo-map="ctrl.map"></div>
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoMap
+ * @ngname ngeoMap
  */
 ngeo.mapDirective = function() {
   return {
@@ -122137,15 +122128,14 @@ goog.require('ngeo');
  * This directive is based on Bootstrap's `modal` classes and associated
  * jQuery plugin.
  *
- * @example
- * <ngeo-modal ng-model="modalShown">
- *   <div class="modal-header">
- *     <button type="button" class="close" data-dismiss="modal"
- *         aria-hidden="true">&times;</button>
- *     <h4 class="modal-title">The Title</h4>
- *   </div>
- *   <div class="modal-body">Some content</div>
- * </ngeo-modal>
+ *     <ngeo-modal ng-model="modalShown">
+ *       <div class="modal-header">
+ *         <button type="button" class="close" data-dismiss="modal"
+ *                 aria-hidden="true">&times;</button>
+ *         <h4 class="modal-title">The Title</h4>
+ *       </div>
+ *       <div class="modal-body">Some content</div>
+ *     </ngeo-modal>
  *
  * Note: for z-indexing purpose, the modal DOM element is automatically moved
  * to document body element.
@@ -122154,8 +122144,7 @@ goog.require('ngeo');
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoModal
+ * @ngname ngeoModal
  */
 ngeo.modalDirective = function($parse) {
   return {
@@ -122234,8 +122223,7 @@ ngeoModule.value('ngeoPopupTemplateUrl', ngeo.popupTemplateUrl);
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoPopup
+ * @ngname ngeoPopup
  */
 ngeo.popupDirective = function(ngeoPopupTemplateUrl) {
   return {
@@ -122293,8 +122281,7 @@ goog.require('ngeo.profile');
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoProfile
+ * @ngname ngeoProfile
  */
 ngeo.profileDirective = function() {
   return {
@@ -122411,8 +122398,7 @@ goog.require('ol.Map');
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoResizemap
+ * @ngname ngeoResizemap
  */
 ngeo.resizemapDirective = function($window, $animate) {
   var /** @type {number} */ duration = 1000;
@@ -122530,8 +122516,7 @@ ngeo.ScaleselectorOptions;
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoScaleselector
+ * @ngname ngeoScaleselector
  */
 ngeo.scaleselectorDirective = function(ngeoScaleselectorTemplateUrl) {
   return {
@@ -122555,8 +122540,7 @@ ngeoModule.directive('ngeoScaleselector', ngeo.scaleselectorDirective);
  * @export
  * @ngInject
  * @ngdoc controller
- * @memberof ngeo
- * @name NgeoScaleselectorController
+ * @ngname NgeoScaleselectorController
  */
 ngeo.ScaleselectorController = function($scope, $element, $attrs) {
 
@@ -122735,17 +122719,15 @@ goog.require('ngeo');
  * Provides the "ngeoSearch" directive, which uses Twitter's
  * typeahead component to change an input text into a search field.
  *
- * @example
- * <input type="text"
- *   ngeo-search="ctrl.typeaheadOptions"
- *   ngeo-search-datasets="ctrl.typeaheadDatasets"
- *   ngeo-search-listeners="crtl.typeaheadListeners">
+ *     <input type="text"
+ *       ngeo-search="ctrl.typeaheadOptions"
+ *       ngeo-search-datasets="ctrl.typeaheadDatasets"
+ *       ngeo-search-listeners="crtl.typeaheadListeners">
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoSearch
+ * @ngname ngeoSearch
  */
 ngeo.searchDirective = function() {
   return {
@@ -122782,19 +122764,19 @@ ngeo.searchDirective = function() {
           var typeaheadListeners = ngeo.searchDirective.adaptListeners_(
               typeaheadListeners_);
 
-          element.on('typeahead:opened', function() {
+          element.on('typeahead:open', function() {
             scope.$apply(function() {
-              typeaheadListeners.opened();
+              typeaheadListeners.open();
             });
           });
 
-          element.on('typeahead:closed', function() {
+          element.on('typeahead:close', function() {
             scope.$apply(function() {
-              typeaheadListeners.closed();
+              typeaheadListeners.close();
             });
           });
 
-          element.on('typeahead:cursorchanged',
+          element.on('typeahead:cursorchange',
               /**
                * @param {jQuery.Event} event Event.
                * @param {Object} suggestion Suggestion.
@@ -122802,11 +122784,11 @@ ngeo.searchDirective = function() {
                */
               function(event, suggestion, dataset) {
                 scope.$apply(function() {
-                  typeaheadListeners.cursorchanged(event, suggestion, dataset);
+                  typeaheadListeners.cursorchange(event, suggestion, dataset);
                 });
               });
 
-          element.on('typeahead:selected',
+          element.on('typeahead:select',
               /**
                * @param {jQuery.Event} event Event.
                * @param {Object} suggestion Suggestion.
@@ -122814,11 +122796,11 @@ ngeo.searchDirective = function() {
                */
               function(event, suggestion, dataset) {
                 scope.$apply(function() {
-                  typeaheadListeners.selected(event, suggestion, dataset);
+                  typeaheadListeners.select(event, suggestion, dataset);
                 });
               });
 
-          element.on('typeahead:autocompleted',
+          element.on('typeahead:autocomplete',
               /**
                * @param {jQuery.Event} event Event.
                * @param {Object} suggestion Suggestion.
@@ -122826,7 +122808,7 @@ ngeo.searchDirective = function() {
                */
               function(event, suggestion, dataset) {
                 scope.$apply(function() {
-                  typeaheadListeners.autocompleted(event, suggestion, dataset);
+                  typeaheadListeners.autocomplete(event, suggestion, dataset);
                 });
               });
         }
@@ -122846,24 +122828,24 @@ ngeo.searchDirective.adaptListeners_ = function(object) {
   var typeaheadListeners;
   if (!goog.isDef(object)) {
     typeaheadListeners = {
-      opened: goog.nullFunction,
-      closed: goog.nullFunction,
-      cursorchanged: goog.nullFunction,
-      selected: goog.nullFunction,
-      autocompleted: goog.nullFunction
+      open: goog.nullFunction,
+      close: goog.nullFunction,
+      cursorchange: goog.nullFunction,
+      select: goog.nullFunction,
+      autocomplete: goog.nullFunction
     };
   } else {
     typeaheadListeners = {
-      opened: goog.isDef(object.opened) ?
-          object.opened : goog.nullFunction,
-      closed: goog.isDef(object.closed) ?
-          object.closed : goog.nullFunction,
-      cursorchanged: goog.isDef(object.cursorchanged) ?
-          object.cursorchanged : goog.nullFunction,
-      selected: goog.isDef(object.selected) ?
-          object.selected : goog.nullFunction,
-      autocompleted: goog.isDef(object.autocompleted) ?
-          object.autocompleted : goog.nullFunction
+      open: goog.isDef(object.open) ?
+          object.open : goog.nullFunction,
+      close: goog.isDef(object.close) ?
+          object.close : goog.nullFunction,
+      cursorchange: goog.isDef(object.cursorchange) ?
+          object.cursorchange : goog.nullFunction,
+      select: goog.isDef(object.select) ?
+          object.select : goog.nullFunction,
+      autocomplete: goog.isDef(object.autocomplete) ?
+          object.autocomplete : goog.nullFunction
     };
   }
   return typeaheadListeners;
@@ -124201,8 +124183,7 @@ ngeo.SortableOptions;
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
- * @memberof ngeo
- * @name ngeoSortable
+ * @ngname ngeoSortable
  */
 ngeo.sortableDirective = function($timeout) {
   return {
@@ -126330,11 +126311,11 @@ goog.inherits(ngeo.BackgroundEvent, goog.events.Event);
  *
  * Setting a background layer to map is done with the `set` function:
  *
- * ngeoBackgroundLayerMgr.set(map, layer);
+ *     ngeoBackgroundLayerMgr.set(map, layer);
  *
  * To unset the background layer pass `null` as the `layer` argument:
  *
- * ngeoBackgroundLayerMgr.set(map, null);
+ *     ngeoBackgroundLayerMgr.set(map, null);
  *
  * The `get` function returns the current background layer of the map passed
  * as an argument. `null` is returned if the map doesn't have a background
@@ -126348,19 +126329,17 @@ goog.inherits(ngeo.BackgroundEvent, goog.events.Event);
  * Users can subscribe to a 'change' event to get notified when the background
  * layer changes:
  *
- * @example
- * ngeoBackgroundLayerMgr.on('change', function(e) {
- *   // do something with the layer
- *   var layer = ngeoBackgroundLayerMgr.get();
- *   // know which layer was used before
- *   var previous = e.previous
- * });
+ *     ngeoBackgroundLayerMgr.on('change', function(e) {
+ *       // do something with the layer
+ *       var layer = ngeoBackgroundLayerMgr.get();
+ *       // know which layer was used before
+ *       var previous = e.previous
+ *     });
  *
  * @extends {ol.Observable}
  * @constructor
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoBackgroundLayerMgr
+ * @ngname ngeoBackgroundLayerMgr
  */
 ngeo.BackgroundLayerMgr = function() {
 
@@ -126462,8 +126441,7 @@ goog.require('ol.format.GeoJSON');
  * @typedef {function(string, (function(GeoJSONFeature): boolean)=,
  * ol.proj.Projection=, ol.proj.Projection=, BloodhoundOptions=):Bloodhound}
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoCreateGeoJSONBloodhound
+ * @ngname ngeoCreateGeoJSONBloodhound
  */
 ngeo.CreateGeoJSONBloodhound;
 
@@ -126531,8 +126509,7 @@ goog.require('ngeo');
  *
  * @typedef {function(function(?), number, boolean):function()}
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoDebounce
+ * @ngname ngeoDebounce
  */
 ngeo.Debounce;
 
@@ -126591,8 +126568,7 @@ goog.require('ngeo');
  *
  * @typedef {function(ol.Geolocation)}
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoDecorateGeolocation
+ * @ngname ngeoDecorateGeolocation
  */
 ngeo.DecorateGeolocation;
 
@@ -126633,8 +126609,7 @@ goog.require('ngeo');
  *
  * @typedef {function(ol.interaction.Interaction)}
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoDecorateInteraction
+ * @ngname ngeoDecorateInteraction
  */
 ngeo.DecorateInteraction;
 
@@ -126674,8 +126649,7 @@ goog.require('ngeo');
  *
  * @typedef {function(ol.layer.Layer)}
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoDecorateLayer
+ * @ngname ngeoDecorateLayer
  */
 ngeo.DecorateLayer;
 
@@ -126760,21 +126734,18 @@ ngeo.FeatureOverlayGroup;
  * The application's main component/controller initializes the feature
  * overlay manager with the map:
  *
- * @example
- * ngeoFeatureOverlayMgr.init(map);
+ *     ngeoFeatureOverlayMgr.init(map);
  *
  * Once initialized, components of the application can use the manager to
  * create a feature overlay, configuring it with specific styles:
  *
- * @example
- * var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
- * featureOverlay.setStyle(myStyle);
- * featureOverlay.addFeature(myFeature);
+ *     var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
+ *     featureOverlay.setStyle(myStyle);
+ *     featureOverlay.addFeature(myFeature);
  *
  * @constructor
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoFeatureOverlayMgr
+ * @ngname ngeoFeatureOverlayMgr
  */
 ngeo.FeatureOverlayMgr = function() {
 
@@ -127053,8 +127024,7 @@ ngeo.GetBrowserLanguage;
  * @return {ngeo.GetBrowserLanguage} The "GetBrowserLanguage" function.
  * @ngInject
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoGetBrowserLanguage
+ * @ngname ngeoGetBrowserLanguage
  */
 ngeo.getBrowserLanguageFactory = function($window) {
   return (
@@ -127117,7 +127087,7 @@ ngeo.MockLocationProvider;
  * use to mock Angular's $location provider and make it possible to use both
  * ngeoLocation and ng-include.
  *
- * app.module.config(ngeo.mockLocationProvider);
+ *     app.module.config(ngeo.mockLocationProvider);
  *
  * The ngeo Location type.
  *
@@ -127125,8 +127095,7 @@ ngeo.MockLocationProvider;
  * @param {History} history History.
  * @constructor
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoLocation
+ * @ngname ngeoLocation
  */
 ngeo.Location = function(location, history) {
   /**
@@ -127337,18 +127306,16 @@ ngeo.CreatePopup;
  * Provides a factory to create a popup in the page.
  * The factory returns a ngeo.Popup object.
  *
- * @example
- * var popup = ngeoCreatePopup();
- * popup.setTitle("A title");
- * popup.setContent("Some content");
- * popup.setOpen(true);
+ *     var popup = ngeoCreatePopup();
+ *     popup.setTitle("A title");
+ *     popup.setContent("Some content");
+ *     popup.setOpen(true);
  *
  * @constructor
  * @param {angular.$compile} $compile The compile provider.
  * @param {angular.Scope} $rootScope The rootScope provider.
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoCreatePopup
+ * @ngname ngeoCreatePopup
  */
 ngeo.Popup = function($compile, $rootScope) {
 
@@ -127513,15 +127480,16 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * - getReportUrl: get the URL of a report
  * - getCapabilities: get the capabilities of the server
  *
- * @example
- * var printBaseUrl = 'http://example.com/print';
- * var print = new ngeo.Print(printBaseUrl);
  *
- * var scale = 5000;
- * var dpi = 72;
- * var layout = 'A4 portrait';
- * var reportSpec = print.createSpec(map, scale, dpi, layout,
- *     {'title': 'A title for my report'});
+ *     var printBaseUrl = 'http://example.com/print';
+ *     var print = new ngeo.Print(printBaseUrl);
+ *
+ *     var scale = 5000;
+ *     var dpi = 72;
+ *     var layout = 'A4 portrait';
+ *     var reportSpec = print.createSpec(map, scale, dpi, layout, {
+ *       'title': 'A title for my report'
+ *     });
  *
  * TODO and limitations:
  *
@@ -128207,8 +128175,7 @@ ngeo.Print.prototype.getCapabilities = function(opt_httpConfig) {
  * @return {ngeo.CreatePrint} The function to create a print service.
  * @ngInject
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoCreatePrint
+ * @ngname ngeoCreatePrint
  */
 ngeo.createPrintServiceFactory = function($http) {
   return (
@@ -128234,8 +128201,7 @@ goog.require('ngeo');
  *
  * @constructor
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoPrintUtils
+ * @ngname ngeoPrintUtils
  */
 ngeo.PrintUtils = function() {
 };
@@ -128402,20 +128368,18 @@ goog.require('ngeo');
  * with the array of selected layers, where layers may be added to/removed from
  * the map, and the order of selected layers may change.
  *
- * @example
- * var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
- *     true, scope, function(layer) {
- *       // exclude the layer at index 0 in the map
- *       return map.getLayers().indexOf(layer) !== 0;
- *     });
+ *     var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
+ *         true, scope, function(layer) {
+ *           // exclude the layer at index 0 in the map
+ *           return map.getLayers().indexOf(layer) !== 0;
+ *         });
  *
  * This will return a function that can be called to cancel synchronization.
  *
  * @typedef {function(Array, Array, boolean, angular.Scope,
  *     function(?):boolean)}
  * @ngdoc service
- * @memberof ngeo
- * @name ngeoSyncArrays
+ * @ngname ngeoSyncArrays
  */
 ngeo.SyncArrays;
 

@@ -7220,7 +7220,8 @@ nav.nav-right {
   width: 260px;
   height: 100%;
   background-color: white;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 1;
 }
