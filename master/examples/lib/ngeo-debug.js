@@ -121559,11 +121559,11 @@ goog.require('ngeo');
  * The ngeo-btn-group directive allows creating "toggle" groups. It works with
  * the ngeo-btn directive.
  *
- * @example
- * <div ngeo-btn-group>
- *   <button ngeo-btn class="btn" ng-model="ctrl.drawPoint.active"></button>
- *   <button ngeo-btn class="btn" ng-model="ctrl.drawLine.active"></button>
- * </div>
+ * Example:
+ *     <div ngeo-btn-group>
+ *       <button ngeo-btn class="btn" ng-model="ctrl.drawPoint.active"></button>
+ *       <button ngeo-btn class="btn" ng-model="ctrl.drawLine.active"></button>
+ *     </div>
  *
  * In that example the ngeo-btn are combined together in a "toggle group",
  * where activating a button will deactivate the others.
@@ -121633,8 +121633,8 @@ ngeoModule.controller('ngeoBtnGroupController', ngeo.BtnGroupController);
  * The ngeo-btn allows creating toggle buttons working with ng-model. It is
  * typically used with Bootstrap buttons (`btn`).
  *
- * @example
- * <button ngeo-btn class="btn" ng-model="ctrl.interaction.active"></button>
+ * Example:
+ *     <button ngeo-btn class="btn" ng-model="ctrl.interaction.active"></button>
  *
  * This example is about creating a Bootstrap button that can pressed/depressed
  * to activate/deactivate an OpenLayers 3 interaction.
@@ -121704,8 +121704,8 @@ goog.require('ol.control.Control');
  * Provides a directive can be used to add a control to a DOM
  * element of the HTML page.
  *
- * @example
- * <div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map"></div>
+ * Example:
+ *     <div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map"></div>
  *
  * The expression passed to "ngeo-control" should evaluate to a control
  * instance, and the expression passed to "ngeo-control-map" should
@@ -121833,11 +121833,11 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * The directive assumes that tree nodes that are not leaves have a "children"
  * property referencing an array of child nodes.
  *
- * @example
- * <div ngeo-layertree="ctrl.tree"
- *      ngeo-layertree-map="ctrl.map"
- *      ngeo-layertree-nodelayer="ctrl.getLayer(node)"
- * </div>
+ * Example:
+ *     <div ngeo-layertree="ctrl.tree"
+ *          ngeo-layertree-map="ctrl.map"
+ *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *     </div>
  *
  * The "ngeo-layertree", "ngeo-layertree-map" and
  * "ngeo-layertree-nodelayer" attributes are mandatory attributes.
@@ -121861,14 +121861,14 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * By default the directive uses "layertree.html" as its templateUrl. This
  * can be changed by redefining the "ngeoLayertreeTemplateUrl" value (using
  * app.module.value('ngeoLayertreeTemplateUrl', 'path/layertree.html'), or
- * by adding an "ngeo-layertree-templateurl" attribute to the element. For
- * example:
+ * by adding an "ngeo-layertree-templateurl" attribute to the element.
  *
- * <div ngeo-layertree="ctrl.tree"
- *      ngeo-layertree-templateurl="path/to/layertree.html"
- *      ngeo-layertree-map="ctrl.map"
- *      ngeo-layertree-nodelayer="ctrl.getLayer(node)"
- * </div>
+ * Example:
+ *     <div ngeo-layertree="ctrl.tree"
+ *          ngeo-layertree-templateurl="path/to/layertree.html"
+ *          ngeo-layertree-map="ctrl.map"
+ *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *     </div>
  *
  * The directive has its own scope, but it is not an isolate scope. That scope
  * has a "layertreeCtrl" property which is a reference to the directive's
@@ -122244,11 +122244,11 @@ goog.require('ngeo.profile');
  * Provides a directive used to insert an elevation profile chart
  * in the DOM.
  *
- * @example
- * <div ngeo-profile="ctrl.profileData"
- *      ngeo-profile-options="ctrl.profileOptions"
- *      ngeo-profile-pois="ctrl.profilePois"
- * ></div>
+ * Example:
+ *     <div ngeo-profile="ctrl.profileData"
+ *          ngeo-profile-options="ctrl.profileOptions"
+ *          ngeo-profile-pois="ctrl.profilePois"
+ *     ></div>
  *
  * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions};
  * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
@@ -122451,20 +122451,20 @@ ngeo.ScaleselectorOptions;
  * Provides the "ngeoScaleselector" directive, a widget for
  * selecting map scales.
  *
- * @example
- * <div ngeo-scaleselector="ctrl.scales" ngeo-scaleselector-map="ctrl.map">
- * </div>
+ * Example:
+ *     <div ngeo-scaleselector="ctrl.scales" ngeo-scaleselector-map="ctrl.map">
+ *     </div>
  *
  * The expression passed to the ngeo-scaleselector attribute should return an
  * object of this form:
  *
- * {
- *   '0': $sce.trustAsHtml('1&nbsp;:&nbsp;200\'000\'000'),
- *   '1': $sce.trustAsHtml('1&nbsp;:&nbsp;100\'000\'000'),
- *   '2': $sce.trustAsHtml('1&nbsp;:&nbsp;50\'000\'000'),
- *   '3': $sce.trustAsHtml('1&nbsp;:&nbsp;25\'000\'000'),
- *   '4': $sce.trustAsHtml('1&nbsp;:&nbsp;12\'000\'000')
- * }
+ *     {
+ *       '0': $sce.trustAsHtml('1&nbsp;:&nbsp;200\'000\'000'),
+ *       '1': $sce.trustAsHtml('1&nbsp;:&nbsp;100\'000\'000'),
+ *       '2': $sce.trustAsHtml('1&nbsp;:&nbsp;50\'000\'000'),
+ *       '3': $sce.trustAsHtml('1&nbsp;:&nbsp;25\'000\'000'),
+ *       '4': $sce.trustAsHtml('1&nbsp;:&nbsp;12\'000\'000')
+ *     }
  *
  * This object's keys are strings representing zoom levels, the values are
  * strings representing scales. The directive's partial uses ng-bind-html so
@@ -124127,13 +124127,13 @@ ngeo.SortableOptions;
  * It is typically used together with `ng-repeat`, for example for re-ordering
  * layers in a map.
  *
- * @example
- * <ul ngeo-sortable="ctrl.layers"
- *     ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
- *   <li ng-repeat="layer in ctrl.layers">
- *     <span class="sortable-handle">handle</span>{{layer.get('name')}}
- *   </li>
- * </ul>
+ * Example:
+ *     <ul ngeo-sortable="ctrl.layers"
+ *         ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
+ *       <li ng-repeat="layer in ctrl.layers">
+ *         <span class="sortable-handle">handle</span>{{layer.get('name')}}
+ *       </li>
+ *     </ul>
  *
  * The value of the "ngeo-sortable" attribute is an expression which evaluates
  * to an array (an array of layers in the above example). This is the array
@@ -126375,31 +126375,30 @@ goog.require('ol.format.GeoJSON');
  * expecting GeoJSON responses from the search web service, and creating
  * `ol.Feature` objects as suggestions.
  *
- * @example
- * var bloodhound = ngeoCreateGeoJSONBloodhound(
- *   'http://example.com/fulltextsearch?query=%QUERY',
- *   aFilterFunction,
- *   ol.proj.get('EPSG:3857'));
- * bloodhound.initialize();
+ * Example:
+ *     var bloodhound = ngeoCreateGeoJSONBloodhound(
+ *       'http://example.com/fulltextsearch?query=%QUERY',
+ *       aFilterFunction,
+ *       ol.proj.get('EPSG:3857'));
+ *     bloodhound.initialize();
  *
- * @example
- * var bloodhound = ngeoCreateGeoJSONBloodhound(
- *   '',
- *   undefined,
- *   ol.proj.get('EPSG:3857'),
- *   ol.proj.get('EPSG:21781'),
- *   {
- *     remote: {
- *       url: mySearchEngineUrl,
- *       replace: function(url, query) {
- *         return url +
- *             '?qtext=' + encodeURIComponent(query) +
- *             '&lang=' + gettextCatalog.currentLanguage;
+ *     var bloodhound = ngeoCreateGeoJSONBloodhound(
+ *       '',
+ *       undefined,
+ *       ol.proj.get('EPSG:3857'),
+ *       ol.proj.get('EPSG:21781'),
+ *       {
+ *         remote: {
+ *           url: mySearchEngineUrl,
+ *           replace: function(url, query) {
+ *             return url +
+ *                 '?qtext=' + encodeURIComponent(query) +
+ *                 '&lang=' + gettextCatalog.currentLanguage;
+ *           }
+ *         }
  *       }
- *     }
- *   }
- * );
- * bloodhound.initialize
+ *     );
+ *     bloodhound.initialize();
  *
  * @typedef {function(string, (function(GeoJSONFeature): boolean)=,
  * ol.proj.Projection=, ol.proj.Projection=, BloodhoundOptions=):Bloodhound}
