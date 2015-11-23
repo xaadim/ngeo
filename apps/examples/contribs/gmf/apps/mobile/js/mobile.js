@@ -4,11 +4,12 @@
 /**
  * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
  *     overlay manager service.
+ * @param {Object} serverVars vars from GMF
  * @constructor
  * @ngInject
  * @export
  */
-app.MobileController = function(ngeoFeatureOverlayMgr) {
+app.MobileController = function(ngeoFeatureOverlayMgr, serverVars) {
 
   proj4.defs('EPSG:21781',
       '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 ' +
@@ -25,8 +26,7 @@ app.MobileController = function(ngeoFeatureOverlayMgr) {
     groupsKey: 'layer_name',
     groupValues: ['osm'],
     projection: 'EPSG:21781',
-    url: 'http://geomapfish-demo.camptocamp.net/2.0/wsgi/fulltextsearch?' +
-        'query=%QUERY'
+    url: serverVars['searchDatasourcesUrls']['gmfDemo2']
   }];
 
   /**

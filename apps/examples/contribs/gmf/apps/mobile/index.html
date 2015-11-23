@@ -98,5 +98,16 @@
     <script src="../../build/mobile.js"></script>
     <script src="js/mobile.js"></script>
     <script src="../../../../lib/watchwatchers.js"></script>
+    <script>
+      (function() {
+         var module = angular.module('app');
+         var serverVars = {
+           searchDatasourcesUrls: {
+             gmfDemo2: 'http://geomapfish-demo.camptocamp.net/2.0/wsgi/fulltextsearch?query=%QUERY'
+           }
+         };
+         module.constant('serverVars', serverVars);
+       })();
+    </script>
   </body>
 </html>
