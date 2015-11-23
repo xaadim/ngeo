@@ -38095,13 +38095,13 @@ ol.control.Attribution = function(opt_options) {
    * @private
    * @type {Element}
    */
-  this.ulElement_ = goog.dom.createElement('UL');
+  this.ulElement_ = document.createElement('UL');
 
   /**
    * @private
    * @type {Element}
    */
-  this.logoLi_ = goog.dom.createElement('LI');
+  this.logoLi_ = document.createElement('LI');
 
   this.ulElement_.appendChild(this.logoLi_);
   goog.style.setElementShown(this.logoLi_, false);
@@ -38319,7 +38319,7 @@ ol.control.Attribution.prototype.updateElement_ = function(frameState) {
     }
   }
   for (attributionKey in visibleAttributions) {
-    attributionElement = goog.dom.createElement('LI');
+    attributionElement = document.createElement('LI');
     attributionElement.innerHTML =
         visibleAttributions[attributionKey].getHTML();
     this.ulElement_.appendChild(attributionElement);
@@ -38327,7 +38327,7 @@ ol.control.Attribution.prototype.updateElement_ = function(frameState) {
     this.attributionElementRenderedVisible_[attributionKey] = true;
   }
   for (attributionKey in hiddenAttributions) {
-    attributionElement = goog.dom.createElement('LI');
+    attributionElement = document.createElement('LI');
     attributionElement.innerHTML =
         hiddenAttributions[attributionKey].getHTML();
     goog.style.setElementShown(attributionElement, false);
@@ -39017,7 +39017,7 @@ ol.control.FullScreen = function(opt_options) {
    * @type {Node}
    */
   this.labelNode_ = goog.isString(label) ?
-      goog.dom.createTextNode(label) : label;
+      document.createTextNode(label) : label;
 
   var labelActive = options.labelActive ? options.labelActive : '\u00d7';
 
@@ -39026,7 +39026,7 @@ ol.control.FullScreen = function(opt_options) {
    * @type {Node}
    */
   this.labelActiveNode_ = goog.isString(labelActive) ?
-      goog.dom.createTextNode(labelActive) : labelActive;
+      document.createTextNode(labelActive) : labelActive;
 
   var tipLabel = options.tipLabel ? options.tipLabel : 'Toggle full-screen';
   var button = goog.dom.createDom('BUTTON', {
@@ -47354,7 +47354,7 @@ goog.require('ol');
  * @return {CanvasRenderingContext2D}
  */
 ol.dom.createCanvasContext2D = function(opt_width, opt_height) {
-  var canvas = goog.dom.createElement('CANVAS');
+  var canvas = document.createElement('CANVAS');
   if (opt_width) {
     canvas.width = opt_width;
   }
@@ -47381,7 +47381,7 @@ ol.dom.canUseCssTransform = (function() {
         // this browser is ancient
         canUseCssTransform = false;
       } else {
-        var el = goog.dom.createElement('P'),
+        var el = document.createElement('P'),
             has2d,
             transforms = {
               'webkitTransform': '-webkit-transform',
@@ -47424,7 +47424,7 @@ ol.dom.canUseCssTransform3D = (function() {
         // this browser is ancient
         canUseCssTransform3D = false;
       } else {
-        var el = goog.dom.createElement('P'),
+        var el = document.createElement('P'),
             has3d,
             transforms = {
               'webkitTransform': '-webkit-transform',
@@ -47606,7 +47606,6 @@ ol.webgl.getContext = function(canvas, opt_attributes) {
 
 goog.provide('ol.has');
 
-goog.require('goog.dom');
 goog.require('ol');
 goog.require('ol.dom');
 goog.require('ol.webgl');
@@ -47730,7 +47729,7 @@ ol.has.WEBGL;
     if ('WebGLRenderingContext' in goog.global) {
       try {
         var canvas = /** @type {HTMLCanvasElement} */
-            (goog.dom.createElement('CANVAS'));
+            (document.createElement('CANVAS'));
         var gl = ol.webgl.getContext(canvas, {
           failIfMajorPerformanceCaveat: true
         });
@@ -56938,7 +56937,6 @@ ol.style.Stroke.prototype.getChecksum = function() {
 goog.provide('ol.style.Circle');
 
 goog.require('goog.asserts');
-goog.require('goog.dom');
 goog.require('ol');
 goog.require('ol.color');
 goog.require('ol.has');
@@ -57209,7 +57207,7 @@ ol.style.Circle.prototype.render_ = function(atlasManager) {
   if (atlasManager === undefined) {
     // no atlas manager is used, create a new canvas
     this.canvas_ = /** @type {HTMLCanvasElement} */
-        (goog.dom.createElement('CANVAS'));
+        (document.createElement('CANVAS'));
     this.canvas_.height = size;
     this.canvas_.width = size;
 
@@ -57310,7 +57308,7 @@ ol.style.Circle.prototype.createHitDetectionCanvas_ = function(renderOptions) {
   // if no fill style is set, create an extra hit-detection image with a
   // default fill style
   this.hitDetectionCanvas_ = /** @type {HTMLCanvasElement} */
-      (goog.dom.createElement('CANVAS'));
+      (document.createElement('CANVAS'));
   var canvas = this.hitDetectionCanvas_;
 
   canvas.height = renderOptions.size;
@@ -75144,7 +75142,7 @@ goog.require('ol.vec.Mat4');
  * @param {ol.layer.Image} imageLayer Image layer.
  */
 ol.renderer.dom.ImageLayer = function(imageLayer) {
-  var target = goog.dom.createElement('DIV');
+  var target = document.createElement('DIV');
   target.style.position = 'absolute';
 
   goog.base(this, imageLayer, target);
@@ -75317,7 +75315,7 @@ goog.require('ol.vec.Mat4');
  */
 ol.renderer.dom.TileLayer = function(tileLayer) {
 
-  var target = goog.dom.createElement('DIV');
+  var target = document.createElement('DIV');
   target.style.position = 'absolute';
 
   goog.base(this, tileLayer, target);
@@ -75562,7 +75560,7 @@ ol.renderer.dom.TileLayerZ_ = function(tileGrid, tileCoordOrigin) {
   /**
    * @type {!Element}
    */
-  this.target = goog.dom.createElement('DIV');
+  this.target = document.createElement('DIV');
   this.target.style.position = 'absolute';
   this.target.style.width = '100%';
   this.target.style.height = '100%';
@@ -75645,7 +75643,7 @@ ol.renderer.dom.TileLayerZ_.prototype.addTile = function(tile, tileGutter) {
   var tileElement;
   var tileElementStyle;
   if (tileGutter > 0) {
-    tileElement = goog.dom.createElement('DIV');
+    tileElement = document.createElement('DIV');
     tileElementStyle = tileElement.style;
     tileElementStyle.overflow = 'hidden';
     tileElementStyle.width = tileSize[0] + 'px';
@@ -76159,7 +76157,7 @@ ol.renderer.dom.Map = function(container, map) {
    * @type {!Element}
    * @private
    */
-  this.layersPane_ = goog.dom.createElement('DIV');
+  this.layersPane_ = document.createElement('DIV');
   this.layersPane_.className = ol.css.CLASS_UNSELECTABLE;
   var style = this.layersPane_.style;
   style.position = 'absolute';
@@ -82355,7 +82353,7 @@ ol.renderer.webgl.Map = function(container, map) {
    * @type {HTMLCanvasElement}
    */
   this.canvas_ = /** @type {HTMLCanvasElement} */
-      (goog.dom.createElement('CANVAS'));
+      (document.createElement('CANVAS'));
   this.canvas_.style.width = '100%';
   this.canvas_.style.height = '100%';
   this.canvas_.className = ol.css.CLASS_UNSELECTABLE;
@@ -120007,7 +120005,6 @@ goog.provide('ol.style.Atlas');
 goog.provide('ol.style.AtlasManager');
 
 goog.require('goog.asserts');
-goog.require('goog.dom');
 goog.require('goog.functions');
 goog.require('goog.object');
 goog.require('ol');
@@ -120302,7 +120299,7 @@ ol.style.Atlas = function(size, space) {
    * @type {HTMLCanvasElement}
    */
   this.canvas_ = /** @type {HTMLCanvasElement} */
-      (goog.dom.createElement('CANVAS'));
+      (document.createElement('CANVAS'));
   this.canvas_.width = size;
   this.canvas_.height = size;
 
@@ -120453,7 +120450,6 @@ ol.style.Atlas.Block;
 goog.provide('ol.style.RegularShape');
 
 goog.require('goog.asserts');
-goog.require('goog.dom');
 goog.require('ol');
 goog.require('ol.color');
 goog.require('ol.has');
@@ -120804,7 +120800,7 @@ ol.style.RegularShape.prototype.render_ = function(atlasManager) {
   if (atlasManager === undefined) {
     // no atlas manager is used, create a new canvas
     this.canvas_ = /** @type {HTMLCanvasElement} */
-        (goog.dom.createElement('CANVAS'));
+        (document.createElement('CANVAS'));
 
     this.canvas_.height = size;
     this.canvas_.width = size;
@@ -120916,7 +120912,7 @@ ol.style.RegularShape.prototype.createHitDetectionCanvas_ =
   // if no fill style is set, create an extra hit-detection image with a
   // default fill style
   this.hitDetectionCanvas_ = /** @type {HTMLCanvasElement} */
-      (goog.dom.createElement('CANVAS'));
+      (document.createElement('CANVAS'));
   var canvas = this.hitDetectionCanvas_;
 
   canvas.height = renderOptions.size;
