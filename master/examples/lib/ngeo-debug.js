@@ -121553,6 +121553,7 @@ goog.require('ngeo');
  * the ngeo-btn directive.
  *
  * Example:
+ *
  *     <div ngeo-btn-group>
  *       <button ngeo-btn class="btn" ng-model="ctrl.drawPoint.active"></button>
  *       <button ngeo-btn class="btn" ng-model="ctrl.drawLine.active"></button>
@@ -121631,6 +121632,7 @@ ngeoModule.controller('ngeoBtnGroupController', ngeo.BtnGroupController);
  * typically used with Bootstrap buttons (`btn`).
  *
  * Example:
+ *
  *     <button ngeo-btn class="btn" ng-model="ctrl.interaction.active"></button>
  *
  * This example is about creating a Bootstrap button that can pressed/depressed
@@ -121704,6 +121706,7 @@ goog.require('ol.control.Control');
  * element of the HTML page.
  *
  * Example:
+ *
  *     <div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map"></div>
  *
  * The expression passed to "ngeo-control" should evaluate to a control
@@ -121837,6 +121840,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * property referencing an array of child nodes.
  *
  * Example:
+ *
  *     <div ngeo-layertree="ctrl.tree"
  *          ngeo-layertree-map="ctrl.map"
  *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
@@ -121867,6 +121871,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  * by adding an "ngeo-layertree-templateurl" attribute to the element.
  *
  * Example:
+ *
  *     <div ngeo-layertree="ctrl.tree"
  *          ngeo-layertree-templateurl="path/to/layertree.html"
  *          ngeo-layertree-map="ctrl.map"
@@ -122258,6 +122263,7 @@ goog.require('ngeo.profile');
  * in the DOM.
  *
  * Example:
+ *
  *     <div ngeo-profile="ctrl.profileData"
  *          ngeo-profile-options="ctrl.profileOptions"
  *          ngeo-profile-pois="ctrl.profilePois"
@@ -122469,6 +122475,7 @@ ngeo.ScaleselectorOptions;
  * selecting map scales.
  *
  * Example:
+ *
  *     <div ngeo-scaleselector="ctrl.scales" ngeo-scaleselector-map="ctrl.map">
  *     </div>
  *
@@ -124151,6 +124158,7 @@ ngeo.SortableOptions;
  * layers in a map.
  *
  * Example:
+ *
  *     <ul ngeo-sortable="ctrl.layers"
  *         ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
  *       <li ng-repeat="layer in ctrl.layers">
@@ -126403,6 +126411,7 @@ goog.require('ol.format.GeoJSON');
  * `ol.Feature` objects as suggestions.
  *
  * Example:
+ *
  *     var bloodhound = ngeoCreateGeoJSONBloodhound(
  *       'http://example.com/fulltextsearch?query=%QUERY',
  *       aFilterFunction,

@@ -54,14 +54,13 @@ drag-and-dropping DOM items between them. The directive also changes the
 order of elements in the array it is given.</p>
 <p>It is typically used together with <code>ng-repeat</code>, for example for re-ordering
 layers in a map.</p>
-<p>Example:
-    <ul ngeo-sortable="ctrl.layers"
-        ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
-      <li ng-repeat="layer in ctrl.layers">
-        <span class="sortable-handle">handle</span>{{layer.get('name')}}
-      </li>
-    </ul></p>
-<p>The value of the &quot;ngeo-sortable&quot; attribute is an expression which evaluates
+<p>Example:</p>
+<pre class="prettyprint source"><code>&lt;ul ngeo-sortable=&quot;ctrl.layers&quot;
+    ngeo-sortable-options=&quot;{handleClassName: 'sortable-handle'}&quot;>
+  &lt;li ng-repeat=&quot;layer in ctrl.layers&quot;>
+    &lt;span class=&quot;sortable-handle&quot;>handle&lt;/span>{{layer.get('name')}}
+  &lt;/li>
+&lt;/ul></code></pre><p>The value of the &quot;ngeo-sortable&quot; attribute is an expression which evaluates
 to an array (an array of layers in the above example). This is the array
 that is re-ordered after a drag-and-drop.</p>
 <p>The element with the class &quot;sortable-handle&quot; is the &quot;drag handle&quot;. It is
@@ -161,7 +160,7 @@ the &quot;ngeoSortable&quot; directive will pick it up.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_sortable.js.html">src/directives/sortable.js</a>, <a href="src_directives_sortable.js.html#line52">line 52</a>
+        <a href="src_directives_sortable.js.html">src/directives/sortable.js</a>, <a href="src_directives_sortable.js.html#line53">line 53</a>
     </li></ul></dd>
     
 

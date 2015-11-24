@@ -53,12 +53,11 @@
 creating layer trees in application.</p>
 <p>The directive assumes that tree nodes that are not leaves have a &quot;children&quot;
 property referencing an array of child nodes.</p>
-<p>Example:
-    <div ngeo-layertree="ctrl.tree"
-         ngeo-layertree-map="ctrl.map"
-         ngeo-layertree-nodelayer="ctrl.getLayer(node)"
-    </div></p>
-<p>The &quot;ngeo-layertree&quot;, &quot;ngeo-layertree-map&quot; and
+<p>Example:</p>
+<pre class="prettyprint source"><code>&lt;div ngeo-layertree=&quot;ctrl.tree&quot;
+     ngeo-layertree-map=&quot;ctrl.map&quot;
+     ngeo-layertree-nodelayer=&quot;ctrl.getLayer(node)&quot;
+&lt;/div></code></pre><p>The &quot;ngeo-layertree&quot;, &quot;ngeo-layertree-map&quot; and
 &quot;ngeo-layertree-nodelayer&quot; attributes are mandatory attributes.</p>
 <ul>
 <li><p>&quot;ngeo-layertree&quot; specifies an expression providing the tree. The
@@ -81,13 +80,12 @@ array of child nodes. It also assumes that nodes have a &quot;name&quot; propert
 can be changed by redefining the &quot;ngeoLayertreeTemplateUrl&quot; value (using
 app.module.value('ngeoLayertreeTemplateUrl', 'path/layertree.html'), or
 by adding an &quot;ngeo-layertree-templateurl&quot; attribute to the element.</p>
-<p>Example:
-    <div ngeo-layertree="ctrl.tree"
-         ngeo-layertree-templateurl="path/to/layertree.html"
-         ngeo-layertree-map="ctrl.map"
-         ngeo-layertree-nodelayer="ctrl.getLayer(node)"
-    </div></p>
-<p>The directive has its own scope, but it is not an isolate scope. That scope
+<p>Example:</p>
+<pre class="prettyprint source"><code>&lt;div ngeo-layertree=&quot;ctrl.tree&quot;
+     ngeo-layertree-templateurl=&quot;path/to/layertree.html&quot;
+     ngeo-layertree-map=&quot;ctrl.map&quot;
+     ngeo-layertree-nodelayer=&quot;ctrl.getLayer(node)&quot;
+&lt;/div></code></pre><p>The directive has its own scope, but it is not an isolate scope. That scope
 has a &quot;layertreeCtrl&quot; property which is a reference to the directive's
 controller: &quot;layertreeCtrl&quot;. You can refer to that property in a custom
 template for example.</p>
@@ -209,7 +207,7 @@ template for example.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line82">line 82</a>
+        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
