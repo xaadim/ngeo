@@ -38157,13 +38157,6 @@ ol.control.Attribution = function(opt_options) {
   goog.events.listen(button, goog.events.EventType.CLICK,
       this.handleClick_, false, this);
 
-  goog.events.listen(button, [
-    goog.events.EventType.MOUSEOUT,
-    goog.events.EventType.FOCUSOUT
-  ], function() {
-    this.blur();
-  }, false);
-
   var cssClasses = className + ' ' + ol.css.CLASS_UNSELECTABLE + ' ' +
       ol.css.CLASS_CONTROL +
       (this.collapsed_ && this.collapsible_ ? ' ol-collapsed' : '') +
@@ -121041,7 +121034,6 @@ goog.require('goog.object');
  * @return {Object}
  * @param {ngeox.profile.ProfileOptions} options
  * @export
- *
  */
 ngeo.profile = function(options) {
   /**
@@ -121571,6 +121563,8 @@ goog.require('ngeo');
  *
  * @return {angular.Directive} The directive specs.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoBtnGroup
  */
 ngeo.btngroupDirective = function() {
   return {
@@ -121588,6 +121582,8 @@ ngeoModule.directive('ngeoBtnGroup', ngeo.btngroupDirective);
  * @param {!angular.Scope} $scope Scope.
  * @constructor
  * @ngInject
+ * @ngdoc controller
+ * @ngname ngeoBtnGroupController
  */
 ngeo.BtnGroupController = function($scope) {
   /**
@@ -121643,6 +121639,8 @@ ngeoModule.controller('ngeoBtnGroupController', ngeo.BtnGroupController);
  * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoBtn
  */
 ngeo.btnDirective = function($parse) {
   return {
@@ -121714,6 +121712,8 @@ goog.require('ol.control.Control');
  *
  * @return {angular.Directive} The directive specs.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoControl
  */
 ngeo.controlDirective = function() {
   return {
@@ -121762,6 +121762,8 @@ goog.require('ngeo');
  * @param {angular.$window} $window The Angular $window service.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoFilereader
  */
 ngeo.filereaderDirective = function($window) {
   return {
@@ -121881,6 +121883,8 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *     ngeoLayertreeTemplateUrl Template URL for the directive.
  * @return {angular.Directive} The Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoLayertree
  */
 ngeo.layertreeDirective = function(
     $compile, ngeoLayertreeTemplateUrl) {
@@ -121935,6 +121939,8 @@ ngeoModule.directive('ngeoLayertree', ngeo.layertreeDirective);
  * @constructor
  * @ngInject
  * @export
+ * @ngdoc controller
+ * @ngname NgeoLayertreeController
  */
 ngeo.LayertreeController = function($scope, $element, $attrs) {
 
@@ -122067,6 +122073,8 @@ goog.require('ol.Map');
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoMap
  */
 ngeo.mapDirective = function() {
   return {
@@ -122125,6 +122133,8 @@ goog.require('ngeo');
  * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoModal
  */
 ngeo.modalDirective = function($parse) {
   return {
@@ -122202,6 +122212,8 @@ ngeoModule.value('ngeoPopupTemplateUrl', ngeo.popupTemplateUrl);
  * @param {string} ngeoPopupTemplateUrl Url to popup template.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoPopup
  */
 ngeo.popupDirective = function(ngeoPopupTemplateUrl) {
   return {
@@ -122258,6 +122270,8 @@ goog.require('ngeo.profile');
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoProfile
  */
 ngeo.profileDirective = function() {
   return {
@@ -122373,6 +122387,8 @@ goog.require('ol.Map');
  * @param {angular.$animate} $animate Angular animate service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoResizemap
  */
 ngeo.resizemapDirective = function($window, $animate) {
   var /** @type {number} */ duration = 1000;
@@ -122489,6 +122505,8 @@ ngeo.ScaleselectorOptions;
  *     ngeoScaleselectorTemplateUrl Template URL for the directive.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoScaleselector
  */
 ngeo.scaleselectorDirective = function(ngeoScaleselectorTemplateUrl) {
   return {
@@ -122511,6 +122529,8 @@ ngeoModule.directive('ngeoScaleselector', ngeo.scaleselectorDirective);
  * @param {angular.Attributes} $attrs Attributes.
  * @export
  * @ngInject
+ * @ngdoc controller
+ * @ngname NgeoScaleselectorController
  */
 ngeo.ScaleselectorController = function($scope, $element, $attrs) {
 
@@ -122696,6 +122716,8 @@ goog.require('ngeo');
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoSearch
  */
 ngeo.searchDirective = function() {
   return {
@@ -124150,6 +124172,8 @@ ngeo.SortableOptions;
  * @param {angular.$timeout} $timeout Angular timeout service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoSortable
  */
 ngeo.sortableDirective = function($timeout) {
   return {
@@ -126304,6 +126328,8 @@ goog.inherits(ngeo.BackgroundEvent, goog.events.Event);
  *
  * @extends {ol.Observable}
  * @constructor
+ * @ngdoc service
+ * @ngname ngeoBackgroundLayerMgr
  */
 ngeo.BackgroundLayerMgr = function() {
 
@@ -126403,6 +126429,8 @@ goog.require('ol.format.GeoJSON');
  *
  * @typedef {function(string, (function(GeoJSONFeature): boolean)=,
  * ol.proj.Projection=, ol.proj.Projection=, BloodhoundOptions=):Bloodhound}
+ * @ngdoc service
+ * @ngname ngeoCreateGeoJSONBloodhound
  */
 ngeo.CreateGeoJSONBloodhound;
 
@@ -126470,6 +126498,8 @@ goog.require('ngeo');
  * used to debounce calls to a user-provided function.
  *
  * @typedef {function(function(?), number, boolean):function()}
+ * @ngdoc service
+ * @ngname ngeoDebounce
  */
 ngeo.Debounce;
 
@@ -126527,6 +126557,8 @@ goog.require('ngeo');
  * <input type="checkbox" ngModel="geolocation.tracking" />
  *
  * @typedef {function(ol.Geolocation)}
+ * @ngdoc service
+ * @ngname ngeoDecorateGeolocation
  */
 ngeo.DecorateGeolocation;
 
@@ -126566,6 +126598,8 @@ goog.require('ngeo');
  * <input type="checkbox" ngModel="interaction.active" />
  *
  * @typedef {function(ol.interaction.Interaction)}
+ * @ngdoc service
+ * @ngname ngeoDecorateInteraction
  */
 ngeo.DecorateInteraction;
 
@@ -126604,6 +126638,8 @@ goog.require('ngeo');
  * <input type="checkbox" ngModel="layer.visible" />
  *
  * @typedef {function(ol.layer.Layer)}
+ * @ngdoc service
+ * @ngname ngeoDecorateLayer
  */
 ngeo.DecorateLayer;
 
@@ -126698,6 +126734,8 @@ ngeo.FeatureOverlayGroup;
  *     featureOverlay.addFeature(myFeature);
  *
  * @constructor
+ * @ngdoc service
+ * @ngname ngeoFeatureOverlayMgr
  */
 ngeo.FeatureOverlayMgr = function() {
 
@@ -126975,6 +127013,8 @@ ngeo.GetBrowserLanguage;
  * @param {angular.$window} $window Angular $window service.
  * @return {ngeo.GetBrowserLanguage} The "GetBrowserLanguage" function.
  * @ngInject
+ * @ngdoc service
+ * @ngname ngeoGetBrowserLanguage
  */
 ngeo.getBrowserLanguageFactory = function($window) {
   return (
@@ -127044,6 +127084,8 @@ ngeo.MockLocationProvider;
  * @param {Location} location Location.
  * @param {History} history History.
  * @constructor
+ * @ngdoc service
+ * @ngname ngeoLocation
  */
 ngeo.Location = function(location, history) {
   /**
@@ -127269,6 +127311,8 @@ ngeo.CreatePopup;
  * @constructor
  * @param {angular.$compile} $compile The compile provider.
  * @param {angular.Scope} $rootScope The rootScope provider.
+ * @ngdoc service
+ * @ngname ngeoCreatePopup
  */
 ngeo.Popup = function($compile, $rootScope) {
 
@@ -128127,6 +128171,8 @@ ngeo.Print.prototype.getCapabilities = function(opt_httpConfig) {
  * @param {angular.$http} $http Angular $http service.
  * @return {ngeo.CreatePrint} The function to create a print service.
  * @ngInject
+ * @ngdoc service
+ * @ngname ngeoCreatePrint
  */
 ngeo.createPrintServiceFactory = function($http) {
   return (
@@ -128151,6 +128197,8 @@ goog.require('ngeo');
  * Provides a service with print utility functions.
  *
  * @constructor
+ * @ngdoc service
+ * @ngname ngeoPrintUtils
  */
 ngeo.PrintUtils = function() {
 };
@@ -128327,6 +128375,8 @@ goog.require('ngeo');
  *
  * @typedef {function(Array, Array, boolean, angular.Scope,
  *     function(?):boolean)}
+ * @ngdoc service
+ * @ngname ngeoSyncArrays
  */
 ngeo.SyncArrays;
 
