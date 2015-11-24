@@ -51,6 +51,14 @@
 <div class="description">
     <p>Provides a directive used to insert an elevation profile chart
 in the DOM.</p>
+<p>Example:
+    &lt;div ngeo-profile=&quot;ctrl.profileData&quot;
+         ngeo-profile-options=&quot;ctrl.profileOptions&quot;
+         ngeo-profile-pois=&quot;ctrl.profilePois&quot;</p>
+<pre class="prettyprint source"><code>>&lt;/div></code></pre><p>Where &quot;ctrl.profileOptions&quot; is of type <code>ngeox.profile.ProfileOptions</code>;
+&quot;ctrl.profileData&quot; and &quot;ctrl.profilePois&quot; are arrays which will be
+processed by <code>ngeox.profile.ElevationExtractor</code> and
+<code>ngeox.profile.PoiExtractor</code>.</p>
 </div>
 
 
@@ -139,19 +147,6 @@ in the DOM.</p>
 </dl>
 
     
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;div ngeo-profile="ctrl.profileData"
-     ngeo-profile-options="ctrl.profileOptions"
-     ngeo-profile-pois="ctrl.profilePois"
->&lt;/div>
-
-Where "ctrl.profileOptions" is of type <code>ngeox.profile.ProfileOptions</code>;
-"ctrl.profileData" and "ctrl.profilePois" are arrays which will be
-processed by <code>ngeox.profile.ElevationExtractor</code> and
-<code>ngeox.profile.PoiExtractor</code>.</code></pre>
 
 
 

@@ -54,6 +54,21 @@ drag-and-dropping DOM items between them. The directive also changes the
 order of elements in the array it is given.</p>
 <p>It is typically used together with <code>ng-repeat</code>, for example for re-ordering
 layers in a map.</p>
+<p>Example:
+    <ul ngeo-sortable="ctrl.layers"
+        ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
+      <li ng-repeat="layer in ctrl.layers">
+        <span class="sortable-handle">handle</span>{{layer.get('name')}}
+      </li>
+    </ul></p>
+<p>The value of the &quot;ngeo-sortable&quot; attribute is an expression which evaluates
+to an array (an array of layers in the above example). This is the array
+that is re-ordered after a drag-and-drop.</p>
+<p>The element with the class &quot;sortable-handle&quot; is the &quot;drag handle&quot;. It is
+required.</p>
+<p>This directives uses <code>$watchCollection</code> to watch the &quot;sortable&quot; array. So
+if some outside code adds/removes elements to/from the &quot;sortable&quot; array,
+the &quot;ngeoSortable&quot; directive will pick it up.</p>
 </div>
 
 
@@ -191,27 +206,6 @@ layers in a map.</p>
 </dl>
 
     
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;ul ngeo-sortable="ctrl.layers"
-    ngeo-sortable-options="{handleClassName: 'sortable-handle'}">
-  &lt;li ng-repeat="layer in ctrl.layers">
-    &lt;span class="sortable-handle">handle&lt;/span>{{layer.get('name')}}
-  &lt;/li>
-&lt;/ul>
-
-The value of the "ngeo-sortable" attribute is an expression which evaluates
-to an array (an array of layers in the above example). This is the array
-that is re-ordered after a drag-and-drop.
-
-The element with the class "sortable-handle" is the "drag handle". It is
-required.
-
-This directives uses `$watchCollection` to watch the "sortable" array. So
-if some outside code adds/removes elements to/from the "sortable" array,
-the "ngeoSortable" directive will pick it up.</code></pre>
 
 
 

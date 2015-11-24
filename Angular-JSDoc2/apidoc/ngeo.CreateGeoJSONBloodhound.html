@@ -52,6 +52,29 @@
     <p>Provides a function that creates a Bloodhound engine
 expecting GeoJSON responses from the search web service, and creating
 <code>ol.Feature</code> objects as suggestions.</p>
+<p>Example:
+    var bloodhound = ngeoCreateGeoJSONBloodhound(
+      'http://example.com/fulltextsearch?query=%QUERY',
+      aFilterFunction,
+      ol.proj.get('EPSG:3857'));
+    bloodhound.initialize();</p>
+<pre class="prettyprint source"><code>var bloodhound = ngeoCreateGeoJSONBloodhound(
+  '',
+  undefined,
+  ol.proj.get('EPSG:3857'),
+  ol.proj.get('EPSG:21781'),
+  {
+    remote: {
+      url: mySearchEngineUrl,
+      replace: function(url, query) {
+        return url +
+            '?qtext=' + encodeURIComponent(query) +
+            '&lang=' + gettextCatalog.currentLanguage;
+      }
+    }
+  }
+);
+bloodhound.initialize();</code></pre>
 </div>
 
 
@@ -95,7 +118,7 @@ expecting GeoJSON responses from the search web service, and creating
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_creategeojsonbloodhound.js.html">src/services/creategeojsonbloodhound.js</a>, <a href="src_services_creategeojsonbloodhound.js.html#line45">line 45</a>
+        <a href="src_services_creategeojsonbloodhound.js.html">src/services/creategeojsonbloodhound.js</a>, <a href="src_services_creategeojsonbloodhound.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -118,33 +141,6 @@ expecting GeoJSON responses from the search web service, and creating
 
 
 
-
-
-    <h5>Examples</h5>
-    
-    <pre class="prettyprint"><code>var bloodhound = ngeoCreateGeoJSONBloodhound(
-  'http://example.com/fulltextsearch?query=%QUERY',
-  aFilterFunction,
-  ol.proj.get('EPSG:3857'));
-bloodhound.initialize();</code></pre>
-
-    <pre class="prettyprint"><code>var bloodhound = ngeoCreateGeoJSONBloodhound(
-  '',
-  undefined,
-  ol.proj.get('EPSG:3857'),
-  ol.proj.get('EPSG:21781'),
-  {
-    remote: {
-      url: mySearchEngineUrl,
-      replace: function(url, query) {
-        return url +
-            '?qtext=' + encodeURIComponent(query) +
-            '&amp;lang=' + gettextCatalog.currentLanguage;
-      }
-    }
-  }
-);
-bloodhound.initialize</code></pre>
 
 
 
