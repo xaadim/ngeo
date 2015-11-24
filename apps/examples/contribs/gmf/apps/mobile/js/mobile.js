@@ -1,3 +1,27 @@
+/**
+ * @fileoverview Application entry point.
+ *
+ * This file defines the "app_mobile" Closure namespace, which is be used as the
+ * Closure entry point (see "closure_entry_point" in the "build.json" file).
+ *
+ * This file includes `goog.require`'s for all the components/directives used
+ * by the HTML page and the controller to provide the configuration.
+ */
+goog.provide('app.MobileController');
+goog.provide('app_mobile');
+
+goog.require('app');
+goog.require('gmf.mapDirective');
+goog.require('gmf.mobileNavDirective');
+goog.require('gmf.proj.EPSG21781');
+goog.require('gmf.searchDirective');
+goog.require('ngeo.FeatureOverlayMgr');
+goog.require('ol.Map');
+goog.require('ol.View');
+goog.require('ol.control.ScaleLine');
+goog.require('ol.control.Zoom');
+goog.require('ol.layer.Tile');
+goog.require('ol.source.OSM');
 
 
 
@@ -10,11 +34,6 @@
  * @export
  */
 app.MobileController = function(ngeoFeatureOverlayMgr, serverVars) {
-
-  proj4.defs('EPSG:21781',
-      '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 ' +
-      '+x_0=600000 +y_0=200000 +ellps=bessel ' +
-      '+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs');
 
   /**
    * @type {Array.<gmfx.SearchDirectiveDatasource>}
