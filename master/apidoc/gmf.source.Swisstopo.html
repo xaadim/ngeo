@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/services/decorateinteraction.js</title>
+    <title>JSDoc: Class: Swisstopo</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,57 +17,200 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/services/decorateinteraction.js</h1>
+    <h1 class="page-title">Class: Swisstopo</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.DecorateInteraction');
+        <h2>
+        Swisstopo
+        </h2>
+        
+    
+</header>
 
-goog.require('goog.asserts');
-goog.require('ngeo');
+<article>
+    <div class="container-overview">
+    
+        
 
+    
 
-/**
- * Provides a function that adds an "active" property (using
- * `Object.defineProperty`) to an interaction, making it possible to use ngModel
- * to activate/deactivate interactions.
- *
- * @example
- * &lt;input type="checkbox" ngModel="interaction.active" />
- *
- * @typedef {function(ol.interaction.Interaction)}
- * @ngdoc service
- * @ngname ngeoDecorateInteraction
- */
-ngeo.DecorateInteraction;
+    <h4 class="name" id="Swisstopo"><span class="type-signature"></span>new Swisstopo<span class="signature">(options)</span><span class="type-signature"></span></h4>
+
+    
 
 
-/**
- * @param {ol.interaction.Interaction} interaction Interaction to decorate.
- */
-ngeo.decorateInteraction = function(interaction) {
-  goog.asserts.assertInstanceof(interaction, ol.interaction.Interaction);
 
-  Object.defineProperty(interaction, 'active', {
-    get: function() {
-      return interaction.getActive();
-    },
-    set: function(val) {
-      interaction.setActive(val);
-    }
-  });
-};
+<div class="description">
+    <p>Layer source for the Swisstopo tile server.
+WARNING: This tile server is not publicly available: you have to be
+         registered by Swisstopo to use the service.</p>
+</div>
 
 
-ngeoModule.value('ngeoDecorateInteraction', ngeo.decorateInteraction);
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">gmfx.source.SwisstopoOptions</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>WMTS options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_source_swisstoposource.js.html">contribs/gmf/src/source/swisstoposource.js</a>, <a href="contribs_gmf_src_source_swisstoposource.js.html#line42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://api3.geo.admin.ch/services/sdiservices.html#wmts">https://api3.geo.admin.ch/services/sdiservices.html#wmts</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="http://openlayers.org/en/master/apidoc/ol.source.WMTS.html">ol.source.WMTS</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
