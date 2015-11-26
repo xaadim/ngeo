@@ -19230,7 +19230,7 @@ ol.proj.addTransform = function(source, destination, transformFn) {
   var sourceCode = source.getCode();
   var destinationCode = destination.getCode();
   var transforms = ol.proj.transforms_;
-  if (!goog.object.containsKey(transforms, sourceCode)) {
+  if (!(sourceCode in transforms)) {
     transforms[sourceCode] = {};
   }
   transforms[sourceCode][destinationCode] = transformFn;
@@ -19439,8 +19439,7 @@ ol.proj.getTransformFromProjections =
   var sourceCode = sourceProjection.getCode();
   var destinationCode = destinationProjection.getCode();
   var transform;
-  if (goog.object.containsKey(transforms, sourceCode) &&
-      goog.object.containsKey(transforms[sourceCode], destinationCode)) {
+  if (sourceCode in transforms && destinationCode in transforms[sourceCode]) {
     transform = transforms[sourceCode][destinationCode];
   }
   if (transform === undefined) {
@@ -48504,8 +48503,8 @@ ol.pointer.TouchSource.prototype.isPrimaryTouch_ = function(inTouch) {
  */
 ol.pointer.TouchSource.prototype.setPrimaryTouch_ = function(inTouch) {
   var count = goog.object.getCount(this.pointerMap);
-  if (count === 0 || (count === 1 && goog.object.containsKey(this.pointerMap,
-      ol.pointer.MouseSource.POINTER_ID.toString()))) {
+  if (count === 0 || (count === 1 &&
+      ol.pointer.MouseSource.POINTER_ID.toString() in this.pointerMap)) {
     this.firstTouchId_ = inTouch.identifier;
     this.cancelResetClickCount_();
   }
@@ -55127,9 +55126,6 @@ goog.require('ol.interaction.PinchZoom');
  * * {@link ol.interaction.KeyboardZoom}
  * * {@link ol.interaction.MouseWheelZoom}
  * * {@link ol.interaction.DragZoom}
- *
- * Note that DragZoom renders a box as a vector polygon, so this interaction
- * should be excluded if you want a build with no vector support.
  *
  * @param {olx.interaction.DefaultsOptions=} opt_options Defaults options.
  * @return {ol.Collection.<ol.interaction.Interaction>} A collection of
@@ -71312,8 +71308,7 @@ ol.structs.RBush.prototype.insert = function(extent, value) {
   ];
   this.rbush_.insert(item);
   // remember the object that was added to the internal rbush
-  goog.asserts.assert(
-      !goog.object.containsKey(this.items_, goog.getUid(value)),
+  goog.asserts.assert(!(goog.getUid(value) in this.items_),
       'uid (%s) of value (%s) already exists', goog.getUid(value), value);
   this.items_[goog.getUid(value)] = item;
 };
@@ -71345,8 +71340,7 @@ ol.structs.RBush.prototype.load = function(extents, values) {
       value
     ];
     items[i] = item;
-    goog.asserts.assert(
-        !goog.object.containsKey(this.items_, goog.getUid(value)),
+    goog.asserts.assert(!(goog.getUid(value) in this.items_),
         'uid (%s) of value (%s) already exists', goog.getUid(value), value);
     this.items_[goog.getUid(value)] = item;
   }
@@ -71364,7 +71358,7 @@ ol.structs.RBush.prototype.remove = function(value) {
     throw new Error('Can not remove value while reading');
   }
   var uid = goog.getUid(value);
-  goog.asserts.assert(goog.object.containsKey(this.items_, uid),
+  goog.asserts.assert(uid in this.items_,
       'uid (%s) of value (%s) does not exist', uid, value);
 
   // get the object in which the value was wrapped when adding to the
@@ -71382,7 +71376,7 @@ ol.structs.RBush.prototype.remove = function(value) {
  */
 ol.structs.RBush.prototype.update = function(extent, value) {
   var uid = goog.getUid(value);
-  goog.asserts.assert(goog.object.containsKey(this.items_, uid),
+  goog.asserts.assert(uid in this.items_,
       'uid (%s) of value (%s) does not exist', uid, value);
 
   var item = this.items_[uid];
@@ -79697,7 +79691,7 @@ ol.render.webgl.ImageReplay.prototype.createTextures_ =
     image = images[i];
 
     uid = goog.getUid(image).toString();
-    if (goog.object.containsKey(texturePerImage, uid)) {
+    if (uid in texturePerImage) {
       texture = texturePerImage[uid];
     } else {
       texture = ol.webgl.Context.createTexture(
@@ -83183,7 +83177,8 @@ ol.Map = function(options) {
    * @private
    * @type {Element}
    */
-  this.viewport_ = goog.dom.createDom('DIV', 'ol-viewport');
+  this.viewport_ = document.createElement('DIV');
+  this.viewport_.className = 'ol-viewport';
   this.viewport_.style.position = 'relative';
   this.viewport_.style.overflow = 'hidden';
   this.viewport_.style.width = '100%';
@@ -83199,16 +83194,16 @@ ol.Map = function(options) {
    * @private
    * @type {Element}
    */
-  this.overlayContainer_ = goog.dom.createDom('DIV',
-      'ol-overlaycontainer');
+  this.overlayContainer_ = document.createElement('DIV');
+  this.overlayContainer_.className = 'ol-overlaycontainer';
   this.viewport_.appendChild(this.overlayContainer_);
 
   /**
    * @private
    * @type {Element}
    */
-  this.overlayContainerStopEvent_ = goog.dom.createDom('DIV',
-      'ol-overlaycontainer-stopevent');
+  this.overlayContainerStopEvent_ = document.createElement('DIV');
+  this.overlayContainerStopEvent_.className = 'ol-overlaycontainer-stopevent';
   goog.events.listen(this.overlayContainerStopEvent_, [
     goog.events.EventType.CLICK,
     goog.events.EventType.DBLCLICK,
@@ -84640,9 +84635,8 @@ ol.Overlay = function(options) {
    * @private
    * @type {Element}
    */
-  this.element_ = goog.dom.createDom('DIV', {
-    'class': 'ol-overlay-container'
-  });
+  this.element_ = document.createElement('DIV');
+  this.element_.className = 'ol-overlay-container';
   this.element_.style.position = 'absolute';
 
   /**
@@ -84804,7 +84798,7 @@ ol.Overlay.prototype.handleElementChanged = function() {
   goog.dom.removeChildren(this.element_);
   var element = this.getElement();
   if (element) {
-    goog.dom.append(/** @type {!Node} */ (this.element_), element);
+    this.element_.appendChild(element);
   }
 };
 
@@ -84829,7 +84823,7 @@ ol.Overlay.prototype.handleMapChanged = function() {
       goog.dom.insertChildAt(/** @type {!Element} */ (
           container), this.element_, 0);
     } else {
-      goog.dom.append(/** @type {!Node} */ (container), this.element_);
+      container.appendChild(this.element_);
     }
   }
 };
@@ -107273,7 +107267,6 @@ ol.geom.Circle.prototype.transform;
 goog.provide('ol.geom.flat.geodesic');
 
 goog.require('goog.asserts');
-goog.require('goog.object');
 goog.require('ol.TransformFunction');
 goog.require('ol.math');
 goog.require('ol.proj');
@@ -107321,7 +107314,7 @@ ol.geom.flat.geodesic.line_ =
     a = stack.pop();
     // Add the a coordinate if it has not been added yet
     key = fracA.toString();
-    if (!goog.object.containsKey(fractions, key)) {
+    if (!(key in fractions)) {
       flatCoordinates.push(a[0], a[1]);
       fractions[key] = true;
     }
@@ -107340,7 +107333,7 @@ ol.geom.flat.geodesic.line_ =
       // segment.
       flatCoordinates.push(b[0], b[1]);
       key = fracB.toString();
-      goog.asserts.assert(!goog.object.containsKey(fractions, key),
+      goog.asserts.assert(!(key in fractions),
           'fractions object should contain key : ' + key);
       fractions[key] = true;
     } else {
@@ -116001,7 +115994,7 @@ ol.source.Cluster.prototype.cluster_ = function() {
 
   for (var i = 0, ii = features.length; i < ii; i++) {
     var feature = features[i];
-    if (!goog.object.containsKey(clustered, goog.getUid(feature).toString())) {
+    if (!(goog.getUid(feature).toString() in clustered)) {
       var geometry = feature.getGeometry();
       goog.asserts.assert(geometry instanceof ol.geom.Point,
           'feature geometry is a ol.geom.Point instance');
@@ -116013,7 +116006,7 @@ ol.source.Cluster.prototype.cluster_ = function() {
       goog.asserts.assert(neighbors.length >= 1, 'at least one neighbor found');
       neighbors = neighbors.filter(function(neighbor) {
         var uid = goog.getUid(neighbor).toString();
-        if (!goog.object.containsKey(clustered, uid)) {
+        if (!(uid in clustered)) {
           clustered[uid] = true;
           return true;
         } else {
