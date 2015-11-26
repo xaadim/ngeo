@@ -6,7 +6,7 @@ var app = {};
 
 
 /** @type {!angular.Module} **/
-app.module = angular.module('app', ['gmf', 'gettext']);
+app.module = angular.module('app', ['gmf']);
 
 
 
@@ -31,6 +31,9 @@ app.MainController = function(ngeoFeatureOverlayMgr) {
     datasetTitle: 'From demo 1.6',
     labelKey: 'label',
     projection: 'EPSG:21781',
+    typeaheadDatasetOptions: {
+      limit: 7
+    },
     url: 'http://geomapfish-demo.camptocamp.net/1.6/wsgi/fulltextsearch?' +
         'query=%QUERY'
   }];

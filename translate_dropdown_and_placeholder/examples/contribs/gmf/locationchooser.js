@@ -6,7 +6,7 @@ var app = {};
 
 
 /** @type {!angular.Module} **/
-app.module = angular.module('app', ['gmf', 'gettext']);
+app.module = angular.module('app', ['gmf']);
 
 
 
@@ -36,10 +36,10 @@ app.MainController = function() {
 
 
   /**
-   * @type {string}
+   * @type {gmfx.LocationchooserLocation}
    * @export
    */
-  this.selectedLocation = '[' + this.locations[2].extent + ']';
+  this.selectedLocation = this.locations[2];
 
   /**
    * @type {ol.Map}
