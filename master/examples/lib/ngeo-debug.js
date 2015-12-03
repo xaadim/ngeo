@@ -47847,7 +47847,7 @@ ol.pointer.MouseSource = function(dispatcher) {
 
   /**
    * @const
-   * @type {Object.<string, goog.events.BrowserEvent|Object>}
+   * @type {!Object.<string, goog.events.BrowserEvent|Object>}
    */
   this.pointerMap = dispatcher.pointerMap;
 
@@ -48100,7 +48100,7 @@ ol.pointer.MsSource = function(dispatcher) {
 
   /**
    * @const
-   * @type {Object.<string, goog.events.BrowserEvent|Object>}
+   * @type {!Object.<string, goog.events.BrowserEvent|Object>}
    */
   this.pointerMap = dispatcher.pointerMap;
 
@@ -48432,7 +48432,7 @@ ol.pointer.TouchSource = function(dispatcher, mouseSource) {
 
   /**
    * @const
-   * @type {Object.<string, goog.events.BrowserEvent|Object>}
+   * @type {!Object.<string, goog.events.BrowserEvent|Object>}
    */
   this.pointerMap = dispatcher.pointerMap;
 
@@ -48646,7 +48646,7 @@ ol.pointer.TouchSource.prototype.vacuumTouches_ = function(inEvent) {
   var touchList = inEvent.getBrowserEvent().touches;
   // pointerMap.getCount() should be < touchList.length here,
   // as the touchstart has not been processed yet.
-  var keys = goog.object.getKeys(this.pointerMap);
+  var keys = Object.keys(this.pointerMap);
   var count = keys.length;
   if (count >= touchList.length) {
     var d = [];
@@ -48893,7 +48893,7 @@ ol.pointer.PointerEventHandler = function(element) {
 
   /**
    * @const
-   * @type {Object.<string, goog.events.BrowserEvent|Object>}
+   * @type {!Object.<string, goog.events.BrowserEvent|Object>}
    */
   this.pointerMap = {};
 
@@ -50443,11 +50443,11 @@ ol.layer.Layer.prototype.handleSourcePropertyChange_ = function() {
 
 
 /**
- * Sets the layer to be rendered on a map. The map will not manage this layer in
- * its layers collection, layer filters in {@link ol.Map#forEachLayerAtPixel}
- * will not filter the layer, and it will be rendered on top. This is useful for
- * temporary layers. To remove an unmanaged layer from the map, use
- * `#setMap(null)`.
+ * Sets the layer to be rendered on top of other layers on a map. The map will
+ * not manage this layer in its layers collection, and the callback in
+ * {@link ol.Map#forEachLayerAtPixel} will receive `null` as layer. This
+ * is useful for temporary layers. To remove an unmanaged layer from the map,
+ * use `#setMap(null)`.
  *
  * To add the layer to a map and have it managed by the map, use
  * {@link ol.Map#addLayer} instead.
@@ -52149,9 +52149,8 @@ ol.renderer.Map.prototype.forEachFeatureAtCoordinate =
   for (i = numLayers - 1; i >= 0; --i) {
     var layerState = layerStates[i];
     var layer = layerState.layer;
-    if (!layerState.managed ||
-        (ol.layer.Layer.visibleAtResolution(layerState, viewResolution) &&
-        layerFilter.call(thisArg2, layer))) {
+    if (ol.layer.Layer.visibleAtResolution(layerState, viewResolution) &&
+        layerFilter.call(thisArg2, layer)) {
       var layerRenderer = this.getLayerRenderer(layer);
       if (layer.getSource()) {
         result = layerRenderer.forEachFeatureAtCoordinate(
@@ -61457,7 +61456,6 @@ goog.provide('ol.render.Feature');
 
 
 goog.require('goog.asserts');
-goog.require('goog.functions');
 goog.require('ol.extent');
 goog.require('ol.geom.GeometryType');
 
@@ -61593,7 +61591,9 @@ ol.render.Feature.prototype.getSimplifiedGeometry =
 /**
  * @return {number} Stride.
  */
-ol.render.Feature.prototype.getStride = goog.functions.constant(2);
+ol.render.Feature.prototype.getStride = function() {
+  return 2;
+};
 
 
 /**
@@ -92689,7 +92689,9 @@ ol.format.GML2.prototype.readFlatCoordinates_ = function(node, objectStack) {
   var axisOrientation = 'enu';
   if (containerSrs) {
     var proj = ol.proj.get(containerSrs);
-    axisOrientation = proj.getAxisOrientation();
+    if (proj) {
+      axisOrientation = proj.getAxisOrientation();
+    }
   }
   var coords = s.split(/[\s,]+/);
   // The "dimension" attribute is from the GML 3.0.1 spec.
@@ -95459,7 +95461,6 @@ goog.provide('ol.format.IGC');
 goog.provide('ol.format.IGCZ');
 
 goog.require('goog.asserts');
-goog.require('goog.string');
 goog.require('goog.string.newlines');
 goog.require('ol.Feature');
 goog.require('ol.format.Feature');
@@ -112933,7 +112934,7 @@ ol.interaction.Select.handleEvent = function(mapBrowserEvent) {
          * @param {ol.layer.Layer} layer Layer.
          */
         function(feature, layer) {
-          if (!layer || this.filter_(feature, layer)) {
+          if (this.filter_(feature, layer)) {
             selected.push(feature);
             this.addFeatureLayerAssociation_(feature, layer);
             return !this.multi_;
