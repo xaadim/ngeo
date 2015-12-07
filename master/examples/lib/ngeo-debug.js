@@ -51076,7 +51076,8 @@ ol.style.ImageOptions;
 /**
  * @classdesc
  * A base class used for creating subclasses and not instantiated in
- * apps. Base class for {@link ol.style.Icon} and {@link ol.style.Circle}.
+ * apps. Base class for {@link ol.style.Icon}, {@link ol.style.Circle} and
+ * {@link ol.style.RegularShape}.
  *
  * @constructor
  * @param {ol.style.ImageOptions} options Options.
@@ -119618,19 +119619,19 @@ ol.source.WMTS.prototype.updateDimensions = function(dimensions) {
  *                  the layer will apply if not provided.
  *
  * Required config properties:
- * layer - {String} The layer identifier.
+ *  - layer - {string} The layer identifier.
  *
  * Optional config properties:
- * matrixSet - {String} The matrix set identifier, required if there is
- *      more than one matrix set in the layer capabilities.
- * projection - {String} The desired CRS when no matrixSet is specified.
- *     eg: "EPSG:3857". If the desired projection is not available,
- *     an error is thrown.
- * requestEncoding - {String} url encoding format for the layer. Default is the
- *     first tile url format found in the GetCapabilities response.
- * style - {String} The name of the style
- * format - {String} Image format for the layer. Default is the first
- *     format returned in the GetCapabilities response.
+ *  - matrixSet - {string} The matrix set identifier, required if there is
+ *       more than one matrix set in the layer capabilities.
+ *  - projection - {string} The desired CRS when no matrixSet is specified.
+ *       eg: "EPSG:3857". If the desired projection is not available,
+ *       an error is thrown.
+ *  - requestEncoding - {string} url encoding format for the layer. Default is
+ *       the first tile url format found in the GetCapabilities response.
+ *  - style - {string} The name of the style
+ *  - format - {string} Image format for the layer. Default is the first
+ *       format returned in the GetCapabilities response.
  * @return {olx.source.WMTSOptions} WMTS source options object.
  * @api
  */
