@@ -7190,6 +7190,7 @@ gmf-map > div {
 main {
   position: relative;
   background-color: #e2e3df;
+  box-shadow: 0px 0px 15px black;
   min-height: 100vh;
   z-index: 2;
   padding-top: 120px;
