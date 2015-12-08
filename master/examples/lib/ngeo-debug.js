@@ -121593,6 +121593,13 @@ goog.provide('ngeo');
 /** @type {!angular.Module} */
 var ngeoModule = angular.module('ngeo', []);
 
+
+/**
+ * @type {string}
+ * The default template based URL, used as it by the template cache.
+ */
+ngeo.baseTemplateUrl = 'ngeo';
+
 goog.provide('ngeo.BtnGroupController');
 goog.provide('ngeo.btnDirective');
 goog.provide('ngeo.btngroupDirective');
@@ -121868,13 +121875,6 @@ goog.provide('ngeo.layertreeDirective');
 goog.require('ngeo');
 
 
-/**
- * @const
- * @type {string}
- */
-ngeo.layertreeTemplateUrl = 'layertree.html';
-
-
 ngeoModule.value('ngeoLayertreeTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
@@ -121882,7 +121882,8 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
      */
     function(element, attrs) {
       var templateUrl = attrs['ngeoLayertreeTemplateurl'];
-      return goog.isDef(templateUrl) ? templateUrl : ngeo.layertreeTemplateUrl;
+      return templateUrl !== undefined ? templateUrl :
+          ngeo.baseTemplateUrl + '/layertree.html';
     });
 
 
@@ -122243,14 +122244,16 @@ goog.provide('ngeo.popupDirective');
 goog.require('ngeo');
 
 
-/**
- * @const
- * @type {string}
- */
-ngeo.popupTemplateUrl = 'partials/popup.html';
-
-
-ngeoModule.value('ngeoPopupTemplateUrl', ngeo.popupTemplateUrl);
+ngeoModule.value('ngeoPopupTemplateUrl',
+    /**
+     * @param {angular.JQLite} element Element.
+     * @param {angular.Attributes} attrs Attributes.
+     */
+    function(element, attrs) {
+      var templateUrl = attrs['ngeoPopupTemplateurl'];
+      return templateUrl !== undefined ? templateUrl :
+          ngeo.baseTemplateUrl + '/popup.html';
+    });
 
 
 /**
@@ -122572,15 +122575,16 @@ goog.require('ol.Map');
 goog.require('ol.Object');
 
 
-/**
- * @const
- * @type {string}
- */
-ngeo.scaleselectorTemplateUrl = 'scaleselector.html';
-
-
 ngeoModule.value('ngeoScaleselectorTemplateUrl',
-    ngeo.scaleselectorTemplateUrl);
+    /**
+     * @param {angular.JQLite} element Element.
+     * @param {angular.Attributes} attrs Attributes.
+     */
+    function(element, attrs) {
+      var templateUrl = attrs['ngeoScaleselectorTemplateurl'];
+      return templateUrl !== undefined ? templateUrl :
+          ngeo.baseTemplateUrl + '/scaleselector.html';
+    });
 
 
 /**
@@ -128769,9 +128773,9 @@ goog.require('ngeo');
    * @ngInject
    */
   var runner = function($templateCache) {
-    $templateCache.put('../src/directives/partials/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr> </li> </ul> ');
-    $templateCache.put('../src/directives/partials/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span>{{title}}</span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
-    $templateCache.put('../src/directives/partials/scaleselector.html', '<div ng-class="::{\'dropdown\': true, \'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-primary" data-toggle=dropdown> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<span class=caret></span> </button> <ul class=dropdown-menu role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
+    $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span>{{title}}</span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
+    $templateCache.put('ngeo/scaleselector.html', '<div ng-class="::{\'dropdown\': true, \'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-primary" data-toggle=dropdown> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<span class=caret></span> </button> <ul class=dropdown-menu role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
+    $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr> </li> </ul> ');
   };
 
   ngeoModule.run(runner);
