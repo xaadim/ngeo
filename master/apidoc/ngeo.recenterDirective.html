@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: contribs/gmf/src/source/asitvdsource.js</title>
+    <title>JSDoc: Class: recenterDirective <small>directive:ngeoRecenter</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,82 +17,165 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: contribs/gmf/src/source/asitvdsource.js</h1>
+    <h1 class="page-title">Class: recenterDirective <small>directive:ngeoRecenter</small></h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2 id="recenterDirective">
+            <span class="ancestors">ngeo.</span>recenterDirective
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="recenterDirective"><span class="type-signature"></span>new recenterDirective<span class="signature">()</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Provides the &quot;ngeoRecenter&quot; directive, a widget for recentering a map
+to a specific extent (by using <code>ngeo-extent</code>) or a specific zoom level
+(by using <code>ngeo-zoom</code>).</p>
+<p>Example:</p>
+<pre class="prettyprint source"><code>&lt;div ngeo-recenter ngeo-recenter-map=&quot;::ctrl.map&quot;>
+  &lt;a href=&quot;#&quot; ngeo-extent=&quot;[-1898084, 4676723, 3972279, 8590299]&quot;>A&lt;/a>
+  &lt;a href=&quot;#&quot; ngeo-extent=&quot;[727681, 5784754, 1094579, 6029353]&quot;>B&lt;/a>
+  &lt;a href=&quot;#&quot; ngeo-zoom=&quot;1&quot;>Zoom to level 1&lt;/a>
+&lt;/div></code></pre><p>Or with a select:</p>
+<pre class="prettyprint source"><code>&lt;select ngeo-locationchooser ngeo-locationchooser-map=&quot;::ctrl.map&quot;>
+  &lt;option extent=&quot;[-1898084, 4676723, 3972279, 8590299]&quot;>A&lt;/option>
+  &lt;option extent=&quot;[727681, 5784754, 1094579, 6029353]&quot;>B&lt;/option>
+&lt;/select></code></pre>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_directives_recenter.js.html">src/directives/recenter.js</a>, <a href="src_directives_recenter.js.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Directive Definition Object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">angular.Directive</span>
+
+
+    </dd>
+</dl>
 
     
 
 
 
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('gmf.source.AsitVD');
+    </div>
 
-goog.require('ol.Attribution');
-goog.require('ol.source.WMTS');
-goog.require('ol.tilegrid.WMTS');
+    
 
+    
 
-/**
- * @const {!Array.&lt;number>}
- * @private
- */
-gmf.source.AsitVDResolutions_ = [
-  4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
-  1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5
-];
+    
 
+     
 
-/**
- * @const {ol.tilegrid.WMTS}
- * @private
- */
-gmf.source.AsitVDTileGrid_ = new ol.tilegrid.WMTS({
-  extent: [420000, 30000, 900000, 350000],
-  resolutions: gmf.source.AsitVDResolutions_,
-  matrixIds: gmf.source.AsitVDResolutions_.map(function(value, index) {
-    return String(index);
-  })
-});
+    
 
+    
 
+    
 
-/**
- * Layer source for the ASIT VD tile server.
- * @see https://www.asitvd.ch/chercher/geoservices/fond-de-plan-asit-vd.html
- *
- * @constructor
- * @extends {ol.source.WMTS}
- * @param {gmfx.source.AsitVDOptions} options WMTS options.
- */
-gmf.source.AsitVD = function(options) {
+    
 
-  goog.base(this, {
-    attributions: [gmf.source.AsitVD.ATTRIBUTION_],
-    url: 'https://ows{1-4}.asitvd.ch/wmts/1.0.0/{Layer}/default/default/0/' +
-        '21781/{TileMatrix}/{TileRow}/{TileCol}.png',
-    projection: 'EPSG:21781',
-    requestEncoding: 'REST',
-    layer: options.layer,
-    style: 'default',
-    matrixSet: '21781',
-    format: 'image/png',
-    tileGrid: gmf.source.AsitVDTileGrid_
-  });
-};
-goog.inherits(gmf.source.AsitVD, ol.source.WMTS);
+    
+</article>
 
-
-/**
- * @const {ol.Attribution}
- * @private
- */
-gmf.source.AsitVD.ATTRIBUTION_ = new ol.Attribution({
-  html: 'géodonnées &amp;copy; Etat de Vaud &amp; &amp;copy; contributeurs OpenStreetMap'
-});
-</code></pre>
-        </article>
-    </section>
+</section>
 
 
 

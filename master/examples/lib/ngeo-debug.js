@@ -58461,11 +58461,10 @@ ol.render.canvas.Immediate.prototype.drawAsync = function(zIndex, callback) {
  * the current fill and stroke styles.
  *
  * @param {ol.geom.Circle} circleGeometry Circle geometry.
- * @param {ol.Feature} feature Feature,
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawCircleGeometry =
-    function(circleGeometry, feature) {
+    function(circleGeometry) {
   if (!ol.extent.intersects(this.extent_, circleGeometry.getExtent())) {
     return;
   }
@@ -58560,11 +58559,10 @@ ol.render.canvas.Immediate.prototype.drawGeometryCollectionGeometry =
  * the current style.
  *
  * @param {ol.geom.Point|ol.render.Feature} pointGeometry Point geometry.
- * @param {ol.Feature|ol.render.Feature} feature Feature.
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawPointGeometry =
-    function(pointGeometry, feature) {
+    function(pointGeometry) {
   var flatCoordinates = pointGeometry.getFlatCoordinates();
   var stride = pointGeometry.getStride();
   if (this.image_) {
@@ -58582,11 +58580,10 @@ ol.render.canvas.Immediate.prototype.drawPointGeometry =
  *
  * @param {ol.geom.MultiPoint|ol.render.Feature} multiPointGeometry MultiPoint
  *     geometry.
- * @param {ol.Feature|ol.render.Feature} feature Feature.
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawMultiPointGeometry =
-    function(multiPointGeometry, feature) {
+    function(multiPointGeometry) {
   var flatCoordinates = multiPointGeometry.getFlatCoordinates();
   var stride = multiPointGeometry.getStride();
   if (this.image_) {
@@ -58604,11 +58601,10 @@ ol.render.canvas.Immediate.prototype.drawMultiPointGeometry =
  *
  * @param {ol.geom.LineString|ol.render.Feature} lineStringGeometry Line
  *     string geometry.
- * @param {ol.Feature|ol.render.Feature} feature Feature.
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawLineStringGeometry =
-    function(lineStringGeometry, feature) {
+    function(lineStringGeometry) {
   if (!ol.extent.intersects(this.extent_, lineStringGeometry.getExtent())) {
     return;
   }
@@ -58634,11 +58630,10 @@ ol.render.canvas.Immediate.prototype.drawLineStringGeometry =
  *
  * @param {ol.geom.MultiLineString|ol.render.Feature} multiLineStringGeometry
  *     MultiLineString geometry.
- * @param {ol.Feature|ol.render.Feature} feature Feature.
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawMultiLineStringGeometry =
-    function(multiLineStringGeometry, feature) {
+    function(multiLineStringGeometry) {
   var geometryExtent = multiLineStringGeometry.getExtent();
   if (!ol.extent.intersects(this.extent_, geometryExtent)) {
     return;
@@ -58671,11 +58666,10 @@ ol.render.canvas.Immediate.prototype.drawMultiLineStringGeometry =
  *
  * @param {ol.geom.Polygon|ol.render.Feature} polygonGeometry Polygon
  *     geometry.
- * @param {ol.Feature|ol.render.Feature} feature Feature.
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawPolygonGeometry =
-    function(polygonGeometry, feature) {
+    function(polygonGeometry) {
   if (!ol.extent.intersects(this.extent_, polygonGeometry.getExtent())) {
     return;
   }
@@ -58708,11 +58702,10 @@ ol.render.canvas.Immediate.prototype.drawPolygonGeometry =
  * Render MultiPolygon geometry into the canvas.  Rendering is immediate and
  * uses the current style.
  * @param {ol.geom.MultiPolygon} multiPolygonGeometry MultiPolygon geometry.
- * @param {ol.Feature} feature Feature.
  * @api
  */
 ol.render.canvas.Immediate.prototype.drawMultiPolygonGeometry =
-    function(multiPolygonGeometry, feature) {
+    function(multiPolygonGeometry) {
   if (!ol.extent.intersects(this.extent_, multiPolygonGeometry.getExtent())) {
     return;
   }
@@ -114302,6 +114295,54 @@ goog.provide('ol.raster.Pixel');
  */
 ol.raster.Pixel;
 
+goog.provide('ol.render');
+
+goog.require('goog.vec.Mat4');
+goog.require('ol.render.canvas.Immediate');
+goog.require('ol.vec.Mat4');
+
+
+/**
+ * Binds a Canvas Immediate API to a canvas context, to allow drawing geometries
+ * to the context's canvas.
+ *
+ * The units for geometry coordinates are css pixels relative to the top left
+ * corner of the canvas element.
+ * ```js
+ * var canvas = document.createElement('canvas');
+ * var render = ol.render.toContext(canvas.getContext('2d'),
+ *     { size: [100, 100] });
+ * render.setFillStrokeStyle(new ol.style.Fill({ color: blue }));
+ * render.drawPolygonGeometry(
+ *     new ol.geom.Polygon([[[0, 0], [100, 100], [100, 0], [0, 0]]]));
+ * ```
+ *
+ * Note that {@link ol.render.canvas.Immediate#drawAsync} and
+ * {@link ol.render.canvas.Immediate#drawFeature} cannot be used.
+ *
+ * @param {CanvasRenderingContext2D} context Canvas context.
+ * @param {olx.render.ToContextOptions=} opt_options Options.
+ * @return {ol.render.canvas.Immediate} Canvas Immediate.
+ * @api
+ */
+ol.render.toContext = function(context, opt_options) {
+  var canvas = context.canvas;
+  var options = opt_options ? opt_options : {};
+  var pixelRatio = options.pixelRatio || ol.has.DEVICE_PIXEL_RATIO;
+  var size = options.size;
+  if (size) {
+    canvas.width = size[0] * pixelRatio;
+    canvas.height = size[1] * pixelRatio;
+    canvas.style.width = size[0] + 'px';
+    canvas.style.height = size[1] + 'px';
+  }
+  var extent = [0, 0, canvas.width, canvas.height];
+  var transform = ol.vec.Mat4.makeTransform2D(goog.vec.Mat4.createNumber(),
+      0, 0, pixelRatio, pixelRatio, 0, 0, 0);
+  return new ol.render.canvas.Immediate(context, pixelRatio, extent, transform,
+      0);
+};
+
 goog.provide('ol.reproj.Tile');
 goog.provide('ol.reproj.TileFunctionType');
 
@@ -122365,6 +122406,71 @@ ngeo.profileDirective = function() {
 
 ngeoModule.directive('ngeoProfile', ngeo.profileDirective);
 
+goog.provide('ngeo.recenterDirective');
+
+goog.require('ngeo');
+
+
+/**
+ * Provides the "ngeoRecenter" directive, a widget for recentering a map
+ * to a specific extent (by using `ngeo-extent`) or a specific zoom level
+ * (by using `ngeo-zoom`).
+ *
+ * Example:
+ *
+ *     <div ngeo-recenter ngeo-recenter-map="::ctrl.map">
+ *       <a href="#" ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</a>
+ *       <a href="#" ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</a>
+ *       <a href="#" ngeo-zoom="1">Zoom to level 1</a>
+ *     </div>
+ *
+ * Or with a select:
+ *
+ *     <select ngeo-locationchooser ngeo-locationchooser-map="::ctrl.map">
+ *       <option extent="[-1898084, 4676723, 3972279, 8590299]">A</option>
+ *       <option extent="[727681, 5784754, 1094579, 6029353]">B</option>
+ *     </select>
+ *
+ *
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngdoc directive
+ * @ngname ngeoRecenter
+ */
+ngeo.recenterDirective = function() {
+  return {
+    restrict: 'A',
+    link: function($scope, $element, $attrs) {
+      var mapExpr = $attrs['ngeoRecenterMap'];
+      var map = /** @type {ol.Map} */ ($scope.$eval(mapExpr));
+
+      function recenter(element) {
+        var extent = element.attr('ngeo-extent');
+        if (extent !== undefined) {
+          var mapSize = /** @type {ol.Size} */ (map.getSize());
+          map.getView().fit($scope.$eval(extent), mapSize);
+        }
+        var zoom = element.attr('ngeo-zoom');
+        if (zoom !== undefined) {
+          map.getView().setZoom($scope.$eval(zoom));
+        }
+      }
+
+      // if the children is a link or button
+      $element.on('click', function(event) {
+        recenter(angular.element(event.target));
+      });
+
+      // if the children is an option inside a select
+      $element.on('change', function(event) {
+        var selected = event.target.options[event.target.selectedIndex];
+        recenter(angular.element(selected));
+      });
+
+    }
+  };
+};
+ngeoModule.directive('ngeoRecenter', ngeo.recenterDirective);
+
 goog.provide('ngeo.resizemapDirective');
 
 goog.require('goog.asserts');
@@ -128828,6 +128934,7 @@ goog.require('ol.proj.Projection');
 goog.require('ol.proj.ProjectionLike');
 goog.require('ol.proj.Units');
 goog.require('ol.proj.common');
+goog.require('ol.render');
 goog.require('ol.render.Event');
 goog.require('ol.render.EventType');
 goog.require('ol.render.Feature');
@@ -136533,6 +136640,10 @@ goog.exportProperty(
     ol.render.canvas.Immediate.prototype,
     'setTextStyle',
     ol.render.canvas.Immediate.prototype.setTextStyle);
+
+goog.exportSymbol(
+    'ol.render.toContext',
+    ol.render.toContext);
 
 goog.exportProperty(
     ol.render.webgl.Immediate.prototype,
