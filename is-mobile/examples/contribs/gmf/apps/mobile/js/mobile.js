@@ -24,7 +24,7 @@ goog.require('ol.layer.Tile');
 goog.require('ol.source.OSM');
 
 
-gmfModule.value('isMobile', true);
+gmfModule.constant('isMobile', true);
 
 
 
