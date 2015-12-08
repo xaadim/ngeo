@@ -19396,12 +19396,14 @@ ol.proj.get = function(projectionLike) {
 ol.proj.equivalent = function(projection1, projection2) {
   if (projection1 === projection2) {
     return true;
-  } else if (projection1.getCode() === projection2.getCode()) {
-    return projection1.getUnits() === projection2.getUnits();
+  }
+  var equalUnits = projection1.getUnits() === projection2.getUnits();
+  if (projection1.getCode() === projection2.getCode()) {
+    return equalUnits;
   } else {
     var transformFn = ol.proj.getTransformFromProjections(
         projection1, projection2);
-    return transformFn === ol.proj.cloneTransform;
+    return transformFn === ol.proj.cloneTransform && equalUnits;
   }
 };
 
@@ -70375,6 +70377,9 @@ goog.require('goog.net.XhrIo');
 goog.require('goog.net.XhrIo.ResponseType');
 goog.require('ol.TileState');
 goog.require('ol.format.FormatType');
+goog.require('ol.proj');
+goog.require('ol.proj.Projection');
+goog.require('ol.proj.Units');
 goog.require('ol.xml');
 
 
@@ -70466,12 +70471,21 @@ ol.featureloader.loadFeaturesXhr = function(url, format, success, failure) {
                   goog.asserts.fail('unexpected format type');
                 }
                 if (source) {
-                  var features = format.readFeatures(source,
-                      {featureProjection: projection});
                   if (ol.ENABLE_VECTOR_TILE && success.length == 2) {
-                    success.call(this, features, format.readProjection(source));
+                    var dataProjection = format.readProjection(source);
+                    var units = dataProjection.getUnits();
+                    if (units === ol.proj.Units.TILE_PIXELS) {
+                      projection = new ol.proj.Projection({
+                        code: projection.getCode(),
+                        units: units
+                      });
+                      this.setProjection(projection);
+                    }
+                    success.call(this, format.readFeatures(source,
+                        {featureProjection: projection}), dataProjection);
                   } else {
-                    success.call(this, features);
+                    success.call(this, format.readFeatures(source,
+                        {featureProjection: projection}));
                   }
                 } else {
                   goog.asserts.fail('undefined or null source');
@@ -70508,7 +70522,9 @@ ol.featureloader.tile = function(url, format) {
        * @this {ol.VectorTile}
        */
       function(features, projection) {
-        this.setProjection(projection);
+        if (ol.proj.equivalent(projection, this.getProjection())) {
+          this.setProjection(projection);
+        }
         this.setFeatures(features);
       },
       /**
@@ -73746,6 +73762,7 @@ goog.require('ol.Tile');
 goog.require('ol.TileCoord');
 goog.require('ol.TileLoadFunctionType');
 goog.require('ol.TileState');
+goog.require('ol.proj.Projection');
 
 
 /**
@@ -73767,8 +73784,10 @@ ol.TileReplayState;
  * @param {string} src Data source url.
  * @param {ol.format.Feature} format Feature format.
  * @param {ol.TileLoadFunctionType} tileLoadFunction Tile load function.
+ * @param {ol.proj.Projection} projection Feature projection.
  */
-ol.VectorTile = function(tileCoord, state, src, format, tileLoadFunction) {
+ol.VectorTile =
+    function(tileCoord, state, src, format, tileLoadFunction, projection) {
 
   goog.base(this, tileCoord, state);
 
@@ -73794,7 +73813,7 @@ ol.VectorTile = function(tileCoord, state, src, format, tileLoadFunction) {
    * @private
    * @type {ol.proj.Projection}
    */
-  this.projection_ = null;
+  this.projection_ = projection;
 
   /**
    * @private
@@ -73866,7 +73885,7 @@ ol.VectorTile.prototype.getKey = function() {
 
 
 /**
- * @return {ol.proj.Projection} Projection.
+ * @return {ol.proj.Projection} Feature projection.
  */
 ol.VectorTile.prototype.getProjection = function() {
   return this.projection_;
@@ -73880,7 +73899,7 @@ ol.VectorTile.prototype.load = function() {
   if (this.state == ol.TileState.IDLE) {
     this.setState(ol.TileState.LOADING);
     this.tileLoadFunction_(this, this.url_);
-    this.loader_(null, NaN, null);
+    this.loader_(null, NaN, this.projection_);
   }
 };
 
@@ -73895,7 +73914,7 @@ ol.VectorTile.prototype.setFeatures = function(features) {
 
 
 /**
- * @param {ol.proj.Projection} projection Projection.
+ * @param {ol.proj.Projection} projection Feature projection.
  */
 ol.VectorTile.prototype.setProjection = function(projection) {
   this.projection_ = projection;
@@ -74338,7 +74357,7 @@ ol.source.VectorTile = function(options) {
   /**
    * @protected
    * @type {function(new: ol.VectorTile, ol.TileCoord, ol.TileState, string,
-   *        ol.format.Feature, ol.TileLoadFunctionType)}
+   *        ol.format.Feature, ol.TileLoadFunctionType, ol.proj.Projection)}
    */
   this.tileClass = options.tileClass ? options.tileClass : ol.VectorTile;
 
@@ -74365,8 +74384,7 @@ ol.source.VectorTile.prototype.getTile =
         tileCoord,
         tileUrl !== undefined ? ol.TileState.IDLE : ol.TileState.EMPTY,
         tileUrl !== undefined ? tileUrl : '',
-        this.format_,
-        this.tileLoadFunction);
+        this.format_, this.tileLoadFunction, projection);
     goog.events.listen(tile, goog.events.EventType.CHANGE,
         this.handleTileChange, false, this);
 
