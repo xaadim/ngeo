@@ -32,28 +32,9 @@
             <span class="ancestors">ngeo.format.</span>FeatureHash
         </h2>
         
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-
-    <h4 class="name" id="FeatureHash"><span class="type-signature"></span>new FeatureHash<span class="signature">(opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>This file provides an OpenLayers format for encoding
-and decoding features for use in permalinks.</p>
-<p>The code is based on Stéphane Brunner's URLCompressed format:</p>
-<https://github.com/sbrunner/OpenLayers-URLCompressed>
-
+            <div class="class-description"><p>Provide an OpenLayers format for encoding and decoding features for use
+in permalinks.</p>
+<p>The code is based on Stéphane Brunner's URLCompressed format.</p>
 <p>TODOs:</p>
 <ul>
 <li>The OpenLayers-URLCompressed format has options where the user
@@ -64,8 +45,25 @@ This format does not have it.</li>
 <li>ol.style.Icon styles are not supported.</li>
 <li>Transformation of coordinates during encoding and decoding is
 not supported.</li>
-</ul>
-</div>
+</ul></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="FeatureHash"><span class="type-signature"></span>new FeatureHash<span class="signature">(opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
 
 
 
@@ -169,12 +167,19 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line76">line 76</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://github.com/sbrunner/OpenLayers-URLCompressed">https://github.com/sbrunner/OpenLayers-URLCompressed</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -229,18 +234,114 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="readFeatureFromText"><span class="type-signature"></span>readFeatureFromText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="readFeatureFromText"><span class="type-signature">(protected) </span>readFeatureFromText<span class="signature">(text, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Read a feature from a logical sequence of characters.</p>
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Text.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">olx.format.ReadOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Read options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -276,7 +377,7 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line796">line 796</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line855">line 855</a>
     </li></ul></dd>
     
 
@@ -299,6 +400,24 @@ not supported.</li>
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -307,18 +426,114 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="readFeaturesFromText"><span class="type-signature"></span>readFeaturesFromText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="readFeaturesFromText"><span class="type-signature">(protected) </span>readFeaturesFromText<span class="signature">(text, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>>}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Read multiple features from a logical sequence of characters.</p>
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Text.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">olx.format.ReadOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Read options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -354,7 +569,7 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line832">line 832</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line895">line 895</a>
     </li></ul></dd>
     
 
@@ -377,6 +592,24 @@ not supported.</li>
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -385,18 +618,114 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="readGeometryFromText"><span class="type-signature"></span>readGeometryFromText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="readGeometryFromText"><span class="type-signature">(protected) </span>readGeometryFromText<span class="signature">(text, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="http://openlayers.org/en/master/apidoc/ol.geom.Geometry.html">ol.geom.Geometry</a>}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Read a geometry from a logical sequence of characters.</p>
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Text.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">olx.format.ReadOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Read options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -432,7 +761,7 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line853">line 853</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line920">line 920</a>
     </li></ul></dd>
     
 
@@ -455,6 +784,24 @@ not supported.</li>
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.geom.Geometry.html">ol.geom.Geometry</a></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -463,18 +810,114 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="writeFeaturesText"><span class="type-signature"></span>writeFeaturesText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="writeFeaturesText"><span class="type-signature">(protected) </span>writeFeaturesText<span class="signature">(features, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Encode an array of features into a logical sequence of characters.</p>
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>features</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">olx.format.ReadOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Read options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -510,7 +953,7 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line939">line 939</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line1014">line 1014</a>
     </li></ul></dd>
     
 
@@ -533,6 +976,24 @@ not supported.</li>
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -541,18 +1002,114 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="writeFeatureText"><span class="type-signature"></span>writeFeatureText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="writeFeatureText"><span class="type-signature">(protected) </span>writeFeatureText<span class="signature">(feature, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Encode a feature into a logical sequence of characters.</p>
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">olx.format.ReadOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Read options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -588,7 +1145,7 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line866">line 866</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line937">line 937</a>
     </li></ul></dd>
     
 
@@ -611,6 +1168,24 @@ not supported.</li>
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -619,18 +1194,114 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="writeGeometryText"><span class="type-signature"></span>writeGeometryText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="writeGeometryText"><span class="type-signature">(protected) </span>writeGeometryText<span class="signature">(geometry, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Encode a geometry into a logical sequence of characters.</p>
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geometry</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.geom.Geometry.html">ol.geom.Geometry</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Geometry.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">olx.format.ReadOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Read options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -666,7 +1337,7 @@ not supported.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line955">line 955</a>
+        <a href="src_ol-ext_format_featurehash.js.html">src/ol-ext/format/featurehash.js</a>, <a href="src_ol-ext_format_featurehash.js.html#line1034">line 1034</a>
     </li></ul></dd>
     
 
@@ -689,6 +1360,24 @@ not supported.</li>
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 

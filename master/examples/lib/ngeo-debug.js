@@ -113023,12 +113023,12 @@ ol.interaction.Select.prototype.setMap = function(map) {
   var currentMap = this.getMap();
   var selectedFeatures =
       this.featureOverlay_.getSource().getFeaturesCollection();
-  if (!goog.isNull(currentMap)) {
+  if (currentMap) {
     selectedFeatures.forEach(currentMap.unskipFeature, currentMap);
   }
   goog.base(this, 'setMap', map);
   this.featureOverlay_.setMap(map);
-  if (!goog.isNull(map)) {
+  if (map) {
     selectedFeatures.forEach(map.skipFeature, map);
   }
 };
@@ -113059,7 +113059,7 @@ ol.interaction.Select.prototype.addFeature_ = function(evt) {
   var map = this.getMap();
   goog.asserts.assertInstanceof(feature, ol.Feature,
       'feature should be an ol.Feature');
-  if (!goog.isNull(map)) {
+  if (map) {
     map.skipFeature(feature);
   }
 };
@@ -113074,7 +113074,7 @@ ol.interaction.Select.prototype.removeFeature_ = function(evt) {
   var map = this.getMap();
   goog.asserts.assertInstanceof(feature, ol.Feature,
       'feature should be an ol.Feature');
-  if (!goog.isNull(map)) {
+  if (map) {
     map.unskipFeature(feature);
   }
 };
@@ -124488,11 +124488,11 @@ ngeo.format.FeatureHashStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
 
 
 /**
- * This file provides an OpenLayers format for encoding
- * and decoding features for use in permalinks.
+ * @classdesc
+ * Provide an OpenLayers format for encoding and decoding features for use
+ * in permalinks.
  *
- * The code is based on Stéphane Brunner's URLCompressed format:
- * <https://github.com/sbrunner/OpenLayers-URLCompressed>
+ * The code is based on Stéphane Brunner's URLCompressed format.
  *
  * TODOs:
  *
@@ -124505,9 +124505,10 @@ ngeo.format.FeatureHashStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
  * - Transformation of coordinates during encoding and decoding is
  *   not supported.
  *
+ * @see https://github.com/sbrunner/OpenLayers-URLCompressed
  * @constructor
- * @param {ngeox.format.FeatureHashOptions=} opt_options Options.
  * @extends {ol.format.TextFeature}
+ * @param {ngeox.format.FeatureHashOptions=} opt_options Options.
  */
 ngeo.format.FeatureHash = function(opt_options) {
   goog.base(this);
@@ -124570,6 +124571,7 @@ ngeo.format.FeatureHash.ACCURACY_ = 1;
 
 
 /**
+ * Get features's properties.
  * @param {ol.Feature} feature Feature.
  * @return {Object.<string, (string|number)>} The feature properties to
  * serialize.
@@ -124581,6 +124583,7 @@ ngeo.format.FeatureHash.defaultPropertiesFunction_ = function(feature) {
 
 
 /**
+ * Sign then encode a number.
  * @param {number} num Number.
  * @return {string} String.
  * @private
@@ -124595,6 +124598,7 @@ ngeo.format.FeatureHash.encodeSignedNumber_ = function(num) {
 
 
 /**
+ * Transform a number into a logical sequence of characters.
  * @param {number} num Number.
  * @return {string} String.
  * @private
@@ -124612,6 +124616,9 @@ ngeo.format.FeatureHash.encodeNumber_ = function(num) {
 
 
 /**
+ * For a type of geometry, transforms an array of {@link ol.style.Style} into
+ * a logical sequence of characters and put the result into the given encoded
+ * styles's array.
  * @param {Array.<ol.style.Style>} styles Styles.
  * @param {ol.geom.GeometryType} geometryType Geometry type.
  * @param {Array.<string>} encodedStyles Encoded styles array.
@@ -124649,6 +124656,8 @@ ngeo.format.FeatureHash.encodeStyles_ =
 
 
 /**
+ * Transform an {@link ol.style.Stroke} into a logical sequence of
+ * characters and put the result into the given encoded styles's array.
  * @param {ol.style.Stroke} strokeStyle Stroke style.
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
@@ -124660,6 +124669,8 @@ ngeo.format.FeatureHash.encodeStyleLine_ =
 
 
 /**
+ * Transform an {@link ol.style.Circle} into a logical sequence of
+ * characters and put the result into the given encoded styles's array.
  * @param {ol.style.Image} imageStyle Image style.
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
@@ -124685,6 +124696,9 @@ ngeo.format.FeatureHash.encodeStylePoint_ =
 
 
 /**
+ * Transform an {@link ol.style.Fill} and an {@link ol.style.Stroke} into
+ * a logical sequence of characters and put the result into the given
+ * encoded styles's array.
  * @param {ol.style.Fill} fillStyle Fill style.
  * @param {ol.style.Stroke} strokeStyle Stroke style.
  * @param {Array.<string>} encodedStyles Encoded styles array.
@@ -124700,6 +124714,9 @@ ngeo.format.FeatureHash.encodeStylePolygon_ =
 
 
 /**
+ * Transform an {@link ol.style.Fill} and optionally its properties into
+ * a logical sequence of characters and put the result into the given encoded
+ * styles's array.
  * @param {ol.style.Fill} fillStyle Fill style.
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @param {string=} opt_propertyName Property name.
@@ -124723,6 +124740,8 @@ ngeo.format.FeatureHash.encodeStyleFill_ =
 
 
 /**
+ * Transform an {@link ol.style.Stroke} into a logical sequence of
+ * characters and put the result into the given encoded styles's array.
  * @param {ol.style.Stroke} strokeStyle Stroke style.
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
@@ -124749,6 +124768,8 @@ ngeo.format.FeatureHash.encodeStyleStroke_ =
 
 
 /**
+ * Transform an {@link ol.style.Text} into a logical sequence of characters and
+ * put the result into the given encoded styles's array.
  * @param {ol.style.Text} textStyle Text style.
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
@@ -124773,6 +124794,8 @@ ngeo.format.FeatureHash.encodeStyleText_ = function(textStyle, encodedStyles) {
 
 
 /**
+ * Read a logical sequence of characters and return a corresponding
+ * {@link ol.geom.LineString}.
  * @param {string} text Text.
  * @return {ol.geom.LineString} Line string.
  * @this {ngeo.format.FeatureHash}
@@ -124790,6 +124813,8 @@ ngeo.format.FeatureHash.readLineStringGeometry_ = function(text) {
 
 
 /**
+ * Read a logical sequence of characters and return a corresponding
+ * {@link ol.geom.MultiLineString}.
  * @param {string} text Text.
  * @return {ol.geom.MultiLineString} Line string.
  * @this {ngeo.format.FeatureHash}
@@ -124814,6 +124839,8 @@ ngeo.format.FeatureHash.readMultiLineStringGeometry_ = function(text) {
 
 
 /**
+ * Read a logical sequence of characters and return a corresponding
+ * {@link ol.geom.Point}.
  * @param {string} text Text.
  * @return {ol.geom.Point} Point.
  * @this {ngeo.format.FeatureHash}
@@ -124832,6 +124859,8 @@ ngeo.format.FeatureHash.readPointGeometry_ = function(text) {
 
 
 /**
+ * Read a logical sequence of characters and return a corresponding
+ * {@link ol.geom.MultiPoint}.
  * @param {string} text Text.
  * @return {ol.geom.MultiPoint} MultiPoint.
  * @this {ngeo.format.FeatureHash}
@@ -124849,6 +124878,8 @@ ngeo.format.FeatureHash.readMultiPointGeometry_ = function(text) {
 
 
 /**
+ * Read a logical sequence of characters and return a corresponding
+ * {@link ol.geom.Polygon}.
  * @param {string} text Text.
  * @return {ol.geom.Polygon} Polygon.
  * @this {ngeo.format.FeatureHash}
@@ -124880,6 +124911,8 @@ ngeo.format.FeatureHash.readPolygonGeometry_ = function(text) {
 
 
 /**
+ * Read a logical sequence of characters and return a corresponding
+ * {@link ol.geom.MultiPolygon}.
  * @param {string} text Text.
  * @return {ol.geom.MultiPolygon} MultiPolygon.
  * @this {ngeo.format.FeatureHash}
@@ -124916,6 +124949,8 @@ ngeo.format.FeatureHash.readMultiPolygonGeometry_ = function(text) {
 
 
 /**
+ * Read a logical sequence of characters and apply the decoded style on the
+ * given feature.
  * @param {string} text Text.
  * @param {ol.Feature} feature Feature.
  * @private
@@ -124985,6 +125020,8 @@ ngeo.format.FeatureHash.setStyleInFeature_ = function(text, feature) {
 
 
 /**
+ * Encode a {@link ol.geom.LineString} geometry into a logical sequence of
+ * characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @return {string} Encoded geometry.
  * @this {ngeo.format.FeatureHash}
@@ -125000,6 +125037,8 @@ ngeo.format.FeatureHash.writeLineStringGeometry_ = function(geometry) {
 
 
 /**
+ * Encode a {@link ol.geom.MultiLineString} geometry into a logical sequence
+ * of characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @return {string} Encoded geometry.
  * @this {ngeo.format.FeatureHash}
@@ -125028,6 +125067,8 @@ ngeo.format.FeatureHash.writeMultiLineStringGeometry_ = function(geometry) {
 
 
 /**
+ * Encode a {@link ol.geom.Point} geometry into a logical sequence of
+ * characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @return {string} Encoded geometry.
  * @this {ngeo.format.FeatureHash}
@@ -125043,6 +125084,8 @@ ngeo.format.FeatureHash.writePointGeometry_ = function(geometry) {
 
 
 /**
+ * Encode an {@link ol.geom.MultiPoint} geometry into a logical sequence
+ * of characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @return {string} Encoded geometry.
  * @this {ngeo.format.FeatureHash}
@@ -125058,6 +125101,7 @@ ngeo.format.FeatureHash.writeMultiPointGeometry_ = function(geometry) {
 
 
 /**
+ * Helper to encode an {@link ol.geom.Polygon} geometry.
  * @param {Array.<number>} flatCoordinates Flat coordinates.
  * @param {number} stride Stride.
  * @param {number} offset Offset.
@@ -125085,6 +125129,8 @@ ngeo.format.FeatureHash.encodeRings_ =
 
 
 /**
+ * Encode an {@link ol.geom.Polygon} geometry into a logical sequence
+ * of characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @return {string} Encoded geometry.
  * @this {ngeo.format.FeatureHash}
@@ -125105,6 +125151,8 @@ ngeo.format.FeatureHash.writePolygonGeometry_ = function(geometry) {
 
 
 /**
+ * Encode an {@link ol.geom.MultiPoligon} geometry into a logical sequence of
+ * characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @return {string} Encoded geometry.
  * @this {ngeo.format.FeatureHash}
@@ -125160,6 +125208,10 @@ ngeo.format.FeatureHash.GEOMETRY_WRITERS_ = {
 
 
 /**
+ * Read a logical sequence of characters and return (or complet then return)
+ * an array of numbers. The coordinates are assumed to be in
+ * two dimensions and in latitude, longitude order.
+ * corresponding to a geometry's coordinates.
  * @param {string} text Text.
  * @param {Array.<number>=} opt_flatCoordinates Flat coordinates array.
  * @return {Array.<number>} Flat coordinates.
@@ -125200,6 +125252,9 @@ ngeo.format.FeatureHash.prototype.decodeCoordinates_ =
 
 
 /**
+ * Encode an array of number (corresponding to some coordinates) into a
+ * logical sequence of characters. The coordinates are assumed to be in
+ * two dimensions and in latitude, longitude order.
  * @param {Array.<number>} flatCoordinates Flat coordinates.
  * @param {number} stride Stride.
  * @param {number} offset Offset.
@@ -125227,7 +125282,11 @@ ngeo.format.FeatureHash.prototype.encodeCoordinates_ =
 
 
 /**
- * @inheritDoc
+ * Read a feature from a logical sequence of characters.
+ * @param {string} text Text.
+ * @param {olx.format.ReadOptions=} opt_options Read options.
+ * @return {ol.Feature}
+ * @protected
  */
 ngeo.format.FeatureHash.prototype.readFeatureFromText =
     function(text, opt_options) {
@@ -125263,7 +125322,11 @@ ngeo.format.FeatureHash.prototype.readFeatureFromText =
 
 
 /**
- * @inheritDoc
+ * Read multiple features from a logical sequence of characters.
+ * @param {string} text Text.
+ * @param {olx.format.ReadOptions=} opt_options Read options.
+ * @return {Array.<ol.Feature>}
+ * @protected
  */
 ngeo.format.FeatureHash.prototype.readFeaturesFromText =
     function(text, opt_options) {
@@ -125284,7 +125347,11 @@ ngeo.format.FeatureHash.prototype.readFeaturesFromText =
 
 
 /**
- * @inheritDoc
+ * Read a geometry from a logical sequence of characters.
+ * @param {string} text Text.
+ * @param {olx.format.ReadOptions=} opt_options Read options.
+ * @return {ol.geom.Geometry}
+ * @protected
  */
 ngeo.format.FeatureHash.prototype.readGeometryFromText =
     function(text, opt_options) {
@@ -125297,7 +125364,11 @@ ngeo.format.FeatureHash.prototype.readGeometryFromText =
 
 
 /**
- * @inheritDoc
+ * Encode a feature into a logical sequence of characters.
+ * @param {ol.Feature} feature Feature.
+ * @param {olx.format.ReadOptions=} opt_options Read options.
+ * @return {string}
+ * @protected
  */
 ngeo.format.FeatureHash.prototype.writeFeatureText =
     function(feature, opt_options) {
@@ -125370,7 +125441,11 @@ ngeo.format.FeatureHash.prototype.writeFeatureText =
 
 
 /**
- * @inheritDoc
+ * Encode an array of features into a logical sequence of characters.
+ * @param {Array.<ol.Feature>} features Feature.
+ * @param {olx.format.ReadOptions=} opt_options Read options.
+ * @return {string}
+ * @protected
  */
 ngeo.format.FeatureHash.prototype.writeFeaturesText =
     function(features, opt_options) {
@@ -125386,7 +125461,11 @@ ngeo.format.FeatureHash.prototype.writeFeaturesText =
 
 
 /**
- * @inheritDoc
+ * Encode a geometry into a logical sequence of characters.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {olx.format.ReadOptions=} opt_options Read options.
+ * @return {string}
+ * @protected
  */
 ngeo.format.FeatureHash.prototype.writeGeometryText =
     function(geometry, opt_options) {
