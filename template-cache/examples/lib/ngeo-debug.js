@@ -121881,7 +121881,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
      * @param {angular.Attributes} attrs Attributes.
      */
     function(element, attrs) {
-      var templateUrl = attrs['ngeoLayertreeTemplateUrl'];
+      var templateUrl = attrs['ngeoLayertreeTemplateurl'];
       return templateUrl !== undefined ? templateUrl :
           ngeo.baseTemplateUrl + '/layertree.html';
     });
@@ -122250,7 +122250,7 @@ ngeoModule.value('ngeoPopupTemplateUrl',
      * @param {angular.Attributes} attrs Attributes.
      */
     function(element, attrs) {
-      var templateUrl = attrs['ngeoPopupTemplateUrl'];
+      var templateUrl = attrs['ngeoPopupTemplateurl'];
       return templateUrl !== undefined ? templateUrl :
           ngeo.baseTemplateUrl + '/popup.html';
     });
@@ -122581,7 +122581,7 @@ ngeoModule.value('ngeoScaleselectorTemplateUrl',
      * @param {angular.Attributes} attrs Attributes.
      */
     function(element, attrs) {
-      var templateUrl = attrs['ngeoScaleselectorTemplateUrl'];
+      var templateUrl = attrs['ngeoScaleselectorTemplateurl'];
       return templateUrl !== undefined ? templateUrl :
           ngeo.baseTemplateUrl + '/scaleselector.html';
     });
