@@ -121595,8 +121595,8 @@ var ngeoModule = angular.module('ngeo', []);
 
 
 /**
- * @type {string}
  * The default template based URL, used as it by the template cache.
+ * @type {string}
  */
 ngeo.baseTemplateUrl = 'ngeo';
 
@@ -121666,12 +121666,11 @@ ngeo.BtnGroupController = function($scope) {
  * @param {number} index Index of the button in buttons array.
  */
 ngeo.BtnGroupController.prototype.activate = function(index) {
-  goog.array.forEach(this.buttons_,
-      function(s, i) {
-        if (i != index) {
-          s(this.scope_, false);
-        }
-      }, this);
+  this.buttons_.forEach(function(s, i) {
+    if (i != index) {
+      s(this.scope_, false);
+    }
+  }, this);
 };
 
 
@@ -122158,6 +122157,548 @@ ngeo.mapDirective = function() {
 };
 
 ngeoModule.directive('ngeoMap', ngeo.mapDirective);
+
+goog.provide('ngeo.DecorateGeolocation');
+
+goog.require('goog.asserts');
+goog.require('ngeo');
+
+
+/**
+ * Provides a function that adds a "tracking" property (using
+ * `Object.defineProperty`) to the `ol.Geolocation` instance, making it
+ * possible to activate/deactivate the tracking mode.
+ *
+ * @example
+ * <input type="checkbox" ngModel="geolocation.tracking" />
+ *
+ * @typedef {function(ol.Geolocation)}
+ * @ngdoc service
+ * @ngname ngeoDecorateGeolocation
+ */
+ngeo.DecorateGeolocation;
+
+
+/**
+ * @param {ol.Geolocation} geolocation Geolocation to decorate.
+ * @ngInject
+ */
+ngeo.decorateGeolocation = function(geolocation) {
+  goog.asserts.assertInstanceof(geolocation, ol.Geolocation);
+
+  Object.defineProperty(geolocation, 'tracking', {
+    get: function() {
+      return geolocation.getTracking();
+    },
+    set: function(val) {
+      geolocation.setTracking(val);
+    }
+  });
+};
+
+
+ngeoModule.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
+
+goog.provide('ngeo.FeatureOverlay');
+goog.provide('ngeo.FeatureOverlayMgr');
+
+goog.require('goog.object');
+goog.require('ngeo');
+goog.require('ol.Collection');
+goog.require('ol.CollectionEvent');
+goog.require('ol.CollectionEventType');
+goog.require('ol.Feature');
+goog.require('ol.layer.Vector');
+goog.require('ol.source.Vector');
+goog.require('ol.style.Style');
+goog.require('ol.style.StyleFunction');
+
+
+/**
+ * @typedef {{
+ *  styleFunction: ol.style.StyleFunction,
+ *  features: Object.<string, ol.Feature>
+ * }}
+ */
+ngeo.FeatureOverlayGroup;
+
+
+
+/**
+ * Provides a service that wraps an "unmanaged" vector layer,
+ * used as a shared vector layer accross the application.
+ *
+ * Example:
+ *
+ * The application's main component/controller initializes the feature
+ * overlay manager with the map:
+ *
+ *     ngeoFeatureOverlayMgr.init(map);
+ *
+ * Once initialized, components of the application can use the manager to
+ * create a feature overlay, configuring it with specific styles:
+ *
+ *     var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
+ *     featureOverlay.setStyle(myStyle);
+ *     featureOverlay.addFeature(myFeature);
+ *
+ * @constructor
+ * @ngdoc service
+ * @ngname ngeoFeatureOverlayMgr
+ */
+ngeo.FeatureOverlayMgr = function() {
+
+  /**
+   * @type {Object.<string, number>}
+   * @private
+   */
+  this.featureUidToGroupIndex_ = {};
+
+  /**
+   * @type {Array.<ngeo.FeatureOverlayGroup>}
+   * @private
+   */
+  this.groups_ = [];
+
+  /**
+   * @type {ol.source.Vector}
+   * @private
+   */
+  this.source_ = new ol.source.Vector({
+    useSpatialIndex: false
+  });
+
+  /**
+   * @type {ol.layer.Vector}
+   * @private
+   */
+  this.layer_ = new ol.layer.Vector({
+    source: this.source_,
+    style: goog.bind(this.styleFunction_, this),
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
+  });
+
+};
+
+
+/**
+ * @param {ol.Feature} feature The feature to add.
+ * @param {number} groupIndex The group groupIndex.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.addFeature = function(feature, groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  var featureUid = goog.getUid(feature).toString();
+  this.featureUidToGroupIndex_[featureUid] = groupIndex;
+  this.groups_[groupIndex].features[featureUid] = feature;
+  this.source_.addFeature(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature The feature to add.
+ * @param {number} groupIndex The group groupIndex.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.removeFeature = function(feature, groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  var featureUid = goog.getUid(feature).toString();
+  delete this.featureUidToGroupIndex_[featureUid];
+  delete this.groups_[groupIndex].features[featureUid];
+  this.source_.removeFeature(feature);
+};
+
+
+/**
+ * @param {number} groupIndex The group groupIndex.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.clear = function(groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  var group = this.groups_[groupIndex];
+  for (var featureUid in group.features) {
+    this.removeFeature(group.features[featureUid], groupIndex);
+  }
+  goog.asserts.assert(goog.object.isEmpty(group.features));
+};
+
+
+/**
+ * @return {ol.layer.Vector} The vector layer used internally.
+ */
+ngeo.FeatureOverlayMgr.prototype.getLayer = function() {
+  return this.layer_;
+};
+
+
+/**
+ * @return {ngeo.FeatureOverlay} Feature overlay.
+ */
+ngeo.FeatureOverlayMgr.prototype.getFeatureOverlay = function() {
+  var groupIndex = this.groups_.length;
+  this.groups_.push({
+    styleFunction: ol.style.defaultStyleFunction,
+    features: {}
+  });
+  return new ngeo.FeatureOverlay(this, groupIndex);
+};
+
+
+/**
+ * @param {ol.Map} map Map.
+ */
+ngeo.FeatureOverlayMgr.prototype.init = function(map) {
+  this.layer_.setMap(map);
+};
+
+
+/**
+ * @param {ol.style.Style|Array.<ol.style.Style>|ol.style.StyleFunction} style
+ * Style.
+ * @param {number} groupIndex Group index.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.setStyle = function(style, groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  this.groups_[groupIndex].styleFunction = goog.isNull(style) ?
+      ol.style.defaultStyleFunction : ol.style.createStyleFunction(style);
+};
+
+
+/**
+ * @param {ol.Feature|ol.render.Feature} feature Feature.
+ * @param {number} resolution Resolution.
+ * @return {Array.<ol.style.Style>|ol.style.Style} Styles.
+ * @private
+ */
+ngeo.FeatureOverlayMgr.prototype.styleFunction_ =
+    function(feature, resolution) {
+  var featureUid = goog.getUid(feature).toString();
+  goog.asserts.assert(featureUid in this.featureUidToGroupIndex_);
+  var groupIndex = this.featureUidToGroupIndex_[featureUid];
+  var group = this.groups_[groupIndex];
+  return group.styleFunction(feature, resolution);
+};
+
+
+
+/**
+ * @constructor
+ * @param {ngeo.FeatureOverlayMgr} manager The feature overlay manager.
+ * @param {number} index This feature overlay's index.
+ */
+ngeo.FeatureOverlay = function(manager, index) {
+
+  /**
+   * @type {ngeo.FeatureOverlayMgr}
+   * @private
+   */
+  this.manager_ = manager;
+
+  /**
+   * @type {ol.Collection.<ol.Feature>}
+   * @private
+   */
+  this.features_ = null;
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.index_ = index;
+};
+
+
+/**
+ * Add a feature to the feature overlay.
+ * @param {ol.Feature} feature The feature to add.
+ */
+ngeo.FeatureOverlay.prototype.addFeature = function(feature) {
+  this.manager_.addFeature(feature, this.index_);
+};
+
+
+/**
+ * Remove a feature from the feature overlay.
+ * @param {ol.Feature} feature The feature to add.
+ */
+ngeo.FeatureOverlay.prototype.removeFeature = function(feature) {
+  this.manager_.removeFeature(feature, this.index_);
+};
+
+
+/**
+ * Remove all the features from the feature overlay.
+ */
+ngeo.FeatureOverlay.prototype.clear = function() {
+  this.manager_.clear(this.index_);
+};
+
+
+/**
+ * Configure this feature overlay with a feature collection. Features added
+ * to the collection are also added to the overlay. Same for removal. If you
+ * configure the feature overlay with a feature collection you will use the
+ * collection to add and remove features instead of using the overlay's
+ * `addFeature`, `removeFeature` and `clear` functions.
+ * @param {ol.Collection.<ol.Feature>} features Feature collection.
+ */
+ngeo.FeatureOverlay.prototype.setFeatures = function(features) {
+  if (!goog.isNull(this.features_)) {
+    this.features_.clear();
+    goog.events.unlisten(this.features_, ol.CollectionEventType.ADD,
+        this.handleFeatureAdd_, false, this);
+    goog.events.unlisten(this.features_, ol.CollectionEventType.REMOVE,
+        this.handleFeatureRemove_, false, this);
+  }
+  if (!goog.isNull(features)) {
+    features.forEach(function(feature) {
+      this.addFeature(feature);
+    }, this);
+    goog.events.listen(features, ol.CollectionEventType.ADD,
+        this.handleFeatureAdd_, false, this);
+    goog.events.listen(features, ol.CollectionEventType.REMOVE,
+        this.handleFeatureRemove_, false, this);
+  }
+  this.features_ = features;
+};
+
+
+/**
+ * Set a style for the feature overlay.
+ * @param {ol.style.Style|Array.<ol.style.Style>|ol.style.StyleFunction} style
+ * Style.
+ */
+ngeo.FeatureOverlay.prototype.setStyle = function(style) {
+  this.manager_.setStyle(style, this.index_);
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Feature collection event.
+ * @private
+ */
+ngeo.FeatureOverlay.prototype.handleFeatureAdd_ = function(evt) {
+  var feature = /** @type {ol.Feature} */ (evt.element);
+  this.addFeature(feature);
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Feature collection event.
+ * @private
+ */
+ngeo.FeatureOverlay.prototype.handleFeatureRemove_ = function(evt) {
+  var feature = /** @type {ol.Feature} */ (evt.element);
+  this.removeFeature(feature);
+};
+
+
+ngeoModule.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
+
+goog.provide('ngeo.MobileGeolocationController');
+goog.provide('ngeo.mobileGeolocationDirective');
+
+goog.require('ngeo');
+goog.require('ngeo.DecorateGeolocation');
+goog.require('ngeo.FeatureOverlay');
+goog.require('ngeo.FeatureOverlayMgr');
+goog.require('ol.Feature');
+goog.require('ol.Geolocation');
+goog.require('ol.Map');
+goog.require('ol.geom.Point');
+goog.require('ol.proj');
+
+
+/**
+ * Provide a "mobile geolocation" directive.
+ *
+ * @example
+ * <button ngeo-mobile-geolocation=""
+ *   ngeo-mobile-geolocation-map="ctrl.map"
+ *   ngeo-mobile-geolocation-options="ctrl.mobileGeolocationOptions">
+ * </button>
+ *
+ * @return {angular.Directive} The Directive Definition Object.
+ * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoMobileGeolocation
+ */
+ngeo.mobileGeolocationDirective = function() {
+  return {
+    restrict: 'A',
+    scope: {
+      'getMobileMapFn': '&ngeoMobileGeolocationMap',
+      'getMobileGeolocationOptionsFn': '&ngeoMobileGeolocationOptions'
+    },
+    controller: 'NgeoMobileGeolocationController',
+    controllerAs: 'ctrl'
+  };
+};
+
+
+ngeoModule.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
+
+
+
+/**
+ * @constructor
+ * @param {angular.Scope} $scope The directive's scope.
+ * @param {angular.JQLite} $element Element.
+ * @param {ngeo.DecorateGeolocation} ngeoDecorateGeolocation Decorate
+ *     Geolocation service.
+ * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
+ *     overlay manager service.
+ * @export
+ * @ngInject
+ * @ngdoc controller
+ * @ngname NgeoMobileGeolocationController
+ */
+ngeo.MobileGeolocationController = function($scope, $element,
+    ngeoDecorateGeolocation, ngeoFeatureOverlayMgr) {
+
+  $element.on('click', goog.bind(this.toggleTracking, this));
+
+  var map = $scope['getMobileMapFn']();
+  goog.asserts.assertInstanceof(map, ol.Map);
+
+  /**
+   * @type {!ol.Map}
+   * @private
+   */
+  this.map_ = map;
+
+  var options = $scope['getMobileGeolocationOptionsFn']() || {};
+  goog.asserts.assertObject(options);
+
+  /**
+   * @type {ngeo.FeatureOverlay}
+   * @private
+   */
+  this.featureOverlay_ = ngeoFeatureOverlayMgr.getFeatureOverlay();
+
+  /**
+   * @type {ol.Geolocation}
+   * @private
+   */
+  this.geolocation_ = new ol.Geolocation({
+    projection: map.getView().getProjection()
+  });
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.positionFeature_ = new ol.Feature(new ol.geom.Point([0, 0]));
+
+  if (options.positionFeatureStyle) {
+    this.positionFeature_.setStyle(options.positionFeatureStyle);
+  }
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.accuracyFeature_ = new ol.Feature();
+
+  if (options.accuracyFeatureStyle) {
+    this.accuracyFeature_.setStyle(options.accuracyFeatureStyle);
+  }
+
+  /**
+   * @type {number|undefined}
+   * @private
+   */
+  this.zoom_ = options.zoom;
+
+  goog.events.listen(
+      this.geolocation_,
+      ol.Object.getChangeEventType(ol.GeolocationProperty.ACCURACY_GEOMETRY),
+      function() {
+        this.accuracyFeature_.setGeometry(
+            this.geolocation_.getAccuracyGeometry());
+      },
+      false,
+      this);
+
+  goog.events.listen(
+      this.geolocation_,
+      ol.Object.getChangeEventType(ol.GeolocationProperty.POSITION),
+      function(e) {
+        this.setPosition_(e);
+      },
+      false,
+      this);
+
+  ngeoDecorateGeolocation(this.geolocation_);
+};
+
+
+/**
+ * @export
+ */
+ngeo.MobileGeolocationController.prototype.toggleTracking = function() {
+  if (this.geolocation_.getTracking()) {
+    // if map center is different than geolocation position, then track again
+    var currentPosition = this.geolocation_.getPosition();
+    var center = this.map_.getView().getCenter();
+    if (currentPosition[0] === center[0] &&
+        currentPosition[1] === center[1]) {
+      this.untrack_();
+    } else {
+      this.untrack_();
+      this.track_();
+    }
+  } else {
+    this.track_();
+  }
+};
+
+
+/**
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.track_ = function() {
+  this.featureOverlay_.addFeature(this.positionFeature_);
+  this.featureOverlay_.addFeature(this.accuracyFeature_);
+  this.geolocation_.setTracking(true);
+};
+
+
+/**
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.untrack_ = function() {
+  this.featureOverlay_.clear();
+  this.geolocation_.setTracking(false);
+};
+
+
+/**
+ * @param {ol.ObjectEvent} event Event.
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.setPosition_ = function(event) {
+  var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
+  var point = /** @type {ol.geom.Point} */
+      (this.positionFeature_.getGeometry());
+
+  point.setCoordinates(position);
+  this.map_.getView().setCenter(position);
+
+  if (this.zoom_ !== undefined) {
+    this.map_.getView().setZoom(this.zoom_);
+  }
+};
+
+
+ngeoModule.controller('NgeoMobileGeolocationController',
+    ngeo.MobileGeolocationController);
 
 goog.provide('ngeo.modalDirective');
 
@@ -122668,15 +123209,15 @@ ngeo.ScaleselectorController = function($scope, $element, $attrs) {
 
   /**
    * The zoom level/scale map object.
-   * @type {Object.<string, string>}
+   * @type {!Object.<string, string>}
    * @export
    */
-  this.scales = /** @type {Object.<string, string>} */
+  this.scales = /** @type {!Object.<string, string>} */
       ($scope.$eval(scalesExpr));
   goog.asserts.assert(goog.isDef(this.scales));
 
-  var zoomLevels = goog.array.map(goog.object.getKeys(this.scales), Number);
-  goog.array.sort(zoomLevels);
+  var zoomLevels = Object.keys(this.scales).map(Number);
+  zoomLevels.sort();
 
   /**
    * @type {Array.<number>}
@@ -126602,7 +127143,6 @@ ngeoModule.service('ngeoBackgroundLayerMgr', ngeo.BackgroundLayerMgr);
 
 goog.provide('ngeo.CreateGeoJSONBloodhound');
 
-goog.require('goog.array');
 goog.require('ngeo');
 goog.require('ol.format.GeoJSON');
 
@@ -126675,7 +127215,7 @@ ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
         if (goog.isDef(opt_filter)) {
           featureCollection = /** @type {GeoJSONFeatureCollection} */ ({
             type: 'FeatureCollection',
-            features: goog.array.filter(featureCollection.features, opt_filter)
+            features: featureCollection.features.filter(opt_filter)
           });
         }
 
@@ -126752,47 +127292,6 @@ ngeo.debounceServiceFactory = function($timeout) {
 
 
 ngeoModule.factory('ngeoDebounce', ngeo.debounceServiceFactory);
-
-goog.provide('ngeo.DecorateGeolocation');
-
-goog.require('goog.asserts');
-goog.require('ngeo');
-
-
-/**
- * Provides a function that adds a "tracking" property (using
- * `Object.defineProperty`) to the `ol.Geolocation` instance, making it
- * possible to activate/deactivate the tracking mode.
- *
- * @example
- * <input type="checkbox" ngModel="geolocation.tracking" />
- *
- * @typedef {function(ol.Geolocation)}
- * @ngdoc service
- * @ngname ngeoDecorateGeolocation
- */
-ngeo.DecorateGeolocation;
-
-
-/**
- * @param {ol.Geolocation} geolocation Geolocation to decorate.
- * @ngInject
- */
-ngeo.decorateGeolocation = function(geolocation) {
-  goog.asserts.assertInstanceof(geolocation, ol.Geolocation);
-
-  Object.defineProperty(geolocation, 'tracking', {
-    get: function() {
-      return geolocation.getTracking();
-    },
-    set: function(val) {
-      geolocation.setTracking(val);
-    }
-  });
-};
-
-
-ngeoModule.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
 
 goog.provide('ngeo.DecorateInteraction');
 
@@ -126901,308 +127400,6 @@ ngeo.decorateLayer = function(layer) {
 
 ngeoModule.value('ngeoDecorateLayer', ngeo.decorateLayer);
 
-goog.provide('ngeo.FeatureOverlay');
-goog.provide('ngeo.FeatureOverlayMgr');
-
-goog.require('goog.object');
-goog.require('ngeo');
-goog.require('ol.Collection');
-goog.require('ol.CollectionEvent');
-goog.require('ol.CollectionEventType');
-goog.require('ol.Feature');
-goog.require('ol.layer.Vector');
-goog.require('ol.source.Vector');
-goog.require('ol.style.Style');
-goog.require('ol.style.StyleFunction');
-
-
-/**
- * @typedef {{
- *  styleFunction: ol.style.StyleFunction,
- *  features: Object.<string, ol.Feature>
- * }}
- */
-ngeo.FeatureOverlayGroup;
-
-
-
-/**
- * Provides a service that wraps an "unmanaged" vector layer,
- * used as a shared vector layer accross the application.
- *
- * Example:
- *
- * The application's main component/controller initializes the feature
- * overlay manager with the map:
- *
- *     ngeoFeatureOverlayMgr.init(map);
- *
- * Once initialized, components of the application can use the manager to
- * create a feature overlay, configuring it with specific styles:
- *
- *     var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
- *     featureOverlay.setStyle(myStyle);
- *     featureOverlay.addFeature(myFeature);
- *
- * @constructor
- * @ngdoc service
- * @ngname ngeoFeatureOverlayMgr
- */
-ngeo.FeatureOverlayMgr = function() {
-
-  /**
-   * @type {Object.<string, number>}
-   * @private
-   */
-  this.featureUidToGroupIndex_ = {};
-
-  /**
-   * @type {Array.<ngeo.FeatureOverlayGroup>}
-   * @private
-   */
-  this.groups_ = [];
-
-  /**
-   * @type {ol.source.Vector}
-   * @private
-   */
-  this.source_ = new ol.source.Vector({
-    useSpatialIndex: false
-  });
-
-  /**
-   * @type {ol.layer.Vector}
-   * @private
-   */
-  this.layer_ = new ol.layer.Vector({
-    source: this.source_,
-    style: goog.bind(this.styleFunction_, this),
-    updateWhileAnimating: true,
-    updateWhileInteracting: true
-  });
-
-};
-
-
-/**
- * @param {ol.Feature} feature The feature to add.
- * @param {number} groupIndex The group groupIndex.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.addFeature = function(feature, groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  var featureUid = goog.getUid(feature).toString();
-  this.featureUidToGroupIndex_[featureUid] = groupIndex;
-  this.groups_[groupIndex].features[featureUid] = feature;
-  this.source_.addFeature(feature);
-};
-
-
-/**
- * @param {ol.Feature} feature The feature to add.
- * @param {number} groupIndex The group groupIndex.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.removeFeature = function(feature, groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  var featureUid = goog.getUid(feature).toString();
-  delete this.featureUidToGroupIndex_[featureUid];
-  delete this.groups_[groupIndex].features[featureUid];
-  this.source_.removeFeature(feature);
-};
-
-
-/**
- * @param {number} groupIndex The group groupIndex.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.clear = function(groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  var group = this.groups_[groupIndex];
-  for (var featureUid in group.features) {
-    this.removeFeature(group.features[featureUid], groupIndex);
-  }
-  goog.asserts.assert(goog.object.isEmpty(group.features));
-};
-
-
-/**
- * @return {ol.layer.Vector} The vector layer used internally.
- */
-ngeo.FeatureOverlayMgr.prototype.getLayer = function() {
-  return this.layer_;
-};
-
-
-/**
- * @return {ngeo.FeatureOverlay} Feature overlay.
- */
-ngeo.FeatureOverlayMgr.prototype.getFeatureOverlay = function() {
-  var groupIndex = this.groups_.length;
-  this.groups_.push({
-    styleFunction: ol.style.defaultStyleFunction,
-    features: {}
-  });
-  return new ngeo.FeatureOverlay(this, groupIndex);
-};
-
-
-/**
- * @param {ol.Map} map Map.
- */
-ngeo.FeatureOverlayMgr.prototype.init = function(map) {
-  this.layer_.setMap(map);
-};
-
-
-/**
- * @param {ol.style.Style|Array.<ol.style.Style>|ol.style.StyleFunction} style
- * Style.
- * @param {number} groupIndex Group index.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.setStyle = function(style, groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  this.groups_[groupIndex].styleFunction = goog.isNull(style) ?
-      ol.style.defaultStyleFunction : ol.style.createStyleFunction(style);
-};
-
-
-/**
- * @param {ol.Feature|ol.render.Feature} feature Feature.
- * @param {number} resolution Resolution.
- * @return {Array.<ol.style.Style>|ol.style.Style} Styles.
- * @private
- */
-ngeo.FeatureOverlayMgr.prototype.styleFunction_ =
-    function(feature, resolution) {
-  var featureUid = goog.getUid(feature).toString();
-  goog.asserts.assert(featureUid in this.featureUidToGroupIndex_);
-  var groupIndex = this.featureUidToGroupIndex_[featureUid];
-  var group = this.groups_[groupIndex];
-  return group.styleFunction(feature, resolution);
-};
-
-
-
-/**
- * @constructor
- * @param {ngeo.FeatureOverlayMgr} manager The feature overlay manager.
- * @param {number} index This feature overlay's index.
- */
-ngeo.FeatureOverlay = function(manager, index) {
-
-  /**
-   * @type {ngeo.FeatureOverlayMgr}
-   * @private
-   */
-  this.manager_ = manager;
-
-  /**
-   * @type {ol.Collection.<ol.Feature>}
-   * @private
-   */
-  this.features_ = null;
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.index_ = index;
-};
-
-
-/**
- * Add a feature to the feature overlay.
- * @param {ol.Feature} feature The feature to add.
- */
-ngeo.FeatureOverlay.prototype.addFeature = function(feature) {
-  this.manager_.addFeature(feature, this.index_);
-};
-
-
-/**
- * Remove a feature from the feature overlay.
- * @param {ol.Feature} feature The feature to add.
- */
-ngeo.FeatureOverlay.prototype.removeFeature = function(feature) {
-  this.manager_.removeFeature(feature, this.index_);
-};
-
-
-/**
- * Remove all the features from the feature overlay.
- */
-ngeo.FeatureOverlay.prototype.clear = function() {
-  this.manager_.clear(this.index_);
-};
-
-
-/**
- * Configure this feature overlay with a feature collection. Features added
- * to the collection are also added to the overlay. Same for removal. If you
- * configure the feature overlay with a feature collection you will use the
- * collection to add and remove features instead of using the overlay's
- * `addFeature`, `removeFeature` and `clear` functions.
- * @param {ol.Collection.<ol.Feature>} features Feature collection.
- */
-ngeo.FeatureOverlay.prototype.setFeatures = function(features) {
-  if (!goog.isNull(this.features_)) {
-    this.features_.clear();
-    goog.events.unlisten(this.features_, ol.CollectionEventType.ADD,
-        this.handleFeatureAdd_, false, this);
-    goog.events.unlisten(this.features_, ol.CollectionEventType.REMOVE,
-        this.handleFeatureRemove_, false, this);
-  }
-  if (!goog.isNull(features)) {
-    features.forEach(function(feature) {
-      this.addFeature(feature);
-    }, this);
-    goog.events.listen(features, ol.CollectionEventType.ADD,
-        this.handleFeatureAdd_, false, this);
-    goog.events.listen(features, ol.CollectionEventType.REMOVE,
-        this.handleFeatureRemove_, false, this);
-  }
-  this.features_ = features;
-};
-
-
-/**
- * Set a style for the feature overlay.
- * @param {ol.style.Style|Array.<ol.style.Style>|ol.style.StyleFunction} style
- * Style.
- */
-ngeo.FeatureOverlay.prototype.setStyle = function(style) {
-  this.manager_.setStyle(style, this.index_);
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Feature collection event.
- * @private
- */
-ngeo.FeatureOverlay.prototype.handleFeatureAdd_ = function(evt) {
-  var feature = /** @type {ol.Feature} */ (evt.element);
-  this.addFeature(feature);
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Feature collection event.
- * @private
- */
-ngeo.FeatureOverlay.prototype.handleFeatureRemove_ = function(evt) {
-  var feature = /** @type {ol.Feature} */ (evt.element);
-  this.removeFeature(feature);
-};
-
-
-ngeoModule.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
-
 goog.provide('ngeo.GetBrowserLanguage');
 
 goog.require('ngeo');
@@ -127240,18 +127437,16 @@ ngeo.getBrowserLanguageFactory = function($window) {
         if (!goog.isArray(browserLanguages)) {
           browserLanguages = [browserLanguages];
         }
-        browserLanguages = goog.array.map(browserLanguages, function(item) {
+        browserLanguages = browserLanguages.map(function(item) {
           return item.substring(0, 2);
         });
         // remove duplicated language codes
-        browserLanguages = goog.array.filter(browserLanguages,
-            function(item, index, arr) {
-              return arr.indexOf(item) == index;
-            });
-        var supportedLanguages = goog.array.filter(browserLanguages,
-            function(item) {
-              return availableLanguages.indexOf(item) != -1;
-            });
+        browserLanguages = browserLanguages.filter(function(item, index, arr) {
+          return arr.indexOf(item) == index;
+        });
+        var supportedLanguages = browserLanguages.filter(function(item) {
+          return availableLanguages.indexOf(item) != -1;
+        });
         return supportedLanguages[0];
       });
 };
@@ -127808,7 +128003,7 @@ ngeo.Print.prototype.encodeMap_ = function(map, scale, object) {
   goog.asserts.assert(!goog.isNull(layersCollection));
   var layers = layersCollection.getArray().slice().reverse();
 
-  goog.array.forEach(layers,
+  layers.forEach(
       /**
        * @param {ol.layer.Layer} layer Layer.
        * @param {number} idx Index.
@@ -127883,9 +128078,9 @@ ngeo.Print.prototype.encodeWmsLayer_ = function(arr, opacity, url, params) {
   var customParams = {'TRANSPARENT': true};
   goog.object.extend(customParams, params);
 
-  goog.object.remove(customParams, 'LAYERS');
-  goog.object.remove(customParams, 'FORMAT');
-  goog.object.remove(customParams, 'VERSION');
+  delete customParams['LAYERS'];
+  delete customParams['FORMAT'];
+  delete customParams['VERSION'];
 
   var object = /** @type {MapFishPrintWmsLayer} */ ({
     baseURL: ngeo.Print.getAbsoluteUrl_(url),
@@ -127962,7 +128157,7 @@ ngeo.Print.prototype.encodeTileWmtsLayer_ = function(arr, layer) {
   }
 
   var dimensions = source.getDimensions();
-  var dimensionKeys = goog.object.getKeys(dimensions);
+  var dimensionKeys = Object.keys(dimensions);
 
   var object = /** @type {MapFishPrintWmtsLayer} */ ({
     baseURL: this.getWmtsUrl_(source),
