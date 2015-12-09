@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: filereaderDirective <small>directive:ngeoFilereader</small></title>
+    <title>JSDoc: Class: desktopGeolocationDirective <small>directive:ngeoDesktopGeolocation</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: filereaderDirective <small>directive:ngeoFilereader</small></h1>
+    <h1 class="page-title">Class: desktopGeolocationDirective <small>directive:ngeoDesktopGeolocation</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="filereaderDirective">
-            <span class="ancestors">ngeo.</span>filereaderDirective
+        <h2 id="desktopGeolocationDirective">
+            <span class="ancestors">ngeo.</span>desktopGeolocationDirective
         </h2>
         
     
@@ -42,18 +42,14 @@
 
     
 
-    <h4 class="name" id="filereaderDirective"><span class="type-signature"></span>new filereaderDirective<span class="signature">($window)</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
+    <h4 class="name" id="desktopGeolocationDirective"><span class="type-signature"></span>new desktopGeolocationDirective<span class="signature">()</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>This directive is to used on an input file element. When a file is selected
-the directive uses the browser <code>FileReader</code> API to read the file. The file
-content is provided to the directive user through the assignable expression.
-Only works for text files (<code>readAsText</code> used for reading the file). And does
-not work in Internet Explorer 9.</p>
+    <p>Provide a &quot;desktop geolocation&quot; directive.</p>
 </div>
 
 
@@ -62,55 +58,6 @@ not work in Internet Explorer 9.</p>
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>$window</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">angular.$window</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Angular $window service.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -146,7 +93,7 @@ not work in Internet Explorer 9.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_filereader.js.html">src/directives/filereader.js</a>, <a href="src_directives_filereader.js.html#line23">line 23</a>
+        <a href="src_directives_desktopgeolocation.js.html">src/directives/desktopgeolocation.js</a>, <a href="src_directives_desktopgeolocation.js.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -173,7 +120,7 @@ not work in Internet Explorer 9.</p>
 
         
 <div class="param-desc">
-    <p>Directive Definition Object.</p>
+    <p>The Directive Definition Object.</p>
 </div>
 
 
@@ -195,8 +142,10 @@ not work in Internet Explorer 9.</p>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>&lt;input type="file" ngeo-filereader="ctrl.fileContent"
-       ngeo-filereader-supported="ctrl.supported"/></code></pre>
+    <pre class="prettyprint"><code>&lt;button ngeo-desktop-geolocation=""
+  ngeo-desktop-geolocation-map="ctrl.map"
+  ngeo-desktop-geolocation-options="ctrl.desktopGeolocationOptions">
+&lt;/button></code></pre>
 
 
 
