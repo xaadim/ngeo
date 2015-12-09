@@ -121666,12 +121666,11 @@ ngeo.BtnGroupController = function($scope) {
  * @param {number} index Index of the button in buttons array.
  */
 ngeo.BtnGroupController.prototype.activate = function(index) {
-  goog.array.forEach(this.buttons_,
-      function(s, i) {
-        if (i != index) {
-          s(this.scope_, false);
-        }
-      }, this);
+  this.buttons_.forEach(function(s, i) {
+    if (i != index) {
+      s(this.scope_, false);
+    }
+  }, this);
 };
 
 
@@ -123217,8 +123216,8 @@ ngeo.ScaleselectorController = function($scope, $element, $attrs) {
       ($scope.$eval(scalesExpr));
   goog.asserts.assert(goog.isDef(this['scales']));
 
-  var zoomLevels = goog.array.map(goog.object.getKeys(this['scales']), Number);
-  goog.array.sort(zoomLevels);
+  var zoomLevels = Object.keys(this['scales']).map(Number);
+  zoomLevels.sort();
 
   /**
    * @type {Array.<number>}
@@ -127144,7 +127143,6 @@ ngeoModule.service('ngeoBackgroundLayerMgr', ngeo.BackgroundLayerMgr);
 
 goog.provide('ngeo.CreateGeoJSONBloodhound');
 
-goog.require('goog.array');
 goog.require('ngeo');
 goog.require('ol.format.GeoJSON');
 
@@ -127217,7 +127215,7 @@ ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
         if (goog.isDef(opt_filter)) {
           featureCollection = /** @type {GeoJSONFeatureCollection} */ ({
             type: 'FeatureCollection',
-            features: goog.array.filter(featureCollection.features, opt_filter)
+            features: featureCollection.features.filter(opt_filter)
           });
         }
 
@@ -127439,18 +127437,16 @@ ngeo.getBrowserLanguageFactory = function($window) {
         if (!goog.isArray(browserLanguages)) {
           browserLanguages = [browserLanguages];
         }
-        browserLanguages = goog.array.map(browserLanguages, function(item) {
+        browserLanguages = browserLanguages.map(function(item) {
           return item.substring(0, 2);
         });
         // remove duplicated language codes
-        browserLanguages = goog.array.filter(browserLanguages,
-            function(item, index, arr) {
-              return arr.indexOf(item) == index;
-            });
-        var supportedLanguages = goog.array.filter(browserLanguages,
-            function(item) {
-              return availableLanguages.indexOf(item) != -1;
-            });
+        browserLanguages = browserLanguages.filter(function(item, index, arr) {
+          return arr.indexOf(item) == index;
+        });
+        var supportedLanguages = browserLanguages.filter(function(item) {
+          return availableLanguages.indexOf(item) != -1;
+        });
         return supportedLanguages[0];
       });
 };
@@ -128007,7 +128003,7 @@ ngeo.Print.prototype.encodeMap_ = function(map, scale, object) {
   goog.asserts.assert(!goog.isNull(layersCollection));
   var layers = layersCollection.getArray().slice().reverse();
 
-  goog.array.forEach(layers,
+  layers.forEach(
       /**
        * @param {ol.layer.Layer} layer Layer.
        * @param {number} idx Index.
@@ -128082,9 +128078,9 @@ ngeo.Print.prototype.encodeWmsLayer_ = function(arr, opacity, url, params) {
   var customParams = {'TRANSPARENT': true};
   goog.object.extend(customParams, params);
 
-  goog.object.remove(customParams, 'LAYERS');
-  goog.object.remove(customParams, 'FORMAT');
-  goog.object.remove(customParams, 'VERSION');
+  delete customParams['LAYERS'];
+  delete customParams['FORMAT'];
+  delete customParams['VERSION'];
 
   var object = /** @type {MapFishPrintWmsLayer} */ ({
     baseURL: ngeo.Print.getAbsoluteUrl_(url),
@@ -128161,7 +128157,7 @@ ngeo.Print.prototype.encodeTileWmtsLayer_ = function(arr, layer) {
   }
 
   var dimensions = source.getDimensions();
-  var dimensionKeys = goog.object.getKeys(dimensions);
+  var dimensionKeys = Object.keys(dimensions);
 
   var object = /** @type {MapFishPrintWmtsLayer} */ ({
     baseURL: this.getWmtsUrl_(source),
