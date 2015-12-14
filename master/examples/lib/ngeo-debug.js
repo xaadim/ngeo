@@ -70730,7 +70730,7 @@ ol.featureloader.loadFeaturesXhr = function(url, format, success, failure) {
                     var dataUnits = format.readProjection(source).getUnits();
                     if (dataUnits === ol.proj.Units.TILE_PIXELS) {
                       projection = new ol.proj.Projection({
-                        code: projection.getCode(),
+                        code: this.getProjection().getCode(),
                         units: dataUnits
                       });
                       this.setProjection(projection);
@@ -101455,7 +101455,7 @@ VectorTileFeature.prototype.toGeoJSON = function(x, y, z) {
         type = 'MultiLineString';
     }
 
-    return {
+    var result = {
         type: "Feature",
         geometry: {
             type: type,
@@ -101463,6 +101463,12 @@ VectorTileFeature.prototype.toGeoJSON = function(x, y, z) {
         },
         properties: this.properties
     };
+
+    if ('_id' in this) {
+        result.id = this._id;
+    }
+
+    return result;
 };
 
 },{"point-geometry":5}],4:[function(_dereq_,module,exports){
@@ -114437,9 +114443,8 @@ ol.reproj.TileFunctionType;
  * @param {ol.tilegrid.TileGrid} sourceTileGrid Source tile grid.
  * @param {ol.proj.Projection} targetProj Target projection.
  * @param {ol.tilegrid.TileGrid} targetTileGrid Target tile grid.
- * @param {number} z Zoom level.
- * @param {number} x X.
- * @param {number} y Y.
+ * @param {ol.TileCoord} tileCoord Coordinate of the tile.
+ * @param {ol.TileCoord} wrappedTileCoord Coordinate of the tile wrapped in X.
  * @param {number} pixelRatio Pixel ratio.
  * @param {ol.reproj.TileFunctionType} getTileFunction
  *     Function returning source tiles (z, x, y, pixelRatio).
@@ -114447,10 +114452,11 @@ ol.reproj.TileFunctionType;
  * @param {boolean=} opt_renderEdges Render reprojection edges.
  */
 ol.reproj.Tile = function(sourceProj, sourceTileGrid,
-    targetProj, targetTileGrid, z, x, y, pixelRatio, getTileFunction,
+    targetProj, targetTileGrid, tileCoord, wrappedTileCoord,
+    pixelRatio, getTileFunction,
     opt_errorThreshold,
     opt_renderEdges) {
-  goog.base(this, [z, x, y], ol.TileState.IDLE);
+  goog.base(this, tileCoord, ol.TileState.IDLE);
 
   /**
    * @private
@@ -114490,6 +114496,12 @@ ol.reproj.Tile = function(sourceProj, sourceTileGrid,
 
   /**
    * @private
+   * @type {ol.TileCoord}
+   */
+  this.wrappedTileCoord_ = wrappedTileCoord ? wrappedTileCoord : tileCoord;
+
+  /**
+   * @private
    * @type {!Array.<ol.Tile>}
    */
   this.sourceTiles_ = [];
@@ -114506,7 +114518,7 @@ ol.reproj.Tile = function(sourceProj, sourceTileGrid,
    */
   this.sourceZ_ = 0;
 
-  var targetExtent = targetTileGrid.getTileCoordExtent(this.getTileCoord());
+  var targetExtent = targetTileGrid.getTileCoordExtent(this.wrappedTileCoord_);
   var maxTargetExtent = this.targetTileGrid_.getExtent();
   var maxSourceExtent = this.sourceTileGrid_.getExtent();
 
@@ -114530,7 +114542,8 @@ ol.reproj.Tile = function(sourceProj, sourceTileGrid,
     }
   }
 
-  var targetResolution = targetTileGrid.getResolution(z);
+  var targetResolution = targetTileGrid.getResolution(
+      this.wrappedTileCoord_[0]);
 
   var targetCenter = ol.extent.getCenter(limitedTargetExtent);
   var sourceResolution = ol.reproj.calculateSourceResolution(
@@ -114652,15 +114665,15 @@ ol.reproj.Tile.prototype.reproject_ = function() {
   }, this);
   this.sourceTiles_.length = 0;
 
-  var tileCoord = this.getTileCoord();
-  var z = tileCoord[0];
+  var z = this.wrappedTileCoord_[0];
   var size = this.targetTileGrid_.getTileSize(z);
   var width = goog.isNumber(size) ? size : size[0];
   var height = goog.isNumber(size) ? size : size[1];
   var targetResolution = this.targetTileGrid_.getResolution(z);
   var sourceResolution = this.sourceTileGrid_.getResolution(this.sourceZ_);
 
-  var targetExtent = this.targetTileGrid_.getTileCoordExtent(tileCoord);
+  var targetExtent = this.targetTileGrid_.getTileCoordExtent(
+      this.wrappedTileCoord_);
   this.canvas_ = ol.reproj.render(width, height, this.pixelRatio_,
       sourceResolution, this.sourceTileGrid_.getExtent(),
       targetResolution, targetExtent, this.triangulation_, sources,
@@ -115667,17 +115680,20 @@ ol.source.TileImage.prototype.getTile =
     return this.getTileInternal(z, x, y, pixelRatio, projection);
   } else {
     var cache = this.getTileCacheForProjection(projection);
-    var tileCoordKey = this.getKeyZXY(z, x, y);
+    var tileCoord = [z, x, y];
+    var tileCoordKey = this.getKeyZXY.apply(this, tileCoord);
     if (cache.containsKey(tileCoordKey)) {
       return /** @type {!ol.Tile} */ (cache.get(tileCoordKey));
     } else {
       var sourceProjection = this.getProjection();
       var sourceTileGrid = this.getTileGridForProjection(sourceProjection);
       var targetTileGrid = this.getTileGridForProjection(projection);
+      var wrappedTileCoord =
+          this.getTileCoordForTileUrlFunction(tileCoord, projection);
       var tile = new ol.reproj.Tile(
           sourceProjection, sourceTileGrid,
           projection, targetTileGrid,
-          z, x, y, this.getTilePixelRatio(),
+          tileCoord, wrappedTileCoord, this.getTilePixelRatio(),
           goog.bind(function(z, x, y, pixelRatio) {
             return this.getTileInternal(z, x, y, pixelRatio, sourceProjection);
           }, this), this.reprojectionErrorThreshold_,
@@ -118169,7 +118185,9 @@ ol.source.TileArcGISRest.prototype.getRequestUrl_ =
   params['BBOX'] = tileExtent.join(',');
   params['BBOXSR'] = srid;
   params['IMAGESR'] = srid;
-  params['DPI'] = Math.round(90 * pixelRatio);
+  params['DPI'] = Math.round(
+      params['DPI'] ? params['DPI'] * pixelRatio : 90 * pixelRatio
+      );
 
   var url;
   if (urls.length == 1) {
@@ -122858,6 +122876,21 @@ ngeo.MobileGeolocationController = function($scope, $element,
    */
   this.zoom_ = options.zoom;
 
+  /**
+   * Whether to recenter the map at the position it gets updated
+   * @type {boolean}
+   * @private
+   */
+  this.follow_ = false;
+
+  /**
+   * A flag used to determine whether the view was changed by me or something
+   * else. In the latter case, stop following.
+   * @type {boolean}
+   * @private
+   */
+  this.viewChangedByMe_ = false;
+
   goog.events.listen(
       this.geolocation_,
       ol.Object.getChangeEventType(ol.GeolocationProperty.ACCURACY_GEOMETRY),
@@ -122874,6 +122907,29 @@ ngeo.MobileGeolocationController = function($scope, $element,
       function(e) {
         this.setPosition_(e);
       },
+      false,
+      this);
+
+  var view = map.getView();
+
+  goog.events.listen(
+      view,
+      ol.Object.getChangeEventType(ol.ViewProperty.CENTER),
+      this.handleViewChange_,
+      false,
+      this);
+
+  goog.events.listen(
+      view,
+      ol.Object.getChangeEventType(ol.ViewProperty.RESOLUTION),
+      this.handleViewChange_,
+      false,
+      this);
+
+  goog.events.listen(
+      view,
+      ol.Object.getChangeEventType(ol.ViewProperty.ROTATION),
+      this.handleViewChange_,
       false,
       this);
 
@@ -122908,6 +122964,7 @@ ngeo.MobileGeolocationController.prototype.toggleTracking = function() {
 ngeo.MobileGeolocationController.prototype.track_ = function() {
   this.featureOverlay_.addFeature(this.positionFeature_);
   this.featureOverlay_.addFeature(this.accuracyFeature_);
+  this.follow_ = true;
   this.geolocation_.setTracking(true);
 };
 
@@ -122917,6 +122974,7 @@ ngeo.MobileGeolocationController.prototype.track_ = function() {
  */
 ngeo.MobileGeolocationController.prototype.untrack_ = function() {
   this.featureOverlay_.clear();
+  this.follow_ = false;
   this.geolocation_.setTracking(false);
 };
 
@@ -122931,10 +122989,25 @@ ngeo.MobileGeolocationController.prototype.setPosition_ = function(event) {
       (this.positionFeature_.getGeometry());
 
   point.setCoordinates(position);
-  this.map_.getView().setCenter(position);
 
-  if (this.zoom_ !== undefined) {
-    this.map_.getView().setZoom(this.zoom_);
+  if (this.follow_) {
+    this.viewChangedByMe_ = true;
+    this.map_.getView().setCenter(position);
+    if (this.zoom_ !== undefined) {
+      this.map_.getView().setZoom(this.zoom_);
+    }
+    this.viewChangedByMe_ = false;
+  }
+};
+
+
+/**
+ * @param {ol.ObjectEvent} event Event.
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.handleViewChange_ = function(event) {
+  if (this.follow_ && !this.viewChangedByMe_) {
+    this.follow_ = false;
   }
 };
 
