@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DecorateGeolocation <small>service:ngeoDecorateGeolocation</small></title>
+    <title>JSDoc: Source: contribs/gmf/src/controllers/abstractmobile.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,138 +17,191 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DecorateGeolocation <small>service:ngeoDecorateGeolocation</small></h1>
+    <h1 class="page-title">Source: contribs/gmf/src/controllers/abstractmobile.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2 id="DecorateGeolocation">
-            <span class="ancestors">ngeo.</span>DecorateGeolocation
-        </h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-
-    <h4 class="name" id="DecorateGeolocation"><span class="type-signature"></span>new DecorateGeolocation<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Provides a function that adds a &quot;tracking&quot; property (using
-<code>Object.defineProperty</code>) to the <code>ol.Geolocation</code> instance, making it
-possible to activate/deactivate the tracking mode.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_decorategeolocation.js.html">src/services/decorategeolocation.js</a>, <a href="src_services_decorategeolocation.js.html#line19">line 19</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;input type="checkbox" ngModel="geolocation.tracking" /></code></pre>
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Application entry point.
+ *
+ * This file defines the "app_mobile" Closure namespace, which is be used as the
+ * Closure entry point (see "closure_entry_point" in the "build.json" file).
+ *
+ * This file includes `goog.require`'s for all the components/directives used
+ * by the HTML page and the controller to provide the configuration.
+ */
+goog.provide('gmf.AbstractMobileController');
+
+goog.require('gmf');
+goog.require('gmf.mapDirective');
+goog.require('gmf.mobileNavDirective');
+goog.require('gmf.proj.EPSG21781');
+goog.require('gmf.searchDirective');
+goog.require('ngeo.FeatureOverlayMgr');
+goog.require('ngeo.mobileGeolocationDirective');
+goog.require('ol.Map');
+goog.require('ol.View');
+goog.require('ol.control.ScaleLine');
+goog.require('ol.control.Zoom');
+goog.require('ol.layer.Tile');
+goog.require('ol.source.OSM');
+goog.require('ol.style.Circle');
+goog.require('ol.style.Fill');
+goog.require('ol.style.Stroke');
+goog.require('ol.style.Style');
+
+
+gmfModule.constant('isMobile', true);
+
+
+
+/**
+ * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
+ *     overlay manager service.
+ * @param {Object} serverVars vars from GMF
+ * @constructor
+ * @ngInject
+ * @export
+ */
+gmf.AbstractMobileController = function(ngeoFeatureOverlayMgr, serverVars) {
+
+  /**
+   * @type {Array.&lt;gmfx.SearchDirectiveDatasource>}
+   * @export
+   */
+  this.searchDatasources = [{
+    datasetTitle: 'Internal',
+    labelKey: 'label',
+    groupsKey: 'layer_name',
+    groupValues: ['osm'],
+    projection: 'EPSG:21781',
+    url: serverVars['serviceUrls']['fulltextsearch']
+  }];
+
+  /**
+   * @type {boolean}
+   * @export
+   */
+  this.leftNavVisible = false;
+
+  /**
+   * @type {boolean}
+   * @export
+   */
+  this.rightNavVisible = false;
+
+  var positionFeatureStyle = new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: 6,
+      fill: new ol.style.Fill({color: 'rgba(230, 100, 100, 1)'}),
+      stroke: new ol.style.Stroke({color: 'rgba(230, 40, 40, 1)', width: 2})
+    })
+  });
+
+  var accuracyFeatureStyle = new ol.style.Style({
+    fill: new ol.style.Fill({color: 'rgba(100, 100, 230, 0.3)'}),
+    stroke: new ol.style.Stroke({color: 'rgba(40, 40, 230, 1)', width: 2})
+  });
+
+  /**
+   * @type {ngeox.MobileGeolocationDirectiveOptions}
+   * @export
+   */
+  this.mobileGeolocationOptions = {
+    positionFeatureStyle: positionFeatureStyle,
+    accuracyFeatureStyle: accuracyFeatureStyle,
+    zoom: 17
+  };
+
+  /**
+   * @type {ol.Map}
+   * @export
+   */
+  this.map = new ol.Map({
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+    ],
+    view: new ol.View({
+      center: [0, 0],
+      zoom: 2
+    }),
+    controls: [
+      new ol.control.ScaleLine(),
+      new ol.control.Zoom()
+    ]
+  });
+
+  ngeoFeatureOverlayMgr.init(this.map);
+
+};
+
+
+/**
+ * @export
+ */
+gmf.AbstractMobileController.prototype.toggleLeftNavVisibility = function() {
+  this.leftNavVisible = !this.leftNavVisible;
+};
+
+
+/**
+ * @export
+ */
+gmf.AbstractMobileController.prototype.toggleRightNavVisibility = function() {
+  this.rightNavVisible = !this.rightNavVisible;
+};
+
+
+/**
+ * Hide both navigation menus.
+ * @export
+ */
+gmf.AbstractMobileController.prototype.hideNav = function() {
+  this.leftNavVisible = this.rightNavVisible = false;
+};
+
+
+/**
+ * @return {boolean} Return true if one of the navigation menus is visible,
+ * otherwise false.
+ * @export
+ */
+gmf.AbstractMobileController.prototype.navIsVisible = function() {
+  return this.leftNavVisible || this.rightNavVisible;
+};
+
+
+/**
+ * @return {boolean} Return true if the left navigation menus is visible,
+ * otherwise false.
+ * @export
+ */
+gmf.AbstractMobileController.prototype.leftNavIsVisible = function() {
+  return this.leftNavVisible;
+};
+
+
+/**
+ * @return {boolean} Return true if the right navigation menus is visible,
+ * otherwise false.
+ * @export
+ */
+gmf.AbstractMobileController.prototype.rightNavIsVisible = function() {
+  return this.rightNavVisible;
+};
+
+
+gmfModule.controller('AbstractMobileController', gmf.AbstractMobileController);
+</code></pre>
+        </article>
+    </section>
 
 
 
