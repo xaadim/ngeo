@@ -70903,7 +70903,8 @@ var define;
  https://github.com/mourner/rbush
 */
 
-(function () { 'use strict';
+(function () {
+'use strict';
 
 function rbush(maxEntries, format) {
 
@@ -71132,12 +71133,11 @@ rbush.prototype = {
             M = Math.ceil(N / Math.pow(M, height - 1));
         }
 
-        // TODO eliminate recursion?
-
         node = {
             children: [],
             height: height,
-            bbox: null
+            bbox: null,
+            leaf: false
         };
 
         // split the items into M mostly square tiles
@@ -71243,7 +71243,9 @@ rbush.prototype = {
 
         var newNode = {
             children: node.children.splice(splitIndex, node.children.length - splitIndex),
-            height: node.height
+            height: node.height,
+            bbox: null,
+            leaf: false
         };
 
         if (node.leaf) newNode.leaf = true;
@@ -71259,7 +71261,9 @@ rbush.prototype = {
         // split root node
         this.data = {
             children: [node, newNode],
-            height: node.height + 1
+            height: node.height + 1,
+            bbox: null,
+            leaf: false
         };
         calcBBox(this.data, this.toBBox);
     },
@@ -71508,7 +71512,7 @@ function swap(arr, i, j) {
 
 
 // export as AMD/CommonJS module or global variable
-if (typeof define === 'function' && define.amd) define('rbush', function() { return rbush; });
+if (typeof define === 'function' && define.amd) define('rbush', function () { return rbush; });
 else if (typeof module !== 'undefined') module.exports = rbush;
 else if (typeof self !== 'undefined') self.rbush = rbush;
 else window.rbush = rbush;
@@ -129525,12 +129529,6 @@ ngeo.StateManager = function(ngeoLocation) {
    */
   this.localStorage = new goog.storage.mechanism.HTML5LocalStorage();
 
-  /**
-   * @type {number}
-   */
-  this.version = -1;
-
-
   // Populate initialState with the application's initial state. The initial
   // state is read from the location URL, or from the local storage if there
   // is no state in the location URL.
@@ -129548,29 +129546,15 @@ ngeo.StateManager = function(ngeoLocation) {
         this.initialState[key] = this.localStorage.get(key);
       }
     }
-    this.version = 3;
   } else {
     var keys = ngeoLocation.getParamKeys();
     for (i = 0; i < keys.length; ++i) {
       key = keys[i];
       this.initialState[key] = ngeoLocation.getParam(key);
     }
-    this.version = this.initialState.hasOwnProperty('version') ?
-        goog.math.clamp(+this.initialState['version'], 2, 3) : 2;
   }
-  goog.asserts.assert(this.version != -1);
 
-  this.ngeoLocation.updateParams({'version': 3});
-};
-
-
-/**
- * Return the version as set in the initial URL (the URL that user
- * used to load the application in the browser).
- * @return {number} Version.
- */
-ngeo.StateManager.prototype.getVersion = function() {
-  return this.version;
+  this.ngeoLocation.updateParams({});
 };
 
 
