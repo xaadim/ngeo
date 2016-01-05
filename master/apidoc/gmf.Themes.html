@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="Themes"><span class="type-signature"></span>new Themes<span class="signature">($http, treeUrl, isThemePrivateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Themes"><span class="type-signature"></span>new Themes<span class="signature">($http)</span><span class="type-signature"></span></h4>
 
     
 
@@ -101,52 +101,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>treeUrl</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>URL to &quot;themes&quot; web service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>isThemePrivateUrl</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>URL to check if theme is public.</p></td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -184,7 +138,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line43">line 43</a>
+        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -295,7 +249,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line105">line 105</a>
+        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -448,7 +402,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line133">line 133</a>
+        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line146">line 146</a>
     </li></ul></dd>
     
 
@@ -552,7 +506,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line151">line 151</a>
+        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -605,11 +559,15 @@
 
     
 
-    <h4 class="name" id="isThemePrivate"><span class="type-signature"></span>isThemePrivate<span class="signature">(themeId)</span><span class="type-signature"> &rarr; {angular.$q.Promise}</span></h4>
+    <h4 class="name" id="init"><span class="type-signature"></span>init<span class="signature">(treeUrl)</span><span class="type-signature"></span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Init the service.</p>
+</div>
 
 
 
@@ -644,7 +602,7 @@
 
         <tr>
             
-                <td class="name"><code>themeId</code></td>
+                <td class="name"><code>treeUrl</code></td>
             
 
             <td class="type">
@@ -660,8 +618,7 @@
 
             
 
-            <td class="description last"><p>The theme id to send in the request.
-checks if the theme is protected or not.</p></td>
+            <td class="description last"><p>URL to &quot;themes&quot; web service.</p></td>
         </tr>
 
     
@@ -702,7 +659,7 @@ checks if the theme is protected or not.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line191">line 191</a>
+        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -725,28 +682,6 @@ checks if the theme is protected or not.</p></td>
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Promise.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">angular.$q.Promise</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -864,7 +799,7 @@ Load themes from the &quot;themes&quot; service.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line170">line 170</a>
+        <a href="contribs_gmf_src_services_themesservice.js.html">contribs/gmf/src/services/themesservice.js</a>, <a href="contribs_gmf_src_services_themesservice.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
