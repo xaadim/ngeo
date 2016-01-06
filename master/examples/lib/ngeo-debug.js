@@ -122380,7 +122380,6 @@ goog.require('ol.Feature');
 goog.require('ol.Geolocation');
 goog.require('ol.Map');
 goog.require('ol.geom.Point');
-goog.require('ol.proj');
 
 
 /**
@@ -122933,7 +122932,6 @@ goog.require('ol.Feature');
 goog.require('ol.Geolocation');
 goog.require('ol.Map');
 goog.require('ol.geom.Point');
-goog.require('ol.proj');
 
 
 /**
@@ -128467,6 +128465,12 @@ goog.provide('ngeo.CreatePopup');
 goog.provide('ngeo.Popup');
 
 goog.require('ngeo');
+
+/**
+ * This goog.require is needed because of 'ngeo-popup' used in
+ * the template.
+ * @suppress {extraRequire}
+ */
 goog.require('ngeo.popupDirective');
 
 
@@ -129631,7 +129635,6 @@ ngeoModule.value('ngeoSyncArrays', ngeo.syncArrays);
 goog.provide('ngeo.ToolActivate');
 goog.provide('ngeo.ToolActivateMgr');
 
-goog.require('goog.asserts');
 goog.require('ngeo');
 
 
@@ -129811,6 +129814,10 @@ ngeoModule.service('ngeoToolActivateMgr', ngeo.ToolActivateMgr);
  * GENERATED FILE. DO NOT EDIT.
  */
 
+/**
+ * This goog.require is needed because it provides ngeoModule.
+ * @suppress {extraRequire}
+ */
 goog.require('ngeo');
 
 (function() {
@@ -129849,6 +129856,11 @@ goog.addDependency('demos/editor/equationeditor.js', ['goog.demos.editor.Equatio
 goog.addDependency('demos/editor/helloworld.js', ['goog.demos.editor.HelloWorld'], ['goog.dom', 'goog.dom.TagName', 'goog.editor.Plugin']);
 goog.addDependency('demos/editor/helloworlddialog.js', ['goog.demos.editor.HelloWorldDialog', 'goog.demos.editor.HelloWorldDialog.OkEvent'], ['goog.dom.TagName', 'goog.events.Event', 'goog.string', 'goog.ui.editor.AbstractDialog', 'goog.ui.editor.AbstractDialog.Builder', 'goog.ui.editor.AbstractDialog.EventType']);
 goog.addDependency('demos/editor/helloworlddialogplugin.js', ['goog.demos.editor.HelloWorldDialogPlugin', 'goog.demos.editor.HelloWorldDialogPlugin.Command'], ['goog.demos.editor.HelloWorldDialog', 'goog.dom.TagName', 'goog.editor.plugins.AbstractDialogPlugin', 'goog.editor.range', 'goog.functions', 'goog.ui.editor.AbstractDialog.EventType']);
+
+/**
+ * @fileoverview Custom exports file.
+ * @suppress {checkVars,extraRequire}
+ */
 
 goog.require('ol');
 goog.require('ol.Attribution');
