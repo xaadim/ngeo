@@ -54247,11 +54247,12 @@ ol.DragBoxEventType = {
  *
  * @param {string} type The event type.
  * @param {ol.Coordinate} coordinate The event coordinate.
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Originating event.
  * @extends {goog.events.Event}
  * @constructor
  * @implements {oli.DragBoxEvent}
  */
-ol.DragBoxEvent = function(type, coordinate) {
+ol.DragBoxEvent = function(type, coordinate, mapBrowserEvent) {
   goog.base(this, type);
 
   /**
@@ -54261,6 +54262,13 @@ ol.DragBoxEvent = function(type, coordinate) {
    * @api stable
    */
   this.coordinate = coordinate;
+
+  /**
+   * @const
+   * @type {ol.MapBrowserEvent}
+   * @api
+   */
+  this.mapBrowserEvent = mapBrowserEvent;
 
 };
 goog.inherits(ol.DragBoxEvent, goog.events.Event);
@@ -54370,7 +54378,7 @@ ol.interaction.DragBox.handleUpEvent_ = function(mapBrowserEvent) {
       ol.DRAG_BOX_HYSTERESIS_PIXELS_SQUARED) {
     this.onBoxEnd(mapBrowserEvent);
     this.dispatchEvent(new ol.DragBoxEvent(ol.DragBoxEventType.BOXEND,
-        mapBrowserEvent.coordinate));
+        mapBrowserEvent.coordinate, mapBrowserEvent));
   }
   return false;
 };
@@ -54393,7 +54401,7 @@ ol.interaction.DragBox.handleDownEvent_ = function(mapBrowserEvent) {
     this.box_.setMap(mapBrowserEvent.map);
     this.box_.setPixels(this.startPixel_, this.startPixel_);
     this.dispatchEvent(new ol.DragBoxEvent(ol.DragBoxEventType.BOXSTART,
-        mapBrowserEvent.coordinate));
+        mapBrowserEvent.coordinate, mapBrowserEvent));
     return true;
   } else {
     return false;
@@ -56003,27 +56011,9 @@ ol.render.canvas.defaultTextBaseline = 'middle';
  */
 ol.render.canvas.defaultLineWidth = 1;
 
-goog.provide('ol.structs.IHasChecksum');
-
-
-
-/**
- * @interface
- */
-ol.structs.IHasChecksum = function() {
-};
-
-
-/**
- * @return {string} The checksum.
- */
-ol.structs.IHasChecksum.prototype.getChecksum = function() {
-};
-
 goog.provide('ol.style.Fill');
 
 goog.require('ol.color');
-goog.require('ol.structs.IHasChecksum');
 
 
 
@@ -56033,7 +56023,6 @@ goog.require('ol.structs.IHasChecksum');
  *
  * @constructor
  * @param {olx.style.FillOptions=} opt_options Options.
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.Fill = function(opt_options) {
@@ -56077,7 +56066,7 @@ ol.style.Fill.prototype.setColor = function(color) {
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.Fill.prototype.getChecksum = function() {
   if (this.checksum_ === undefined) {
@@ -56772,7 +56761,6 @@ goog.provide('ol.style.Stroke');
 goog.require('goog.crypt');
 goog.require('goog.crypt.Md5');
 goog.require('ol.color');
-goog.require('ol.structs.IHasChecksum');
 
 
 
@@ -56785,7 +56773,6 @@ goog.require('ol.structs.IHasChecksum');
  *
  * @constructor
  * @param {olx.style.StrokeOptions=} opt_options Options.
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.Stroke = function(opt_options) {
@@ -56969,7 +56956,7 @@ ol.style.Stroke.prototype.setWidth = function(width) {
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.Stroke.prototype.getChecksum = function() {
   if (this.checksum_ === undefined) {
@@ -57002,7 +56989,6 @@ goog.require('ol');
 goog.require('ol.color');
 goog.require('ol.has');
 goog.require('ol.render.canvas');
-goog.require('ol.structs.IHasChecksum');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Image');
 goog.require('ol.style.ImageState');
@@ -57017,7 +57003,6 @@ goog.require('ol.style.Stroke');
  * @constructor
  * @param {olx.style.CircleOptions=} opt_options Options.
  * @extends {ol.style.Image}
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.Circle = function(opt_options) {
@@ -57416,7 +57401,7 @@ ol.style.Circle.prototype.drawHitDetectionCanvas_ =
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.Circle.prototype.getChecksum = function() {
   var strokeChecksum = this.stroke_ ?
@@ -113006,10 +112991,36 @@ ol.interaction.Select = function(opt_options) {
   this.filter_ = options.filter ? options.filter :
       goog.functions.TRUE;
 
+  var featureOverlay = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      useSpatialIndex: false,
+      features: options.features,
+      wrapX: options.wrapX
+    }),
+    style: options.style ? options.style :
+        ol.interaction.Select.getDefaultStyleFunction(),
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
+  });
+
+  /**
+   * @private
+   * @type {ol.layer.Vector}
+   */
+  this.featureOverlay_ = featureOverlay;
+
   var layerFilter;
   if (options.layers) {
     if (goog.isFunction(options.layers)) {
-      layerFilter = options.layers;
+      layerFilter =
+          /**
+           * @param {ol.layer.Layer} layer Layer.
+           * @return {boolean} Include.
+           */
+          function(layer) {
+        goog.asserts.assertFunction(options.layers);
+        return layer === featureOverlay || options.layers(layer);
+      };
     } else {
       var layers = options.layers;
       layerFilter =
@@ -113018,7 +113029,7 @@ ol.interaction.Select = function(opt_options) {
            * @return {boolean} Include.
            */
           function(layer) {
-        return ol.array.includes(layers, layer);
+        return layer === featureOverlay || ol.array.includes(layers, layer);
       };
     }
   } else {
@@ -113038,22 +113049,6 @@ ol.interaction.Select = function(opt_options) {
    * @type {Object.<number, ol.layer.Layer>}
    */
   this.featureLayerAssociation_ = {};
-
-  /**
-   * @private
-   * @type {ol.layer.Vector}
-   */
-  this.featureOverlay_ = new ol.layer.Vector({
-    source: new ol.source.Vector({
-      useSpatialIndex: false,
-      features: options.features,
-      wrapX: options.wrapX
-    }),
-    style: options.style ? options.style :
-        ol.interaction.Select.getDefaultStyleFunction(),
-    updateWhileAnimating: true,
-    updateWhileInteracting: true
-  });
 
   var features = this.featureOverlay_.getSource().getFeaturesCollection();
   goog.events.listen(features, ol.CollectionEventType.ADD,
@@ -113170,9 +113165,11 @@ ol.interaction.Select.handleEvent = function(mapBrowserEvent) {
          * @param {ol.layer.Layer} layer Layer.
          */
         function(feature, layer) {
-          if (!ol.array.includes(features.getArray(), feature)) {
+          if (layer !== this.featureOverlay_) {
             if (add || toggle) {
-              if (this.filter_(feature, layer)) {
+              if (this.filter_(feature, layer) &&
+                  !ol.array.includes(features.getArray(), feature) &&
+                  !ol.array.includes(selected, feature)) {
                 selected.push(feature);
                 this.addFeatureLayerAssociation_(feature, layer);
               }
@@ -120698,7 +120695,6 @@ goog.require('ol');
 goog.require('ol.color');
 goog.require('ol.has');
 goog.require('ol.render.canvas');
-goog.require('ol.structs.IHasChecksum');
 goog.require('ol.style.AtlasManager');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Image');
@@ -120716,7 +120712,6 @@ goog.require('ol.style.Stroke');
  * @constructor
  * @param {olx.style.RegularShapeOptions} options Options.
  * @extends {ol.style.Image}
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.RegularShape = function(options) {
@@ -121210,7 +121205,7 @@ ol.style.RegularShape.prototype.drawHitDetectionCanvas_ =
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.RegularShape.prototype.getChecksum = function() {
   var strokeChecksum = this.stroke_ ?
@@ -121819,15 +121814,44 @@ goog.require('ngeo');
  * In that example the ngeo-btn are combined together in a "toggle group",
  * where activating a button will deactivate the others.
  *
+ * One can use `ng-model` directive at the group level in order to know if
+ * a button is active.
+ *
+ * Example:
+ *
+ *     <div ngeo-btn-group ngeo-btn-group-active="ctrl.drawToolActive">
+ *
+ * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
  * @ngname ngeoBtnGroup
  */
-ngeo.btngroupDirective = function() {
+ngeo.btngroupDirective = function($parse) {
   return {
     restrict: 'A',
-    controller: 'ngeoBtnGroupController'
+    controller: 'ngeoBtnGroupController',
+    link:
+        /**
+         * @param {!angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         * @param {!Object} controller Controller.
+         */
+        function(scope, element, attrs, controller) {
+          var setActive = $parse(attrs['ngeoBtnGroupActive']).assign;
+
+          if (setActive) {
+            scope.$watch(function() {
+              // return true if at least one button is active otherwise false
+              return controller.buttons_.some(function(buttonModel) {
+                return (buttonModel(scope) === true);
+              });
+            }, function(newValue) {
+              setActive(scope, newValue);
+            });
+          }
+        }
   };
 };
 
@@ -121845,7 +121869,7 @@ ngeoModule.directive('ngeoBtnGroup', ngeo.btngroupDirective);
  */
 ngeo.BtnGroupController = function($scope) {
   /**
-   * @type {Array.<function(!angular.Scope, boolean)>}
+   * @type {Array.<angular.$parse.Expression>}
    * @private
    */
   this.buttons_ = [];
@@ -121862,20 +121886,20 @@ ngeo.BtnGroupController = function($scope) {
  * @param {number} index Index of the button in buttons array.
  */
 ngeo.BtnGroupController.prototype.activate = function(index) {
-  this.buttons_.forEach(function(s, i) {
+  this.buttons_.forEach(function(expressionFn, i) {
     if (i != index) {
-      s(this.scope_, false);
+      expressionFn.assign(this.scope_, false);
     }
   }, this);
 };
 
 
 /**
- * @param {function((!angular.Scope), *)} ngModelSet Setter.
+ * @param {angular.$parse.Expression} expressionFn Expression function.
  * @return {number} Index of the pushed setter.
  */
-ngeo.BtnGroupController.prototype.addButton = function(ngModelSet) {
-  this.buttons_.push(ngModelSet);
+ngeo.BtnGroupController.prototype.addButton = function(expressionFn) {
+  this.buttons_.push(expressionFn);
   return this.buttons_.length - 1;
 };
 
@@ -121924,7 +121948,7 @@ ngeo.btnDirective = function($parse) {
             ngModelSet(scope, false);
           }
           if (!goog.isNull(buttonsCtrl)) {
-            indexInGroup = buttonsCtrl.addButton(ngModelSet);
+            indexInGroup = buttonsCtrl.addButton(ngModelGet);
           }
 
           // UI -> model
@@ -130291,6 +130315,11 @@ goog.exportProperty(
     ol.DragBoxEvent.prototype,
     'coordinate',
     ol.DragBoxEvent.prototype.coordinate);
+
+goog.exportProperty(
+    ol.DragBoxEvent.prototype,
+    'mapBrowserEvent',
+    ol.DragBoxEvent.prototype.mapBrowserEvent);
 
 goog.exportSymbol(
     'ol.Feature',
