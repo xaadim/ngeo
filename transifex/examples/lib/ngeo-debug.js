@@ -18806,7 +18806,8 @@ ol.proj.METERS_PER_UNIT[ol.proj.Units.USFEET] = 1200 / 3937;
  *     http://www.opengis.net/gml/srs/epsg.xml#3857
  *
  * If you use proj4js, aliases can be added using `proj4.defs()`; see
- * [documentation](https://github.com/proj4js/proj4js).
+ * [documentation](https://github.com/proj4js/proj4js). To set an alternative
+ * namespace for proj4, use {@link ol.proj.setProj4}.
  *
  * @constructor
  * @param {olx.ProjectionOptions} options Projection options.
@@ -18873,39 +18874,42 @@ ol.proj.Projection = function(options) {
    */
   this.defaultTileGrid_ = null;
 
+  /**
+   * @private
+   * @type {number|undefined}
+   */
+  this.metersPerUnit_ = options.metersPerUnit;
+
   var projections = ol.proj.projections_;
   var code = options.code;
   goog.asserts.assert(code !== undefined,
       'Option "code" is required for constructing instance');
-  if (ol.ENABLE_PROJ4JS && typeof proj4 == 'function' &&
-      projections[code] === undefined) {
-    var def = proj4.defs(code);
-    if (def !== undefined) {
-      if (def.axis !== undefined && options.axisOrientation === undefined) {
-        this.axisOrientation_ = def.axis;
-      }
-      if (options.units === undefined) {
-        var units = def.units;
-        if (def.to_meter !== undefined) {
-          if (units === undefined ||
-              ol.proj.METERS_PER_UNIT[units] === undefined) {
-            units = def.to_meter.toString();
-            ol.proj.METERS_PER_UNIT[units] = def.to_meter;
-          }
+  if (ol.ENABLE_PROJ4JS) {
+    var proj4js = ol.proj.proj4_ || goog.global['proj4'];
+    if (typeof proj4js == 'function' && projections[code] === undefined) {
+      var def = proj4js.defs(code);
+      if (def !== undefined) {
+        if (def.axis !== undefined && options.axisOrientation === undefined) {
+          this.axisOrientation_ = def.axis;
         }
-        this.units_ = units;
-      }
-      var currentCode, currentDef, currentProj, proj4Transform;
-      for (currentCode in projections) {
-        currentDef = proj4.defs(currentCode);
-        if (currentDef !== undefined) {
-          currentProj = ol.proj.get(currentCode);
-          if (currentDef === def) {
-            ol.proj.addEquivalentProjections([currentProj, this]);
-          } else {
-            proj4Transform = proj4(currentCode, code);
-            ol.proj.addCoordinateTransforms(currentProj, this,
-                proj4Transform.forward, proj4Transform.inverse);
+        if (options.metersPerUnit === undefined) {
+          this.metersPerUnit_ = def.to_meter;
+        }
+        if (options.units === undefined) {
+          this.units_ = def.units;
+        }
+        var currentCode, currentDef, currentProj, proj4Transform;
+        for (currentCode in projections) {
+          currentDef = proj4js.defs(currentCode);
+          if (currentDef !== undefined) {
+            currentProj = ol.proj.get(currentCode);
+            if (currentDef === def) {
+              ol.proj.addEquivalentProjections([currentProj, this]);
+            } else {
+              proj4Transform = proj4js(currentCode, code);
+              ol.proj.addCoordinateTransforms(currentProj, this,
+                  proj4Transform.forward, proj4Transform.inverse);
+            }
           }
         }
       }
@@ -18955,12 +18959,13 @@ ol.proj.Projection.prototype.getUnits = function() {
 
 /**
  * Get the amount of meters per unit of this projection.  If the projection is
- * not configured with a units identifier, the return is `undefined`.
+ * not configured with `metersPerUnit` or a units identifier, the return is
+ * `undefined`.
  * @return {number|undefined} Meters.
  * @api stable
  */
 ol.proj.Projection.prototype.getMetersPerUnit = function() {
-  return ol.proj.METERS_PER_UNIT[this.units_];
+  return this.metersPerUnit_ || ol.proj.METERS_PER_UNIT[this.units_];
 };
 
 
@@ -19134,6 +19139,34 @@ ol.proj.projections_ = {};
  * @type {Object.<string, Object.<string, ol.TransformFunction>>}
  */
 ol.proj.transforms_ = {};
+
+
+/**
+ * @private
+ * @type {proj4}
+ */
+ol.proj.proj4_ = null;
+
+
+if (ol.ENABLE_PROJ4JS) {
+  /**
+   * Register proj4. If not explicitly registered, it will be assumed that
+   * proj4js will be loaded in the global namespace. For example in a
+   * browserify ES6 environment you could use:
+   *
+   *     import ol from 'openlayers';
+   *     import proj4 from 'proj4';
+   *     ol.proj.setProj4(proj4);
+   *
+   * @param {proj4} proj4 Proj4.
+   * @api
+   */
+  ol.proj.setProj4 = function(proj4) {
+    goog.asserts.assert(typeof proj4 == 'function',
+        'proj4 argument should be a function');
+    ol.proj.proj4_ = proj4;
+  };
+}
 
 
 /**
@@ -19384,10 +19417,13 @@ ol.proj.get = function(projectionLike) {
   } else if (goog.isString(projectionLike)) {
     var code = projectionLike;
     projection = ol.proj.projections_[code];
-    if (ol.ENABLE_PROJ4JS && projection === undefined &&
-        typeof proj4 == 'function' && proj4.defs(code) !== undefined) {
-      projection = new ol.proj.Projection({code: code});
-      ol.proj.addProjection(projection);
+    if (ol.ENABLE_PROJ4JS) {
+      var proj4js = ol.proj.proj4_ || goog.global['proj4'];
+      if (projection === undefined && typeof proj4js == 'function' &&
+          proj4js.defs(code) !== undefined) {
+        projection = new ol.proj.Projection({code: code});
+        ol.proj.addProjection(projection);
+      }
     }
   } else {
     projection = null;
@@ -23501,15 +23537,6 @@ ol.tilecoord.quadKey = function(tileCoord) {
     mask >>= 1;
   }
   return digits.join('');
-};
-
-
-/**
- * @param {ol.TileCoord} tileCoord Tile coord.
- * @return {string} String.
- */
-ol.tilecoord.toString = function(tileCoord) {
-  return ol.tilecoord.getKeyZXY(tileCoord[0], tileCoord[1], tileCoord[2]);
 };
 
 
@@ -37962,9 +37989,10 @@ ol.source.Tile.prototype.getTileCacheForProjection = function(projection) {
 
 
 /**
+ * @param {number} pixelRatio Pixel ratio.
  * @return {number} Tile pixel ratio.
  */
-ol.source.Tile.prototype.getTilePixelRatio = function() {
+ol.source.Tile.prototype.getTilePixelRatio = function(pixelRatio) {
   return this.tilePixelRatio_;
 };
 
@@ -37978,8 +38006,13 @@ ol.source.Tile.prototype.getTilePixelRatio = function() {
 ol.source.Tile.prototype.getTilePixelSize =
     function(z, pixelRatio, projection) {
   var tileGrid = this.getTileGridForProjection(projection);
-  return ol.size.scale(ol.size.toSize(tileGrid.getTileSize(z), this.tmpSize),
-      this.tilePixelRatio_, this.tmpSize);
+  var tilePixelRatio = this.getTilePixelRatio(pixelRatio);
+  var tileSize = ol.size.toSize(tileGrid.getTileSize(z), this.tmpSize);
+  if (tilePixelRatio == 1) {
+    return tileSize;
+  } else {
+    return ol.size.scale(tileSize, tilePixelRatio, this.tmpSize);
+  }
 };
 
 
@@ -50739,7 +50772,6 @@ goog.require('ol.layer.Layer');
 goog.require('ol.source.Source');
 goog.require('ol.source.State');
 goog.require('ol.source.Tile');
-goog.require('ol.tilecoord');
 goog.require('ol.vec.Mat4');
 
 
@@ -51045,7 +51077,7 @@ ol.renderer.Layer.prototype.manageTilePyramid = function(
         if (currentZ - z <= preload) {
           tile = tileSource.getTile(z, x, y, pixelRatio, projection);
           if (tile.getState() == ol.TileState.IDLE) {
-            wantedTiles[ol.tilecoord.toString(tile.tileCoord)] = true;
+            wantedTiles[tile.tileCoord.toString()] = true;
             if (!tileQueue.isKeyQueued(tile.getKey())) {
               tileQueue.enqueue([tile, tileSourceKey,
                 tileGrid.getTileCoordCenter(tile.tileCoord), tileResolution]);
@@ -52811,10 +52843,10 @@ ol.TileQueue.prototype.loadMoreTiles = function(maxTotalLoading, maxNewLoads) {
          this.getCount() > 0) {
     tile = /** @type {ol.Tile} */ (this.dequeue()[0]);
     if (tile.getState() === ol.TileState.IDLE) {
-      tile.load();
       this.tilesLoadingKeys_[tile.getKey()] = true;
       ++this.tilesLoading_;
       ++newLoads;
+      tile.load();
     }
   }
 };
@@ -54217,11 +54249,12 @@ ol.DragBoxEventType = {
  *
  * @param {string} type The event type.
  * @param {ol.Coordinate} coordinate The event coordinate.
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Originating event.
  * @extends {goog.events.Event}
  * @constructor
  * @implements {oli.DragBoxEvent}
  */
-ol.DragBoxEvent = function(type, coordinate) {
+ol.DragBoxEvent = function(type, coordinate, mapBrowserEvent) {
   goog.base(this, type);
 
   /**
@@ -54232,8 +54265,25 @@ ol.DragBoxEvent = function(type, coordinate) {
    */
   this.coordinate = coordinate;
 
+  /**
+   * @const
+   * @type {ol.MapBrowserEvent}
+   * @api
+   */
+  this.mapBrowserEvent = mapBrowserEvent;
+
 };
 goog.inherits(ol.DragBoxEvent, goog.events.Event);
+
+
+/**
+ * A function that takes a {@link ol.MapBrowserEvent} and two
+ * {@link ol.Pixel}s and returns a `{boolean}`. If the condition is met,
+ * true should be returned.
+ * @typedef {function(ol.MapBrowserEvent, ol.Pixel, ol.Pixel):boolean}
+ * @api
+ */
+ol.interaction.DragBoxEndConditionType;
 
 
 
@@ -54283,8 +54333,32 @@ ol.interaction.DragBox = function(opt_options) {
   this.condition_ = options.condition ?
       options.condition : ol.events.condition.always;
 
+  /**
+   * @private
+   * @type {ol.interaction.DragBoxEndConditionType}
+   */
+  this.boxEndCondition_ = options.boxEndCondition ?
+      options.boxEndCondition : ol.interaction.DragBox.defaultBoxEndCondition;
 };
 goog.inherits(ol.interaction.DragBox, ol.interaction.Pointer);
+
+
+/**
+ * The default condition for determining whether the boxend event
+ * should fire.
+ * @param  {ol.MapBrowserEvent} mapBrowserEvent The originating MapBrowserEvent
+ *  leading to the box end.
+ * @param  {ol.Pixel} startPixel      The starting pixel of the box.
+ * @param  {ol.Pixel} endPixel        The end pixel of the box.
+ * @return {boolean} Whether or not the boxend condition should be fired.
+ */
+ol.interaction.DragBox.defaultBoxEndCondition = function(mapBrowserEvent,
+    startPixel, endPixel) {
+  var width = endPixel[0] - startPixel[0];
+  var height = endPixel[1] - startPixel[1];
+  return width * width + height * height >=
+      ol.DRAG_BOX_HYSTERESIS_PIXELS_SQUARED;
+};
 
 
 /**
@@ -54333,14 +54407,11 @@ ol.interaction.DragBox.handleUpEvent_ = function(mapBrowserEvent) {
 
   this.box_.setMap(null);
 
-  var deltaX = mapBrowserEvent.pixel[0] - this.startPixel_[0];
-  var deltaY = mapBrowserEvent.pixel[1] - this.startPixel_[1];
-
-  if (deltaX * deltaX + deltaY * deltaY >=
-      ol.DRAG_BOX_HYSTERESIS_PIXELS_SQUARED) {
+  if (this.boxEndCondition_(mapBrowserEvent,
+      this.startPixel_, mapBrowserEvent.pixel)) {
     this.onBoxEnd(mapBrowserEvent);
     this.dispatchEvent(new ol.DragBoxEvent(ol.DragBoxEventType.BOXEND,
-        mapBrowserEvent.coordinate));
+        mapBrowserEvent.coordinate, mapBrowserEvent));
   }
   return false;
 };
@@ -54363,7 +54434,7 @@ ol.interaction.DragBox.handleDownEvent_ = function(mapBrowserEvent) {
     this.box_.setMap(mapBrowserEvent.map);
     this.box_.setPixels(this.startPixel_, this.startPixel_);
     this.dispatchEvent(new ol.DragBoxEvent(ol.DragBoxEventType.BOXSTART,
-        mapBrowserEvent.coordinate));
+        mapBrowserEvent.coordinate, mapBrowserEvent));
     return true;
   } else {
     return false;
@@ -55645,11 +55716,24 @@ ol.proj.EPSG3857.toEPSG4326 = function(input, opt_output, opt_dimension) {
   return output;
 };
 
+goog.provide('ol.sphere.WGS84');
+
+goog.require('ol.Sphere');
+
+
+/**
+ * A sphere with radius equal to the semi-major axis of the WGS84 ellipsoid.
+ * @const
+ * @type {ol.Sphere}
+ */
+ol.sphere.WGS84 = new ol.Sphere(6378137);
+
 goog.provide('ol.proj.EPSG4326');
 
 goog.require('ol.proj');
 goog.require('ol.proj.Projection');
 goog.require('ol.proj.Units');
+goog.require('ol.sphere.WGS84');
 
 
 
@@ -55674,6 +55758,7 @@ ol.proj.EPSG4326_ = function(code, opt_axisOrientation) {
     extent: ol.proj.EPSG4326.EXTENT,
     axisOrientation: opt_axisOrientation,
     global: true,
+    metersPerUnit: ol.proj.EPSG4326.METERS_PER_UNIT,
     worldExtent: ol.proj.EPSG4326.EXTENT
   });
 };
@@ -55695,6 +55780,13 @@ ol.proj.EPSG4326_.prototype.getPointResolution = function(resolution, point) {
  * @type {ol.Extent}
  */
 ol.proj.EPSG4326.EXTENT = [-180, -90, 180, 90];
+
+
+/**
+ * @const
+ * @type {number}
+ */
+ol.proj.EPSG4326.METERS_PER_UNIT = Math.PI * ol.sphere.WGS84.radius / 180;
 
 
 /**
@@ -55973,27 +56065,9 @@ ol.render.canvas.defaultTextBaseline = 'middle';
  */
 ol.render.canvas.defaultLineWidth = 1;
 
-goog.provide('ol.structs.IHasChecksum');
-
-
-
-/**
- * @interface
- */
-ol.structs.IHasChecksum = function() {
-};
-
-
-/**
- * @return {string} The checksum.
- */
-ol.structs.IHasChecksum.prototype.getChecksum = function() {
-};
-
 goog.provide('ol.style.Fill');
 
 goog.require('ol.color');
-goog.require('ol.structs.IHasChecksum');
 
 
 
@@ -56003,7 +56077,6 @@ goog.require('ol.structs.IHasChecksum');
  *
  * @constructor
  * @param {olx.style.FillOptions=} opt_options Options.
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.Fill = function(opt_options) {
@@ -56047,7 +56120,7 @@ ol.style.Fill.prototype.setColor = function(color) {
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.Fill.prototype.getChecksum = function() {
   if (this.checksum_ === undefined) {
@@ -56742,7 +56815,6 @@ goog.provide('ol.style.Stroke');
 goog.require('goog.crypt');
 goog.require('goog.crypt.Md5');
 goog.require('ol.color');
-goog.require('ol.structs.IHasChecksum');
 
 
 
@@ -56755,7 +56827,6 @@ goog.require('ol.structs.IHasChecksum');
  *
  * @constructor
  * @param {olx.style.StrokeOptions=} opt_options Options.
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.Stroke = function(opt_options) {
@@ -56939,7 +57010,7 @@ ol.style.Stroke.prototype.setWidth = function(width) {
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.Stroke.prototype.getChecksum = function() {
   if (this.checksum_ === undefined) {
@@ -56972,7 +57043,6 @@ goog.require('ol');
 goog.require('ol.color');
 goog.require('ol.has');
 goog.require('ol.render.canvas');
-goog.require('ol.structs.IHasChecksum');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Image');
 goog.require('ol.style.ImageState');
@@ -56987,7 +57057,6 @@ goog.require('ol.style.Stroke');
  * @constructor
  * @param {olx.style.CircleOptions=} opt_options Options.
  * @extends {ol.style.Image}
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.Circle = function(opt_options) {
@@ -57386,7 +57455,7 @@ ol.style.Circle.prototype.drawHitDetectionCanvas_ =
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.Circle.prototype.getChecksum = function() {
   var strokeChecksum = this.stroke_ ?
@@ -73220,7 +73289,6 @@ goog.require('ol.extent');
 goog.require('ol.layer.Tile');
 goog.require('ol.renderer.canvas.Layer');
 goog.require('ol.size');
-goog.require('ol.tilecoord');
 goog.require('ol.vec.Mat4');
 
 
@@ -73542,7 +73610,7 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
       }
       goog.asserts.assert(tile);
       if (drawableTile(tile)) {
-        tilesToDrawByZ[z][ol.tilecoord.toString(tile.tileCoord)] = tile;
+        tilesToDrawByZ[z][tile.tileCoord.toString()] = tile;
         continue;
       }
       fullyLoaded = tileGrid.forEachTileCoordParentTileRange(
@@ -74523,7 +74591,6 @@ goog.require('ol.renderer.canvas.Layer');
 goog.require('ol.renderer.vector');
 goog.require('ol.size');
 goog.require('ol.source.VectorTile');
-goog.require('ol.tilecoord');
 goog.require('ol.vec.Mat4');
 
 
@@ -74597,7 +74664,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.composeFrame =
   var source = layer.getSource();
   goog.asserts.assertInstanceof(source, ol.source.VectorTile,
       'Source is an ol.source.VectorTile');
-  var tilePixelRatio = source.getTilePixelRatio();
+  var tilePixelRatio = source.getTilePixelRatio(pixelRatio);
   var maxScale = tilePixelRatio / pixelRatio;
 
   var transform = this.getTransform(frameState, 0);
@@ -74743,7 +74810,8 @@ ol.renderer.canvas.VectorTileLayer.prototype.createReplayGroup = function(tile,
     extent = tileGrid.getTileCoordExtent(tileCoord);
   }
   var resolution = tileGrid.getResolution(tileCoord[0]);
-  var tileResolution = pixelSpace ? source.getTilePixelRatio() : resolution;
+  var tileResolution =
+      pixelSpace ? source.getTilePixelRatio(pixelRatio) : resolution;
   replayState.dirty = false;
   var replayGroup = new ol.render.canvas.ReplayGroup(0, extent,
       tileResolution, layer.getRenderBuffer());
@@ -74797,6 +74865,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.createReplayGroup = function(tile,
  */
 ol.renderer.canvas.VectorTileLayer.prototype.forEachFeatureAtCoordinate =
     function(coordinate, frameState, callback, thisArg) {
+  var pixelRatio = frameState.pixelRatio;
   var resolution = frameState.viewState.resolution;
   var rotation = frameState.viewState.rotation;
   var layer = this.getLayer();
@@ -74822,7 +74891,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.forEachFeatureAtCoordinate =
     }
     if (tile.getProjection().getUnits() === ol.proj.Units.TILE_PIXELS) {
       origin = ol.extent.getTopLeft(tileExtent);
-      tilePixelRatio = source.getTilePixelRatio();
+      tilePixelRatio = source.getTilePixelRatio(pixelRatio);
       tileResolution = tileGrid.getResolution(tileCoord[0]) / tilePixelRatio;
       tileSpaceCoordinate = [
         (coordinate[0] - origin[0]) / tileResolution,
@@ -74940,7 +75009,7 @@ ol.renderer.canvas.VectorTileLayer.prototype.prepareFrame =
       if (tileState == ol.TileState.LOADED ||
           tileState == ol.TileState.EMPTY ||
           (tileState == ol.TileState.ERROR && !useInterimTilesOnError)) {
-        tilesToDrawByZ[z][ol.tilecoord.toString(tile.tileCoord)] = tile;
+        tilesToDrawByZ[z][tile.tileCoord.toString()] = tile;
         continue;
       }
 
@@ -75455,7 +75524,6 @@ goog.require('ol.extent');
 goog.require('ol.layer.Tile');
 goog.require('ol.renderer.dom.Layer');
 goog.require('ol.size');
-goog.require('ol.tilecoord');
 goog.require('ol.tilegrid.TileGrid');
 goog.require('ol.vec.Mat4');
 
@@ -75578,7 +75646,7 @@ ol.renderer.dom.TileLayer.prototype.prepareFrame =
       goog.asserts.assert(tile);
       tileState = tile.getState();
       if (tileState == ol.TileState.LOADED) {
-        tilesToDrawByZ[z][ol.tilecoord.toString(tile.tileCoord)] = tile;
+        tilesToDrawByZ[z][tile.tileCoord.toString()] = tile;
         continue;
       } else if (tileState == ol.TileState.EMPTY ||
                  (tileState == ol.TileState.ERROR &&
@@ -75781,7 +75849,7 @@ ol.renderer.dom.TileLayerZ_.prototype.addTile = function(tile, tileGutter) {
   var tileCoordY = tileCoord[2];
   goog.asserts.assert(tileCoordZ == this.tileCoordOrigin_[0],
       'tileCoordZ matches z of tileCoordOrigin');
-  var tileCoordKey = ol.tilecoord.toString(tileCoord);
+  var tileCoordKey = tileCoord.toString();
   if (tileCoordKey in this.tiles_) {
     return;
   }
@@ -75873,7 +75941,7 @@ ol.renderer.dom.TileLayerZ_.prototype.removeTilesOutsideExtent =
   var i, ii;
   for (i = 0, ii = tilesToRemove.length; i < ii; ++i) {
     tile = tilesToRemove[i];
-    tileCoordKey = ol.tilecoord.toString(tile.tileCoord);
+    tileCoordKey = tile.tileCoord.toString();
     goog.dom.removeNode(tile.getImage(this));
     delete this.tiles_[tileCoordKey];
   }
@@ -81725,7 +81793,6 @@ goog.require('ol.renderer.webgl.tilelayer.shader.Fragment');
 goog.require('ol.renderer.webgl.tilelayer.shader.Locations');
 goog.require('ol.renderer.webgl.tilelayer.shader.Vertex');
 goog.require('ol.size');
-goog.require('ol.tilecoord');
 goog.require('ol.vec.Mat4');
 goog.require('ol.webgl.Buffer');
 
@@ -81978,7 +82045,7 @@ ol.renderer.webgl.TileLayer.prototype.prepareFrame =
         tileState = tile.getState();
         if (tileState == ol.TileState.LOADED) {
           if (mapRenderer.isTileTextureLoaded(tile)) {
-            tilesToDrawByZ[z][ol.tilecoord.toString(tile.tileCoord)] = tile;
+            tilesToDrawByZ[z][tile.tileCoord.toString()] = tile;
             continue;
           }
         } else if (tileState == ol.TileState.EMPTY ||
@@ -83143,7 +83210,6 @@ goog.require('ol.renderer.dom.Map');
 goog.require('ol.renderer.webgl.Map');
 goog.require('ol.size');
 goog.require('ol.structs.PriorityQueue');
-goog.require('ol.tilecoord');
 goog.require('ol.vec.Mat4');
 
 
@@ -84021,7 +84087,7 @@ ol.Map.prototype.getTilePriority =
   if (!frameState || !(tileSourceKey in frameState.wantedTiles)) {
     return ol.structs.PriorityQueue.DROP;
   }
-  var coordKey = ol.tilecoord.toString(tile.tileCoord);
+  var coordKey = tile.tileCoord.toString();
   if (!frameState.wantedTiles[tileSourceKey][coordKey]) {
     return ol.structs.PriorityQueue.DROP;
   }
@@ -91625,32 +91691,33 @@ ol.format.GeoJSON.prototype.writeFeature;
  *
  * @param {ol.Feature} feature Feature.
  * @param {olx.format.WriteOptions=} opt_options Write options.
- * @return {Object} Object.
+ * @return {GeoJSONObject} Object.
  * @api stable
  */
 ol.format.GeoJSON.prototype.writeFeatureObject = function(
     feature, opt_options) {
   opt_options = this.adaptOptions(opt_options);
-  var object = {
+
+  var object = /** @type {GeoJSONObject} */ ({
     'type': 'Feature'
-  };
+  });
   var id = feature.getId();
   if (id !== undefined) {
-    object['id'] = id;
+    object.id = id;
   }
   var geometry = feature.getGeometry();
   if (geometry) {
-    object['geometry'] =
+    object.geometry =
         ol.format.GeoJSON.writeGeometry_(geometry, opt_options);
   } else {
-    object['geometry'] = null;
+    object.geometry = null;
   }
   var properties = feature.getProperties();
   delete properties[feature.getGeometryName()];
   if (!goog.object.isEmpty(properties)) {
-    object['properties'] = properties;
+    object.properties = properties;
   } else {
-    object['properties'] = null;
+    object.properties = null;
   }
   return object;
 };
@@ -91673,7 +91740,7 @@ ol.format.GeoJSON.prototype.writeFeatures;
  *
  * @param {Array.<ol.Feature>} features Features.
  * @param {olx.format.WriteOptions=} opt_options Write options.
- * @return {Object} GeoJSON Object.
+ * @return {GeoJSONFeatureCollection} GeoJSON Object.
  * @api stable
  */
 ol.format.GeoJSON.prototype.writeFeaturesObject =
@@ -106808,18 +106875,6 @@ ol.format.WMTSCapabilities.TM_PARSERS_ = ol.xml.makeStructureNS(
           ol.format.XSD.readString)
     }));
 
-goog.provide('ol.sphere.WGS84');
-
-goog.require('ol.Sphere');
-
-
-/**
- * A sphere with radius equal to the semi-major axis of the WGS84 ellipsoid.
- * @const
- * @type {ol.Sphere}
- */
-ol.sphere.WGS84 = new ol.Sphere(6378137);
-
 // FIXME handle geolocation not supported
 
 goog.provide('ol.Geolocation');
@@ -112978,10 +113033,36 @@ ol.interaction.Select = function(opt_options) {
   this.filter_ = options.filter ? options.filter :
       goog.functions.TRUE;
 
+  var featureOverlay = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      useSpatialIndex: false,
+      features: options.features,
+      wrapX: options.wrapX
+    }),
+    style: options.style ? options.style :
+        ol.interaction.Select.getDefaultStyleFunction(),
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
+  });
+
+  /**
+   * @private
+   * @type {ol.layer.Vector}
+   */
+  this.featureOverlay_ = featureOverlay;
+
   var layerFilter;
   if (options.layers) {
     if (goog.isFunction(options.layers)) {
-      layerFilter = options.layers;
+      layerFilter =
+          /**
+           * @param {ol.layer.Layer} layer Layer.
+           * @return {boolean} Include.
+           */
+          function(layer) {
+        goog.asserts.assertFunction(options.layers);
+        return layer === featureOverlay || options.layers(layer);
+      };
     } else {
       var layers = options.layers;
       layerFilter =
@@ -112990,7 +113071,7 @@ ol.interaction.Select = function(opt_options) {
            * @return {boolean} Include.
            */
           function(layer) {
-        return ol.array.includes(layers, layer);
+        return layer === featureOverlay || ol.array.includes(layers, layer);
       };
     }
   } else {
@@ -113010,22 +113091,6 @@ ol.interaction.Select = function(opt_options) {
    * @type {Object.<number, ol.layer.Layer>}
    */
   this.featureLayerAssociation_ = {};
-
-  /**
-   * @private
-   * @type {ol.layer.Vector}
-   */
-  this.featureOverlay_ = new ol.layer.Vector({
-    source: new ol.source.Vector({
-      useSpatialIndex: false,
-      features: options.features,
-      wrapX: options.wrapX
-    }),
-    style: options.style ? options.style :
-        ol.interaction.Select.getDefaultStyleFunction(),
-    updateWhileAnimating: true,
-    updateWhileInteracting: true
-  });
 
   var features = this.featureOverlay_.getSource().getFeaturesCollection();
   goog.events.listen(features, ol.CollectionEventType.ADD,
@@ -113142,9 +113207,11 @@ ol.interaction.Select.handleEvent = function(mapBrowserEvent) {
          * @param {ol.layer.Layer} layer Layer.
          */
         function(feature, layer) {
-          if (!ol.array.includes(features.getArray(), feature)) {
+          if (layer !== this.featureOverlay_) {
             if (add || toggle) {
-              if (this.filter_(feature, layer)) {
+              if (this.filter_(feature, layer) &&
+                  !ol.array.includes(features.getArray(), feature) &&
+                  !ol.array.includes(selected, feature)) {
                 selected.push(feature);
                 this.addFeatureLayerAssociation_(feature, layer);
               }
@@ -114846,7 +114913,7 @@ ol.reproj.Tile.prototype.load = function() {
     });
 
     if (leftToLoad === 0) {
-      this.reproject_();
+      goog.global.setTimeout(goog.bind(this.reproject_, this), 0);
     }
   }
 };
@@ -115807,7 +115874,7 @@ ol.source.TileImage.prototype.getTile =
       var tile = new ol.reproj.Tile(
           sourceProjection, sourceTileGrid,
           projection, targetTileGrid,
-          tileCoord, wrappedTileCoord, this.getTilePixelRatio(),
+          tileCoord, wrappedTileCoord, this.getTilePixelRatio(pixelRatio),
           goog.bind(function(z, x, y, pixelRatio) {
             return this.getTileInternal(z, x, y, pixelRatio, sourceProjection);
           }, this), this.reprojectionErrorThreshold_,
@@ -117070,6 +117137,7 @@ ol.source.XYZ = function(options) {
     attributions: options.attributions,
     crossOrigin: options.crossOrigin,
     logo: options.logo,
+    opaque: options.opaque,
     projection: projection,
     reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileGrid: tileGrid,
@@ -118331,19 +118399,10 @@ ol.source.TileArcGISRest.prototype.getRequestUrl_ =
 
 
 /**
- * @param {number} z Z.
- * @param {number} pixelRatio Pixel ratio.
- * @param {ol.proj.Projection} projection Projection.
- * @return {ol.Size} Size.
+ * @inheritDoc
  */
-ol.source.TileArcGISRest.prototype.getTilePixelSize =
-    function(z, pixelRatio, projection) {
-  var tileSize = goog.base(this, 'getTilePixelSize', z, pixelRatio, projection);
-  if (pixelRatio == 1) {
-    return tileSize;
-  } else {
-    return ol.size.scale(tileSize, pixelRatio, this.tmpSize);
-  }
+ol.source.TileArcGISRest.prototype.getTilePixelRatio = function(pixelRatio) {
+  return pixelRatio;
 };
 
 
@@ -118406,7 +118465,6 @@ goog.require('ol.TileState');
 goog.require('ol.dom');
 goog.require('ol.size');
 goog.require('ol.source.Tile');
-goog.require('ol.tilecoord');
 
 
 
@@ -118513,8 +118571,8 @@ ol.source.TileDebug.prototype.getTile = function(z, x, y) {
     var tileSize = ol.size.toSize(this.tileGrid.getTileSize(z));
     var tileCoord = [z, x, y];
     var textTileCoord = this.getTileCoordForTileUrlFunction(tileCoord);
-    var text = !textTileCoord ? '' : ol.tilecoord.toString(
-        this.getTileCoordForTileUrlFunction(textTileCoord));
+    var text = !textTileCoord ? '' :
+        this.getTileCoordForTileUrlFunction(textTileCoord).toString();
     var tile = new ol.DebugTile_(tileCoord, tileSize, text);
     this.tileCache.set(tileCoordKey, tile);
     return tile;
@@ -118532,6 +118590,7 @@ goog.provide('ol.tilejson');
 
 goog.require('goog.asserts');
 goog.require('goog.net.Jsonp');
+goog.require('goog.net.XhrIo');
 goog.require('ol.Attribution');
 goog.require('ol.TileRange');
 goog.require('ol.TileUrlFunction');
@@ -118563,9 +118622,21 @@ ol.source.TileJSON = function(options) {
     wrapX: options.wrapX !== undefined ? options.wrapX : true
   });
 
-  var request = new goog.net.Jsonp(options.url);
-  request.send(undefined, goog.bind(this.handleTileJSONResponse, this),
-      goog.bind(this.handleTileJSONError, this));
+  if (options.useXhr) {
+    goog.net.XhrIo.send(options.url, goog.bind(function(e) {
+      var xhr = /** @type {goog.net.XhrIo} */(e.target);
+      if (xhr.isSuccess()) {
+        var response = /** @type {TileJSON} */(xhr.getResponseJson());
+        this.handleTileJSONResponse(response);
+      } else {
+        this.handleTileJSONError();
+      }
+    }, this));
+  } else {
+    var request = new goog.net.Jsonp(options.url);
+    request.send(undefined, goog.bind(this.handleTileJSONResponse, this),
+        goog.bind(this.handleTileJSONError, this));
+  }
 
 };
 goog.inherits(ol.source.TileJSON, ol.source.TileImage);
@@ -119293,19 +119364,10 @@ ol.source.TileWMS.prototype.getRequestUrl_ =
 
 
 /**
- * @param {number} z Z.
- * @param {number} pixelRatio Pixel ratio.
- * @param {ol.proj.Projection} projection Projection.
- * @return {ol.Size} Size.
+ * @inheritDoc
  */
-ol.source.TileWMS.prototype.getTilePixelSize =
-    function(z, pixelRatio, projection) {
-  var tileSize = goog.base(this, 'getTilePixelSize', z, pixelRatio, projection);
-  if (pixelRatio == 1 || !this.hidpi_ || this.serverType_ === undefined) {
-    return tileSize;
-  } else {
-    return ol.size.scale(tileSize, pixelRatio, this.tmpSize);
-  }
+ol.source.TileWMS.prototype.getTilePixelRatio = function(pixelRatio) {
+  return (!this.hidpi_ || this.serverType_ === undefined) ? 1 : pixelRatio;
 };
 
 
@@ -120675,7 +120737,6 @@ goog.require('ol');
 goog.require('ol.color');
 goog.require('ol.has');
 goog.require('ol.render.canvas');
-goog.require('ol.structs.IHasChecksum');
 goog.require('ol.style.AtlasManager');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Image');
@@ -120693,7 +120754,6 @@ goog.require('ol.style.Stroke');
  * @constructor
  * @param {olx.style.RegularShapeOptions} options Options.
  * @extends {ol.style.Image}
- * @implements {ol.structs.IHasChecksum}
  * @api
  */
 ol.style.RegularShape = function(options) {
@@ -121187,7 +121247,7 @@ ol.style.RegularShape.prototype.drawHitDetectionCanvas_ =
 
 
 /**
- * @inheritDoc
+ * @return {string} The checksum.
  */
 ol.style.RegularShape.prototype.getChecksum = function() {
   var strokeChecksum = this.stroke_ ?
@@ -121796,15 +121856,44 @@ goog.require('ngeo');
  * In that example the ngeo-btn are combined together in a "toggle group",
  * where activating a button will deactivate the others.
  *
+ * One can use `ng-model` directive at the group level in order to know if
+ * a button is active.
+ *
+ * Example:
+ *
+ *     <div ngeo-btn-group ngeo-btn-group-active="ctrl.drawToolActive">
+ *
+ * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
  * @ngname ngeoBtnGroup
  */
-ngeo.btngroupDirective = function() {
+ngeo.btngroupDirective = function($parse) {
   return {
     restrict: 'A',
-    controller: 'ngeoBtnGroupController'
+    controller: 'ngeoBtnGroupController',
+    link:
+        /**
+         * @param {!angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         * @param {!Object} controller Controller.
+         */
+        function(scope, element, attrs, controller) {
+          var setActive = $parse(attrs['ngeoBtnGroupActive']).assign;
+
+          if (setActive) {
+            scope.$watch(function() {
+              // return true if at least one button is active otherwise false
+              return controller.buttons_.some(function(buttonModel) {
+                return (buttonModel(scope) === true);
+              });
+            }, function(newValue) {
+              setActive(scope, newValue);
+            });
+          }
+        }
   };
 };
 
@@ -121822,7 +121911,7 @@ ngeoModule.directive('ngeoBtnGroup', ngeo.btngroupDirective);
  */
 ngeo.BtnGroupController = function($scope) {
   /**
-   * @type {Array.<function(!angular.Scope, boolean)>}
+   * @type {Array.<angular.$parse.Expression>}
    * @private
    */
   this.buttons_ = [];
@@ -121839,20 +121928,20 @@ ngeo.BtnGroupController = function($scope) {
  * @param {number} index Index of the button in buttons array.
  */
 ngeo.BtnGroupController.prototype.activate = function(index) {
-  this.buttons_.forEach(function(s, i) {
+  this.buttons_.forEach(function(expressionFn, i) {
     if (i != index) {
-      s(this.scope_, false);
+      expressionFn.assign(this.scope_, false);
     }
   }, this);
 };
 
 
 /**
- * @param {function((!angular.Scope), *)} ngModelSet Setter.
+ * @param {angular.$parse.Expression} expressionFn Expression function.
  * @return {number} Index of the pushed setter.
  */
-ngeo.BtnGroupController.prototype.addButton = function(ngModelSet) {
-  this.buttons_.push(ngModelSet);
+ngeo.BtnGroupController.prototype.addButton = function(expressionFn) {
+  this.buttons_.push(expressionFn);
   return this.buttons_.length - 1;
 };
 
@@ -121901,7 +121990,7 @@ ngeo.btnDirective = function($parse) {
             ngModelSet(scope, false);
           }
           if (!goog.isNull(buttonsCtrl)) {
-            indexInGroup = buttonsCtrl.addButton(ngModelSet);
+            indexInGroup = buttonsCtrl.addButton(ngModelGet);
           }
 
           // UI -> model
@@ -122333,7 +122422,6 @@ goog.require('ol.Feature');
 goog.require('ol.Geolocation');
 goog.require('ol.Map');
 goog.require('ol.geom.Point');
-goog.require('ol.proj');
 
 
 /**
@@ -122886,7 +122974,6 @@ goog.require('ol.Feature');
 goog.require('ol.Geolocation');
 goog.require('ol.Map');
 goog.require('ol.geom.Point');
-goog.require('ol.proj');
 
 
 /**
@@ -127883,6 +127970,302 @@ ngeo.getBrowserLanguageFactory = function($window) {
 
 ngeoModule.factory('ngeoGetBrowserLanguage', ngeo.getBrowserLanguageFactory);
 
+goog.provide('ngeo.LayerHelper');
+
+goog.require('ngeo');
+goog.require('ol.Collection');
+goog.require('ol.format.WMTSCapabilities');
+goog.require('ol.layer.Group');
+goog.require('ol.layer.Image');
+goog.require('ol.layer.Tile');
+goog.require('ol.source.ImageWMS');
+goog.require('ol.source.WMTS');
+
+
+
+/**
+ * Provides help functions that helps you to create and manage layers.
+ * @param {angular.$q} $q Angular promises/deferred service.
+ * @param {angular.$http} $http Angular http service.
+ * @constructor
+ * @ngdoc service
+ * @ngname ngeoLayerHelper
+ * @ngInject
+ */
+ngeo.LayerHelper = function($q, $http) {
+
+  /**
+   * @type {angular.$q}
+   * @private
+   */
+  this.$q_ = $q;
+
+  /**
+   * @type {angular.$http}
+   * @private
+   */
+  this.$http_ = $http;
+};
+
+
+/**
+ * @const {string}
+ * @export
+ */
+ngeo.LayerHelper.prototype.helperID = 'helperID';
+
+
+/**
+ * Add a HelperID to the given layer. Layers with this ID can be
+ * managed by this sevice.
+ * @param {ol.layer.Layer} layer The layer that needs an ID.
+ * @param {string} layerURL Part of the ID.
+ * @param {string} layerName Part of the ID.
+ * @export
+ */
+ngeo.LayerHelper.prototype.setHelperID = function(layer, layerURL, layerName) {
+  layer.set(this.helperID, this.makeHelperID(layerURL, layerName));
+};
+
+
+/**
+ * Return an ID based on two strings ('layerURL_layerName');
+ * @param {string} layerURL Part of the ID.
+ * @param {string} layerName Part of the ID.
+ * @return {string}
+ * @export
+ */
+ngeo.LayerHelper.prototype.makeHelperID = function(layerURL, layerName) {
+  return layerURL + '_' + layerName;
+};
+
+
+/**
+ * Create and return a basic WMS layer with only a source URL and a dot
+ * separated layers names (see {@link ol.source.ImageWMS}).
+ * This layer will be tagged by a a helperID.
+ * @param {string} sourceURL The source URL.
+ * @param {string} sourceLayersName A dot separated names string.
+ * @return {ol.layer.Image}
+ * @export
+ */
+ngeo.LayerHelper.prototype.createBasicWMSLayer = function(sourceURL,
+    sourceLayersName) {
+  var layer = new ol.layer.Image({
+    source: new ol.source.ImageWMS({
+      url: sourceURL,
+      params: {'LAYERS': sourceLayersName}
+    })
+  });
+  this.setHelperID(layer, sourceURL, sourceLayersName);
+  return layer;
+};
+
+
+/**
+ * Create and return a promise that provides a WMTS layer with source on
+ * success, no layer else.
+ * The WMTS layer source will be configured by the capabilities that are
+ * loaded from the given capabilitiesUrl.
+ * This layer will be tagged by a a helperID.
+ * @param {string} capabilitiesURL The getCapabilities url.
+ * @param {string} layerName The name of the layer.
+ * @return {angular.$q.Promise} A Promise with a layer (with source) on success,
+ *     no layer else.
+ * @export
+ */
+ngeo.LayerHelper.prototype.createWMTSLayerFromCapabilitites = function(
+    capabilitiesURL, layerName) {
+  var parser = new ol.format.WMTSCapabilities();
+  var layer = new ol.layer.Tile();
+  var deferred = this.$q_.defer();
+  this.setHelperID(layer, capabilitiesURL, layerName);
+
+  this.$http_.get(capabilitiesURL).then(function(response) {
+    var result;
+    if (response.data) {
+      result = parser.read(response.data);
+    }
+    if (goog.isDef(result)) {
+      var options = ol.source.WMTS.optionsFromCapabilities(result,
+          {layer: layerName, requestEncoding: 'REST'});
+      layer.setSource(new ol.source.WMTS(options));
+      deferred.resolve(layer);
+    } else {
+      deferred.resolve();
+    }
+  }, function(response) {
+    deferred.resolve();
+  });
+
+  return deferred.promise;
+};
+
+
+/**
+ * Create and return an ol.layer.Group. You can pass a collection of layers to
+ * directly add them in the returned group.
+ * @param {ol.Collection.<ol.layer.Base>=} opt_layers The layer to add to the
+ * returned Group.
+ * @return {ol.layer.Group}
+ * @export
+ */
+ngeo.LayerHelper.prototype.createBasicGroup = function(opt_layers) {
+  var group = new ol.layer.Group();
+  if (goog.isDefAndNotNull(opt_layers)) {
+    group.setLayers(opt_layers);
+  }
+  return group;
+};
+
+
+/**
+ * Get the position of the layer in the map's layers array or -1 if the layer
+ * can't be found.
+ * The layer must be tagged by a helperID (return -1 else).
+ * @param {ol.Map} map The concerned map.
+ * @param {ol.layer.Layer} layer The concerned layer.
+ * @return {number} index or -1 if not found.
+ * @export
+ */
+ngeo.LayerHelper.prototype.getLayerIndex = function(map, layer) {
+  var layerId = layer.get(this.helperID);
+  if (!goog.isDef(layerId)) {
+    return -1;
+  }
+
+  var i, layers = /** @type {Array.<ol.layer.Layer>} */
+      (map.getLayers().getArray());
+  for (i = 0; i < layers.length; i++) {
+    if (layers[i].get(this.helperID) === layerId) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+
+/**
+ * Retrieve a layer from the given array of layers and based on the given
+ * layers's helperID. Return null if no layer match.
+ * @param {Array.<ol.layer.Layer>} layers An array of layers.
+ * @param {string} layerID an ID like one created by the setHelperID methode
+ *   in this service
+ * @return {ol.layer.Layer?} layer or null;
+ * @export
+ */
+ngeo.LayerHelper.prototype.findLayer = function(layers, layerID) {
+  var i, layer;
+  for (i = 0; i < layers.length; i++) {
+    layer = layers[i];
+    if (layer.get(this.helperID) === layerID) {
+      return layer;
+    }
+  }
+  return null;
+};
+
+
+/**
+ * Add the given layer on the map if it doesn't already exists and if the layer
+ * has a source.
+ * The layer must be tagged by a helperID.
+ * @param {ol.Map} map The map where add the layer.
+ * @param {ol.layer.Layer} layer The concerned layer.
+ * @return {boolean} true if added, false else.
+ * @export
+ */
+ngeo.LayerHelper.prototype.addLayerToMap = function(map, layer) {
+  var added = false;
+  if (layer.getSource()) {
+    var layerIndex = this.getLayerIndex(map, layer);
+    if (layerIndex < 0) {
+      map.addLayer(layer);
+      added = true;
+    }
+  }
+  return added;
+};
+
+
+/**
+ * Remove the given layer from the map if it exists.
+ * The layer must be tagged by a helperID.
+ * @param {ol.Map} map The map on which to remove the layer.
+ * @param {ol.layer.Layer} layer The concerned layer.
+ * @return {boolean} true if removed, false else.
+ * @export
+ */
+ngeo.LayerHelper.prototype.removeLayerFromMap = function(map, layer) {
+  var removed = false;
+  var layerToRemove;
+  var layerIndex = this.getLayerIndex(map, layer);
+  if (layerIndex >= 0) {
+    layerToRemove = map.getLayers().getArray()[layerIndex];
+    map.removeLayer(layerToRemove);
+    removed = true;
+  }
+  return removed;
+};
+
+
+/**
+ * Add or remove some layers from the map.
+ * The layer must be tagged by a helperID.
+ * @param {ol.Map} map The concerned map.
+ * @param {Array.<ol.layer.Layer>} layers An array of layers.
+ * @param {boolean} add True to add the layers, False to remove them.
+ * @export
+ */
+ngeo.LayerHelper.prototype.moveInOutLayers = function(map, layers, add) {
+  var i, layer;
+  for (i = 0; i < layers.length; i++) {
+    layer = layers[i];
+    if (add) {
+      this.addLayerToMap(map, layer);
+    } else {
+      this.removeLayerFromMap(map, layer);
+    }
+  }
+};
+
+
+/**
+ * Get an array of all layers in a group. The group can contain multiple levels
+ * of others groups.
+ * @param {ol.layer.Base} layer The base layer, mostly a group of layers.
+ * @return {Array.<ol.layer.Layer>}
+ * @export
+ */
+ngeo.LayerHelper.prototype.getFlatLayers = function(layer) {
+  return this.getFlatLayers_(layer, []);
+};
+
+
+/**
+ * Get an array of all layers in a group. The group can contain multiple levels
+ * of others groups.
+ * @param {ol.layer.Base} layer The base layer, mostly a group of layers.
+ * @param {Array.<ol.layer.Base>} array An array to add layers.
+ * @return {Array.<ol.layer.Layer>}
+ * @private
+ */
+ngeo.LayerHelper.prototype.getFlatLayers_ = function(layer, array) {
+  if (layer instanceof ol.layer.Group) {
+    var sublayers = layer.getLayers();
+    sublayers.forEach(function(l) {
+      this.getFlatLayers_(l, array);
+    }, this);
+  } else {
+    if (array.indexOf(layer) < 0) {
+      array.push(layer);
+    }
+  }
+  return array;
+};
+
+ngeoModule.service('ngeoLayerHelper', ngeo.LayerHelper);
+
 goog.provide('ngeo.Location');
 goog.provide('ngeo.MockLocationProvider');
 
@@ -128124,6 +128507,12 @@ goog.provide('ngeo.CreatePopup');
 goog.provide('ngeo.Popup');
 
 goog.require('ngeo');
+
+/**
+ * This goog.require is needed because of 'ngeo-popup' used in
+ * the template.
+ * @suppress {extraRequire}
+ */
 goog.require('ngeo.popupDirective');
 
 
@@ -129588,7 +129977,6 @@ goog.inherits(goog.storage.mechanism.HTML5LocalStorage,
 goog.provide('ngeo.StateManager');
 
 goog.require('goog.asserts');
-goog.require('goog.math');
 goog.require('goog.storage.mechanism.HTML5LocalStorage');
 goog.require('ngeo');
 goog.require('ngeo.Location');
@@ -129792,7 +130180,6 @@ ngeoModule.value('ngeoSyncArrays', ngeo.syncArrays);
 goog.provide('ngeo.ToolActivate');
 goog.provide('ngeo.ToolActivateMgr');
 
-goog.require('goog.asserts');
 goog.require('ngeo');
 
 
@@ -129972,6 +130359,10 @@ ngeoModule.service('ngeoToolActivateMgr', ngeo.ToolActivateMgr);
  * GENERATED FILE. DO NOT EDIT.
  */
 
+/**
+ * This goog.require is needed because it provides ngeoModule.
+ * @suppress {extraRequire}
+ */
 goog.require('ngeo');
 
 (function() {
@@ -130010,6 +130401,11 @@ goog.addDependency('demos/editor/equationeditor.js', ['goog.demos.editor.Equatio
 goog.addDependency('demos/editor/helloworld.js', ['goog.demos.editor.HelloWorld'], ['goog.dom', 'goog.dom.TagName', 'goog.editor.Plugin']);
 goog.addDependency('demos/editor/helloworlddialog.js', ['goog.demos.editor.HelloWorldDialog', 'goog.demos.editor.HelloWorldDialog.OkEvent'], ['goog.dom.TagName', 'goog.events.Event', 'goog.string', 'goog.ui.editor.AbstractDialog', 'goog.ui.editor.AbstractDialog.Builder', 'goog.ui.editor.AbstractDialog.EventType']);
 goog.addDependency('demos/editor/helloworlddialogplugin.js', ['goog.demos.editor.HelloWorldDialogPlugin', 'goog.demos.editor.HelloWorldDialogPlugin.Command'], ['goog.demos.editor.HelloWorldDialog', 'goog.dom.TagName', 'goog.editor.plugins.AbstractDialogPlugin', 'goog.editor.range', 'goog.functions', 'goog.ui.editor.AbstractDialog.EventType']);
+
+/**
+ * @fileoverview Custom exports file.
+ * @suppress {checkVars,extraRequire}
+ */
 
 goog.require('ol');
 goog.require('ol.Attribution');
@@ -130476,6 +130872,11 @@ goog.exportProperty(
     ol.DragBoxEvent.prototype,
     'coordinate',
     ol.DragBoxEvent.prototype.coordinate);
+
+goog.exportProperty(
+    ol.DragBoxEvent.prototype,
+    'mapBrowserEvent',
+    ol.DragBoxEvent.prototype.mapBrowserEvent);
 
 goog.exportSymbol(
     'ol.Feature',
@@ -137748,6 +138149,10 @@ goog.exportSymbol(
 goog.exportSymbol(
     'ol.proj.getTransform',
     ol.proj.getTransform);
+
+goog.exportSymbol(
+    'ol.proj.setProj4',
+    ol.proj.setProj4);
 
 goog.exportSymbol(
     'ol.proj.toLonLat',

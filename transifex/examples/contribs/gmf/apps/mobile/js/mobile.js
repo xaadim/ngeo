@@ -12,7 +12,11 @@ goog.provide('app_mobile');
 
 goog.require('app');
 goog.require('gmf.AbstractMobileController');
+/** @suppress {extraRequire} */
+goog.require('gmf.proj.EPSG21781');
+/** @suppress {extraRequire} */
 goog.require('gmf.searchDirective');
+/** @suppress {extraRequire} */
 goog.require('ngeo.mobileGeolocationDirective');
 
 
