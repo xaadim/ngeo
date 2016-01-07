@@ -83,7 +83,7 @@ gmf.searchDirective = function() {
         'ngeo-search-listeners="ctrl.listeners">' +
         '&lt;div class="clear-button ng-hide" ' +
         'ng-hide="!ctrl.clearButton || ctrl.input_value == \'\'" ' +
-        'ng-click="ctrl.onClearButton()">&lt;/div>' +
+        'ng-click="ctrl.clear()">&lt;/div>' +
         '&lt;/div>',
     link:
         /**
@@ -340,15 +340,6 @@ gmf.SearchController.prototype.setTTDropdownVisibility_ = function() {
 /**
  * @export
  */
-gmf.SearchController.prototype.onClearButton = function() {
-  this.featureOverlay_.clear();
-  this.clear();
-};
-
-
-/**
- * @export
- */
 gmf.SearchController.prototype.clear = function() {
   var typeahead = $('.twitter-typeahead');
   var ttmenu = typeahead.children('.tt-menu');
@@ -378,9 +369,7 @@ gmf.SearchController.select_ = function(event, feature, dataset) {
   var mapSize = /** @type {ol.Size} */ (this.map_.getSize());
   this.map_.getView().fit(fitArray, mapSize,
       /** @type {olx.view.FitOptions} */ ({maxZoom: 16}));
-  if (!this.clearButton) {
-    this.clear();
-  }
+  this.clear();
 };
 
 
@@ -390,9 +379,7 @@ gmf.SearchController.select_ = function(event, feature, dataset) {
  * @private
  */
 gmf.SearchController.close_ = function(event) {
-  if (!this.clearButton) {
-    this.setTTDropdownVisibility_();
-  }
+  this.setTTDropdownVisibility_();
 };
 
 
