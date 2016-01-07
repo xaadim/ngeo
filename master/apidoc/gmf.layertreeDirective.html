@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/services/syncarrays.js</title>
+    <title>JSDoc: Class: layertreeDirective <small>directive:gmfLayertreeDirective</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,119 +17,219 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/services/syncarrays.js</h1>
+    <h1 class="page-title">Class: layertreeDirective <small>directive:gmfLayertreeDirective</small></h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.SyncArrays');
+        <h2 id="layertreeDirective">
+            <span class="ancestors">gmf.</span>layertreeDirective
+        </h2>
+        
+    
+</header>
 
-goog.require('goog.asserts');
-goog.require('ngeo');
+<article>
+    <div class="container-overview">
+    
+        
 
+    
 
-/**
- * Provides a function that synchronizes two arrays, arr1 and
- * arr2. arr2 is a subset of arr1, it includes the elements of arr1 that passes
- * the filter. When elements are added to/removed from arr1, arr2 is updated to
- * include the elements of arr1 that pass the filter. When the order of
- * elements in arr2 changes, arr1 is reordered to have the same order as arr2.
- *
- * This can for example be used to synchronize the array of layers in the map
- * with the array of selected layers, where layers may be added to/removed from
- * the map, and the order of selected layers may change.
- *
- *     var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
- *         true, scope, function(layer) {
- *           // exclude the layer at index 0 in the map
- *           return map.getLayers().indexOf(layer) !== 0;
- *         });
- *
- * This will return a function that can be called to cancel synchronization.
- *
- * @typedef {function(Array, Array, boolean, angular.Scope,
- *     function(?):boolean)}
- * @ngdoc service
- * @ngname ngeoSyncArrays
- */
-ngeo.SyncArrays;
+    <h4 class="name" id="layertreeDirective"><span class="type-signature"></span>new layertreeDirective<span class="signature">(gmfLayertreeTemplate)</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
+
+    
 
 
-/**
- * @param {Array.&lt;T>} arr1 Array 1.
- * @param {Array.&lt;T>} arr2 Array 2.
- * @param {boolean} reverse `true` if arr2 is in reverse order, `false`
- *     otherwise.
- * @param {angular.Scope} scope Angular scope. Used to watch arr1 and arr2
- *     using $watchCollection.
- * @param {function(T):boolean} filter Filter function.
- * @return {function()} Function to call to stop synchronization
- * @template T
- */
-ngeo.syncArrays = function(arr1, arr2, reverse, scope, filter) {
+
+<div class="description">
+    <p>This directive creates a layertree based on the c2cgeoportal JSON themes
+source and a <a href="ngeo.layertreeDirective.html"><code>ngeo.layertreeDirective</code></a>. The controller used by this
+directive defines some fonctions for each node that are created by a default
+template. This default template can be overrided by setting the constant
+'gmf.layertreeTemplateUrl' but you will must adapt the
+ngeoLayertreeTemplateUrl value too (to define the children's nodes template
+path).</p>
+</div>
 
 
-  // Update arr2 when elements are added to, or removed from, arr1.
-
-  var dereg1 = scope.$watchCollection(function() {
-    return arr1;
-  }, function() {
-    var i, ii, j;
-    if (reverse) {
-      for (i = arr1.length - 1, j = 0; i >= 0; --i) {
-        if (filter(arr1[i])) {
-          arr2[j++] = arr1[i];
-        }
-      }
-    } else {
-      for (i = 0, ii = arr1.length, j = 0; i &lt; ii; ++i) {
-        if (filter(arr1[i])) {
-          arr2[j++] = arr1[i];
-        }
-      }
-    }
-    arr2.length = j;
-  });
 
 
-  // Update arr1 when the order of elements changes in arr2.
-
-  var dereg2 = scope.$watchCollection(function() {
-    return arr2;
-  }, function() {
-    var i, ii, j;
-    if (reverse) {
-      for (i = 0, ii = arr1.length, j = arr2.length - 1; i &lt; ii; ++i) {
-        if (filter(arr1[i])) {
-          arr1[i] = arr2[j--];
-        }
-      }
-      goog.asserts.assert(j == -1);
-    } else {
-      for (i = 0, ii = arr1.length, j = 0; i &lt; ii; ++i) {
-        if (filter(arr1[i])) {
-          arr1[i] = arr2[j++];
-        }
-      }
-      goog.asserts.assert(j == arr2.length);
-    }
-  });
-
-  return function() {
-    dereg1();
-    dereg2();
-  };
-};
 
 
-ngeoModule.value('ngeoSyncArrays', ngeo.syncArrays);
-</code></pre>
-        </article>
-    </section>
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gmfLayertreeTemplate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Template for the directive.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The directive specs.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">angular.Directive</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;gmf-layertree
+  gmf-layertree-source="ctrl.source"
+  gmf-layertree-map="ctrl.map"
+&lt;/gmf-layertree></code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

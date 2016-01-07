@@ -122703,6 +122703,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *     <div ngeo-layertree="ctrl.tree"
  *          ngeo-layertree-map="ctrl.map"
  *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *          ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
  *     </div>
  *
  * The "ngeo-layertree", "ngeo-layertree-map" and
@@ -122720,6 +122721,11 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *   call with "node" as the argument to the function call. E.g.
  *   "ngeo-layertree-nodelayer="ctrl.getLayer(node)".
  *
+ * - The "ngeo-layertree-listeners" specifies an expression providing a function
+ *   to bind scope events to customs functions. You'll must set the listener on
+ *   the "treeScope" and probably use "treeCtrl" as context. E.g.
+ *   "ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)".
+ *
  * The directive comes with a default template. That template assumes that
  * tree nodes that are not leaves have a "children" property referencing an
  * array of child nodes. It also assumes that nodes have a "name" property.
@@ -122735,6 +122741,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *          ngeo-layertree-templateurl="path/to/layertree.html"
  *          ngeo-layertree-map="ctrl.map"
  *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *          ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
  *     </div>
  *
  * The directive has its own scope, but it is not an isolate scope. That scope
@@ -122864,12 +122871,6 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
       ($scope.$eval(nodelayerExpr, {'node': this.node}));
 
   /**
-   * @type {ol.Map}
-   * @private
-   */
-  this.map_ = map;
-
-  /**
    * @type {number}
    * @export
    */
@@ -122893,8 +122894,24 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
   $scope['uid'] = this.uid;
   $scope['depth'] = this.depth;
 
-  $scope['layertreeCtrl'] = this;
+  var listenersExpr = $attrs['ngeoLayertreeListeners'];
+  if (!goog.isDef(listenersExpr)) {
+    var listenersexprExpr = $attrs['ngeoLayertreeListenersexpr'];
+    listenersExpr = /** @type {string} */ ($scope.$eval(listenersexprExpr));
+  }
 
+  /**
+   * @type {string}
+   * @export
+   */
+  this.listenersExpr = listenersExpr;
+
+  // Eval function to bind functions to this tree's events.
+  if (goog.isDefAndNotNull(listenersExpr)) {
+    $scope.$eval(listenersExpr, {'treeScope': $scope, 'treeCtrl': this});
+  }
+
+  $scope['layertreeCtrl'] = this;
 };
 
 
@@ -122905,7 +122922,7 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
  */
 ngeo.LayertreeController.prototype.getSetActive = function(val) {
   var layer = this.layer;
-  var map = this.map_;
+  var map = this.map;
   goog.asserts.assert(!goog.isNull(this.layer));
   if (goog.isDef(val)) {
     if (!val) {
@@ -129870,7 +129887,7 @@ goog.require('ngeo');
   var runner = function($templateCache) {
     $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span>{{title}}</span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
     $templateCache.put('ngeo/scaleselector.html', '<div ng-class="::{\'dropdown\': true, \'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-primary" data-toggle=dropdown> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<span class=caret></span> </button> <ul class=dropdown-menu role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
-    $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr> </li> </ul> ');
+    $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr ngeo-layertree-listenersexpr=layertreeCtrl.listenersExpr> </li> </ul> ');
   };
 
   ngeoModule.run(runner);
