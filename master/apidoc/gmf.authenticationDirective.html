@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/services/decoratelayer.js</title>
+    <title>JSDoc: Class: authenticationDirective <small>directive:gmfAuthentication</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,84 +17,216 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/services/decoratelayer.js</h1>
+    <h1 class="page-title">Class: authenticationDirective <small>directive:gmfAuthentication</small></h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.DecorateLayer');
+        <h2 id="authenticationDirective">
+            <span class="ancestors">gmf.</span>authenticationDirective
+        </h2>
+        
+    
+</header>
 
-goog.require('goog.asserts');
-goog.require('ngeo');
+<article>
+    <div class="container-overview">
+    
+        
 
+    
 
-/**
- * Provides a function that adds properties (using
- * `Object.defineProperty`) to the layer, making it possible to control layer
- * properties with ngModel.
- *
- * @example
- * &lt;input type="checkbox" ngModel="layer.visible" />
- *
- * @typedef {function(ol.layer.Layer)}
- * @ngdoc service
- * @ngname ngeoDecorateLayer
- */
-ngeo.DecorateLayer;
+    <h4 class="name" id="authenticationDirective"><span class="type-signature"></span>new authenticationDirective<span class="signature">(gmfAuthenticationTemplateUrl)</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
+
+    
 
 
-/**
- * @param {ol.layer.Layer} layer Layer to decorate.
- */
-ngeo.decorateLayer = function(layer) {
-  goog.asserts.assertInstanceof(layer, ol.layer.Layer);
 
-  Object.defineProperty(layer, 'visible', {
-    configurable: true,
-    get:
-        /**
-         * @return {boolean} Visible.
-         */
-        function() {
-          return layer.getVisible();
-        },
-    set:
-        /**
-         * @param {boolean} val Visible.
-         */
-        function(val) {
-          layer.setVisible(val);
-        }
-  });
-
-  Object.defineProperty(layer, 'opacity', {
-    configurable: true,
-    get:
-        /**
-         * @return {string} Opacity.
-         */
-        function() {
-          return (Math.round(layer.getOpacity() * 100) / 100) + '';
-        },
-    set:
-        /**
-         * @param {string} val Opacity.
-         */
-        function(val) {
-          layer.setOpacity(+val);
-        }
-  });
-};
+<div class="description">
+    <p>An &quot;authentication&quot; directive for a GeoMapFish application. With the
+use of the &quot;authentication&quot; service, it features a complete interface
+for the user to be able to login, logout, change or reset his or her
+password.  The <code>gmfUser</code> angular value is also used to keep track of
+the user information. When empty, that means that the user isn't connected
+yet.</p>
+<p>While not logged in, the &quot;login&quot; form is shown, which allows the user to
+either log in or ask for a password reset.</p>
+<p>Once logged in, the &quot;logout&quot; form is shown, which allows the user to either
+log out or change his or her password.</p>
+</div>
 
 
-ngeoModule.value('ngeoDecorateLayer', ngeo.decorateLayer);
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gmfAuthenticationTemplateUrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Url to template.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_authenticationdirective.js.html">contribs/gmf/src/directives/authenticationdirective.js</a>, <a href="contribs_gmf_src_directives_authenticationdirective.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The Directive Definition Object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">angular.Directive</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;gmf-authentication>&lt;/gmf-authentication></code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
