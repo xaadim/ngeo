@@ -6594,6 +6594,10 @@ main button:before {
 main button:hover {
   cursor: pointer;
 }
+gmf-authentication {
+  padding: 10px 20px;
+  display: block;
+}
 gmf-map {
   position: initial;
 }

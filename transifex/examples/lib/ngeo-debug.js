@@ -23134,7 +23134,7 @@ ol.View.createResolutionConstraint_ = function(options) {
     var size = !extent ?
         // use an extent that can fit the whole world if need be
         360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
-            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
+            projection.getMetersPerUnit() :
         Math.max(ol.extent.getWidth(extent), ol.extent.getHeight(extent));
 
     var defaultMaxResolution = size / ol.DEFAULT_TILE_SIZE / Math.pow(
@@ -23853,7 +23853,7 @@ ol.Attribution.prototype.intersectsAnyTileRange =
         return true;
       }
       var extentTileRange = tileGrid.getTileRangeForExtentAndZ(
-          projection.getExtent(), parseInt(zKey, 10));
+          ol.tilegrid.extentFromProjection(projection), parseInt(zKey, 10));
       var width = extentTileRange.getWidth();
       if (tileRange.minX < extentTileRange.minX ||
           tileRange.maxX > extentTileRange.maxX) {
@@ -51358,6 +51358,7 @@ goog.require('goog.asserts');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
+goog.require('ol.color');
 goog.require('ol.dom');
 goog.require('ol.style.Image');
 goog.require('ol.style.ImageState');
@@ -51477,11 +51478,17 @@ ol.style.Icon = function(opt_options) {
       ol.style.ImageState.IDLE : ol.style.ImageState.LOADED;
 
   /**
+   * @type {ol.Color}
+   */
+  var color = options.color !== undefined ? ol.color.asArray(options.color) :
+      null;
+
+  /**
    * @private
    * @type {ol.style.IconImage_}
    */
   this.iconImage_ = ol.style.IconImage_.get(
-      image, src, imgSize, crossOrigin, imageState);
+      image, src, imgSize, crossOrigin, imageState, color);
 
   /**
    * @private
@@ -51724,10 +51731,12 @@ ol.style.Icon.prototype.unlistenImageChange = function(listener, thisArg) {
  * @param {ol.Size} size Size.
  * @param {?string} crossOrigin Cross origin.
  * @param {ol.style.ImageState} imageState Image state.
+ * @param {ol.Color} color Color.
  * @extends {goog.events.EventTarget}
  * @private
  */
-ol.style.IconImage_ = function(image, src, size, crossOrigin, imageState) {
+ol.style.IconImage_ = function(image, src, size, crossOrigin, imageState,
+                               color) {
 
   goog.base(this);
 
@@ -51746,6 +51755,20 @@ ol.style.IconImage_ = function(image, src, size, crossOrigin, imageState) {
   if (crossOrigin !== null) {
     this.image_.crossOrigin = crossOrigin;
   }
+
+  /**
+   * @private
+   * @type {HTMLCanvasElement}
+   */
+  this.canvas_ = color ?
+      /** @type {HTMLCanvasElement} */ (document.createElement('CANVAS')) :
+      null;
+
+  /**
+   * @private
+   * @type {ol.Color}
+   */
+  this.color_ = color;
 
   /**
    * @private
@@ -51790,15 +51813,17 @@ goog.inherits(ol.style.IconImage_, goog.events.EventTarget);
  * @param {ol.Size} size Size.
  * @param {?string} crossOrigin Cross origin.
  * @param {ol.style.ImageState} imageState Image state.
+ * @param {ol.Color} color Color.
  * @return {ol.style.IconImage_} Icon image.
  */
-ol.style.IconImage_.get = function(image, src, size, crossOrigin, imageState) {
+ol.style.IconImage_.get = function(image, src, size, crossOrigin, imageState,
+                                   color) {
   var iconImageCache = ol.style.IconImageCache.getInstance();
-  var iconImage = iconImageCache.get(src, crossOrigin);
+  var iconImage = iconImageCache.get(src, crossOrigin, color);
   if (!iconImage) {
     iconImage = new ol.style.IconImage_(
-        image, src, size, crossOrigin, imageState);
-    iconImageCache.set(src, crossOrigin, iconImage);
+        image, src, size, crossOrigin, imageState, color);
+    iconImageCache.set(src, crossOrigin, color, iconImage);
   }
   return iconImage;
 };
@@ -51844,6 +51869,7 @@ ol.style.IconImage_.prototype.handleImageLoad_ = function() {
   this.size_ = [this.image_.width, this.image_.height];
   this.unlistenImage_();
   this.determineTainting_();
+  this.replaceColor_();
   this.dispatchChangeEvent_();
 };
 
@@ -51853,7 +51879,7 @@ ol.style.IconImage_.prototype.handleImageLoad_ = function() {
  * @return {Image|HTMLCanvasElement} Image or Canvas element.
  */
 ol.style.IconImage_.prototype.getImage = function(pixelRatio) {
-  return this.image_;
+  return this.canvas_ ? this.canvas_ : this.image_;
 };
 
 
@@ -51927,6 +51953,38 @@ ol.style.IconImage_.prototype.load = function() {
 
 
 /**
+ * @private
+ */
+ol.style.IconImage_.prototype.replaceColor_ = function() {
+  if (this.tainting_ || this.color_ === null) {
+    return;
+  }
+
+  goog.asserts.assert(this.canvas_ !== null,
+      'this.canvas_ must not be null');
+
+  this.canvas_.width = this.image_.width;
+  this.canvas_.height = this.image_.height;
+
+  var ctx = this.canvas_.getContext('2d');
+  ctx.drawImage(this.image_, 0, 0);
+
+  var imgData = ctx.getImageData(0, 0, this.image_.width, this.image_.height);
+  var data = imgData.data;
+  var r = this.color_[0] / 255.0;
+  var g = this.color_[1] / 255.0;
+  var b = this.color_[2] / 255.0;
+
+  for (var i = 0, ii = data.length; i < ii; i += 4) {
+    data[i] *= r;
+    data[i + 1] *= g;
+    data[i + 2] *= b;
+  }
+  ctx.putImageData(imgData, 0, 0);
+};
+
+
+/**
  * Discards event handlers which listen for load completion or errors.
  *
  * @private
@@ -51970,12 +52028,14 @@ goog.addSingletonGetter(ol.style.IconImageCache);
 /**
  * @param {string} src Src.
  * @param {?string} crossOrigin Cross origin.
+ * @param {ol.Color} color Color.
  * @return {string} Cache key.
  */
-ol.style.IconImageCache.getKey = function(src, crossOrigin) {
+ol.style.IconImageCache.getKey = function(src, crossOrigin, color) {
   goog.asserts.assert(crossOrigin !== undefined,
       'argument crossOrigin must be defined');
-  return crossOrigin + ':' + src;
+  var colorString = color ? ol.color.asString(color) : 'null';
+  return crossOrigin + ':' + src + ':' + colorString;
 };
 
 
@@ -52009,10 +52069,11 @@ ol.style.IconImageCache.prototype.expire = function() {
 /**
  * @param {string} src Src.
  * @param {?string} crossOrigin Cross origin.
+ * @param {ol.Color} color Color.
  * @return {ol.style.IconImage_} Icon image.
  */
-ol.style.IconImageCache.prototype.get = function(src, crossOrigin) {
-  var key = ol.style.IconImageCache.getKey(src, crossOrigin);
+ol.style.IconImageCache.prototype.get = function(src, crossOrigin, color) {
+  var key = ol.style.IconImageCache.getKey(src, crossOrigin, color);
   return key in this.cache_ ? this.cache_[key] : null;
 };
 
@@ -52020,10 +52081,12 @@ ol.style.IconImageCache.prototype.get = function(src, crossOrigin) {
 /**
  * @param {string} src Src.
  * @param {?string} crossOrigin Cross origin.
+ * @param {ol.Color} color Color.
  * @param {ol.style.IconImage_} iconImage Icon image.
  */
-ol.style.IconImageCache.prototype.set = function(src, crossOrigin, iconImage) {
-  var key = ol.style.IconImageCache.getKey(src, crossOrigin);
+ol.style.IconImageCache.prototype.set = function(src, crossOrigin, color,
+                                                 iconImage) {
+  var key = ol.style.IconImageCache.getKey(src, crossOrigin, color);
   this.cache_[key] = iconImage;
   ++this.cacheSize_;
 };
@@ -53846,7 +53909,6 @@ ol.interaction.DragPan.handleDragEvent_ = function(mapBrowserEvent) {
     ol.coordinate.rotate(center, viewState.rotation);
     ol.coordinate.add(center, viewState.center);
     center = view.constrainCenter(center);
-    map.render();
     view.setCenter(center);
   }
   this.lastCentroid = centroid;
@@ -53879,7 +53941,6 @@ ol.interaction.DragPan.handleUpEvent_ = function(mapBrowserEvent) {
       view.setCenter(dest);
     }
     view.setHint(ol.ViewHint.INTERACTING, -1);
-    map.render();
     return false;
   } else {
     this.lastCentroid = null;
@@ -53902,7 +53963,6 @@ ol.interaction.DragPan.handleDownEvent_ = function(mapBrowserEvent) {
     if (!this.handlingDownUpSequence) {
       view.setHint(ol.ViewHint.INTERACTING, 1);
     }
-    map.render();
     if (this.kineticPreRenderFn_ &&
         map.removePreRenderFunction(this.kineticPreRenderFn_)) {
       view.setCenter(mapBrowserEvent.frameState.viewState.center);
@@ -54001,7 +54061,6 @@ ol.interaction.DragRotate.handleDragEvent_ = function(mapBrowserEvent) {
     var delta = theta - this.lastAngle_;
     var view = map.getView();
     var rotation = view.getRotation();
-    map.render();
     ol.interaction.Interaction.rotateWithoutConstraints(
         map, view, rotation - delta);
   }
@@ -54045,7 +54104,6 @@ ol.interaction.DragRotate.handleDownEvent_ = function(mapBrowserEvent) {
   if (browserEvent.isMouseActionButton() && this.condition_(mapBrowserEvent)) {
     var map = mapBrowserEvent.map;
     map.getView().setHint(ol.ViewHint.INTERACTING, 1);
-    map.render();
     this.lastAngle_ = undefined;
     return true;
   } else {
@@ -54711,7 +54769,6 @@ ol.interaction.KeyboardZoom.handleEvent = function(mapBrowserEvent) {
         (charCode == '+'.charCodeAt(0) || charCode == '-'.charCodeAt(0))) {
       var map = mapBrowserEvent.map;
       var delta = (charCode == '+'.charCodeAt(0)) ? this.delta_ : -this.delta_;
-      map.render();
       var view = map.getView();
       goog.asserts.assert(view, 'map must have view');
       ol.interaction.Interaction.zoomByDelta(
@@ -54844,7 +54901,6 @@ ol.interaction.MouseWheelZoom.prototype.doZoom_ = function(map) {
   var view = map.getView();
   goog.asserts.assert(view, 'map must have view');
 
-  map.render();
   ol.interaction.Interaction.zoomByDelta(map, view, -delta, this.lastAnchor_,
       this.duration_);
 
@@ -54986,7 +55042,6 @@ ol.interaction.PinchRotate.handleDragEvent_ = function(mapBrowserEvent) {
   if (this.rotating_) {
     var view = map.getView();
     var rotation = view.getRotation();
-    map.render();
     ol.interaction.Interaction.rotateWithoutConstraints(map, view,
         rotation + rotationDelta, this.anchor_);
   }
@@ -55032,7 +55087,6 @@ ol.interaction.PinchRotate.handleDownEvent_ = function(mapBrowserEvent) {
     if (!this.handlingDownUpSequence) {
       map.getView().setHint(ol.ViewHint.INTERACTING, 1);
     }
-    map.render();
     return true;
   } else {
     return false;
@@ -55145,7 +55199,6 @@ ol.interaction.PinchZoom.handleDragEvent_ = function(mapBrowserEvent) {
   this.anchor_ = map.getCoordinateFromPixel(centroid);
 
   // scale, bypass the resolution constraint
-  map.render();
   ol.interaction.Interaction.zoomWithoutConstraints(
       map, view, resolution * scaleDelta, this.anchor_);
 
@@ -55192,7 +55245,6 @@ ol.interaction.PinchZoom.handleDownEvent_ = function(mapBrowserEvent) {
     if (!this.handlingDownUpSequence) {
       map.getView().setHint(ol.ViewHint.INTERACTING, 1);
     }
-    map.render();
     return true;
   } else {
     return false;
@@ -85881,14 +85933,10 @@ goog.require('goog.events');
 goog.require('goog.style');
 goog.require('ol');
 goog.require('ol.Object');
-goog.require('ol.TransformFunction');
 goog.require('ol.control.Control');
 goog.require('ol.css');
-goog.require('ol.math');
-goog.require('ol.proj');
 goog.require('ol.proj.METERS_PER_UNIT');
 goog.require('ol.proj.Units');
-goog.require('ol.sphere.NORMAL');
 
 
 /**
@@ -85978,12 +86026,6 @@ ol.control.ScaleLine = function(opt_options) {
    * @type {string}
    */
   this.renderedHTML_ = '';
-
-  /**
-   * @private
-   * @type {?ol.TransformFunction}
-   */
-  this.toEPSG4326_ = null;
 
   var render = options.render ? options.render : ol.control.ScaleLine.render;
 
@@ -86076,61 +86118,21 @@ ol.control.ScaleLine.prototype.updateElement_ = function() {
 
   var center = viewState.center;
   var projection = viewState.projection;
+  var metersPerUnit = projection.getMetersPerUnit();
   var pointResolution =
-      projection.getPointResolution(viewState.resolution, center);
-  var projectionUnits = projection.getUnits();
-
-  var cosLatitude;
-  var units = this.getUnits();
-  if (projectionUnits == ol.proj.Units.DEGREES &&
-      (units == ol.control.ScaleLineUnits.METRIC ||
-       units == ol.control.ScaleLineUnits.IMPERIAL ||
-       units == ol.control.ScaleLineUnits.US ||
-       units == ol.control.ScaleLineUnits.NAUTICAL)) {
-
-    // Convert pointResolution from degrees to meters
-    this.toEPSG4326_ = null;
-    cosLatitude = Math.cos(ol.math.toRadians(center[1]));
-    pointResolution *= Math.PI * cosLatitude * ol.sphere.NORMAL.radius / 180;
-    projectionUnits = ol.proj.Units.METERS;
-
-  } else if (projectionUnits != ol.proj.Units.DEGREES &&
-      units == ol.control.ScaleLineUnits.DEGREES) {
-
-    // Convert pointResolution from other units to degrees
-    if (!this.toEPSG4326_) {
-      this.toEPSG4326_ = ol.proj.getTransformFromProjections(
-          projection, ol.proj.get('EPSG:4326'));
-    }
-    cosLatitude = Math.cos(ol.math.toRadians(this.toEPSG4326_(center)[1]));
-    var radius = ol.sphere.NORMAL.radius;
-    goog.asserts.assert(ol.proj.METERS_PER_UNIT[projectionUnits],
-        'Meters per unit should be defined for the projection unit');
-    radius /= ol.proj.METERS_PER_UNIT[projectionUnits];
-    pointResolution *= 180 / (Math.PI * cosLatitude * radius);
-    projectionUnits = ol.proj.Units.DEGREES;
-
-  } else {
-    this.toEPSG4326_ = null;
-  }
-
-  goog.asserts.assert(
-      ((units == ol.control.ScaleLineUnits.METRIC ||
-        units == ol.control.ScaleLineUnits.IMPERIAL ||
-        units == ol.control.ScaleLineUnits.US ||
-        units == ol.control.ScaleLineUnits.NAUTICAL) &&
-       projectionUnits == ol.proj.Units.METERS) ||
-      (units == ol.control.ScaleLineUnits.DEGREES &&
-       projectionUnits == ol.proj.Units.DEGREES),
-      'Scale line units and projection units should match');
+      projection.getPointResolution(viewState.resolution, center) *
+      metersPerUnit;
 
   var nominalCount = this.minWidth_ * pointResolution;
   var suffix = '';
+  var units = this.getUnits();
   if (units == ol.control.ScaleLineUnits.DEGREES) {
-    if (nominalCount < 1 / 60) {
+    var metersPerDegree = ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES];
+    pointResolution /= metersPerDegree;
+    if (nominalCount < metersPerDegree / 60) {
       suffix = '\u2033'; // seconds
       pointResolution *= 3600;
-    } else if (nominalCount < 1) {
+    } else if (nominalCount < metersPerDegree) {
       suffix = '\u2032'; // minutes
       pointResolution *= 60;
     } else {
@@ -86179,7 +86181,7 @@ ol.control.ScaleLine.prototype.updateElement_ = function() {
       Math.log(this.minWidth_ * pointResolution) / Math.log(10));
   var count, width;
   while (true) {
-    count = ol.control.ScaleLine.LEADING_DIGITS[i % 3] *
+    count = ol.control.ScaleLine.LEADING_DIGITS[((i % 3) + 3) % 3] *
         Math.pow(10, Math.floor(i / 3));
     width = Math.round(count / pointResolution);
     if (isNaN(width)) {
@@ -89080,6 +89082,23 @@ ol.geom.LineString.prototype.getCoordinates = function() {
 
 
 /**
+ * Return the coordinate at the provided fraction along the linestring.
+ * The `fraction` is a number between 0 and 1, where 0 is the start of the
+ * linestring and 1 is the end.
+ * @param {number} fraction Fraction.
+ * @param {ol.Coordinate=} opt_dest Optional coordinate whose values will
+ *     be modified. If not provided, a new coordinate will be returned.
+ * @return {ol.Coordinate} Coordinate of the interpolated point.
+ * @api
+ */
+ol.geom.LineString.prototype.getCoordinateAt = function(fraction, opt_dest) {
+  return ol.geom.flat.interpolate.lineString(
+      this.flatCoordinates, 0, this.flatCoordinates.length, this.stride,
+      fraction, opt_dest);
+};
+
+
+/**
  * Return the length of the linestring on projected plane.
  * @return {number} Length (on projected plane).
  * @api stable
@@ -89095,9 +89114,7 @@ ol.geom.LineString.prototype.getLength = function() {
  */
 ol.geom.LineString.prototype.getFlatMidpoint = function() {
   if (this.flatMidpointRevision_ != this.getRevision()) {
-    this.flatMidpoint_ = ol.geom.flat.interpolate.lineString(
-        this.flatCoordinates, 0, this.flatCoordinates.length, this.stride,
-        0.5, this.flatMidpoint_);
+    this.flatMidpoint_ = this.getCoordinateAt(0.5, this.flatMidpoint_);
     this.flatMidpointRevision_ = this.getRevision();
   }
   return this.flatMidpoint_;
@@ -110920,7 +110937,6 @@ ol.interaction.DragRotateAndZoom.handleDragEvent_ = function(mapBrowserEvent) {
   var theta = Math.atan2(delta.y, delta.x);
   var magnitude = delta.magnitude();
   var view = map.getView();
-  map.render();
   if (this.lastAngle_ !== undefined) {
     var angleDelta = theta - this.lastAngle_;
     ol.interaction.Interaction.rotateWithoutConstraints(
@@ -118579,6 +118595,279 @@ ol.source.TileDebug.prototype.getTile = function(z, x, y) {
   }
 };
 
+// Copyright 2013 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview This file contain classes that add support for cross-domain XHR
+ * requests (see http://www.w3.org/TR/cors/). Most modern browsers are able to
+ * use a regular XMLHttpRequest for that, but IE 8 use XDomainRequest object
+ * instead. This file provides an adapter from this object to a goog.net.XhrLike
+ * and a factory to allow using this with a goog.net.XhrIo instance.
+ *
+ * IE 7 and older versions are not supported (given that they do not support
+ * CORS requests).
+ */
+goog.provide('goog.net.CorsXmlHttpFactory');
+goog.provide('goog.net.IeCorsXhrAdapter');
+
+goog.require('goog.net.HttpStatus');
+goog.require('goog.net.XhrLike');
+goog.require('goog.net.XmlHttp');
+goog.require('goog.net.XmlHttpFactory');
+
+
+
+/**
+ * A factory of XML http request objects that supports cross domain requests.
+ * This class should be instantiated and passed as the parameter of a
+ * goog.net.XhrIo constructor to allow cross-domain requests in every browser.
+ *
+ * @extends {goog.net.XmlHttpFactory}
+ * @constructor
+ * @final
+ */
+goog.net.CorsXmlHttpFactory = function() {
+  goog.net.XmlHttpFactory.call(this);
+};
+goog.inherits(goog.net.CorsXmlHttpFactory, goog.net.XmlHttpFactory);
+
+
+/** @override */
+goog.net.CorsXmlHttpFactory.prototype.createInstance = function() {
+  var xhr = new XMLHttpRequest();
+  if (('withCredentials' in xhr)) {
+    return xhr;
+  } else if (typeof XDomainRequest != 'undefined') {
+    return new goog.net.IeCorsXhrAdapter();
+  } else {
+    throw Error('Unsupported browser');
+  }
+};
+
+
+/** @override */
+goog.net.CorsXmlHttpFactory.prototype.internalGetOptions = function() {
+  return {};
+};
+
+
+
+/**
+ * An adapter around Internet Explorer's XDomainRequest object that makes it
+ * look like a standard XMLHttpRequest. This can be used instead of
+ * XMLHttpRequest to support CORS.
+ *
+ * @implements {goog.net.XhrLike}
+ * @constructor
+ * @struct
+ * @final
+ */
+goog.net.IeCorsXhrAdapter = function() {
+  /**
+   * The underlying XDomainRequest used to make the HTTP request.
+   * @type {!XDomainRequest}
+   * @private
+   */
+  this.xdr_ = new XDomainRequest();
+
+  /**
+   * The simulated ready state.
+   * @type {number}
+   */
+  this.readyState = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
+
+  /**
+   * The simulated ready state change callback function.
+   * @type {Function}
+   */
+  this.onreadystatechange = null;
+
+  /**
+   * The simulated response text parameter.
+   * @type {?string}
+   */
+  this.responseText = null;
+
+  /**
+   * The simulated status code
+   * @type {number}
+   */
+  this.status = -1;
+
+  /** @override */
+  this.responseXML = null;
+
+  /** @override */
+  this.statusText = null;
+
+  this.xdr_.onload = goog.bind(this.handleLoad_, this);
+  this.xdr_.onerror = goog.bind(this.handleError_, this);
+  this.xdr_.onprogress = goog.bind(this.handleProgress_, this);
+  this.xdr_.ontimeout = goog.bind(this.handleTimeout_, this);
+};
+
+
+/**
+ * Opens a connection to the provided URL.
+ * @param {string} method The HTTP method to use. Valid methods include GET and
+ *     POST.
+ * @param {string} url The URL to contact. The authority of this URL must match
+ *     the authority of the current page's URL (e.g. http or https).
+ * @param {?boolean=} opt_async Whether the request is asynchronous, defaulting
+ *     to true. XDomainRequest does not support syncronous requests, so setting
+ *     it to false will actually raise an exception.
+ * @override
+ */
+goog.net.IeCorsXhrAdapter.prototype.open = function(method, url, opt_async) {
+  if (goog.isDefAndNotNull(opt_async) && (!opt_async)) {
+    throw new Error('Only async requests are supported.');
+  }
+  this.xdr_.open(method, url);
+};
+
+
+/**
+ * Sends the request to the remote server. Before calling this function, always
+ * call {@link open}.
+ * @param {(ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string)=}
+ *     opt_content The content to send as POSTDATA, if any. Only string data is
+ *     supported by this implementation.
+ * @override
+ */
+goog.net.IeCorsXhrAdapter.prototype.send = function(opt_content) {
+  if (opt_content) {
+    if (typeof opt_content == 'string') {
+      this.xdr_.send(opt_content);
+    } else {
+      throw new Error('Only string data is supported');
+    }
+  } else {
+    this.xdr_.send();
+  }
+};
+
+
+/**
+ * @override
+ */
+goog.net.IeCorsXhrAdapter.prototype.abort = function() {
+  this.xdr_.abort();
+};
+
+
+/**
+ * Sets a request header to send to the remote server. Because this
+ * implementation does not support request headers, this function does nothing.
+ * @param {string} key The name of the HTTP header to set. Ignored.
+ * @param {string} value The value to set for the HTTP header. Ignored.
+ * @override
+ */
+goog.net.IeCorsXhrAdapter.prototype.setRequestHeader = function(key, value) {
+  // Unsupported; ignore the header.
+};
+
+
+/**
+ * Returns the value of the response header identified by key. This
+ * implementation only supports the 'content-type' header.
+ * @param {string} key The request header to fetch. If this parameter is set to
+ *     'content-type' (case-insensitive), this function returns the value of
+ *     the 'content-type' request header. If this parameter is set to any other
+ *     value, this function always returns an empty string.
+ * @return {string} The value of the response header, or an empty string if key
+ *     is not 'content-type' (case-insensitive).
+ * @override
+ */
+goog.net.IeCorsXhrAdapter.prototype.getResponseHeader = function(key) {
+  if (key.toLowerCase() == 'content-type') {
+    return this.xdr_.contentType;
+  }
+  return '';
+};
+
+
+/**
+ * Handles a request that has fully loaded successfully.
+ * @private
+ */
+goog.net.IeCorsXhrAdapter.prototype.handleLoad_ = function() {
+  // IE only calls onload if the status is 200, so the status code must be OK.
+  this.status = goog.net.HttpStatus.OK;
+  this.responseText = this.xdr_.responseText;
+  this.setReadyState_(goog.net.XmlHttp.ReadyState.COMPLETE);
+};
+
+
+/**
+ * Handles a request that has failed to load.
+ * @private
+ */
+goog.net.IeCorsXhrAdapter.prototype.handleError_ = function() {
+  // IE doesn't tell us what the status code actually is (other than the fact
+  // that it is not 200), so simulate an INTERNAL_SERVER_ERROR.
+  this.status = goog.net.HttpStatus.INTERNAL_SERVER_ERROR;
+  this.responseText = null;
+  this.setReadyState_(goog.net.XmlHttp.ReadyState.COMPLETE);
+};
+
+
+/**
+ * Handles a request that timed out.
+ * @private
+ */
+goog.net.IeCorsXhrAdapter.prototype.handleTimeout_ = function() {
+  this.handleError_();
+};
+
+
+/**
+ * Handles a request that is in the process of loading.
+ * @private
+ */
+goog.net.IeCorsXhrAdapter.prototype.handleProgress_ = function() {
+  // IE only calls onprogress if the status is 200, so the status code must be
+  // OK.
+  this.status = goog.net.HttpStatus.OK;
+  this.setReadyState_(goog.net.XmlHttp.ReadyState.LOADING);
+};
+
+
+/**
+ * Sets this XHR's ready state and fires the onreadystatechange listener (if one
+ * is set).
+ * @param {number} readyState The new ready state.
+ * @private
+ */
+goog.net.IeCorsXhrAdapter.prototype.setReadyState_ = function(readyState) {
+  this.readyState = readyState;
+  if (this.onreadystatechange) {
+    this.onreadystatechange();
+  }
+};
+
+
+/**
+ * Returns the response headers from the server. This implemntation only returns
+ * the 'content-type' header.
+ * @return {string} The headers returned from the server.
+ * @override
+ */
+goog.net.IeCorsXhrAdapter.prototype.getAllResponseHeaders = function() {
+  return 'content-type: ' + this.xdr_.contentType;
+};
+
 // FIXME check order of async callbacks
 
 /**
@@ -118589,6 +118878,9 @@ goog.provide('ol.source.TileJSON');
 goog.provide('ol.tilejson');
 
 goog.require('goog.asserts');
+goog.require('goog.events');
+goog.require('goog.net.CorsXmlHttpFactory');
+goog.require('goog.net.EventType');
 goog.require('goog.net.Jsonp');
 goog.require('goog.net.XhrIo');
 goog.require('ol.Attribution');
@@ -118622,20 +118914,22 @@ ol.source.TileJSON = function(options) {
     wrapX: options.wrapX !== undefined ? options.wrapX : true
   });
 
-  if (options.useXhr) {
-    goog.net.XhrIo.send(options.url, goog.bind(function(e) {
-      var xhr = /** @type {goog.net.XhrIo} */(e.target);
+  if (options.jsonp) {
+    var request = new goog.net.Jsonp(options.url);
+    request.send(undefined, goog.bind(this.handleTileJSONResponse, this),
+        goog.bind(this.handleTileJSONError, this));
+  } else {
+    var xhr = new goog.net.XhrIo(new goog.net.CorsXmlHttpFactory());
+    goog.events.listen(xhr, goog.net.EventType.COMPLETE, function(e) {
       if (xhr.isSuccess()) {
         var response = /** @type {TileJSON} */(xhr.getResponseJson());
         this.handleTileJSONResponse(response);
       } else {
         this.handleTileJSONError();
       }
-    }, this));
-  } else {
-    var request = new goog.net.Jsonp(options.url);
-    request.send(undefined, goog.bind(this.handleTileJSONResponse, this),
-        goog.bind(this.handleTileJSONError, this));
+      xhr.dispose();
+    }, false, this);
+    xhr.send(options.url);
   }
 
 };
@@ -122505,7 +122799,7 @@ ngeo.DesktopGeolocationController = function($scope, $element,
    * @type {ol.Feature}
    * @private
    */
-  this.positionFeature_ = new ol.Feature(new ol.geom.Point([0, 0]));
+  this.positionFeature_ = new ol.Feature();
 
   if (options.positionFeatureStyle) {
     this.positionFeature_.setStyle(options.positionFeatureStyle);
@@ -122594,10 +122888,9 @@ ngeo.DesktopGeolocationController.prototype.deactivate_ = function() {
  */
 ngeo.DesktopGeolocationController.prototype.setPosition_ = function(event) {
   var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
-  var point = /** @type {ol.geom.Point} */
-      (this.positionFeature_.getGeometry());
+  var point = new ol.geom.Point(position);
 
-  point.setCoordinates(position);
+  this.positionFeature_.setGeometry(point);
   this.map_.getView().setCenter(position);
 
   if (this.zoom_ !== undefined) {
@@ -122703,6 +122996,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *     <div ngeo-layertree="ctrl.tree"
  *          ngeo-layertree-map="ctrl.map"
  *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *          ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
  *     </div>
  *
  * The "ngeo-layertree", "ngeo-layertree-map" and
@@ -122720,6 +123014,11 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *   call with "node" as the argument to the function call. E.g.
  *   "ngeo-layertree-nodelayer="ctrl.getLayer(node)".
  *
+ * - The "ngeo-layertree-listeners" specifies an expression providing a function
+ *   to bind scope events to customs functions. You'll must set the listener on
+ *   the "treeScope" and probably use "treeCtrl" as context. E.g.
+ *   "ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)".
+ *
  * The directive comes with a default template. That template assumes that
  * tree nodes that are not leaves have a "children" property referencing an
  * array of child nodes. It also assumes that nodes have a "name" property.
@@ -122735,6 +123034,7 @@ ngeoModule.value('ngeoLayertreeTemplateUrl',
  *          ngeo-layertree-templateurl="path/to/layertree.html"
  *          ngeo-layertree-map="ctrl.map"
  *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *          ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
  *     </div>
  *
  * The directive has its own scope, but it is not an isolate scope. That scope
@@ -122864,12 +123164,6 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
       ($scope.$eval(nodelayerExpr, {'node': this.node}));
 
   /**
-   * @type {ol.Map}
-   * @private
-   */
-  this.map_ = map;
-
-  /**
    * @type {number}
    * @export
    */
@@ -122893,8 +123187,24 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
   $scope['uid'] = this.uid;
   $scope['depth'] = this.depth;
 
-  $scope['layertreeCtrl'] = this;
+  var listenersExpr = $attrs['ngeoLayertreeListeners'];
+  if (!goog.isDef(listenersExpr)) {
+    var listenersexprExpr = $attrs['ngeoLayertreeListenersexpr'];
+    listenersExpr = /** @type {string} */ ($scope.$eval(listenersexprExpr));
+  }
 
+  /**
+   * @type {string}
+   * @export
+   */
+  this.listenersExpr = listenersExpr;
+
+  // Eval function to bind functions to this tree's events.
+  if (goog.isDefAndNotNull(listenersExpr)) {
+    $scope.$eval(listenersExpr, {'treeScope': $scope, 'treeCtrl': this});
+  }
+
+  $scope['layertreeCtrl'] = this;
 };
 
 
@@ -122905,7 +123215,7 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
  */
 ngeo.LayertreeController.prototype.getSetActive = function(val) {
   var layer = this.layer;
-  var map = this.map_;
+  var map = this.map;
   goog.asserts.assert(!goog.isNull(this.layer));
   if (goog.isDef(val)) {
     if (!val) {
@@ -123055,7 +123365,7 @@ ngeo.MobileGeolocationController = function($scope, $element,
    * @type {ol.Feature}
    * @private
    */
-  this.positionFeature_ = new ol.Feature(new ol.geom.Point([0, 0]));
+  this.positionFeature_ = new ol.Feature();
 
   if (options.positionFeatureStyle) {
     this.positionFeature_.setStyle(options.positionFeatureStyle);
@@ -123186,10 +123496,9 @@ ngeo.MobileGeolocationController.prototype.untrack_ = function() {
  */
 ngeo.MobileGeolocationController.prototype.setPosition_ = function(event) {
   var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
-  var point = /** @type {ol.geom.Point} */
-      (this.positionFeature_.getGeometry());
+  var point = new ol.geom.Point(position);
 
-  point.setCoordinates(position);
+  this.positionFeature_.setGeometry(point);
 
   if (this.follow_) {
     this.viewChangedByMe_ = true;
@@ -130373,7 +130682,7 @@ goog.require('ngeo');
   var runner = function($templateCache) {
     $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span>{{title}}</span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
     $templateCache.put('ngeo/scaleselector.html', '<div ng-class="::{\'dropdown\': true, \'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-primary" data-toggle=dropdown> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<span class=caret></span> </button> <ul class=dropdown-menu role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
-    $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr> </li> </ul> ');
+    $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr ngeo-layertree-listenersexpr=layertreeCtrl.listenersExpr> </li> </ul> ');
   };
 
   ngeoModule.run(runner);
@@ -133921,6 +134230,11 @@ goog.exportProperty(
     ol.geom.LineString.prototype,
     'getClosestPoint',
     ol.geom.LineString.prototype.getClosestPoint);
+
+goog.exportProperty(
+    ol.geom.LineString.prototype,
+    'getCoordinateAt',
+    ol.geom.LineString.prototype.getCoordinateAt);
 
 goog.exportProperty(
     ol.geom.LineString.prototype,
