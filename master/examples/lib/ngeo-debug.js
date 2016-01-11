@@ -58468,8 +58468,8 @@ ol.render.canvas.Immediate.prototype.drawImages_ =
     var x = pixelCoordinates[i] - this.imageAnchorX_;
     var y = pixelCoordinates[i + 1] - this.imageAnchorY_;
     if (this.imageSnapToPixel_) {
-      x = (x + 0.5) | 0;
-      y = (y + 0.5) | 0;
+      x = Math.round(x);
+      y = Math.round(y);
     }
     if (rotation !== 0 || this.imageScale_ != 1) {
       var centerX = x + this.imageAnchorX_;
@@ -59869,8 +59869,8 @@ ol.render.canvas.Replay.prototype.replay_ = function(
           x = pixelCoordinates[d] - anchorX;
           y = pixelCoordinates[d + 1] - anchorY;
           if (snapToPixel) {
-            x = (x + 0.5) | 0;
-            y = (y + 0.5) | 0;
+            x = Math.round(x);
+            y = Math.round(y);
           }
           if (scale != 1 || rotation !== 0) {
             var centerX = x + anchorX;
@@ -123637,7 +123637,7 @@ ngeoModule.value('ngeoPopupTemplateUrl',
  * - The directive doesn't create any scope but relies on its parent scope.
  *   Properties like 'content', 'title' or 'open' come from the parent scope.
  *
- * @param {string} ngeoPopupTemplateUrl Url to popup template.
+ * @param {string} ngeoPopupTemplateUrl URL to popup template.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
@@ -129880,6 +129880,509 @@ ngeo.PrintUtils.prototype.getOptimalResolution = function(
 
 
 ngeoModule.service('ngeoPrintUtils', ngeo.PrintUtils);
+
+// Copyright 2011 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Defines error codes to be thrown by storage mechanisms.
+ *
+ */
+
+goog.provide('goog.storage.mechanism.ErrorCode');
+
+
+/**
+ * Errors thrown by storage mechanisms.
+ * @enum {string}
+ */
+goog.storage.mechanism.ErrorCode = {
+  INVALID_VALUE: 'Storage mechanism: Invalid value was encountered',
+  QUOTA_EXCEEDED: 'Storage mechanism: Quota exceeded',
+  STORAGE_DISABLED: 'Storage mechanism: Storage disabled'
+};
+
+// Copyright 2011 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Abstract interface for storing and retrieving data using
+ * some persistence mechanism.
+ *
+ */
+
+goog.provide('goog.storage.mechanism.Mechanism');
+
+
+
+/**
+ * Basic interface for all storage mechanisms.
+ *
+ * @constructor
+ * @struct
+ */
+goog.storage.mechanism.Mechanism = function() {};
+
+
+/**
+ * Set a value for a key.
+ *
+ * @param {string} key The key to set.
+ * @param {string} value The string to save.
+ */
+goog.storage.mechanism.Mechanism.prototype.set = goog.abstractMethod;
+
+
+/**
+ * Get the value stored under a key.
+ *
+ * @param {string} key The key to get.
+ * @return {?string} The corresponding value, null if not found.
+ */
+goog.storage.mechanism.Mechanism.prototype.get = goog.abstractMethod;
+
+
+/**
+ * Remove a key and its value.
+ *
+ * @param {string} key The key to remove.
+ */
+goog.storage.mechanism.Mechanism.prototype.remove = goog.abstractMethod;
+
+// Copyright 2011 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Interface for storing, retieving and scanning data using some
+ * persistence mechanism.
+ *
+ */
+
+goog.provide('goog.storage.mechanism.IterableMechanism');
+
+goog.require('goog.array');
+goog.require('goog.asserts');
+goog.require('goog.iter');
+goog.require('goog.storage.mechanism.Mechanism');
+
+
+
+/**
+ * Interface for all iterable storage mechanisms.
+ *
+ * @constructor
+ * @struct
+ * @extends {goog.storage.mechanism.Mechanism}
+ */
+goog.storage.mechanism.IterableMechanism = function() {
+  goog.storage.mechanism.IterableMechanism.base(this, 'constructor');
+};
+goog.inherits(goog.storage.mechanism.IterableMechanism,
+              goog.storage.mechanism.Mechanism);
+
+
+/**
+ * Get the number of stored key-value pairs.
+ *
+ * Could be overridden in a subclass, as the default implementation is not very
+ * efficient - it iterates over all keys.
+ *
+ * @return {number} Number of stored elements.
+ */
+goog.storage.mechanism.IterableMechanism.prototype.getCount = function() {
+  var count = 0;
+  goog.iter.forEach(this.__iterator__(true), function(key) {
+    goog.asserts.assertString(key);
+    count++;
+  });
+  return count;
+};
+
+
+/**
+ * Returns an iterator that iterates over the elements in the storage. Will
+ * throw goog.iter.StopIteration after the last element.
+ *
+ * @param {boolean=} opt_keys True to iterate over the keys. False to iterate
+ *     over the values.  The default value is false.
+ * @return {!goog.iter.Iterator} The iterator.
+ */
+goog.storage.mechanism.IterableMechanism.prototype.__iterator__ =
+    goog.abstractMethod;
+
+
+/**
+ * Remove all key-value pairs.
+ *
+ * Could be overridden in a subclass, as the default implementation is not very
+ * efficient - it iterates over all keys.
+ */
+goog.storage.mechanism.IterableMechanism.prototype.clear = function() {
+  var keys = goog.iter.toArray(this.__iterator__(true));
+  var selfObj = this;
+  goog.array.forEach(keys, function(key) {
+    selfObj.remove(key);
+  });
+};
+
+// Copyright 2011 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Base class that implements functionality common
+ * across both session and local web storage mechanisms.
+ *
+ */
+
+goog.provide('goog.storage.mechanism.HTML5WebStorage');
+
+goog.require('goog.asserts');
+goog.require('goog.iter.Iterator');
+goog.require('goog.iter.StopIteration');
+goog.require('goog.storage.mechanism.ErrorCode');
+goog.require('goog.storage.mechanism.IterableMechanism');
+
+
+
+/**
+ * Provides a storage mechanism that uses HTML5 Web storage.
+ *
+ * @param {Storage} storage The Web storage object.
+ * @constructor
+ * @struct
+ * @extends {goog.storage.mechanism.IterableMechanism}
+ */
+goog.storage.mechanism.HTML5WebStorage = function(storage) {
+  goog.storage.mechanism.HTML5WebStorage.base(this, 'constructor');
+
+  /**
+   * The web storage object (window.localStorage or window.sessionStorage).
+   * @private {Storage}
+   */
+  this.storage_ = storage;
+};
+goog.inherits(goog.storage.mechanism.HTML5WebStorage,
+              goog.storage.mechanism.IterableMechanism);
+
+
+/**
+ * The key used to check if the storage instance is available.
+ * @private {string}
+ * @const
+ */
+goog.storage.mechanism.HTML5WebStorage.STORAGE_AVAILABLE_KEY_ = '__sak';
+
+
+/**
+ * Determines whether or not the mechanism is available.
+ * It works only if the provided web storage object exists and is enabled.
+ *
+ * @return {boolean} True if the mechanism is available.
+ */
+goog.storage.mechanism.HTML5WebStorage.prototype.isAvailable = function() {
+  if (!this.storage_) {
+    return false;
+  }
+  /** @preserveTry */
+  try {
+    // setItem will throw an exception if we cannot access WebStorage (e.g.,
+    // Safari in private mode).
+    this.storage_.setItem(
+        goog.storage.mechanism.HTML5WebStorage.STORAGE_AVAILABLE_KEY_, '1');
+    this.storage_.removeItem(
+        goog.storage.mechanism.HTML5WebStorage.STORAGE_AVAILABLE_KEY_);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+
+/** @override */
+goog.storage.mechanism.HTML5WebStorage.prototype.set = function(key, value) {
+  /** @preserveTry */
+  try {
+    // May throw an exception if storage quota is exceeded.
+    this.storage_.setItem(key, value);
+  } catch (e) {
+    // In Safari Private mode, conforming to the W3C spec, invoking
+    // Storage.prototype.setItem will allways throw a QUOTA_EXCEEDED_ERR
+    // exception.  Since it's impossible to verify if we're in private browsing
+    // mode, we throw a different exception if the storage is empty.
+    if (this.storage_.length == 0) {
+      throw goog.storage.mechanism.ErrorCode.STORAGE_DISABLED;
+    } else {
+      throw goog.storage.mechanism.ErrorCode.QUOTA_EXCEEDED;
+    }
+  }
+};
+
+
+/** @override */
+goog.storage.mechanism.HTML5WebStorage.prototype.get = function(key) {
+  // According to W3C specs, values can be of any type. Since we only save
+  // strings, any other type is a storage error. If we returned nulls for
+  // such keys, i.e., treated them as non-existent, this would lead to a
+  // paradox where a key exists, but it does not when it is retrieved.
+  // http://www.w3.org/TR/2009/WD-webstorage-20091029/#the-storage-interface
+  var value = this.storage_.getItem(key);
+  if (!goog.isString(value) && !goog.isNull(value)) {
+    throw goog.storage.mechanism.ErrorCode.INVALID_VALUE;
+  }
+  return value;
+};
+
+
+/** @override */
+goog.storage.mechanism.HTML5WebStorage.prototype.remove = function(key) {
+  this.storage_.removeItem(key);
+};
+
+
+/** @override */
+goog.storage.mechanism.HTML5WebStorage.prototype.getCount = function() {
+  return this.storage_.length;
+};
+
+
+/** @override */
+goog.storage.mechanism.HTML5WebStorage.prototype.__iterator__ = function(
+    opt_keys) {
+  var i = 0;
+  var storage = this.storage_;
+  var newIter = new goog.iter.Iterator();
+  newIter.next = function() {
+    if (i >= storage.length) {
+      throw goog.iter.StopIteration;
+    }
+    var key = goog.asserts.assertString(storage.key(i++));
+    if (opt_keys) {
+      return key;
+    }
+    var value = storage.getItem(key);
+    // The value must exist and be a string, otherwise it is a storage error.
+    if (!goog.isString(value)) {
+      throw goog.storage.mechanism.ErrorCode.INVALID_VALUE;
+    }
+    return value;
+  };
+  return newIter;
+};
+
+
+/** @override */
+goog.storage.mechanism.HTML5WebStorage.prototype.clear = function() {
+  this.storage_.clear();
+};
+
+
+/**
+ * Gets the key for a given key index. If an index outside of
+ * [0..this.getCount()) is specified, this function returns null.
+ * @param {number} index A key index.
+ * @return {?string} A storage key, or null if the specified index is out of
+ *     range.
+ */
+goog.storage.mechanism.HTML5WebStorage.prototype.key = function(index) {
+  return this.storage_.key(index);
+};
+
+// Copyright 2011 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Provides data persistence using HTML5 local storage
+ * mechanism. Local storage must be available under window.localStorage,
+ * see: http://www.w3.org/TR/webstorage/#the-localstorage-attribute.
+ *
+ */
+
+goog.provide('goog.storage.mechanism.HTML5LocalStorage');
+
+goog.require('goog.storage.mechanism.HTML5WebStorage');
+
+
+
+/**
+ * Provides a storage mechanism that uses HTML5 local storage.
+ *
+ * @constructor
+ * @struct
+ * @extends {goog.storage.mechanism.HTML5WebStorage}
+ */
+goog.storage.mechanism.HTML5LocalStorage = function() {
+  var storage = null;
+  /** @preserveTry */
+  try {
+    // May throw an exception in cases where the local storage object
+    // is visible but access to it is disabled.
+    storage = window.localStorage || null;
+  } catch (e) {}
+  goog.storage.mechanism.HTML5LocalStorage.base(this, 'constructor', storage);
+};
+goog.inherits(goog.storage.mechanism.HTML5LocalStorage,
+              goog.storage.mechanism.HTML5WebStorage);
+
+/**
+ * @fileoverview This files provides a service for managing the application
+ * state. The application state is written to both the URL and the local
+ * storage.
+ */
+goog.provide('ngeo.StateManager');
+
+goog.require('goog.asserts');
+goog.require('goog.storage.mechanism.HTML5LocalStorage');
+goog.require('ngeo');
+goog.require('ngeo.Location');
+
+
+
+/**
+ * Provides a service for managing the application state.
+ * The application state is written to both the URL and the local storage.
+ * @constructor
+ * @param {ngeo.Location} ngeoLocation ngeo location service.
+ * @ngInject
+ */
+ngeo.StateManager = function(ngeoLocation) {
+
+  /**
+   * Object representing the application's initial state.
+   * @type {Object.<string ,string>}
+   */
+  this.initialState = {};
+
+  /**
+   * @type {ngeo.Location}
+   */
+  this.ngeoLocation = ngeoLocation;
+
+  /**
+   * @type {goog.storage.mechanism.HTML5LocalStorage}
+   */
+  this.localStorage = new goog.storage.mechanism.HTML5LocalStorage();
+
+  // Populate initialState with the application's initial state. The initial
+  // state is read from the location URL, or from the local storage if there
+  // is no state in the location URL.
+
+  var paramKeys = ngeoLocation.getParamKeys();
+  var i, key;
+
+  if (paramKeys.length === 0 ||
+      (paramKeys.length === 1 && paramKeys[0] == 'debug')) {
+    if (this.localStorage.isAvailable()) {
+      var count = this.localStorage.getCount();
+      for (i = 0; i < count; ++i) {
+        key = this.localStorage.key(i);
+        goog.asserts.assert(!goog.isNull(key));
+        this.initialState[key] = this.localStorage.get(key);
+      }
+    }
+  } else {
+    var keys = ngeoLocation.getParamKeys();
+    for (i = 0; i < keys.length; ++i) {
+      key = keys[i];
+      this.initialState[key] = ngeoLocation.getParam(key);
+    }
+  }
+
+  this.ngeoLocation.updateParams({});
+};
+
+
+/**
+ * Get the state value for `key`.
+ * @param {string} key State key.
+ * @return {string|undefined} State value.
+ */
+ngeo.StateManager.prototype.getInitialValue = function(key) {
+  return this.initialState[key];
+};
+
+
+/**
+ * Update the application state with the values in `object`.
+ * @param {Object.<string, string>} object Object.
+ */
+ngeo.StateManager.prototype.updateState = function(object) {
+  this.ngeoLocation.updateParams(object);
+  if (this.localStorage.isAvailable()) {
+    var key;
+    for (key in object) {
+      this.localStorage.set(key, object[key]);
+    }
+  }
+};
+
+
+/**
+ * Delete a parameter
+ * @param {string} key
+ */
+ngeo.StateManager.prototype.deleteParam = function(key) {
+  this.ngeoLocation.deleteParam(key);
+  if (this.localStorage.isAvailable()) {
+    this.localStorage.remove(key);
+  }
+};
+
+ngeoModule.service('ngeoStateManager', ngeo.StateManager);
 
 goog.provide('ngeo.SyncArrays');
 
