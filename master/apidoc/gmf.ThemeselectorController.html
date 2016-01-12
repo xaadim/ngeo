@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/directives/control.js</title>
+    <title>JSDoc: Class: ThemeselectorController <small>controller:gmfThemeselectorController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,70 +17,694 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/directives/control.js</h1>
+    <h1 class="page-title">Class: ThemeselectorController <small>controller:gmfThemeselectorController</small></h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.controlDirective');
+        <h2 id="ThemeselectorController">
+            <span class="ancestors">gmf.</span>ThemeselectorController
+        </h2>
+        
+    
+</header>
 
-goog.require('goog.asserts');
-goog.require('ngeo');
-goog.require('ol.Map');
-goog.require('ol.control.Control');
+<article>
+    <div class="container-overview">
+    
+        
 
+    
 
-/**
- * Provides a directive can be used to add a control to a DOM
- * element of the HTML page.
- *
- * Example:
- *
- *     &lt;div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map">&lt;/div>
- *
- * The expression passed to "ngeo-control" should evaluate to a control
- * instance, and the expression passed to "ngeo-control-map" should
- * evaluate to a map instance.
- *
- * @return {angular.Directive} The directive specs.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoControl
- */
-ngeo.controlDirective = function() {
-  return {
-    restrict: 'A',
-    link:
-        /**
-         * @param {angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         */
-        function(scope, element, attrs) {
+    <h4 class="name" id="ThemeselectorController"><span class="type-signature"></span>new ThemeselectorController<span class="signature">(ngeoLocation, gmfThemes)</span><span class="type-signature"></span></h4>
 
-          var control = /** @type {ol.control.Control} */
-              (scope.$eval(attrs['ngeoControl']));
-          goog.asserts.assertInstanceof(control, ol.control.Control);
-
-          var map = /** @type {ol.Map} */
-              (scope.$eval(attrs['ngeoControlMap']));
-          goog.asserts.assertInstanceof(map, ol.Map);
-
-          control.setTarget(element[0]);
-          map.addControl(control);
-        }
-  };
-};
+    
 
 
-ngeoModule.directive('ngeoControl', ngeo.controlDirective);
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoLocation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ngeo.Location.html">ngeo.Location</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ngeo Location service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmfThemes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="gmf.Themes.html">gmf.Themes</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Themes service.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="currentTheme"><span class="type-signature"></span>currentTheme<span class="type-signature"> :Object</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line55">line 55</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="filter"><span class="type-signature"></span>filter<span class="type-signature"> :function|undefined</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">function</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="themes"><span class="type-signature"></span>themes<span class="type-signature"> :Array.&lt;Object></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;Object></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line49">line 49</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".themeInUrl"><span class="type-signature">(static) </span>themeInUrl<span class="signature">(pathElements)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Return true if there is a theme specified in the URL path.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pathElements</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Array of path elements.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>theme in path.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="switchTheme"><span class="type-signature"></span>switchTheme<span class="signature">(theme)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>theme</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line161">line 161</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

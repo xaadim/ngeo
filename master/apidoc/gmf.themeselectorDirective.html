@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/directives/control.js</title>
+    <title>JSDoc: Class: themeselectorDirective <small>directive:gmfThemeselector</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,70 +17,149 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/directives/control.js</h1>
+    <h1 class="page-title">Class: themeselectorDirective <small>directive:gmfThemeselector</small></h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2 id="themeselectorDirective">
+            <span class="ancestors">gmf.</span>themeselectorDirective
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="themeselectorDirective"><span class="type-signature"></span>new themeselectorDirective<span class="signature">()</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_themeselector.js.html">contribs/gmf/src/directives/themeselector.js</a>, <a href="contribs_gmf_src_directives_themeselector.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The directive specs.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">angular.Directive</span>
+
+
+    </dd>
+</dl>
 
     
 
 
 
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.controlDirective');
+    </div>
 
-goog.require('goog.asserts');
-goog.require('ngeo');
-goog.require('ol.Map');
-goog.require('ol.control.Control');
+    
 
+    
 
-/**
- * Provides a directive can be used to add a control to a DOM
- * element of the HTML page.
- *
- * Example:
- *
- *     &lt;div ngeo-control="ctrl.control" ngeo-control-map="ctrl.map">&lt;/div>
- *
- * The expression passed to "ngeo-control" should evaluate to a control
- * instance, and the expression passed to "ngeo-control-map" should
- * evaluate to a map instance.
- *
- * @return {angular.Directive} The directive specs.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoControl
- */
-ngeo.controlDirective = function() {
-  return {
-    restrict: 'A',
-    link:
-        /**
-         * @param {angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         */
-        function(scope, element, attrs) {
+    
 
-          var control = /** @type {ol.control.Control} */
-              (scope.$eval(attrs['ngeoControl']));
-          goog.asserts.assertInstanceof(control, ol.control.Control);
+     
 
-          var map = /** @type {ol.Map} */
-              (scope.$eval(attrs['ngeoControlMap']));
-          goog.asserts.assertInstanceof(map, ol.Map);
+    
 
-          control.setTarget(element[0]);
-          map.addControl(control);
-        }
-  };
-};
+    
 
+    
 
-ngeoModule.directive('ngeoControl', ngeo.controlDirective);
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+</article>
+
+</section>
 
 
 
