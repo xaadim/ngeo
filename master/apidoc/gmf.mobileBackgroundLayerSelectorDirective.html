@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: PrintUtils <small>service:ngeoPrintUtils</small></title>
+    <title>JSDoc: Class: mobileBackgroundLayerSelectorDirective <small>directive:gmfMobileBackgroundLayerSelector</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: PrintUtils <small>service:ngeoPrintUtils</small></h1>
+    <h1 class="page-title">Class: mobileBackgroundLayerSelectorDirective <small>directive:gmfMobileBackgroundLayerSelector</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="PrintUtils">
-            <span class="ancestors">ngeo.</span>PrintUtils
+        <h2 id="mobileBackgroundLayerSelectorDirective">
+            <span class="ancestors">gmf.</span>mobileBackgroundLayerSelectorDirective
         </h2>
         
     
@@ -42,14 +42,14 @@
 
     
 
-    <h4 class="name" id="PrintUtils"><span class="type-signature"></span>new PrintUtils<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="mobileBackgroundLayerSelectorDirective"><span class="type-signature"></span>new mobileBackgroundLayerSelectorDirective<span class="signature">(gmfMobileBackgroundLayerSelectorTemplateUrl)</span><span class="type-signature"> &rarr; {angular.Directive}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provides a service with print utility functions.</p>
+    <p>Provide a &quot;mobile background layer selector&quot; directive.</p>
 </div>
 
 
@@ -58,6 +58,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gmfMobileBackgroundLayerSelectorTemplateUrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Url to template.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -93,7 +142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line14">line 14</a>
+        <a href="contribs_gmf_src_directives_mobilebackgroundlayerselector.js.html">contribs/gmf/src/directives/mobilebackgroundlayerselector.js</a>, <a href="contribs_gmf_src_directives_mobilebackgroundlayerselector.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -116,6 +165,35 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The Directive Definition Object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">angular.Directive</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;gmf-mobile-background-layer-selector
+  gmf-mobile-background-layer-selector-map="::ctrl.map">
+&lt;/gmf-mobile-background-layer-selector></code></pre>
 
 
 
@@ -134,616 +212,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="createPrintMaskPostcompose"><span class="type-signature"></span>createPrintMaskPostcompose<span class="signature">(getSize, getScale)</span><span class="type-signature"> &rarr; {function}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Return a function to use as map postcompose listener for drawing a print
-mask on the map.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>getSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User-defined function returning the
-size in dots of the map to print.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>getScale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User-defined function
-returning the scale of the map to print.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line42">line 42</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Function to use as a map postcompose
-listener.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">function</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getOptimalResolution"><span class="type-signature"></span>getOptimalResolution<span class="signature">(mapSize, printMapSize, printMapScale)</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Get the optimal map resolution for a print scale and a map size.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mapSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Size">ol.Size</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Size of the map on the screen (px).</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>printMapSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Size">ol.Size</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Size of the map on the paper (dots).</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>printMapScale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Map scale on the paper.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line143">line 143</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The optimal map resolution.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getOptimalScale"><span class="type-signature"></span>getOptimalScale<span class="signature">(mapSize, mapResolution, printMapSize, printMapScales)</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Get the optimal print scale for a map, the map being defined by its
-size (in pixels) and resolution (in map units per pixel).</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mapSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Size">ol.Size</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Size of the map on the screen (px).</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>mapResolution</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Resolution of the map on the screen.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>printMapSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Size">ol.Size</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Size of the map on the paper (dots).</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>printMapScales</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Supported map scales on the paper.
-The scales are provided as scale denominators, sorted in ascending order.
-E.g. <code>[500, 1000, 2000, 4000]</code>.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_printutils.js.html">src/services/printutils.js</a>, <a href="src_services_printutils.js.html#line112">line 112</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The best scale. <code>-1</code> is returned if there is no optimal
-scale, that is the optimal scale is lower than or equal to the first value
-in <code>printMapScales</code>.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
     
 
     
