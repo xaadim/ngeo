@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="LayertreeController"><span class="type-signature"></span>new LayertreeController<span class="signature">($scope, ngeoLayerHelper, gmfWmsUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="LayertreeController"><span class="type-signature"></span>new LayertreeController<span class="signature">(ngeoLayerHelper, gmfWmsUrl)</span><span class="type-signature"></span></h4>
 
     
 
@@ -77,29 +77,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>$scope</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://docs.angularjs.org/guide/scope">angular.Scope</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The directive's scope.</p></td>
-        </tr>
-
     
 
         <tr>
@@ -184,7 +161,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line89">line 89</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line88">line 88</a>
     </li></ul></dd>
     
 
@@ -334,7 +311,7 @@ Currently only creates WMS layers (internal or external) and WMTS layers.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line118">line 118</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -373,6 +350,315 @@ Currently only creates WMS layers (internal or external) and WMTS layers.</p>
     <dd>
         
 <span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.layer.Base.html">ol.layer.Base</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getLegendIconURL"><span class="type-signature"></span>getLegendIconURL<span class="signature">(treeCtrl)</span><span class="type-signature"> &rarr; (nullable) {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the icon image URL for the given treeCtrl's layer. It can only return a
+string for internal WMS layers without multiple childlayers in the node.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>treeCtrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ngeo.LayertreeController.html">ngeo.LayertreeController</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ngeo layertree controller, from
+    the current node.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line278">line 278</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The icon legend URL or null.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getLegendURL"><span class="type-signature"></span>getLegendURL<span class="signature">(treeCtrl)</span><span class="type-signature"> &rarr; (nullable) {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the complete legend URL for the given treeCtrl's layer.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>treeCtrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ngeo.LayertreeController.html">ngeo.LayertreeController</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ngeo layertree controller, from
+    the current node.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line303">line 303</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The legend URL or null.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
 
 
     </dd>
@@ -642,7 +928,7 @@ Currently only creates WMS layers (internal or external) and WMTS layers.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line277">line 277</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -1238,7 +1524,7 @@ the map.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line293">line 293</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line408">line 408</a>
     </li></ul></dd>
     
 
