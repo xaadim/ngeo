@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="LayertreeController"><span class="type-signature"></span>new LayertreeController<span class="signature">(ngeoLayerHelper, gmfWmsUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="LayertreeController"><span class="type-signature"></span>new LayertreeController<span class="signature">($http, $sce, ngeoCreatePopup, ngeoLayerHelper, gmfWmsUrl)</span><span class="type-signature"></span></h4>
 
     
 
@@ -77,6 +77,75 @@
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$http</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://docs.angularjs.org/api/ng/service/$http">angular.$http</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular http service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$sce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://docs.angularjs.org/api/ng/service/$sce">angular.$sce</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular sce service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoCreatePopup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ngeo.html#CreatePopup">ngeo.CreatePopup</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Popup service.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -161,7 +230,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line88">line 88</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -201,9 +270,213 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="openLinksInNewWindow"><span class="type-signature"></span>openLinksInNewWindow<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line146">line 146</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="displayMetadata"><span class="type-signature"></span>displayMetadata<span class="signature">(treeCtrl)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Display a ngeo.infoPopup with the content of the metadata url of a node.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>treeCtrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ngeo.LayertreeController.html">ngeo.LayertreeController</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ngeo layertree controller, from
+    the current node.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line432">line 432</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -311,7 +584,7 @@ Currently only creates WMS layers (internal or external) and WMTS layers.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line117">line 117</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line158">line 158</a>
     </li></ul></dd>
     
 
@@ -466,7 +739,7 @@ string for internal WMS layers without multiple childlayers in the node.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line278">line 278</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line319">line 319</a>
     </li></ul></dd>
     
 
@@ -620,7 +893,7 @@ string for internal WMS layers without multiple childlayers in the node.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line303">line 303</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line344">line 344</a>
     </li></ul></dd>
     
 
@@ -774,7 +1047,7 @@ string for internal WMS layers without multiple childlayers in the node.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line239">line 239</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line280">line 280</a>
     </li></ul></dd>
     
 
@@ -928,7 +1201,7 @@ string for internal WMS layers without multiple childlayers in the node.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line392">line 392</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line461">line 461</a>
     </li></ul></dd>
     
 
@@ -1082,7 +1355,7 @@ the min/max resolution in the node.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line202">line 202</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line243">line 243</a>
     </li></ul></dd>
     
 
@@ -1260,7 +1533,7 @@ relative layertree of the layer catch an on destroy event.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line177">line 177</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line218">line 218</a>
     </li></ul></dd>
     
 
@@ -1393,7 +1666,7 @@ the map.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line222">line 222</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line263">line 263</a>
     </li></ul></dd>
     
 
@@ -1524,7 +1797,7 @@ the map.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line408">line 408</a>
+        <a href="contribs_gmf_src_directives_layertree.js.html">contribs/gmf/src/directives/layertree.js</a>, <a href="contribs_gmf_src_directives_layertree.js.html#line477">line 477</a>
     </li></ul></dd>
     
 
