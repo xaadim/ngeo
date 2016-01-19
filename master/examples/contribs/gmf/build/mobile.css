@@ -9078,7 +9078,7 @@ nav.nav-right ul a {
 nav.nav-left .slide,
 nav.nav-right .slide {
   position: fixed;
-  height: 100%;
+  height: calc(100% - 50px);
   width: 260px;
   -webkit-transform: translateX(100%);
       -ms-transform: translateX(100%);
@@ -9087,6 +9087,7 @@ nav.nav-right .slide {
           transition: transform 0.3s, opacity 0.3s;
   will-change: transform, opacity;
   opacity: 0;
+  overflow-y: auto;
 }
 nav.nav-left .slide.active,
 nav.nav-right .slide.active {
