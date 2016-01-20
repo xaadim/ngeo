@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="AbstractMobileController"><span class="type-signature"></span>new AbstractMobileController<span class="signature">(ngeoFeatureOverlayMgr, gettextCatalog, ngeoStateManager, $scope, ngeoGetBrowserLanguage, gmfThemes, serverVars, fulltextsearchUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AbstractMobileController"><span class="type-signature"></span>new AbstractMobileController<span class="signature">(defaultLang, langUrls, gettextCatalog, ngeoGetBrowserLanguage, $scope, ngeoStateManager, ngeoFeatureOverlayMgr, gmfThemes, fulltextsearchUrl)</span><span class="type-signature"></span></h4>
 
     
 
@@ -81,13 +81,13 @@
 
         <tr>
             
-                <td class="name"><code>ngeoFeatureOverlayMgr</code></td>
+                <td class="name"><code>defaultLang</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="ngeo.FeatureOverlayMgr.html">ngeo.FeatureOverlayMgr</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -97,8 +97,30 @@
 
             
 
-            <td class="description last"><p>The ngeo feature
-    overlay manager service.</p></td>
+            <td class="description last"><p>The default language.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>langUrls</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object.&lt;string, string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The languages URLs.</p></td>
         </tr>
 
     
@@ -128,13 +150,13 @@
 
         <tr>
             
-                <td class="name"><code>ngeoStateManager</code></td>
+                <td class="name"><code>ngeoGetBrowserLanguage</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="ngeo.StateManager.html">ngeo.StateManager</a></span>
+<span class="param-type"><a href="ngeo.html#GetBrowserLanguage">ngeo.GetBrowserLanguage</a></span>
 
 
             
@@ -144,7 +166,7 @@
 
             
 
-            <td class="description last"><p>the state manager.</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -174,13 +196,13 @@
 
         <tr>
             
-                <td class="name"><code>ngeoGetBrowserLanguage</code></td>
+                <td class="name"><code>ngeoStateManager</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="ngeo.html#GetBrowserLanguage">ngeo.GetBrowserLanguage</a></span>
+<span class="param-type"><a href="ngeo.StateManager.html">ngeo.StateManager</a></span>
 
 
             
@@ -190,7 +212,31 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>the state manager.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoFeatureOverlayMgr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ngeo.FeatureOverlayMgr.html">ngeo.FeatureOverlayMgr</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ngeo feature
+    overlay manager service.</p></td>
         </tr>
 
     
@@ -214,29 +260,6 @@
             
 
             <td class="description last"><p>Themes service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>serverVars</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>vars from GMF</p></td>
         </tr>
 
     
@@ -300,7 +323,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line59">line 59</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -398,7 +421,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line158">line 158</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line160">line 160</a>
     </li></ul></dd>
     
 
@@ -466,7 +489,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line142">line 142</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line144">line 144</a>
     </li></ul></dd>
     
 
@@ -538,7 +561,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line170">line 170</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line172">line 172</a>
     </li></ul></dd>
     
 
@@ -610,7 +633,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line164">line 164</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line166">line 166</a>
     </li></ul></dd>
     
 
@@ -678,7 +701,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line89">line 89</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -746,7 +769,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line124">line 124</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line126">line 126</a>
     </li></ul></dd>
     
 
@@ -814,7 +837,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line114">line 114</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -882,7 +905,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line95">line 95</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -950,7 +973,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line152">line 152</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line154">line 154</a>
     </li></ul></dd>
     
 
@@ -1018,7 +1041,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line76">line 76</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -1086,7 +1109,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line147">line 147</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line149">line 149</a>
     </li></ul></dd>
     
 
@@ -1158,7 +1181,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line68">line 68</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -1236,7 +1259,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line199">line 199</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -1314,7 +1337,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line248">line 248</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line250">line 250</a>
     </li></ul></dd>
     
 
@@ -1392,7 +1415,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line219">line 219</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
@@ -1493,7 +1516,7 @@ otherwise false.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line209">line 209</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line211">line 211</a>
     </li></ul></dd>
     
 
@@ -1594,7 +1617,7 @@ otherwise false.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line229">line 229</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line231">line 231</a>
     </li></ul></dd>
     
 
@@ -1744,7 +1767,7 @@ otherwise false.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line238">line 238</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -1822,7 +1845,7 @@ otherwise false.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line182">line 182</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -1900,7 +1923,7 @@ otherwise false.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line190">line 190</a>
+        <a href="contribs_gmf_src_controllers_abstractmobile.js.html">contribs/gmf/src/controllers/abstractmobile.js</a>, <a href="contribs_gmf_src_controllers_abstractmobile.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
