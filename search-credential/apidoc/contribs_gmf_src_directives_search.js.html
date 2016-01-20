@@ -321,9 +321,18 @@ gmf.SearchController.prototype.filterLayername_ = function(groupsKey,
 gmf.SearchController.prototype.createAndInitBloodhound_ = function(config,
     opt_filter) {
   var mapProjectionCode = this.map_.getView().getProjection().getCode();
+  var queryOptions = {
+    param: 'query',
+    xhrFields: {
+      withCredentials: true
+    }
+  };
+  if (config.queryOptions) {
+    goog.object.extend(queryOptions, config.queryOptions);
+  }
   var bloodhound = this.ngeoCreateGeoJSONBloodhound_(config.url, opt_filter,
       ol.proj.get(mapProjectionCode), ol.proj.get(config.projection),
-      config.bloodhoundOptions);
+      config.bloodhoundOptions, queryOptions);
   bloodhound.initialize();
   return bloodhound;
 };
