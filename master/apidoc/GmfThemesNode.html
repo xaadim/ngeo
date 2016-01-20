@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: sortableDirective <small>directive:ngeoSortable</small></title>
+    <title>JSDoc: Class: GmfThemesNode</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: sortableDirective <small>directive:ngeoSortable</small></h1>
+    <h1 class="page-title">Class: GmfThemesNode</h1>
 
     
 
@@ -28,8 +28,7 @@
 
 <header>
     
-        <h2 id="sortableDirective">
-            <span class="ancestors">ngeo.</span>sortableDirective
+        <h2 id="GmfThemesNode">GmfThemesNode
         </h2>
         
     
@@ -42,33 +41,11 @@
 
     
 
-    <h4 class="name" id="sortableDirective"><span class="type-signature"></span>new sortableDirective<span class="signature">($timeout)</span><span class="type-signature"> &rarr; {<a href="https://docs.angularjs.org/guide/directive">angular.Directive</a>}</span></h4>
+    <h4 class="name" id="GmfThemesNode"><span class="type-signature"></span>new GmfThemesNode<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
-
-<div class="description">
-    <p>Provides the &quot;ngeoSortable&quot; directive. This directive allows
-drag-and-dropping DOM items between them. The directive also changes the
-order of elements in the array it is given.</p>
-<p>It is typically used together with <code>ng-repeat</code>, for example for re-ordering
-layers in a map.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code>&lt;ul ngeo-sortable=&quot;ctrl.layers&quot;
-    ngeo-sortable-options=&quot;{handleClassName: 'sortable-handle'}&quot;>
-  &lt;li ng-repeat=&quot;layer in ctrl.layers&quot;>
-    &lt;span class=&quot;sortable-handle&quot;>handle&lt;/span>{{layer.get('name')}}
-  &lt;/li>
-&lt;/ul></code></pre><p>The value of the &quot;ngeo-sortable&quot; attribute is an expression which evaluates
-to an array (an array of layers in the above example). This is the array
-that is re-ordered after a drag-and-drop.</p>
-<p>The element with the class &quot;sortable-handle&quot; is the &quot;drag handle&quot;. It is
-required.</p>
-<p>This directives uses <code>$watchCollection</code> to watch the &quot;sortable&quot; array. So
-if some outside code adds/removes elements to/from the &quot;sortable&quot; array,
-the &quot;ngeoSortable&quot; directive will pick it up.</p>
-</div>
 
 
 
@@ -113,7 +90,7 @@ the &quot;ngeoSortable&quot; directive will pick it up.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_sortable.js.html">src/directives/sortable.js</a>, <a href="src_directives_sortable.js.html#line53">line 53</a>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -136,28 +113,6 @@ the &quot;ngeoSortable&quot; directive will pick it up.</p>
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The directive specs.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="https://docs.angularjs.org/guide/directive">angular.Directive</a></span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -174,6 +129,554 @@ the &quot;ngeoSortable&quot; directive will pick it up.</p>
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="childLayers"><span class="type-signature"></span>childLayers<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="children"><span class="type-signature"></span>children<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="GmfThemesNode.html">GmfThemesNode</a>></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="GmfThemesNode.html">GmfThemesNode</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="id"><span class="type-signature"></span>id<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="maxResolutionHint"><span class="type-signature"></span>maxResolutionHint<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="metadata"><span class="type-signature"></span>metadata<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="minResolutionHint"><span class="type-signature"></span>minResolutionHint<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmf-themes.js.html">contribs/gmf/externs/gmf-themes.js</a>, <a href="contribs_gmf_externs_gmf-themes.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     

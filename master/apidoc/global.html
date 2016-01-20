@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/directives/filereader.js</title>
+    <title>JSDoc: Global</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,79 +17,163 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/directives/filereader.js</h1>
+    <h1 class="page-title">Global</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.filereaderDirective');
+        <h2 id="">
+        </h2>
+        
+    
+</header>
 
-goog.require('ngeo');
+<article>
+    <div class="container-overview">
+    
+        
 
-
-/**
- * This directive is to used on an input file element. When a file is selected
- * the directive uses the browser `FileReader` API to read the file. The file
- * content is provided to the directive user through the assignable expression.
- * Only works for text files (`readAsText` used for reading the file). And does
- * not work in Internet Explorer 9.
- *
- * @example
- * &lt;input type="file" ngeo-filereader="ctrl.fileContent"
- *        ngeo-filereader-supported="ctrl.supported"/>
- *
- * @param {angular.$window} $window The Angular $window service.
- * @return {angular.Directive} Directive Definition Object.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoFilereader
- */
-ngeo.filereaderDirective = function($window) {
-  return {
-    restrict: 'A',
-    scope: {
-      'fileContent': '=ngeoFilereader',
-      'supported': '=ngeoFilereaderSupported'
-    },
-    link:
-        /**
-         * @param {angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         */
-        function(scope, element, attrs) {
-          var supported = 'FileReader' in $window;
-          scope['supported'] = supported;
-          if (!supported) {
-            return;
-          }
-          element.bind('change', function(changeEvent) {
-            /** @type {!FileReader} */
-            var fileReader = new $window.FileReader();
-            fileReader.onload = (
-                /**
-                 * @param {!ProgressEvent} evt Event.
-                 */
-                function(evt) {
-                  scope.$apply(function() {
-                    scope['fileContent'] = evt.target.result;
-                  });
-                });
-            fileReader.readAsText(changeEvent.target.files[0]);
-          });
-        }
-  };
-};
+        
 
 
-ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
-</code></pre>
-        </article>
-    </section>
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="gmfx"><span class="type-signature"></span>gmfx<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line12">line 12</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

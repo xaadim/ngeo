@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/directives/filereader.js</title>
+    <title>JSDoc: Source: contribs/gmf/externs/gmfx.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/directives/filereader.js</h1>
+    <h1 class="page-title">Source: contribs/gmf/externs/gmfx.js</h1>
 
     
 
@@ -26,67 +26,157 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.filereaderDirective');
+            <pre class="prettyprint source linenums"><code>/**
+ * Externs for GeoMapFish
+ *
+ * @externs
+ */
 
-goog.require('ngeo');
 
 
 /**
- * This directive is to used on an input file element. When a file is selected
- * the directive uses the browser `FileReader` API to read the file. The file
- * content is provided to the directive user through the assignable expression.
- * Only works for text files (`readAsText` used for reading the file). And does
- * not work in Internet Explorer 9.
- *
- * @example
- * &lt;input type="file" ngeo-filereader="ctrl.fileContent"
- *        ngeo-filereader-supported="ctrl.supported"/>
- *
- * @param {angular.$window} $window The Angular $window service.
- * @return {angular.Directive} Directive Definition Object.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoFilereader
+ * @type {Object}
  */
-ngeo.filereaderDirective = function($window) {
-  return {
-    restrict: 'A',
-    scope: {
-      'fileContent': '=ngeoFilereader',
-      'supported': '=ngeoFilereaderSupported'
-    },
-    link:
-        /**
-         * @param {angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         */
-        function(scope, element, attrs) {
-          var supported = 'FileReader' in $window;
-          scope['supported'] = supported;
-          if (!supported) {
-            return;
-          }
-          element.bind('change', function(changeEvent) {
-            /** @type {!FileReader} */
-            var fileReader = new $window.FileReader();
-            fileReader.onload = (
-                /**
-                 * @param {!ProgressEvent} evt Event.
-                 */
-                function(evt) {
-                  scope.$apply(function() {
-                    scope['fileContent'] = evt.target.result;
-                  });
-                });
-            fileReader.readAsText(changeEvent.target.files[0]);
-          });
-        }
-  };
-};
+var gmfx;
 
 
-ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
+/**
+ * Datasource configuration options for the search directive.
+ * @typedef {{
+ *    bloodhoundOptions: (BloodhoundOptions|undefined),
+ *    datasetTitle: (string|undefined),
+ *    labelKey: string,
+ *    groupsKey: (string|undefined),
+ *    groupValues: (Array.&lt;string>|undefined),
+ *    projection: (string|undefined),
+ *    typeaheadDatasetOptions: (TypeaheadDataset|undefined),
+ *    url: string
+ * }}
+ */
+gmfx.SearchDirectiveDatasource;
+
+
+/**
+ * The optional Bloodhound configuration for this data set.
+ * See: https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md
+ * @type {BloodhoundOptions|undefined}
+ */
+gmfx.SearchDirectiveDatasource.prototype.bloodhoundOptions;
+
+
+/**
+ * The title of this set of data.
+ * @type {string|undefined}
+ */
+gmfx.SearchDirectiveDatasource.prototype.datasetTitle;
+
+
+/**
+ * The name of a corresponding GeoJSON property key in the current dataset.
+ * The bound value of this property key will be used as label.
+ * @type {string|undefined}
+ */
+gmfx.SearchDirectiveDatasource.prototype.labelKey;
+
+
+/**
+ * The GeoJSON property key that will be used to group data.
+ * If set, the option 'groupValues' must be set too.
+ * @type {string}
+ */
+gmfx.SearchDirectiveDatasource.prototype.groupsKey;
+
+
+/**
+ * Possible values for the 'groupsKey' key. Will be ignored if option
+ * 'groupsKey' is not set. Used to define groups of dataset.
+ * @type {Array.&lt;string>|undefined}
+ */
+gmfx.SearchDirectiveDatasource.prototype.groupValues;
+
+
+/**
+ * The geometry's projection for this set of data.
+ * @type {string|undefined}
+ */
+gmfx.SearchDirectiveDatasource.prototype.projection;
+
+
+/**
+ * The optional Typeahead configuration for this dataset.
+ * See: https://github.com/twitter/typeahead.js/blob/master/
+ * doc/jquery_typeahead.md#datasets
+ * @type {TypeaheadDataset|undefined}
+ */
+gmfx.SearchDirectiveDatasource.prototype.typeaheadDatasetOptions;
+
+
+/**
+ * Url of the search service. Must contain a '%QUERY' term that will be
+ * replaced by the input string.
+ * @type {string}
+ */
+gmfx.SearchDirectiveDatasource.prototype.url;
+
+
+/**
+ * @typedef {{layer: string}}
+ */
+gmfx.source.AsitVDOptions;
+
+
+/**
+ * Layer name. Possible values are `asitvd.fond_couleur`, `asitvd.fond_gris`
+ * and `asitvd.fond_pourortho`.
+ * @type {string}
+ */
+gmfx.source.AsitVDOptions.prototype.layer;
+
+
+/**
+ * @typedef {{
+ *    layer: string,
+ *    format: (string|undefined),
+ *    timestamp: string
+ * }}
+ */
+gmfx.source.SwisstopoOptions;
+
+
+/**
+ * Layer name.
+ * @type {string}
+ */
+gmfx.source.SwisstopoOptions.prototype.layer;
+
+
+/**
+ * Image format. Default is `png`.
+ * @type {string}
+ */
+gmfx.source.SwisstopoOptions.prototype.format;
+
+
+/**
+ * The `Time` dimension of the source.
+ * @type {string}
+ */
+gmfx.source.SwisstopoOptions.prototype.timestamp;
+
+
+/**
+ * @typedef {{
+ *     exportgpxkml: string
+ * }}
+ */
+gmfx.ServiceUrls;
+
+
+/**
+ * URL to the "exportgpxkml" service.
+ * @type {string}
+ */
+gmfx.ServiceUrls.prototype.exportgpxkml;
 </code></pre>
         </article>
     </section>

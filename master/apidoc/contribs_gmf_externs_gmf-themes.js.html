@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/directives/filereader.js</title>
+    <title>JSDoc: Source: contribs/gmf/externs/gmf-themes.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/directives/filereader.js</h1>
+    <h1 class="page-title">Source: contribs/gmf/externs/gmf-themes.js</h1>
 
     
 
@@ -26,67 +26,66 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>goog.provide('ngeo.filereaderDirective');
+            <pre class="prettyprint source linenums"><code>/**
+ * Externs for the GeoMapFish "themes" web service.
+ *
+ * @externs
+ */
 
-goog.require('ngeo');
 
 
 /**
- * This directive is to used on an input file element. When a file is selected
- * the directive uses the browser `FileReader` API to read the file. The file
- * content is provided to the directive user through the assignable expression.
- * Only works for text files (`readAsText` used for reading the file). And does
- * not work in Internet Explorer 9.
- *
- * @example
- * &lt;input type="file" ngeo-filereader="ctrl.fileContent"
- *        ngeo-filereader-supported="ctrl.supported"/>
- *
- * @param {angular.$window} $window The Angular $window service.
- * @return {angular.Directive} Directive Definition Object.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoFilereader
+ * @constructor
  */
-ngeo.filereaderDirective = function($window) {
-  return {
-    restrict: 'A',
-    scope: {
-      'fileContent': '=ngeoFilereader',
-      'supported': '=ngeoFilereaderSupported'
-    },
-    link:
-        /**
-         * @param {angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         */
-        function(scope, element, attrs) {
-          var supported = 'FileReader' in $window;
-          scope['supported'] = supported;
-          if (!supported) {
-            return;
-          }
-          element.bind('change', function(changeEvent) {
-            /** @type {!FileReader} */
-            var fileReader = new $window.FileReader();
-            fileReader.onload = (
-                /**
-                 * @param {!ProgressEvent} evt Event.
-                 */
-                function(evt) {
-                  scope.$apply(function() {
-                    scope['fileContent'] = evt.target.result;
-                  });
-                });
-            fileReader.readAsText(changeEvent.target.files[0]);
-          });
-        }
-  };
-};
+var GmfThemesNode = function() {};
 
 
-ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
+/**
+ * @type {number}
+ */
+GmfThemesNode.prototype.id;
+
+
+/**
+ * @type {Array.&lt;GmfThemesNode>}
+ */
+GmfThemesNode.prototype.children;
+
+
+/**
+ * @type {Object.&lt;string, string>}
+ */
+GmfThemesNode.prototype.childLayers;
+
+
+/**
+ * @type {number}
+ */
+GmfThemesNode.prototype.maxResolutionHint;
+
+
+/**
+ * @type {Object.&lt;string, string>}
+ */
+GmfThemesNode.prototype.metadata;
+
+
+/**
+ * @type {number}
+ */
+GmfThemesNode.prototype.minResolutionHint;
+
+
+/**
+ * @type {string}
+ */
+GmfThemesNode.prototype.name;
+
+
+/**
+ * @type {string}
+ */
+GmfThemesNode.prototype.type;
 </code></pre>
         </article>
     </section>

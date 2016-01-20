@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: LayertreeController <small>controller:NgeoLayertreeController</small></title>
+    <title>JSDoc: Namespace: gmfx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: LayertreeController <small>controller:NgeoLayertreeController</small></h1>
+    <h1 class="page-title">Namespace: gmfx</h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="LayertreeController">
-            <span class="ancestors">ngeo.</span>LayertreeController
+        <h2 id="SearchDirectiveDatasource">
+            <span class="ancestors">gmfx.</span>SearchDirectiveDatasource
         </h2>
         
     
@@ -39,31 +39,19 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>Datasource configuration options for the search directive.</p></div>
+        
+
+        
+
+
+    
+    <h5 class="subsection-title">Properties:</h5>
+    
 
     
 
-    <h4 class="name" id="LayertreeController"><span class="type-signature"></span>new LayertreeController<span class="signature">($scope, $element, $attrs)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>The controller for the &quot;tree node&quot; directive.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
+<table class="props">
     <thead>
     <tr>
         
@@ -76,7 +64,7 @@
 
         
 
-        <th class="last">Description</th>
+        
     </tr>
     </thead>
 
@@ -85,13 +73,16 @@
 
         <tr>
             
-                <td class="name"><code>$scope</code></td>
+                <td class="name"><code>bloodhoundOptions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="https://docs.angularjs.org/guide/scope">angular.Scope</a></span>
+<span class="param-type">BloodhoundOptions</span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
             
@@ -101,20 +92,23 @@
 
             
 
-            <td class="description last"><p>Scope.</p></td>
+            </td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$element</code></td>
+                <td class="name"><code>datasetTitle</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">angular.JQLite</span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
             
@@ -124,20 +118,20 @@
 
             
 
-            <td class="description last"><p>Element.</p></td>
+            </td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$attrs</code></td>
+                <td class="name"><code>labelKey</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">angular.Attributes</span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
 
 
             
@@ -147,16 +141,139 @@
 
             
 
-            <td class="description last"><p>Attributes.</p></td>
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>groupsKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>groupValues</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>projection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>typeaheadDatasetOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets">TypeaheadDataset</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            </td>
         </tr>
 
     
     </tbody>
 </table>
-
-
-
-
 
 
 
@@ -190,7 +307,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line141">line 141</a>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -202,20 +319,7 @@
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     
     </div>
 
@@ -234,78 +338,15 @@
 
         
             
-<h4 class="name" id="depth"><span class="type-signature"></span>depth<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+<h4 class="name" id="bloodhoundOptions"><span class="type-signature"></span>bloodhoundOptions<span class="type-signature"> :BloodhoundOptions|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
 
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line214">line 214</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="isRoot"><span class="type-signature"></span>isRoot<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
-
-
-
+<div class="description">
+    <p>The optional Bloodhound configuration for this data set.
+See: https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md</p>
+</div>
 
 
 
@@ -313,279 +354,7 @@
     <ul>
         <li>
             
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line149">line 149</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="layer"><span class="type-signature"></span>layer<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.layer.Layer.html">ol.layer.Layer</a></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.layer.Layer.html">ol.layer.Layer</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line195">line 195</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="listenersExpr"><span class="type-signature"></span>listenersExpr<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line232">line 232</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="map"><span class="type-signature"></span>map<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line176">line 176</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="node"><span class="type-signature"></span>node<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+<span class="param-type">BloodhoundOptions</span>
 |
 
 <span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
@@ -627,7 +396,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line157">line 157</a>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -645,10 +414,90 @@
 
         
             
-<h4 class="name" id="nodelayerExpr"><span class="type-signature"></span>nodelayerExpr<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+<h4 class="name" id="datasetTitle"><span class="type-signature"></span>datasetTitle<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
+
+<div class="description">
+    <p>The title of this set of data.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="groupsKey"><span class="type-signature"></span>groupsKey<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>The GeoJSON property key that will be used to group data.
+If set, the option 'groupValues' must be set too.</p>
+</div>
 
 
 
@@ -695,7 +544,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line189">line 189</a>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line59">line 59</a>
     </li></ul></dd>
     
 
@@ -713,10 +562,15 @@
 
         
             
-<h4 class="name" id="parentUid"><span class="type-signature"></span>parentUid<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+<h4 class="name" id="groupValues"><span class="type-signature"></span>groupValues<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
+
+<div class="description">
+    <p>Possible values for the 'groupsKey' key. Will be ignored if option
+'groupsKey' is not set. Used to define groups of dataset.</p>
+</div>
 
 
 
@@ -724,7 +578,10 @@
     <ul>
         <li>
             
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
         </li>
@@ -763,7 +620,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line202">line 202</a>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -781,10 +638,15 @@
 
         
             
-<h4 class="name" id="uid"><span class="type-signature"></span>uid<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+<h4 class="name" id="labelKey"><span class="type-signature"></span>labelKey<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
+
+<div class="description">
+    <p>The name of a corresponding GeoJSON property key in the current dataset.
+The bound value of this property key will be used as label.</p>
+</div>
 
 
 
@@ -792,7 +654,10 @@
     <ul>
         <li>
             
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
         </li>
@@ -831,7 +696,232 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line208">line 208</a>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="projection"><span class="type-signature"></span>projection<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>The geometry's projection for this set of data.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="typeaheadDatasetOptions"><span class="type-signature"></span>typeaheadDatasetOptions<span class="type-signature"> :<a href="https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets">TypeaheadDataset</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>The optional Typeahead configuration for this dataset.
+See: https://github.com/twitter/typeahead.js/blob/master/
+doc/jquery_typeahead.md#datasets</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets">TypeaheadDataset</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="url"><span class="type-signature"></span>url<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Url of the search service. Must contain a '%QUERY' term that will be
+replaced by the input string.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -851,31 +941,46 @@
     
 
     
-        <h3 class="subsection-title">Methods</h3>
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2 id="ServiceUrls">
+            <span class="ancestors">gmfx.</span>ServiceUrls
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
 
         
-            
+
+
+    
+    <h5 class="subsection-title">Properties:</h5>
+    
 
     
 
-    <h4 class="name" id="getSetActive"><span class="type-signature"></span>getSetActive<span class="signature">(val)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a>}</span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
+<table class="props">
     <thead>
     <tr>
         
@@ -888,7 +993,7 @@
 
         
 
-        <th class="last">Description</th>
+        
     </tr>
     </thead>
 
@@ -897,16 +1002,13 @@
 
         <tr>
             
-                <td class="name"><code>val</code></td>
+                <td class="name"><code>exportgpxkml</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
 
 
             
@@ -916,7 +1018,7 @@
 
             
 
-            <td class="description last"><p>Value.</p></td>
+            </td>
         </tr>
 
     
@@ -925,6 +1027,87 @@
 
 
 
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="exportgpxkml"><span class="type-signature"></span>exportgpxkml<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>URL to the &quot;exportgpxkml&quot; service.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+        </li>
+    </ul>
 
 
 
@@ -959,7 +1142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_directives_layertree.js.html">src/directives/layertree.js</a>, <a href="src_directives_layertree.js.html#line248">line 248</a>
+        <a href="contribs_gmf_externs_gmfx.js.html">contribs/gmf/externs/gmfx.js</a>, <a href="contribs_gmf_externs_gmfx.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -975,42 +1158,9 @@
 
 
 
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
         
-<div class="param-desc">
-    <p>Value.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
-
-
-    </dd>
-</dl>
-
     
 
-
-
-        
     
 
     
