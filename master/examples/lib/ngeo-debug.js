@@ -63118,8 +63118,7 @@ ol.source.ImageCanvas = function(options) {
     logo: options.logo,
     projection: options.projection,
     resolutions: options.resolutions,
-    state: options.state !== undefined ?
-        /** @type {ol.source.State} */ (options.state) : undefined
+    state: options.state
   });
 
   /**
@@ -74064,11 +74063,12 @@ goog.require('ol.source.TileEvent');
 
 /**
  * @typedef {{attributions: (Array.<ol.Attribution>|undefined),
+ *            cacheSize: (number|undefined),
  *            extent: (ol.Extent|undefined),
  *            logo: (string|olx.LogoOptions|undefined),
  *            opaque: (boolean|undefined),
  *            projection: ol.proj.ProjectionLike,
- *            state: (ol.source.State|string|undefined),
+ *            state: (ol.source.State|undefined),
  *            tileGrid: (ol.tilegrid.TileGrid|undefined),
  *            tileLoadFunction: ol.TileLoadFunctionType,
  *            tilePixelRatio: (number|undefined),
@@ -74098,8 +74098,7 @@ ol.source.UrlTile = function(options) {
     logo: options.logo,
     opaque: options.opaque,
     projection: options.projection,
-    state: options.state ?
-        /** @type {ol.source.State} */ (options.state) : undefined,
+    state: options.state,
     tileGrid: options.tileGrid,
     tilePixelRatio: options.tilePixelRatio,
     wrapX: options.wrapX
@@ -74302,8 +74301,7 @@ ol.source.VectorTile = function(options) {
     logo: options.logo,
     opaque: options.opaque,
     projection: options.projection,
-    state: options.state ?
-        /** @type {ol.source.State} */ (options.state) : undefined,
+    state: options.state,
     tileGrid: options.tileGrid,
     tileLoadFunction: options.tileLoadFunction ?
         options.tileLoadFunction : ol.source.VectorTile.defaultTileLoadFunction,
@@ -105861,6 +105859,7 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.dom.NodeType');
 goog.require('goog.object');
+goog.require('ol.array');
 goog.require('ol.format.GML2');
 goog.require('ol.format.XMLFeature');
 goog.require('ol.xml');
@@ -105873,9 +105872,12 @@ goog.require('ol.xml');
  *
  * @constructor
  * @extends {ol.format.XMLFeature}
+ * @param {olx.format.WMSGetFeatureInfoOptions=} opt_options Options.
  * @api
  */
-ol.format.WMSGetFeatureInfo = function() {
+ol.format.WMSGetFeatureInfo = function(opt_options) {
+
+  var options = opt_options ? opt_options : {};
 
   /**
    * @private
@@ -105889,6 +105891,13 @@ ol.format.WMSGetFeatureInfo = function() {
    * @type {ol.format.GML2}
    */
   this.gmlFormat_ = new ol.format.GML2();
+
+
+  /**
+   * @private
+   * @type {Array.<string>}
+   */
+  this.layers_ = options.layers ? options.layers : null;
 
   goog.base(this);
 };
@@ -105943,7 +105952,13 @@ ol.format.WMSGetFeatureInfo.prototype.readFeatures_ = function(node, objectStack
           'localName of layer node should match layerIdentifier');
 
       var toRemove = ol.format.WMSGetFeatureInfo.layerIdentifier_;
-      var featureType = layer.localName.replace(toRemove, '') +
+      var layerName = layer.localName.replace(toRemove, '');
+
+      if (this.layers_ && !ol.array.includes(this.layers_, layerName)) {
+        continue;
+      }
+
+      var featureType = layerName +
           ol.format.WMSGetFeatureInfo.featureIdentifier_;
 
       context['featureType'] = featureType;
@@ -115202,8 +115217,7 @@ ol.source.TileImage = function(options) {
     logo: options.logo,
     opaque: options.opaque,
     projection: options.projection,
-    state: options.state !== undefined ?
-        /** @type {ol.source.State} */ (options.state) : undefined,
+    state: options.state,
     tileGrid: options.tileGrid,
     tileLoadFunction: options.tileLoadFunction ?
         options.tileLoadFunction : ol.source.TileImage.defaultTileLoadFunction,

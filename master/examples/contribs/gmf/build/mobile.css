@@ -8764,6 +8764,10 @@ button.close {
     display: none !important;
   }
 }
+html,
+body {
+  height: 100%;
+}
 body {
   overflow: hidden;
 }
@@ -8982,7 +8986,7 @@ main {
   position: relative;
   background-color: #e2e3df;
   box-shadow: 0px 0px 15px black;
-  min-height: 100vh;
+  height: 100%;
   z-index: 2;
   padding-top: 120px;
   text-align: center;
@@ -9023,11 +9027,13 @@ main .overlay {
   visibility: visible;
   opacity: 1;
 }
-.nav-left-is-visible nav.nav-right {
-  display: none;
-}
+.nav-left-is-visible nav.nav-right,
 .nav-right-is-visible nav.nav-left {
   display: none;
+}
+.nav-left-is-visible nav.nav-left,
+.nav-right-is-visible nav.nav-right {
+  visibility: visible;
 }
 nav.nav-left,
 nav.nav-right {
@@ -9040,6 +9046,7 @@ nav.nav-right {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 1;
+  visibility: hidden;
 }
 nav.nav-left header,
 nav.nav-right header {
