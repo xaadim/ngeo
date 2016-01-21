@@ -74115,8 +74115,8 @@ ol.source.UrlTile = function(options) {
    * @protected
    * @type {ol.TileUrlFunctionType}
    */
-  this.tileUrlFunction = options.tileUrlFunction ?
-      options.tileUrlFunction :
+  this.tileUrlFunction = this.fixedTileUrlFunction ?
+      this.fixedTileUrlFunction.bind(this) :
       ol.TileUrlFunction.nullTileUrlFunction;
 
   /**
@@ -74126,11 +74126,7 @@ ol.source.UrlTile = function(options) {
   this.urls = null;
 
   if (options.urls) {
-    if (options.tileUrlFunction) {
-      this.urls = options.urls;
-    } else {
-      this.setUrls(options.urls);
-    }
+    this.setUrls(options.urls);
   } else if (options.url) {
     this.setUrl(options.url);
   }
@@ -74141,6 +74137,12 @@ ol.source.UrlTile = function(options) {
 };
 goog.inherits(ol.source.UrlTile, ol.source.Tile);
 
+
+/**
+ * @type {ol.TileUrlFunctionType|undefined}
+ * @protected
+ */
+ol.source.UrlTile.prototype.fixedTileUrlFunction;
 
 /**
  * Return the tile load function of the source.
@@ -74233,9 +74235,11 @@ ol.source.UrlTile.prototype.setTileUrlFunction = function(tileUrlFunction) {
  * @api stable
  */
 ol.source.UrlTile.prototype.setUrl = function(url) {
-  this.setTileUrlFunction(ol.TileUrlFunction.createFromTemplates(
-      ol.TileUrlFunction.expandUrl(url), this.tileGrid));
   this.urls = [url];
+  var urls = ol.TileUrlFunction.expandUrl(url);
+  this.setTileUrlFunction(this.fixedTileUrlFunction ?
+      this.fixedTileUrlFunction.bind(this) :
+      ol.TileUrlFunction.createFromTemplates(urls, this.tileGrid));
 };
 
 
@@ -74245,9 +74249,10 @@ ol.source.UrlTile.prototype.setUrl = function(url) {
  * @api stable
  */
 ol.source.UrlTile.prototype.setUrls = function(urls) {
-  this.setTileUrlFunction(ol.TileUrlFunction.createFromTemplates(
-      urls, this.tileGrid));
   this.urls = urls;
+  this.setTileUrlFunction(this.fixedTileUrlFunction ?
+      this.fixedTileUrlFunction.bind(this) :
+      ol.TileUrlFunction.createFromTemplates(urls, this.tileGrid));
 };
 
 
@@ -117808,7 +117813,6 @@ ol.source.TileArcGISRest = function(opt_options) {
     reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileGrid: options.tileGrid,
     tileLoadFunction: options.tileLoadFunction,
-    tileUrlFunction: this.tileUrlFunction_.bind(this),
     url: options.url,
     urls: options.urls,
     wrapX: options.wrapX !== undefined ? options.wrapX : true
@@ -117904,13 +117908,9 @@ ol.source.TileArcGISRest.prototype.getTilePixelRatio = function(pixelRatio) {
 
 
 /**
- * @param {ol.TileCoord} tileCoord Tile coordinate.
- * @param {number} pixelRatio Pixel ratio.
- * @param {ol.proj.Projection} projection Projection.
- * @return {string|undefined} Tile URL.
- * @private
+ * @inheritDoc
  */
-ol.source.TileArcGISRest.prototype.tileUrlFunction_ = function(tileCoord, pixelRatio, projection) {
+ol.source.TileArcGISRest.prototype.fixedTileUrlFunction = function(tileCoord, pixelRatio, projection) {
 
   var tileGrid = this.getTileGrid();
   if (!tileGrid) {
@@ -118901,7 +118901,6 @@ ol.source.TileWMS = function(opt_options) {
     reprojectionErrorThreshold: options.reprojectionErrorThreshold,
     tileGrid: options.tileGrid,
     tileLoadFunction: options.tileLoadFunction,
-    tileUrlFunction: this.tileUrlFunction_.bind(this),
     url: options.url,
     urls: options.urls,
     wrapX: options.wrapX !== undefined ? options.wrapX : true
@@ -118918,6 +118917,13 @@ ol.source.TileWMS = function(opt_options) {
    * @type {Object}
    */
   this.params_ = params;
+
+  /**
+   * @private
+   * @type {string}
+   */
+  this.paramsKey_ = '';
+  this.resetParamsKey_();
 
   /**
    * @private
@@ -119028,6 +119034,14 @@ ol.source.TileWMS.prototype.getGetFeatureInfoUrl = function(coordinate, resoluti
  */
 ol.source.TileWMS.prototype.getGutter = function() {
   return this.gutter_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.TileWMS.prototype.getKeyParams = function() {
+  return this.paramsKey_;
 };
 
 
@@ -119146,23 +119160,27 @@ ol.source.TileWMS.prototype.resetCoordKeyPrefix_ = function() {
     }
   }
 
-  var key;
-  for (key in this.params_) {
-    res[i++] = key + '-' + this.params_[key];
-  }
-
   this.coordKeyPrefix_ = res.join('#');
 };
 
 
 /**
- * @param {ol.TileCoord} tileCoord Tile coordinate.
- * @param {number} pixelRatio Pixel ratio.
- * @param {ol.proj.Projection} projection Projection.
- * @return {string|undefined} Tile URL.
  * @private
  */
-ol.source.TileWMS.prototype.tileUrlFunction_ = function(tileCoord, pixelRatio, projection) {
+ol.source.TileWMS.prototype.resetParamsKey_ = function() {
+  var i = 0;
+  var res = [];
+  for (var key in this.params_) {
+    res[i++] = key + '-' + this.params_[key];
+  }
+  this.paramsKey_ = res.join('/');
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.TileWMS.prototype.fixedTileUrlFunction = function(tileCoord, pixelRatio, projection) {
 
   var tileGrid = this.getTileGrid();
   if (!tileGrid) {
@@ -119215,6 +119233,7 @@ ol.source.TileWMS.prototype.tileUrlFunction_ = function(tileCoord, pixelRatio, p
 ol.source.TileWMS.prototype.updateParams = function(params) {
   goog.object.extend(this.params_, params);
   this.resetCoordKeyPrefix_();
+  this.resetParamsKey_();
   this.updateV13_();
   this.changed();
 };
@@ -120603,9 +120622,15 @@ ol.style.RegularShape = function(options) {
   var snapToPixel = options.snapToPixel !== undefined ?
       options.snapToPixel : true;
 
+  /**
+   * @type {boolean}
+   */
+  var rotateWithView = options.rotateWithView !== undefined ?
+      options.rotateWithView : false;
+
   goog.base(this, {
     opacity: 1,
-    rotateWithView: false,
+    rotateWithView: rotateWithView,
     rotation: options.rotation !== undefined ? options.rotation : 0,
     scale: 1,
     snapToPixel: snapToPixel
@@ -127455,7 +127480,8 @@ goog.require('ol.format.GeoJSON');
  *     bloodhound.initialize();
  *
  * @typedef {function(string, (function(GeoJSONFeature): boolean)=,
- * ol.proj.Projection=, ol.proj.Projection=, BloodhoundOptions=):Bloodhound}
+ * ol.proj.Projection=, ol.proj.Projection=, BloodhoundOptions=,
+ * BloodhoundQueryOptions=):Bloodhound}
  * @ngdoc service
  * @ngname ngeoCreateGeoJSONBloodhound
  */
@@ -127470,18 +127496,29 @@ ngeo.CreateGeoJSONBloodhound;
  * @param {ol.proj.Projection=} opt_dataProjection Data projection.
  * @param {BloodhoundOptions=} opt_options optional Bloodhound options. If
  *     undefined, the default Bloodhound config will be used.
+ * @param {BloodhoundQueryOptions=} opt_query optional Bloodhound query options.
+ *     Effective only if `remote`is not defined in `opt_options`.
  * @return {Bloodhound} The Bloodhound object.
  */
 ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
-    opt_dataProjection, opt_options) {
+    opt_dataProjection, opt_options, opt_query) {
   var geojsonFormat = new ol.format.GeoJSON();
   var bloodhoundOptions = /** @type {BloodhoundOptions} */ ({
     remote: {
       url: url,
       rateLimitWait: 50,
       prepare: function(query, settings) {
-        settings.url = settings.url.replace('%QUERY', query);
-        settings.dataType = 'jsonp';
+        if (settings.url.indexOf('%QUERY') >= 0) {
+          settings.url = settings.url.replace('%QUERY', query);
+        }
+        else {
+          var lastChar = settings.url.slice(-1);
+          if (lastChar != '&' && lastChar != '?') {
+            settings.url += settings.url.indexOf('?') < 0 ? '?' : '&';
+          }
+          settings.url += opt_query.param + '=' + query;
+        }
+        goog.object.extend(settings, opt_query);
         return settings;
       },
       transform: function(parsedResponse) {
