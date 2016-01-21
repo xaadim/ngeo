@@ -82,6 +82,7 @@ ngeo.CreateGeoJSONBloodhound;
  * @param {BloodhoundOptions=} opt_options optional Bloodhound options. If
  *     undefined, the default Bloodhound config will be used.
  * @param {BloodhoundQueryOptions=} opt_query optional Bloodhound query options.
+ *     Effective only it `remote`is not defined in `opt_options`.
  * @return {Bloodhound} The Bloodhound object.
  */
 ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,

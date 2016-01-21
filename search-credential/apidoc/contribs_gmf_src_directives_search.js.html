@@ -327,9 +327,6 @@ gmf.SearchController.prototype.createAndInitBloodhound_ = function(config,
       withCredentials: true
     }
   };
-  if (config.queryOptions) {
-    goog.object.extend(queryOptions, config.queryOptions);
-  }
   var bloodhound = this.ngeoCreateGeoJSONBloodhound_(config.url, opt_filter,
       ol.proj.get(mapProjectionCode), ol.proj.get(config.projection),
       config.bloodhoundOptions, queryOptions);
