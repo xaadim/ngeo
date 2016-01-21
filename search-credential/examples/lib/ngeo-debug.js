@@ -120622,9 +120622,15 @@ ol.style.RegularShape = function(options) {
   var snapToPixel = options.snapToPixel !== undefined ?
       options.snapToPixel : true;
 
+  /**
+   * @type {boolean}
+   */
+  var rotateWithView = options.rotateWithView !== undefined ?
+      options.rotateWithView : false;
+
   goog.base(this, {
     opacity: 1,
-    rotateWithView: false,
+    rotateWithView: rotateWithView,
     rotation: options.rotation !== undefined ? options.rotation : 0,
     scale: 1,
     snapToPixel: snapToPixel
@@ -127491,7 +127497,7 @@ ngeo.CreateGeoJSONBloodhound;
  * @param {BloodhoundOptions=} opt_options optional Bloodhound options. If
  *     undefined, the default Bloodhound config will be used.
  * @param {BloodhoundQueryOptions=} opt_query optional Bloodhound query options.
- *     Effective only it `remote`is not defined in `opt_options`.
+ *     Effective only if `remote`is not defined in `opt_options`.
  * @return {Bloodhound} The Bloodhound object.
  */
 ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
