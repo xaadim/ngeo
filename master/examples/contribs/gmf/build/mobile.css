@@ -8914,10 +8914,6 @@ button[ngeo-mobile-geolocation] {
   margin: 15px 5px 0 0;
   width: 20px;
 }
-.gmf-theme-selector .gmf-check.active,
-.gmf-mobile-background-layer-selector .gmf-check.active {
-  background-color: green;
-}
 .gmf-theme-selector .gmf-text,
 .gmf-mobile-background-layer-selector .gmf-text {
   margin: 15px 10px 0 0;
@@ -9015,7 +9011,7 @@ main .overlay {
   top: 0;
   left: 0;
   cursor: pointer;
-  background-color: rgba(85, 85, 85, 0.8);
+  background-color: rgba(85, 85, 85, 0.4);
   visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 0.3s, visibility 0.3s;
@@ -9234,6 +9230,21 @@ nav.nav-right .slide.slide-out {
 }
 .gmf-icon.gmf-icon-layers:after {
   content: '\e600';
+}
+.gmf-icon.gmf-icon-list:after {
+  content: '\e602';
+}
+.gmf-icon.gmf-icon-map:after {
+  content: '\f279';
+}
+.gmf-icon.gmf-icon-map-o:after {
+  content: '\f278';
+}
+.gmf-icon.gmf-icon-check:after {
+  content: '\e603';
+}
+.gmf-icon.gmf-icon-check-o:after {
+  content: '\e604';
 }
 span.twitter-typeahead:after {
   content: '\f002';
