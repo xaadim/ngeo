@@ -8869,9 +8869,10 @@ button[ngeo-mobile-geolocation] {
  * Styles for mobile navigation menus (side menus).
  */
 main {
-  position: relative;
+  position: fixed;
   background-color: #e2e3df;
   box-shadow: 0px 0px 15px black;
+  width: 100%;
   height: 100%;
   z-index: 2;
   text-align: center;
@@ -8893,7 +8894,7 @@ main {
 }
 main .overlay {
   /* shadow layer visible when navigation is active */
-  position: fixed;
+  position: absolute;
   z-index: 3;
   height: 100%;
   width: 100%;
