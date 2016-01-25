@@ -17,7 +17,7 @@ goog.require('gmf.AbstractDesktopController');
 goog.require('gmf.authenticationDirective');
 
 
-appModule.constant(
+app.module.constant(
     'authenticationBaseUrl',
     'https://geomapfish-demo.camptocamp.net/2.0/wsgi');
 
@@ -39,4 +39,4 @@ app.DesktopController = function(
 goog.inherits(app.DesktopController, gmf.AbstractDesktopController);
 
 
-appModule.controller('DesktopController', app.DesktopController);
+app.module.controller('DesktopController', app.DesktopController);
