@@ -9336,17 +9336,11 @@ button[ngeo-mobile-geolocation] {
 @media (min-width: 768px) {
   .ol-zoom {
     top: auto;
-    bottom: 4.5em;
+    bottom: 8.5em;
   }
   button[ngeo-mobile-geolocation] {
     top: auto;
-    bottom: 1em;
-  }
-}
-@media (min-width: 768px) {
-  button[ngeo-mobile-geolocation] {
-    bottom: 12px;
-    top: auto;
+    bottom: 5.5em;
   }
   button[ngeo-mobile-geolocation] button:after {
     content: 'b';
