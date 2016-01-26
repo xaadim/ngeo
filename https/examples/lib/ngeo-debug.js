@@ -21374,6 +21374,7 @@ ol.geom.flat.contains.linearRingContainsExtent = function(flatCoordinates, offse
   var outside = ol.extent.forEachCorner(extent,
       /**
        * @param {ol.Coordinate} coordinate Coordinate.
+       * @return {boolean} Contains (x, y).
        */
       function(coordinate) {
         return !ol.geom.flat.contains.linearRingContainsXY(flatCoordinates,
@@ -72222,7 +72223,7 @@ ol.source.Vector.prototype.forEachFeatureIntersectingExtent = function(extent, c
   return this.forEachFeatureInExtent(extent,
       /**
        * @param {ol.Feature} feature Feature.
-       * @return {S|undefined}
+       * @return {S|undefined} The return value from the last call to the callback.
        * @template S
        */
       function(feature) {
@@ -112714,6 +112715,7 @@ ol.interaction.Select.handleEvent = function(mapBrowserEvent) {
         /**
          * @param {ol.Feature|ol.render.Feature} feature Feature.
          * @param {ol.layer.Layer} layer Layer.
+         * @return {boolean|undefined} Continue to iterate over the features.
          */
         function(feature, layer) {
           if (this.filter_(feature, layer)) {
