@@ -109025,7 +109025,7 @@ goog.provide('ngeo');
 
 
 /** @type {!angular.Module} */
-var ngeoModule = angular.module('ngeo', []);
+ngeo.module = angular.module('ngeo', []);
 
 
 /**
@@ -109099,7 +109099,7 @@ ngeo.btngroupDirective = function($parse) {
 };
 
 
-ngeoModule.directive('ngeoBtnGroup', ngeo.btngroupDirective);
+ngeo.module.directive('ngeoBtnGroup', ngeo.btngroupDirective);
 
 
 
@@ -109147,7 +109147,7 @@ ngeo.BtnGroupController.prototype.addButton = function(expressionFn) {
 };
 
 
-ngeoModule.controller('ngeoBtnGroupController', ngeo.BtnGroupController);
+ngeo.module.controller('ngeoBtnGroupController', ngeo.BtnGroupController);
 
 
 /**
@@ -109214,7 +109214,7 @@ ngeo.btnDirective = function($parse) {
 };
 
 
-ngeoModule.directive('ngeoBtn', ngeo.btnDirective);
+ngeo.module.directive('ngeoBtn', ngeo.btnDirective);
 
 goog.provide('ngeo.controlDirective');
 
@@ -109267,7 +109267,7 @@ ngeo.controlDirective = function() {
 };
 
 
-ngeoModule.directive('ngeoControl', ngeo.controlDirective);
+ngeo.module.directive('ngeoControl', ngeo.controlDirective);
 
 goog.provide('ngeo.DecorateGeolocation');
 
@@ -109308,7 +109308,7 @@ ngeo.decorateGeolocation = function(geolocation) {
 };
 
 
-ngeoModule.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
+ngeo.module.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
 
 goog.provide('ngeo.FeatureOverlay');
 goog.provide('ngeo.FeatureOverlayMgr');
@@ -109610,7 +109610,7 @@ ngeo.FeatureOverlay.prototype.handleFeatureRemove_ = function(evt) {
 };
 
 
-ngeoModule.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
+ngeo.module.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
 
 goog.provide('ngeo.DesktopGeolocationController');
 goog.provide('ngeo.desktopGeolocationDirective');
@@ -109652,7 +109652,7 @@ ngeo.desktopGeolocationDirective = function() {
 };
 
 
-ngeoModule.directive('ngeoDesktopGeolocation',
+ngeo.module.directive('ngeoDesktopGeolocation',
     ngeo.desktopGeolocationDirective);
 
 
@@ -109806,7 +109806,7 @@ ngeo.DesktopGeolocationController.prototype.setPosition_ = function(event) {
 };
 
 
-ngeoModule.controller('NgeoDesktopGeolocationController',
+ngeo.module.controller('NgeoDesktopGeolocationController',
     ngeo.DesktopGeolocationController);
 
 goog.provide('ngeo.filereaderDirective');
@@ -109869,7 +109869,7 @@ ngeo.filereaderDirective = function($window) {
 };
 
 
-ngeoModule.directive('ngeoFilereader', ngeo.filereaderDirective);
+ngeo.module.directive('ngeoFilereader', ngeo.filereaderDirective);
 
 goog.provide('ngeo.LayertreeController');
 goog.provide('ngeo.layertreeDirective');
@@ -109877,7 +109877,7 @@ goog.provide('ngeo.layertreeDirective');
 goog.require('ngeo');
 
 
-ngeoModule.value('ngeoLayertreeTemplateUrl',
+ngeo.module.value('ngeoLayertreeTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
      * @param {angular.Attributes} attrs Attributes.
@@ -109996,7 +109996,7 @@ ngeo.layertreeDirective = function(
 };
 
 
-ngeoModule.directive('ngeoLayertree', ngeo.layertreeDirective);
+ngeo.module.directive('ngeoLayertree', ngeo.layertreeDirective);
 
 
 
@@ -110134,7 +110134,7 @@ ngeo.LayertreeController.prototype.getSetActive = function(val) {
 };
 
 
-ngeoModule.controller('NgeoLayertreeController',
+ngeo.module.controller('NgeoLayertreeController',
     ngeo.LayertreeController);
 
 goog.provide('ngeo.mapDirective');
@@ -110176,7 +110176,7 @@ ngeo.mapDirective = function() {
   };
 };
 
-ngeoModule.directive('ngeoMap', ngeo.mapDirective);
+ngeo.module.directive('ngeoMap', ngeo.mapDirective);
 
 goog.provide('ngeo.MobileGeolocationController');
 goog.provide('ngeo.mobileGeolocationDirective');
@@ -110218,7 +110218,7 @@ ngeo.mobileGeolocationDirective = function() {
 };
 
 
-ngeoModule.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
+ngeo.module.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
 
 
 
@@ -110422,7 +110422,7 @@ ngeo.MobileGeolocationController.prototype.handleViewChange_ = function(event) {
 };
 
 
-ngeoModule.controller('NgeoMobileGeolocationController',
+ngeo.module.controller('NgeoMobileGeolocationController',
     ngeo.MobileGeolocationController);
 
 goog.provide('ngeo.Query');
@@ -110474,7 +110474,7 @@ ngeo.QueryResultSource;
  * The `ngeoQueryResult` is the value service where the features of the query
  * result are added.
  */
-ngeoModule.value('ngeoQueryResult', {
+ngeo.module.value('ngeoQueryResult', {
   'sources': [],
   'total': 0
 });
@@ -110828,7 +110828,7 @@ ngeo.Query.prototype.getLayerSourceId_ = function(layer) {
 };
 
 
-ngeoModule.service('ngeoQuery', ngeo.Query);
+ngeo.module.service('ngeoQuery', ngeo.Query);
 
 goog.provide('ngeo.MobileQueryController');
 goog.provide('ngeo.mobileQueryDirective');
@@ -110874,7 +110874,7 @@ ngeo.mobileQueryDirective = function() {
 };
 
 
-ngeoModule.directive('ngeoMobileQuery', ngeo.mobileQueryDirective);
+ngeo.module.directive('ngeoMobileQuery', ngeo.mobileQueryDirective);
 
 
 
@@ -110965,7 +110965,7 @@ ngeo.MobileQueryController.prototype.handleMapClick_ = function(evt) {
 };
 
 
-ngeoModule.controller('NgeoMobileQueryController', ngeo.MobileQueryController);
+ngeo.module.controller('NgeoMobileQueryController', ngeo.MobileQueryController);
 
 goog.provide('ngeo.modalDirective');
 
@@ -111045,14 +111045,14 @@ ngeo.modalDirective = function($parse) {
   };
 };
 
-ngeoModule.directive('ngeoModal', ngeo.modalDirective);
+ngeo.module.directive('ngeoModal', ngeo.modalDirective);
 
 goog.provide('ngeo.popupDirective');
 
 goog.require('ngeo');
 
 
-ngeoModule.value('ngeoPopupTemplateUrl',
+ngeo.module.value('ngeoPopupTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
      * @param {angular.Attributes} attrs Attributes.
@@ -111114,7 +111114,7 @@ ngeo.popupDirective = function(ngeoPopupTemplateUrl) {
   };
 };
 
-ngeoModule.directive('ngeoPopup', ngeo.popupDirective);
+ngeo.module.directive('ngeoPopup', ngeo.popupDirective);
 
 goog.provide('ngeo.profileDirective');
 
@@ -111233,7 +111233,7 @@ ngeo.profileDirective = function() {
   };
 };
 
-ngeoModule.directive('ngeoProfile', ngeo.profileDirective);
+ngeo.module.directive('ngeoProfile', ngeo.profileDirective);
 
 goog.provide('ngeo.recenterDirective');
 
@@ -111298,7 +111298,7 @@ ngeo.recenterDirective = function() {
     }
   };
 };
-ngeoModule.directive('ngeoRecenter', ngeo.recenterDirective);
+ngeo.module.directive('ngeoRecenter', ngeo.recenterDirective);
 
 // Copyright 2010 The Closure Library Authors. All Rights Reserved.
 //
@@ -114394,7 +114394,7 @@ ngeo.resizemapDirective = function($window, $animate) {
 };
 
 
-ngeoModule.directive('ngeoResizemap', ngeo.resizemapDirective);
+ngeo.module.directive('ngeoResizemap', ngeo.resizemapDirective);
 
 goog.provide('ngeo.ScaleselectorController');
 goog.provide('ngeo.ScaleselectorOptions');
@@ -114406,7 +114406,7 @@ goog.require('ol.Object');
 goog.require('ol.events');
 
 
-ngeoModule.value('ngeoScaleselectorTemplateUrl',
+ngeo.module.value('ngeoScaleselectorTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
      * @param {angular.Attributes} attrs Attributes.
@@ -114479,7 +114479,7 @@ ngeo.scaleselectorDirective = function(ngeoScaleselectorTemplateUrl) {
 };
 
 
-ngeoModule.directive('ngeoScaleselector', ngeo.scaleselectorDirective);
+ngeo.module.directive('ngeoScaleselector', ngeo.scaleselectorDirective);
 
 
 
@@ -114658,7 +114658,7 @@ ngeo.ScaleselectorController.prototype.registerResolutionChangeListener_ =
 };
 
 
-ngeoModule.controller('NgeoScaleselectorController',
+ngeo.module.controller('NgeoScaleselectorController',
     ngeo.ScaleselectorController);
 
 goog.provide('ngeo.searchDirective');
@@ -114803,7 +114803,7 @@ ngeo.searchDirective.adaptListeners_ = function(object) {
 };
 
 
-ngeoModule.directive('ngeoSearch', ngeo.searchDirective);
+ngeo.module.directive('ngeoSearch', ngeo.searchDirective);
 
 // Copyright 2005 The Closure Library Authors. All Rights Reserved.
 //
@@ -118118,7 +118118,7 @@ ngeo.sortableDirective = function($timeout) {
   };
 };
 
-ngeoModule.directive('ngeoSortable', ngeo.sortableDirective);
+ngeo.module.directive('ngeoSortable', ngeo.sortableDirective);
 
 goog.provide('ngeo.format.FeatureHash');
 
@@ -120285,7 +120285,7 @@ ngeo.BackgroundLayerMgr.prototype.set = function(map, layer) {
 };
 
 
-ngeoModule.service('ngeoBackgroundLayerMgr', ngeo.BackgroundLayerMgr);
+ngeo.module.service('ngeoBackgroundLayerMgr', ngeo.BackgroundLayerMgr);
 
 
 goog.provide('ngeo.CreateGeoJSONBloodhound');
@@ -120389,7 +120389,7 @@ ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
 };
 
 
-ngeoModule.value('ngeoCreateGeoJSONBloodhound', ngeo.createGeoJSONBloodhound);
+ngeo.module.value('ngeoCreateGeoJSONBloodhound', ngeo.createGeoJSONBloodhound);
 
 goog.provide('ngeo.Debounce');
 
@@ -120443,7 +120443,7 @@ ngeo.debounceServiceFactory = function($timeout) {
 };
 
 
-ngeoModule.factory('ngeoDebounce', ngeo.debounceServiceFactory);
+ngeo.module.factory('ngeoDebounce', ngeo.debounceServiceFactory);
 
 goog.provide('ngeo.DecorateInteraction');
 
@@ -120483,7 +120483,7 @@ ngeo.decorateInteraction = function(interaction) {
 };
 
 
-ngeoModule.value('ngeoDecorateInteraction', ngeo.decorateInteraction);
+ngeo.module.value('ngeoDecorateInteraction', ngeo.decorateInteraction);
 
 goog.provide('ngeo.DecorateLayer');
 
@@ -120550,7 +120550,7 @@ ngeo.decorateLayer = function(layer) {
 };
 
 
-ngeoModule.value('ngeoDecorateLayer', ngeo.decorateLayer);
+ngeo.module.value('ngeoDecorateLayer', ngeo.decorateLayer);
 
 goog.provide('ngeo.GetBrowserLanguage');
 
@@ -120604,7 +120604,7 @@ ngeo.getBrowserLanguageFactory = function($window) {
 };
 
 
-ngeoModule.factory('ngeoGetBrowserLanguage', ngeo.getBrowserLanguageFactory);
+ngeo.module.factory('ngeoGetBrowserLanguage', ngeo.getBrowserLanguageFactory);
 
 goog.provide('ngeo.LayerHelper');
 
@@ -120906,7 +120906,7 @@ ngeo.LayerHelper.prototype.getFlatLayers_ = function(layer, array) {
   return array;
 };
 
-ngeoModule.service('ngeoLayerHelper', ngeo.LayerHelper);
+ngeo.module.service('ngeoLayerHelper', ngeo.LayerHelper);
 
 goog.provide('ngeo.Location');
 goog.provide('ngeo.MockLocationProvider');
@@ -121094,7 +121094,7 @@ ngeo.LocationFactory = function($rootScope, $window) {
 };
 
 
-ngeoModule.factory('ngeoLocation', ngeo.LocationFactory);
+ngeo.module.factory('ngeoLocation', ngeo.LocationFactory);
 
 
 /**
@@ -121265,7 +121265,7 @@ ngeo.createPopupServiceFactory = function($compile, $rootScope) {
         return new ngeo.Popup($compile, $rootScope);
       });
 };
-ngeoModule.factory('ngeoCreatePopup', ngeo.createPopupServiceFactory);
+ngeo.module.factory('ngeoCreatePopup', ngeo.createPopupServiceFactory);
 
 goog.provide('ngeo.CreatePrint');
 goog.provide('ngeo.Print');
@@ -122051,7 +122051,7 @@ ngeo.createPrintServiceFactory = function($http) {
 };
 
 
-ngeoModule.factory('ngeoCreatePrint', ngeo.createPrintServiceFactory);
+ngeo.module.factory('ngeoCreatePrint', ngeo.createPrintServiceFactory);
 
 goog.provide('ngeo.PrintUtils');
 
@@ -122212,7 +122212,7 @@ ngeo.PrintUtils.prototype.getOptimalResolution = function(
 };
 
 
-ngeoModule.service('ngeoPrintUtils', ngeo.PrintUtils);
+ngeo.module.service('ngeoPrintUtils', ngeo.PrintUtils);
 
 // Copyright 2011 The Closure Library Authors. All Rights Reserved.
 //
@@ -122710,7 +122710,7 @@ ngeo.StateManager.prototype.deleteParam = function(key) {
   }
 };
 
-ngeoModule.service('ngeoStateManager', ngeo.StateManager);
+ngeo.module.service('ngeoStateManager', ngeo.StateManager);
 
 goog.provide('ngeo.SyncArrays');
 
@@ -122812,7 +122812,7 @@ ngeo.syncArrays = function(arr1, arr2, reverse, scope, filter) {
 };
 
 
-ngeoModule.value('ngeoSyncArrays', ngeo.syncArrays);
+ngeo.module.value('ngeoSyncArrays', ngeo.syncArrays);
 
 goog.provide('ngeo.ToolActivate');
 goog.provide('ngeo.ToolActivateMgr');
@@ -122853,7 +122853,7 @@ ngeo.ToolActivate = function(toolContext, activePropertyName) {
 };
 
 
-ngeoModule.value('ngeoToolActivate', ngeo.ToolActivate);
+ngeo.module.value('ngeoToolActivate', ngeo.ToolActivate);
 
 
 /**
@@ -123052,7 +123052,7 @@ ngeo.ToolActivateMgr.prototype.activateDefault_ = function(groupName) {
 };
 
 
-ngeoModule.service('ngeoToolActivateMgr', ngeo.ToolActivateMgr);
+ngeo.module.service('ngeoToolActivateMgr', ngeo.ToolActivateMgr);
 
 
 /**
@@ -123061,10 +123061,6 @@ ngeoModule.service('ngeoToolActivateMgr', ngeo.ToolActivateMgr);
  * GENERATED FILE. DO NOT EDIT.
  */
 
-/**
- * This goog.require is needed because it provides ngeoModule.
- * @suppress {extraRequire}
- */
 goog.require('ngeo');
 
 (function() {
@@ -123078,7 +123074,7 @@ goog.require('ngeo');
     $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr ngeo-layertree-listenersexpr=layertreeCtrl.listenersExpr> </li> </ul> ');
   };
 
-  ngeoModule.run(runner);
+  ngeo.module.run(runner);
 })();
 
 
