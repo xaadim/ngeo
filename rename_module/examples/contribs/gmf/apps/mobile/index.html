@@ -12,6 +12,11 @@
                    'nav-right-is-visible': mainCtrl.rightNavIsVisible()}">
     <main>
       <gmf-map gmf-map-map="mainCtrl.map"></gmf-map>
+      <span
+        ngeo-mobile-query=""
+        ngeo-mobile-query-map="::mainCtrl.map"
+        ngeo-mobile-query-active="::mainCtrl.queryActive">
+      </span>
       <button class="nav-trigger nav-left-trigger"
         ng-click="mainCtrl.toggleLeftNavVisibility()">
         <span class="gmf-icon gmf-icon-layers"></span>
@@ -19,6 +24,7 @@
       <div class="search">
         <gmf-search gmf-search-map="mainCtrl.map"
                     gmf-search-datasources="mainCtrl.searchDatasources"
+                    gmf-search-currenttheme="mainCtrl.theme"
                     gmf-search-clearbutton="true">
         </gmf-search>
       </div>
@@ -42,32 +48,21 @@
         <ul>
           <li>
             <a href="#background" data-toggle="slide-in">Background</a>
-            <a href="#data" data-toggle="slide-in">Data</a>
           </li>
+          <li>
+            <a href="#themes" data-toggle="slide-in">Themes</a>
+          </li>
+          <gmf-layertree
+              gmf-layertree-source="mainCtrl.theme"
+              gmf-layertree-map="::mainCtrl.map"
+              gmf-layertree-openlinksinnewwindow="true">
+          </gmf-layertree>
         </ul>
-        <hr />
-        <p class="text-center">
-          <b>Put your logo here</b>
-        </p>
       </div>
       <div id="background" class="slide" data-header-title="Background">
         <gmf-mobile-background-layer-selector
           gmf-mobile-background-layer-selector-map="::mainCtrl.map">
         </gmf-mobile-background-layer-selector>
-      </div>
-      <div id="data" class="slide" data-header-title="Data">
-        <ul>
-          <li>
-            <a href="#themes" data-toggle="slide-in">Themes</a>
-          </li>
-          <li>
-            <gmf-layertree
-                gmf-layertree-source="mainCtrl.theme"
-                gmf-layertree-map="::mainCtrl.map"
-                gmf-layertree-openlinksinnewwindow="true">
-            </gmf-layertree>
-          </li>
-        </ul>
       </div>
       <gmf-themeselector
           id="themes"
@@ -101,7 +96,6 @@
       <gmf-authentication id="login" class="slide" data-header-title="Login">
       </gmf-authentication>
     </nav>
-    <script src="../../../../lib/Function.prototype.bind.js"></script>
     <script src="../../build/mobile.js"></script>
     <script src="../../../../lib/watchwatchers.js"></script>
     <script>
