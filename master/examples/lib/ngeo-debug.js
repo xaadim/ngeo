@@ -119297,6 +119297,22 @@ ngeo.interaction.Measure = function(opt_options) {
   this.continueMsg = null;
 
   /**
+   * Defines the number of decimals to keep in the measurement. If not defined,
+   * then the default behaviour occurs depending on the measure type.
+   * @type {?number}
+   * @protected
+   */
+  this.decimals = options.decimals !== undefined ? options.decimals : null;
+
+  /**
+   * Whether or not to display any tooltip
+   * @type {boolean}
+   * @private
+   */
+  this.displayHelpTooltip_ = goog.isDef(options.displayHelpTooltip) ?
+      options.displayHelpTooltip : true;
+
+  /**
    * The message to show when user is about to start drawing.
    * @type {Element}
    */
@@ -119343,12 +119359,21 @@ ngeo.interaction.Measure = function(opt_options) {
 
   /**
    * The draw interaction to be used.
-   * @type {ol.interaction.Draw|ngeo.interaction.DrawAzimut}
+   * @type {ol.interaction.Draw|ngeo.interaction.DrawAzimut|ngeo.interaction.MobileDraw}
    * @private
    */
-  this.drawInteraction_ = this.getDrawInteraction(options.sketchStyle,
+  this.drawInteraction_ = this.createDrawInteraction(options.sketchStyle,
       this.vectorLayer_.getSource());
 
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.shouldHandleDrawInteractionActiveChange_ = true;
+
+  ol.events.listen(this.drawInteraction_,
+      ol.Object.getChangeEventType(ol.interaction.InteractionProperty.ACTIVE),
+      this.handleDrawInteractionActiveChange_, this);
   ol.events.listen(this.drawInteraction_,
       ol.interaction.DrawEventType.DRAWSTART, this.onDrawStart_, this);
   ol.events.listen(this.drawInteraction_,
@@ -119366,19 +119391,30 @@ goog.inherits(ngeo.interaction.Measure, ol.interaction.Interaction);
  * of the area.
  * @param {ol.geom.Polygon} polygon Polygon.
  * @param {ol.proj.Projection} projection Projection of the polygon coords.
+ * @param {?number} decimals Decimals.
  * @return {string} Formatted string of the area.
  */
-ngeo.interaction.Measure.getFormattedArea = function(polygon, projection) {
+ngeo.interaction.Measure.getFormattedArea = function(
+    polygon, projection, decimals) {
   var geom = /** @type {ol.geom.Polygon} */ (
       polygon.clone().transform(projection, 'EPSG:4326'));
   var coordinates = geom.getLinearRing(0).getCoordinates();
   var area = Math.abs(ol.sphere.WGS84.geodesicArea(coordinates));
   var output;
   if (area > 1000000) {
-    output = parseFloat((area / 1000000).toPrecision(3)) +
-        ' ' + 'km<sup>2</sup>';
+    if (decimals !== null) {
+      output = goog.string.padNumber(area / 1000000, 0, decimals);
+    } else {
+      output = parseFloat((area / 1000000).toPrecision(3));
+    }
+    output += ' ' + 'km<sup>2</sup>';
   } else {
-    output = parseFloat(area.toPrecision(3)) + ' ' + 'm<sup>2</sup>';
+    if (decimals !== null) {
+      output = goog.string.padNumber(area, 0, decimals);
+    } else {
+      output = parseFloat(area.toPrecision(3));
+    }
+    output += ' ' + 'm<sup>2</sup>';
   }
   return output;
 };
@@ -119389,9 +119425,11 @@ ngeo.interaction.Measure.getFormattedArea = function(polygon, projection) {
  * string of the length.
  * @param {ol.geom.LineString} lineString Line string.
  * @param {ol.proj.Projection} projection Projection of the line string coords.
+ * @param {?number} decimals Decimals.
  * @return {string} Formatted string of length.
  */
-ngeo.interaction.Measure.getFormattedLength = function(lineString, projection) {
+ngeo.interaction.Measure.getFormattedLength = function(lineString, projection,
+    decimals) {
   var length = 0;
   var coordinates = lineString.getCoordinates();
   for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
@@ -119401,13 +119439,40 @@ ngeo.interaction.Measure.getFormattedLength = function(lineString, projection) {
   }
   var output;
   if (length > 1000) {
-    output = parseFloat((length / 1000).toPrecision(3)) +
-        ' ' + 'km';
+    if (decimals !== null) {
+      output = goog.string.padNumber(length / 1000, 0, decimals);
+    } else {
+      output = parseFloat((length / 1000).toPrecision(3));
+    }
+    output += ' ' + 'km';
   } else {
-    output = parseFloat(length.toPrecision(3)) +
-        ' ' + 'm';
+    if (decimals !== null) {
+      output = goog.string.padNumber(length, 0, decimals);
+    } else {
+      output = parseFloat(length.toPrecision(3));
+    }
+    output += ' ' + 'm';
   }
   return output;
+};
+
+
+/**
+ * Return a formatted string of the point.
+ * @param {ol.geom.Point} point Point.
+ * @param {ol.proj.Projection} projection Projection of the line string coords.
+ * @param {?number} decimals Decimals.
+ * @return {string} Formatted string of coordinate.
+ */
+ngeo.interaction.Measure.getFormattedPoint = function(
+    point, projection, decimals) {
+  var coordinates = point.getCoordinates();
+  var x = coordinates[0];
+  var y = coordinates[1];
+  decimals = decimals !== null ? decimals : 0;
+  x = goog.string.padNumber(x, 0, decimals);
+  y = goog.string.padNumber(y, 0, decimals);
+  return ['X: ', x, ', Y: ', y].join('');
 };
 
 
@@ -119428,11 +119493,22 @@ ngeo.interaction.Measure.handleEvent_ = function(evt) {
     helpMsg = this.continueMsg;
   }
 
-  goog.dom.removeChildren(this.helpTooltipElement_);
-  goog.dom.appendChild(this.helpTooltipElement_, helpMsg);
-  this.helpTooltipOverlay_.setPosition(evt.coordinate);
+  if (this.displayHelpTooltip_) {
+    goog.dom.removeChildren(this.helpTooltipElement_);
+    goog.dom.appendChild(this.helpTooltipElement_, helpMsg);
+    this.helpTooltipOverlay_.setPosition(evt.coordinate);
+  }
 
   return true;
+};
+
+
+/**
+ * @return {ol.interaction.Draw|ngeo.interaction.DrawAzimut|ngeo.interaction.MobileDraw} The draw interaction.
+ * @export
+ */
+ngeo.interaction.Measure.prototype.getDrawInteraction = function() {
+  return this.drawInteraction_;
 };
 
 
@@ -119441,10 +119517,10 @@ ngeo.interaction.Measure.handleEvent_ = function(evt) {
  * @param {ol.style.Style|Array.<ol.style.Style>|ol.style.StyleFunction|undefined}
  *     style The sketchStyle used for the drawing interaction.
  * @param {ol.source.Vector} source Vector source.
- * @return {ol.interaction.Draw|ngeo.interaction.DrawAzimut}
+ * @return {ol.interaction.Draw|ngeo.interaction.DrawAzimut|ngeo.interaction.MobileDraw}
  * @protected
  */
-ngeo.interaction.Measure.prototype.getDrawInteraction = goog.abstractMethod;
+ngeo.interaction.Measure.prototype.createDrawInteraction = goog.abstractMethod;
 
 
 /**
@@ -119477,6 +119553,7 @@ ngeo.interaction.Measure.prototype.onDrawStart_ = function(evt) {
   this.createMeasureTooltip_();
 
   var geometry = this.sketchFeature.getGeometry();
+
   goog.asserts.assert(goog.isDef(geometry));
   this.changeEventKey_ = ol.events.listen(geometry,
       ol.events.EventType.CHANGE,
@@ -119514,14 +119591,16 @@ ngeo.interaction.Measure.prototype.onDrawEnd_ = function(evt) {
  */
 ngeo.interaction.Measure.prototype.createHelpTooltip_ = function() {
   this.removeHelpTooltip_();
-  this.helpTooltipElement_ = goog.dom.createDom(goog.dom.TagName.DIV);
-  goog.dom.classlist.add(this.helpTooltipElement_, 'tooltip');
-  this.helpTooltipOverlay_ = new ol.Overlay({
-    element: this.helpTooltipElement_,
-    offset: [15, 0],
-    positioning: 'center-left'
-  });
-  this.getMap().addOverlay(this.helpTooltipOverlay_);
+  if (this.displayHelpTooltip_) {
+    this.helpTooltipElement_ = goog.dom.createDom(goog.dom.TagName.DIV);
+    goog.dom.classlist.add(this.helpTooltipElement_, 'tooltip');
+    this.helpTooltipOverlay_ = new ol.Overlay({
+      element: this.helpTooltipElement_,
+      offset: [15, 0],
+      positioning: 'center-left'
+    });
+    this.getMap().addOverlay(this.helpTooltipOverlay_);
+  }
 };
 
 
@@ -119530,12 +119609,14 @@ ngeo.interaction.Measure.prototype.createHelpTooltip_ = function() {
  * @private
  */
 ngeo.interaction.Measure.prototype.removeHelpTooltip_ = function() {
-  this.getMap().removeOverlay(this.helpTooltipOverlay_);
-  if (!goog.isNull(this.helpTooltipElement_)) {
-    this.helpTooltipElement_.parentNode.removeChild(this.helpTooltipElement_);
+  if (this.displayHelpTooltip_) {
+    this.getMap().removeOverlay(this.helpTooltipOverlay_);
+    if (!goog.isNull(this.helpTooltipElement_)) {
+      this.helpTooltipElement_.parentNode.removeChild(this.helpTooltipElement_);
+    }
+    this.helpTooltipElement_ = null;
+    this.helpTooltipOverlay_ = null;
   }
-  this.helpTooltipElement_ = null;
-  this.helpTooltipOverlay_ = null;
 };
 
 
@@ -119577,13 +119658,17 @@ ngeo.interaction.Measure.prototype.removeMeasureTooltip_ = function() {
  */
 ngeo.interaction.Measure.prototype.updateState_ = function() {
   var active = this.getActive();
+  this.shouldHandleDrawInteractionActiveChange_ = false;
   this.drawInteraction_.setActive(active);
+  this.shouldHandleDrawInteractionActiveChange_ = true;
   if (!this.getMap()) {
     return;
   }
   if (active) {
-    this.createMeasureTooltip_();
-    this.createHelpTooltip_();
+    if (!this.measureTooltipOverlay_) {
+      this.createMeasureTooltip_();
+      this.createHelpTooltip_();
+    }
   } else {
     this.vectorLayer_.getSource().clear(true);
     this.getMap().removeOverlay(this.measureTooltipOverlay_);
@@ -119610,6 +119695,21 @@ ngeo.interaction.Measure.prototype.handleMeasure = goog.abstractMethod;
 ngeo.interaction.Measure.prototype.getTooltipElement = function() {
   return this.measureTooltipElement_;
 };
+
+
+/**
+ * Called when the draw interaction `active` property changes. If the
+ * change is due to something else than this measure interactino, then
+ * update follow the its active state accordingly.
+ *
+ * @private
+ */
+ngeo.interaction.Measure.prototype.handleDrawInteractionActiveChange_ =
+    function() {
+      if (this.shouldHandleDrawInteractionActiveChange_) {
+        this.setActive(this.drawInteraction_.getActive());
+      }
+    };
 
 goog.provide('ngeo.interaction.MeasureArea');
 
@@ -119650,7 +119750,7 @@ goog.inherits(ngeo.interaction.MeasureArea, ngeo.interaction.Measure);
 /**
  * @inheritDoc
  */
-ngeo.interaction.MeasureArea.prototype.getDrawInteraction = function(style,
+ngeo.interaction.MeasureArea.prototype.createDrawInteraction = function(style,
     source) {
 
   return new ol.interaction.Draw(
@@ -119670,7 +119770,8 @@ ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
   var geom = /** @type {ol.geom.Polygon} */
       (this.sketchFeature.getGeometry());
   var proj = this.getMap().getView().getProjection();
-  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj);
+  var dec = this.decimals;
+  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj, dec);
   var verticesCount = geom.getCoordinates()[0].length;
   var coord = null;
   if (verticesCount > 2) {
@@ -119730,7 +119831,7 @@ goog.inherits(ngeo.interaction.MeasureAzimut, ngeo.interaction.Measure);
 /**
  * @inheritDoc
  */
-ngeo.interaction.MeasureAzimut.prototype.getDrawInteraction = function(style,
+ngeo.interaction.MeasureAzimut.prototype.createDrawInteraction = function(style,
     source) {
 
   return new ngeo.interaction.DrawAzimut({
@@ -119769,7 +119870,9 @@ ngeo.interaction.MeasureAzimut.prototype.formatMeasure_ = function(line) {
   var azimut = Math.round(factor * rad * 180 / Math.PI) % 360;
   var output = azimut + '°';
   var proj = this.getMap().getView().getProjection();
-  output += '<br/>' + ngeo.interaction.Measure.getFormattedLength(line, proj);
+  var dec = this.decimals;
+  output += '<br/>' + ngeo.interaction.Measure.getFormattedLength(
+      line, proj, dec);
   return output;
 };
 
@@ -120115,7 +120218,7 @@ goog.inherits(ngeo.interaction.MeasureLength, ngeo.interaction.Measure);
 /**
  * @inheritDoc
  */
-ngeo.interaction.MeasureLength.prototype.getDrawInteraction = function(style,
+ngeo.interaction.MeasureLength.prototype.createDrawInteraction = function(style,
     source) {
 
   return new ol.interaction.Draw(
@@ -120135,7 +120238,576 @@ ngeo.interaction.MeasureLength.prototype.handleMeasure = function(callback) {
   var geom = /** @type {ol.geom.LineString} */
       (this.sketchFeature.getGeometry());
   var proj = this.getMap().getView().getProjection();
-  var output = ngeo.interaction.Measure.getFormattedLength(geom, proj);
+  var dec = this.decimals;
+  var output = ngeo.interaction.Measure.getFormattedLength(geom, proj, dec);
+  var coord = geom.getLastCoordinate();
+  callback(output, coord);
+};
+
+goog.provide('ngeo.interaction.MobileDraw');
+
+goog.require('ol.Feature');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.Point');
+goog.require('ol.geom.SimpleGeometry');
+goog.require('ol.interaction.DrawEvent');
+goog.require('ol.interaction.Interaction');
+goog.require('ol.layer.Vector');
+goog.require('ol.source.Vector');
+
+
+/**
+ * @enum {string}
+ */
+ngeo.interaction.MobileDrawProperty = {
+  DIRTY: 'dirty',
+  DRAWING: 'drawing',
+  VALID: 'valid'
+};
+
+
+/**
+ * @classdesc
+ * Interaction for drawing feature geometries from a mobile device using the
+ * center of the map view as entry for points added.
+ *
+ * Supports:
+ * - point
+ * - line string
+ *
+ * @constructor
+ * @fires ol.interaction.DrawEvent
+ * @extends {ol.interaction.Interaction}
+ * @param {ngeox.interaction.MobileDrawOptions} options Options
+ * @export
+ */
+ngeo.interaction.MobileDraw = function(options) {
+
+  goog.base(this, {
+    handleEvent: goog.functions.TRUE
+  });
+
+  /**
+   * The key for view center change event.
+   * @type {?goog.events.Key}
+   * @private
+   */
+  this.changeEventKey_ = null;
+
+  /**
+   * Geometry type.
+   * @type {ol.geom.GeometryType}
+   * @private
+   */
+  this.type_ = options.type;
+
+  /**
+   * The number of points that must be drawn before a polygon ring or line
+   * string can be finished.  The default is 3 for polygon rings and 2 for
+   * line strings.
+   * @type {number}
+   * @private
+   */
+  this.minPoints_ = options.minPoints ?
+      options.minPoints :
+      (this.type_ === ol.geom.GeometryType.POLYGON ? 3 : 2);
+
+  /**
+   * Sketch feature.
+   * @type {ol.Feature}
+   * @private
+   */
+  this.sketchFeature_ = null;
+
+  /**
+   * Previous sketch points, saved to be able to display them on the layer.
+   * @type {Array.<ol.Feature>}
+   * @private
+   */
+  this.sketchPoints_ = [];
+
+  /**
+   * Current sketch point.
+   * @type {ol.Feature}
+   * @private
+   */
+  this.sketchPoint_ = null;
+
+  /**
+   * Draw overlay where our sketch features are drawn.
+   * @type {ol.layer.Vector}
+   * @private
+   */
+  this.overlay_ = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      useSpatialIndex: false,
+      wrapX: options.wrapX ? options.wrapX : false
+    }),
+    style: options.style ? options.style :
+        ol.interaction.Draw.getDefaultStyleFunction(),
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
+  });
+
+  ol.events.listen(this,
+      ol.Object.getChangeEventType(ol.interaction.InteractionProperty.ACTIVE),
+      this.updateState_, this);
+
+  this.set(ngeo.interaction.MobileDrawProperty.DIRTY, false);
+  this.set(ngeo.interaction.MobileDrawProperty.DRAWING, false);
+  this.set(ngeo.interaction.MobileDrawProperty.VALID, false);
+
+};
+goog.inherits(ngeo.interaction.MobileDraw, ol.interaction.Interaction);
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MobileDraw.prototype.setMap = function(map) {
+
+  var currentMap = this.getMap();
+  if (currentMap) {
+    goog.events.unlistenByKey(this.changeEventKey_);
+  }
+
+  goog.base(this, 'setMap', map);
+
+  if (map) {
+    ol.events.listen(map.getView(),
+        ol.Object.getChangeEventType(ol.ViewProperty.CENTER),
+        this.handleViewCenterChange_, this);
+  }
+
+  this.updateState_();
+};
+
+
+// === PUBLIC METHODS - PROPERTY GETTERS ===
+
+
+/**
+ * Return whether the interaction is currently dirty. It is if the sketch
+ * feature has its geometry last coordinate set to the center without the
+ * use of the `addToDrawing` method.
+ * @return {boolean} `true` if the interaction is dirty, `false` otherwise.
+ * @observable
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.getDirty = function() {
+  return /** @type {boolean} */ (
+      this.get(ngeo.interaction.MobileDrawProperty.DIRTY));
+};
+
+
+/**
+ * Return whether the interaction is currently drawing.
+ * @return {boolean} `true` if the interaction is drawing, `false` otherwise.
+ * @observable
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.getDrawing = function() {
+  return /** @type {boolean} */ (
+      this.get(ngeo.interaction.MobileDrawProperty.DRAWING));
+};
+
+
+/**
+ * Return whether the interaction as a valid sketch feature, i.e. its geometry
+ * is valid.
+ * @return {boolean} `true` if the interaction has a valid sketch feature,
+ *     `false` otherwise.
+ * @observable
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.getValid = function() {
+  return /** @type {boolean} */ (
+      this.get(ngeo.interaction.MobileDrawProperty.VALID));
+};
+
+
+/**
+ * Returns the current sketch feature.
+ * @return {?ol.Feature} The sketch feature, or null if none.
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.getFeature = function() {
+  return this.sketchFeature_;
+};
+
+
+// === PUBLIC METHODS ===
+
+
+/**
+ * Add current sketch point to sketch feature if the latter exists, else create
+ * it.
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.addToDrawing = function() {
+
+  // no need to do anything if interaction is not active, nor drawing
+  var active = this.getActive();
+  var drawing = this.getDrawing();
+
+  if (!active || !drawing) {
+    return;
+  }
+
+  var sketchFeatureGeom;
+  var sketchPointGeom = this.getSketchPointGeometry_();
+  var coordinate = sketchPointGeom.getCoordinates();
+  var coordinates;
+
+  // == point ==
+  if (this.type_ === ol.geom.GeometryType.POINT) {
+    if (!this.sketchFeature_) {
+      this.sketchFeature_ = new ol.Feature(new ol.geom.Point(coordinate));
+      this.dispatchEvent(new ol.interaction.DrawEvent(
+          ol.interaction.DrawEventType.DRAWSTART, this.sketchFeature_));
+
+    }
+    sketchFeatureGeom = this.sketchFeature_.getGeometry();
+    goog.asserts.assertInstanceof(sketchFeatureGeom, ol.geom.SimpleGeometry);
+    sketchFeatureGeom.setCoordinates(coordinate);
+    return;
+  }
+
+  // == line string ==
+  if (this.type_ === ol.geom.GeometryType.LINE_STRING) {
+    this.sketchPoints_.push(this.sketchPoint_);
+    if (!this.sketchFeature_) {
+      coordinates = [coordinate.slice(), coordinate.slice()];
+      this.sketchFeature_ = new ol.Feature(new ol.geom.LineString(coordinates));
+      this.dispatchEvent(new ol.interaction.DrawEvent(
+          ol.interaction.DrawEventType.DRAWSTART, this.sketchFeature_));
+    } else {
+      sketchFeatureGeom = this.sketchFeature_.getGeometry();
+      goog.asserts.assertInstanceof(sketchFeatureGeom, ol.geom.SimpleGeometry);
+      coordinates = sketchFeatureGeom.getCoordinates();
+      coordinates.push(coordinate.slice());
+      sketchFeatureGeom.setCoordinates(coordinates);
+    }
+  }
+
+  var dirty = this.getDirty();
+  if (dirty) {
+    this.set(ngeo.interaction.MobileDrawProperty.DIRTY, false);
+  }
+
+  // minPoints validation
+  var valid = this.getValid();
+  if (this.type_ === ol.geom.GeometryType.LINE_STRING) {
+    if (coordinates.length >= this.minPoints_) {
+      if (!valid) {
+        this.set(ngeo.interaction.MobileDrawProperty.VALID, true);
+      }
+    } else {
+      if (valid) {
+        this.set(ngeo.interaction.MobileDrawProperty.VALID, false);
+      }
+    }
+  }
+
+  // reset sketch point
+  this.sketchPoint_ = null;
+
+  // update sketch features
+  this.updateSketchFeatures_();
+};
+
+
+/**
+ * Clear the drawing
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.clearDrawing = function() {
+  this.setActive(false);
+  this.setActive(true);
+};
+
+
+/**
+ * Finish drawing. If there's a sketch point, it's added first.
+ * @export
+ */
+ngeo.interaction.MobileDraw.prototype.finishDrawing = function() {
+
+  // no need to do anything if interaction is not active, nor drawing
+  var active = this.getActive();
+  var drawing = this.getDrawing();
+
+  if (!active || !drawing) {
+    return;
+  }
+
+  if (this.sketchPoint_) {
+    this.addToDrawing();
+  }
+
+  this.set(ngeo.interaction.MobileDrawProperty.DRAWING, false);
+
+  this.dispatchEvent(new ol.interaction.DrawEvent(
+      ol.interaction.DrawEventType.DRAWEND, this.sketchFeature_));
+};
+
+
+// === PRIVATE METHODS ===
+
+
+/**
+ * Start drawing by adding the sketch point first.
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.startDrawing_ = function() {
+  this.set(ngeo.interaction.MobileDrawProperty.DRAWING, true);
+  this.createOrUpdateSketchPoint_();
+  this.updateSketchFeatures_();
+
+  if (this.type_ === ol.geom.GeometryType.POINT) {
+    this.addToDrawing();
+  }
+};
+
+
+/**
+ * Modify the geometry of the sketch feature to have its last coordinate
+ * set to the center of the map.
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.modifyDrawing_ = function() {
+  if (!this.sketchFeature_) {
+    return;
+  }
+
+  var center = this.getCenter_();
+
+  if (this.type_ === ol.geom.GeometryType.LINE_STRING) {
+    var sketchFeatureGeom = this.sketchFeature_.getGeometry();
+    goog.asserts.assertInstanceof(sketchFeatureGeom, ol.geom.SimpleGeometry);
+    var coordinates = sketchFeatureGeom.getCoordinates();
+    coordinates.pop();
+    coordinates.push(center);
+    sketchFeatureGeom.setCoordinates(coordinates);
+  }
+
+  var dirty = this.getDirty();
+  if (!dirty) {
+    this.set(ngeo.interaction.MobileDrawProperty.DIRTY, true);
+  }
+
+};
+
+
+/**
+ * Stop drawing without adding the sketch feature to the target layer.
+ * @return {?ol.Feature} The sketch feature (or null if none).
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.abortDrawing_ = function() {
+  var sketchFeature = this.sketchFeature_;
+  if (sketchFeature || this.sketchPoints_.length > 0) {
+    this.sketchFeature_ = null;
+    this.sketchPoint_ = null;
+    this.overlay_.getSource().clear(true);
+  }
+  this.sketchPoints_ = [];
+  this.set(ngeo.interaction.MobileDrawProperty.DIRTY, false);
+  this.set(ngeo.interaction.MobileDrawProperty.DRAWING, false);
+  this.set(ngeo.interaction.MobileDrawProperty.VALID, false);
+  return sketchFeature;
+};
+
+
+/**
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.updateState_ = function() {
+  var map = this.getMap();
+  var active = this.getActive();
+  if (!map || !active) {
+    this.abortDrawing_();
+  } else {
+    this.startDrawing_();
+  }
+  this.overlay_.setMap(active ? map : null);
+};
+
+
+/**
+ * @param {ol.ObjectEvent} evt Event.
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.handleViewCenterChange_ = function(evt) {
+  // no need to do anything if interaction is not active, nor drawing
+  var active = this.getActive();
+  var drawing = this.getDrawing();
+
+  if (!active || !drawing) {
+    return;
+  }
+
+  this.createOrUpdateSketchPoint_();
+
+  if (this.type_ === ol.geom.GeometryType.POINT) {
+    this.addToDrawing();
+  } else {
+    this.modifyDrawing_();
+    this.updateSketchFeatures_();
+  }
+};
+
+
+/**
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.createOrUpdateSketchPoint_ = function() {
+  var center = this.getCenter_();
+
+  if (this.sketchPoint_) {
+    var geometry = this.getSketchPointGeometry_();
+    geometry.setCoordinates(center);
+  } else {
+    this.sketchPoint_ = new ol.Feature(new ol.geom.Point(center));
+  }
+
+};
+
+
+/**
+ * Redraw the sketch features.
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.updateSketchFeatures_ = function() {
+  var sketchFeatures = [];
+  if (this.sketchFeature_) {
+    sketchFeatures.push(this.sketchFeature_);
+  }
+  if (this.sketchPoint_) {
+    sketchFeatures.push(this.sketchPoint_);
+  }
+  var overlaySource = this.overlay_.getSource();
+  overlaySource.clear(true);
+  overlaySource.addFeatures(sketchFeatures);
+  overlaySource.addFeatures(this.sketchPoints_);
+};
+
+
+/**
+ * Returns the geometry of the sketch point feature.
+ * @return {ol.geom.Point} Point.
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.getSketchPointGeometry_ = function() {
+  goog.asserts.assert(this.sketchPoint_, 'sketch point should be thruty');
+  var geometry = this.sketchPoint_.getGeometry();
+  goog.asserts.assertInstanceof(geometry, ol.geom.Point);
+  return geometry;
+};
+
+
+/**
+ * Returns the center of the map view
+ * @return {ol.Coordinate} Coordinate.
+ * @private
+ */
+ngeo.interaction.MobileDraw.prototype.getCenter_ = function() {
+  var center = this.getMap().getView().getCenter();
+  goog.asserts.assertArray(center);
+  return center;
+};
+
+goog.provide('ngeo.interaction.MeasureLengthMobile');
+
+goog.require('ngeo.interaction.MeasureLength');
+goog.require('ngeo.interaction.MobileDraw');
+
+
+/**
+ * @classdesc
+ * Interaction dedicated to measure length on mobile devices.
+ *
+ * @constructor
+ * @extends {ngeo.interaction.MeasureLength}
+ * @param {ngeox.interaction.MeasureOptions=} opt_options Options
+ * @export
+ */
+ngeo.interaction.MeasureLengthMobile = function(opt_options) {
+
+  var options = goog.isDef(opt_options) ? opt_options : {};
+
+  goog.object.extend(options, {displayHelpTooltip: false});
+
+  goog.base(this, options);
+
+};
+goog.inherits(ngeo.interaction.MeasureLengthMobile,
+              ngeo.interaction.MeasureLength);
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasureLengthMobile.prototype.createDrawInteraction =
+    function(style, source) {
+      return new ngeo.interaction.MobileDraw({
+        'type': /** @type {ol.geom.GeometryType<string>} */ ('LineString'),
+        'style': style,
+        'source': source
+      });
+    };
+
+goog.provide('ngeo.interaction.MeasurePointMobile');
+
+goog.require('ngeo.interaction.Measure');
+goog.require('ngeo.interaction.MobileDraw');
+goog.require('ol.geom.Point');
+
+
+/**
+ * @classdesc
+ * Interaction dedicated to measure by coordinate (point) on mobile devices.
+ *
+ * @constructor
+ * @extends {ngeo.interaction.Measure}
+ * @param {ngeox.interaction.MeasureOptions=} opt_options Options
+ * @export
+ */
+ngeo.interaction.MeasurePointMobile = function(opt_options) {
+
+  var options = goog.isDef(opt_options) ? opt_options : {};
+
+  goog.object.extend(options, {displayHelpTooltip: false});
+
+  goog.base(this, options);
+
+};
+goog.inherits(ngeo.interaction.MeasurePointMobile, ngeo.interaction.Measure);
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasurePointMobile.prototype.createDrawInteraction = function(
+    style, source) {
+  return new ngeo.interaction.MobileDraw({
+    'type': /** @type {ol.geom.GeometryType<string>} */ ('Point'),
+    'style': style,
+    'source': source
+  });
+};
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasurePointMobile.prototype.handleMeasure = function(
+    callback) {
+  var geom = /** @type {ol.geom.Point} */
+      (this.sketchFeature.getGeometry());
+  var proj = this.getMap().getView().getProjection();
+  var dec = this.decimals;
+  var output = ngeo.interaction.Measure.getFormattedPoint(geom, proj, dec);
   var coord = geom.getLastCoordinate();
   callback(output, coord);
 };
