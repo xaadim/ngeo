@@ -61,7 +61,8 @@
       </div>
       <div id="background" class="slide" data-header-title="Background">
         <gmf-mobile-background-layer-selector
-          gmf-mobile-background-layer-selector-map="::mainCtrl.map">
+          gmf-mobile-background-layer-selector-map="::mainCtrl.map"
+          gmf-mobile-background-layer-selector-select="mainCtrl.hideNav()">
         </gmf-mobile-background-layer-selector>
       </div>
       <gmf-themeselector
@@ -69,7 +70,8 @@
           class="slide"
           data-header-title="Themes"
           gmf-themeselector-currenttheme="mainCtrl.theme"
-          gmf-themeselector-filter="::mainCtrl.filter">
+          gmf-themeselector-filter="::mainCtrl.filter"
+          gmf-mobile-nav-back="mainCtrl.theme">
       </gmf-themeselector>
     </nav>
     <nav class="nav-right" gmf-mobile-nav>
@@ -111,7 +113,8 @@
          module.constant('fulltextsearchUrl', 'https://geomapfish-demo.camptocamp.net/2.0/wsgi/fulltextsearch');
          module.constant('gmfWmsUrl', 'https://geomapfish-demo.camptocamp.net/2.0/wsgi/mapserv_proxy');
          module.constant('gmfTreeUrl', 'https://geomapfish-demo.camptocamp.net/2.0/wsgi/themes?version=2&background=background');
-         module.constant('gmfSearchGroups', ['osm','district', 'add_theme', 'add_group', 'add_layer']);
+         module.constant('gmfSearchGroups', ['osm','district']);
+         module.constant('gmfSearchActions', ['add_theme', 'add_group', 'add_layer']);
        })();
     </script>
   </body>
