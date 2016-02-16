@@ -108500,7 +108500,6 @@ goog.provide('ngeo.profile');
 goog.require('goog.object');
 
 
-
 /**
  * Provides a D3js component to be used to draw an elevation
  * profile chart.
@@ -108537,8 +108536,8 @@ goog.require('goog.object');
  *     ]
  *
  * @constructor
- * @return {Object}
- * @param {ngeox.profile.ProfileOptions} options
+ * @return {Object} D3js component.
+ * @param {ngeox.profile.ProfileOptions} options Profile options.
  * @export
  */
 ngeo.profile = function(options) {
@@ -108554,14 +108553,6 @@ ngeo.profile = function(options) {
    */
   var margin = light ? {top: 0, right: 0, bottom: 0, left: 0} :
       {top: 10, right: 20, bottom: 30, left: 40};
-
-  /**
-   * Method to get the coordinate in pixels from a distance.
-   */
-  var bisectDistance = d3.bisector(function(d) {
-    return elevationExtractor.dist(d);
-  }).left;
-
 
   /**
    * Hover callback function.
@@ -108581,6 +108572,13 @@ ngeo.profile = function(options) {
    * Elevation data extractor used to get the dist and elevation values.
    */
   var elevationExtractor = options.elevationExtractor;
+
+  /**
+   * Method to get the coordinate in pixels from a distance.
+   */
+  var bisectDistance = d3.bisector(function(d) {
+    return elevationExtractor.dist(d);
+  }).left;
 
   /**
    * POI data extractor.
@@ -108603,23 +108601,37 @@ ngeo.profile = function(options) {
    */
   var formatter = {
     /**
-     * @return {string}
+     * @param {number} dist Distance.
+     * @param {string} units Units.
+     * @return {string} Distance.
      */
     xhover: function(dist, units) {
       return parseFloat(dist.toPrecision(3)) + ' ' + units;
     },
     /**
-     * @return {string}
+     * @param {number} ele Elevation.
+     * @param {string} units Units.
+     * @return {string} Elevation.
      */
-    yhover: function(ele, units) { return Math.round(ele) + ' m'; },
+    yhover: function(ele, units) {
+      return Math.round(ele) + ' m';
+    },
     /**
-     * @return {string|number}
+     * @param {number} dist Distance.
+     * @param {string} units Units.
+     * @return {string|number} Distance.
      */
-    xtick: function(dist, units) { return dist; },
+    xtick: function(dist, units) {
+      return dist;
+    },
     /**
-     * @return {string|number}
+     * @param {number} ele Elevation.
+     * @param {string} units Units.
+     * @return {string|number} Elevation.
      */
-    ytick: function(ele, units) { return ele; }
+    ytick: function(ele, units) {
+      return ele;
+    }
   };
 
   if (goog.isDef(options.formatter)) {
@@ -108701,12 +108713,20 @@ ngeo.profile = function(options) {
           .orient('left');
 
       var area = d3.svg.area()
-          .x(function(d) { return x(extractor.dist(d)); })
+          .x(function(d) {
+            return x(extractor.dist(d));
+          })
           .y0(height)
-          .y1(function(d) { return y(extractor.z(d)); });
+          .y1(function(d) {
+            return y(extractor.z(d));
+          });
       var line = d3.svg.line()
-          .x(function(d) { return x(extractor.dist(d)); })
-          .y(function(d) { return y(extractor.z(d)); });
+          .x(function(d) {
+            return x(extractor.dist(d));
+          })
+          .y(function(d) {
+            return y(extractor.z(d));
+          });
 
       // Select the svg element, if it exists.
       svg = d3.select(this).selectAll('svg').data([data]);
@@ -108785,10 +108805,14 @@ ngeo.profile = function(options) {
           .attr('transform', 'translate(' + margin.left + ',' +
               margin.top + ')');
 
-      xDomain = d3.extent(data, function(d) { return extractor.dist(d); });
+      xDomain = d3.extent(data, function(d) {
+        return extractor.dist(d);
+      });
       x.domain(xDomain);
 
-      var yDomain = d3.extent(data, function(d) { return extractor.z(d); });
+      var yDomain = d3.extent(data, function(d) {
+        return extractor.z(d);
+      });
       y.domain(yDomain);
 
       // set the ratio according to the horizontal distance
@@ -108983,28 +109007,36 @@ ngeo.profile = function(options) {
 
     p.selectAll('text')
       .attr('transform', function(d) {
-          if (light) {
-            return ['translate(',
-              x(pe.dist(d)), ',',
-              y(pe.z(d)) - 10, ')'
-            ].join('');
-          } else {
-            return ['translate(',
-              x(pe.dist(d)), ',',
-              y(pe.z(d)) - 20, ') rotate(', poiLabelAngle, ')'
-            ].join('');
-          }
-        })
+        if (light) {
+          return ['translate(',
+            x(pe.dist(d)), ',',
+            y(pe.z(d)) - 10, ')'
+          ].join('');
+        } else {
+          return ['translate(',
+            x(pe.dist(d)), ',',
+            y(pe.z(d)) - 20, ') rotate(', poiLabelAngle, ')'
+          ].join('');
+        }
+      })
       .text(function(d) {
-          return pe.sort(d) + (light ? '' : (' - ' + pe.title(d)));
-        });
+        return pe.sort(d) + (light ? '' : (' - ' + pe.title(d)));
+      });
 
     p.selectAll('line')
        .style('stroke', 'grey')
-       .attr('x1', function(d) { return x(pe.dist(d));})
-       .attr('y1', function(d) { return y(y.domain()[0]);})
-       .attr('x2', function(d) { return x(pe.dist(d));})
-       .attr('y2', function(d) { return y(pe.z(d));});
+       .attr('x1', function(d) {
+         return x(pe.dist(d));
+       })
+       .attr('y1', function(d) {
+         return y(y.domain()[0]);
+       })
+       .attr('x2', function(d) {
+         return x(pe.dist(d));
+       })
+       .attr('y2', function(d) {
+         return y(pe.z(d));
+       });
 
     // remove unused pois
     p.exit().remove();
@@ -109100,7 +109132,6 @@ ngeo.btngroupDirective = function($parse) {
 
 
 ngeo.module.directive('ngeoBtnGroup', ngeo.btngroupDirective);
-
 
 
 /**
@@ -109334,7 +109365,6 @@ goog.require('ol.style.StyleFunction');
 ngeo.FeatureOverlayGroup;
 
 
-
 /**
  * Provides a service that wraps an "unmanaged" vector layer,
  * used as a shared vector layer accross the application.
@@ -109487,15 +109517,13 @@ ngeo.FeatureOverlayMgr.prototype.setStyle = function(style, groupIndex) {
  * @return {Array.<ol.style.Style>|ol.style.Style} Styles.
  * @private
  */
-ngeo.FeatureOverlayMgr.prototype.styleFunction_ =
-    function(feature, resolution) {
+ngeo.FeatureOverlayMgr.prototype.styleFunction_ = function(feature, resolution) {
   var featureUid = goog.getUid(feature).toString();
   goog.asserts.assert(featureUid in this.featureUidToGroupIndex_);
   var groupIndex = this.featureUidToGroupIndex_[featureUid];
   var group = this.groups_[groupIndex];
   return group.styleFunction(feature, resolution);
 };
-
 
 
 /**
@@ -109654,7 +109682,6 @@ ngeo.desktopGeolocationDirective = function() {
 
 ngeo.module.directive('ngeoDesktopGeolocation',
     ngeo.desktopGeolocationDirective);
-
 
 
 /**
@@ -109881,6 +109908,7 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
      * @param {angular.Attributes} attrs Attributes.
+     * @return {boolean} Template URL.
      */
     function(element, attrs) {
       var templateUrl = attrs['ngeoLayertreeTemplateurl'];
@@ -109955,49 +109983,41 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
  * @ngdoc directive
  * @ngname ngeoLayertree
  */
-ngeo.layertreeDirective = function(
-    $compile, ngeoLayertreeTemplateUrl) {
+ngeo.layertreeDirective = function($compile, ngeoLayertreeTemplateUrl) {
   return {
     restrict: 'A',
     scope: true,
     templateUrl: ngeoLayertreeTemplateUrl,
     controller: 'NgeoLayertreeController',
-    compile:
+    compile: function(tElement, tAttrs) {
+      var contents = tElement.contents().remove();
+      var compiledContents;
+      return (
         /**
-         * @param {angular.JQLite} tElement Template element.
-         * @param {angular.Attributes} tAttrs Template attributes.
-         * @return {Function} Post-link function.
+         * Post-link function.
+         * @param {!angular.Scope} scope Scope.
+         * @param {angular.JQLite} iElement Instance element.
+         * @param {angular.Attributes} iAttrs Instance attributes.
          */
-        function(tElement, tAttrs) {
-          var contents = tElement.contents().remove();
-          var compiledContents;
-          return (
-              /**
-               * Post-link function.
-               * @param {!angular.Scope} scope Scope.
-               * @param {angular.JQLite} iElement Instance element.
-               * @param {angular.Attributes} iAttrs Instance attributes.
-               */
-              function(scope, iElement, iAttrs) {
-                if (!compiledContents) {
-                  compiledContents = $compile(contents);
-                }
-                compiledContents(scope,
-                    /**
-                     * @param {Object} clone Clone element.
-                     */
-                    function(clone) {
-                      var cloneElement = /** @type {angular.JQLite} */ (clone);
-                      iElement.append(cloneElement);
-                    });
-              });
-        }
+        function(scope, iElement, iAttrs) {
+          if (!compiledContents) {
+            compiledContents = $compile(contents);
+          }
+          compiledContents(scope,
+            /**
+             * @param {Object} clone Clone element.
+             */
+            function(clone) {
+              var cloneElement = /** @type {angular.JQLite} */ (clone);
+              iElement.append(cloneElement);
+            });
+        });
+    }
   };
 };
 
 
 ngeo.module.directive('ngeoLayertree', ngeo.layertreeDirective);
-
 
 
 /**
@@ -110135,8 +110155,7 @@ ngeo.LayertreeController.prototype.getSetActive = function(val) {
 };
 
 
-ngeo.module.controller('NgeoLayertreeController',
-    ngeo.LayertreeController);
+ngeo.module.controller('NgeoLayertreeController', ngeo.LayertreeController);
 
 goog.provide('ngeo.mapDirective');
 
@@ -110220,7 +110239,6 @@ ngeo.mobileGeolocationDirective = function() {
 
 
 ngeo.module.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
-
 
 
 /**
@@ -110479,7 +110497,6 @@ ngeo.module.value('ngeoQueryResult', {
   'sources': [],
   'total': 0
 });
-
 
 
 /**
@@ -110764,10 +110781,7 @@ ngeo.Query.prototype.issueWMSGetFeatureInfoRequests_ = function(
     var layers = items[0].source.wmsSource.getParams()['LAYERS'].split(',');
 
     wmsGetFeatureInfoUrl = items[0].source.wmsSource.getGetFeatureInfoUrl(
-        coordinate,
-        resolution,
-        projCode,
-        {
+        coordinate, resolution, projCode, {
           'INFO_FORMAT': infoFormat,
           'FEATURE_COUNT': this.limit_
         });
@@ -110876,7 +110890,6 @@ ngeo.mobileQueryDirective = function() {
 
 
 ngeo.module.directive('ngeoMobileQuery', ngeo.mobileQueryDirective);
-
 
 
 /**
@@ -111057,6 +111070,7 @@ ngeo.module.value('ngeoPopupTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
      * @param {angular.Attributes} attrs Attributes.
+     * @return {string} Template URL.
      */
     function(element, attrs) {
       var templateUrl = attrs['ngeoPopupTemplateurl'];
@@ -111099,6 +111113,9 @@ ngeo.popupDirective = function(ngeoPopupTemplateUrl) {
         function(scope, element, attrs) {
           element.addClass('popover');
 
+          /**
+           * @param {jQuery.Event} evt Event.
+           */
           scope.close = function(evt) {
             if (evt) {
               evt.stopPropagation();
@@ -114411,6 +114428,7 @@ ngeo.module.value('ngeoScaleselectorTemplateUrl',
     /**
      * @param {angular.JQLite} element Element.
      * @param {angular.Attributes} attrs Attributes.
+     * @return {string} Template URL.
      */
     function(element, attrs) {
       var templateUrl = attrs['ngeoScaleselectorTemplateurl'];
@@ -114481,7 +114499,6 @@ ngeo.scaleselectorDirective = function(ngeoScaleselectorTemplateUrl) {
 
 
 ngeo.module.directive('ngeoScaleselector', ngeo.scaleselectorDirective);
-
 
 
 /**
@@ -114647,8 +114664,7 @@ ngeo.ScaleselectorController.prototype.handleViewChange_ = function(e) {
 /**
  * @private
  */
-ngeo.ScaleselectorController.prototype.registerResolutionChangeListener_ =
-    function() {
+ngeo.ScaleselectorController.prototype.registerResolutionChangeListener_ = function() {
   if (!goog.isNull(this.resolutionChangeKey_)) {
     ol.events.unlistenByKey(this.resolutionChangeKey_);
   }
@@ -118173,7 +118189,6 @@ ngeo.format.FeatureHashStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
     ngeo.format.FeatureHashStyleType.POLYGON;
 
 
-
 /**
  * @classdesc
  * Provide an OpenLayers format for encoding and decoding features for use
@@ -118311,8 +118326,7 @@ ngeo.format.FeatureHash.encodeNumber_ = function(num) {
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
  */
-ngeo.format.FeatureHash.encodeStyles_ =
-    function(styles, geometryType, encodedStyles) {
+ngeo.format.FeatureHash.encodeStyles_ = function(styles, geometryType, encodedStyles) {
   var styleType = ngeo.format.FeatureHashStyleTypes_[geometryType];
   goog.asserts.assert(goog.isDef(styleType));
   for (var i = 0; i < styles.length; ++i) {
@@ -118349,8 +118363,7 @@ ngeo.format.FeatureHash.encodeStyles_ =
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
  */
-ngeo.format.FeatureHash.encodeStyleLine_ =
-    function(strokeStyle, encodedStyles) {
+ngeo.format.FeatureHash.encodeStyleLine_ = function(strokeStyle, encodedStyles) {
   ngeo.format.FeatureHash.encodeStyleStroke_(strokeStyle, encodedStyles);
 };
 
@@ -118362,8 +118375,7 @@ ngeo.format.FeatureHash.encodeStyleLine_ =
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
  */
-ngeo.format.FeatureHash.encodeStylePoint_ =
-    function(imageStyle, encodedStyles) {
+ngeo.format.FeatureHash.encodeStylePoint_ = function(imageStyle, encodedStyles) {
   if (imageStyle instanceof ol.style.Circle) {
     var radius = imageStyle.getRadius();
     if (encodedStyles.length > 0) {
@@ -118391,8 +118403,7 @@ ngeo.format.FeatureHash.encodeStylePoint_ =
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
  */
-ngeo.format.FeatureHash.encodeStylePolygon_ =
-    function(fillStyle, strokeStyle, encodedStyles) {
+ngeo.format.FeatureHash.encodeStylePolygon_ = function(fillStyle, strokeStyle, encodedStyles) {
   ngeo.format.FeatureHash.encodeStyleFill_(fillStyle, encodedStyles);
   if (!goog.isNull(strokeStyle)) {
     ngeo.format.FeatureHash.encodeStyleStroke_(strokeStyle, encodedStyles);
@@ -118409,8 +118420,7 @@ ngeo.format.FeatureHash.encodeStylePolygon_ =
  * @param {string=} opt_propertyName Property name.
  * @private
  */
-ngeo.format.FeatureHash.encodeStyleFill_ =
-    function(fillStyle, encodedStyles, opt_propertyName) {
+ngeo.format.FeatureHash.encodeStyleFill_ = function(fillStyle, encodedStyles, opt_propertyName) {
   var propertyName = goog.isDef(opt_propertyName) ?
       opt_propertyName : 'fillColor';
   var fillColor = fillStyle.getColor();
@@ -118433,8 +118443,7 @@ ngeo.format.FeatureHash.encodeStyleFill_ =
  * @param {Array.<string>} encodedStyles Encoded styles array.
  * @private
  */
-ngeo.format.FeatureHash.encodeStyleStroke_ =
-    function(strokeStyle, encodedStyles) {
+ngeo.format.FeatureHash.encodeStyleStroke_ = function(strokeStyle, encodedStyles) {
   var strokeColor = strokeStyle.getColor();
   if (!goog.isNull(strokeColor)) {
     var strokeColorRgba = ol.color.asArray(strokeColor);
@@ -118798,8 +118807,7 @@ ngeo.format.FeatureHash.writeMultiPointGeometry_ = function(geometry) {
  * @this {ngeo.format.FeatureHash}
  * @private
  */
-ngeo.format.FeatureHash.encodeRings_ =
-    function(flatCoordinates, stride, offset, ends, textArray) {
+ngeo.format.FeatureHash.encodeRings_ = function(flatCoordinates, stride, offset, ends, textArray) {
   var linearRingCount = ends.length;
   for (var i = 0; i < linearRingCount; ++i) {
     // skip the "closing" point
@@ -118904,8 +118912,7 @@ ngeo.format.FeatureHash.GEOMETRY_WRITERS_ = {
  * @return {Array.<number>} Flat coordinates.
  * @private
  */
-ngeo.format.FeatureHash.prototype.decodeCoordinates_ =
-    function(text, opt_flatCoordinates) {
+ngeo.format.FeatureHash.prototype.decodeCoordinates_ = function(text, opt_flatCoordinates) {
   var len = text.length;
   var index = 0;
   var flatCoordinates = goog.isDef(opt_flatCoordinates) ?
@@ -118949,8 +118956,7 @@ ngeo.format.FeatureHash.prototype.decodeCoordinates_ =
  * @return {string} String.
  * @private
  */
-ngeo.format.FeatureHash.prototype.encodeCoordinates_ =
-    function(flatCoordinates, stride, offset, end) {
+ngeo.format.FeatureHash.prototype.encodeCoordinates_ = function(flatCoordinates, stride, offset, end) {
   var encodedCoordinates = '';
   for (var i = offset; i < end; i += stride) {
     var x = flatCoordinates[i];
@@ -118972,11 +118978,10 @@ ngeo.format.FeatureHash.prototype.encodeCoordinates_ =
  * Read a feature from a logical sequence of characters.
  * @param {string} text Text.
  * @param {olx.format.ReadOptions=} opt_options Read options.
- * @return {ol.Feature}
+ * @return {ol.Feature} Feature.
  * @protected
  */
-ngeo.format.FeatureHash.prototype.readFeatureFromText =
-    function(text, opt_options) {
+ngeo.format.FeatureHash.prototype.readFeatureFromText = function(text, opt_options) {
   goog.asserts.assert(text.length > 2);
   goog.asserts.assert(text[1] === '(');
   goog.asserts.assert(text[text.length - 1] === ')');
@@ -119012,11 +119017,10 @@ ngeo.format.FeatureHash.prototype.readFeatureFromText =
  * Read multiple features from a logical sequence of characters.
  * @param {string} text Text.
  * @param {olx.format.ReadOptions=} opt_options Read options.
- * @return {Array.<ol.Feature>}
+ * @return {Array.<ol.Feature>} Features.
  * @protected
  */
-ngeo.format.FeatureHash.prototype.readFeaturesFromText =
-    function(text, opt_options) {
+ngeo.format.FeatureHash.prototype.readFeaturesFromText = function(text, opt_options) {
   goog.asserts.assert(text[0] === 'F');
   /** @type {Array.<ol.Feature>} */
   var features = [];
@@ -119037,11 +119041,10 @@ ngeo.format.FeatureHash.prototype.readFeaturesFromText =
  * Read a geometry from a logical sequence of characters.
  * @param {string} text Text.
  * @param {olx.format.ReadOptions=} opt_options Read options.
- * @return {ol.geom.Geometry}
+ * @return {ol.geom.Geometry} Geometry.
  * @protected
  */
-ngeo.format.FeatureHash.prototype.readGeometryFromText =
-    function(text, opt_options) {
+ngeo.format.FeatureHash.prototype.readGeometryFromText = function(text, opt_options) {
   var geometryReader = ngeo.format.FeatureHash.GEOMETRY_READERS_[text[0]];
   goog.asserts.assert(goog.isDef(geometryReader));
   this.prevX_ = 0;
@@ -119054,11 +119057,10 @@ ngeo.format.FeatureHash.prototype.readGeometryFromText =
  * Encode a feature into a logical sequence of characters.
  * @param {ol.Feature} feature Feature.
  * @param {olx.format.ReadOptions=} opt_options Read options.
- * @return {string}
+ * @return {string} Encoded feature.
  * @protected
  */
-ngeo.format.FeatureHash.prototype.writeFeatureText =
-    function(feature, opt_options) {
+ngeo.format.FeatureHash.prototype.writeFeatureText = function(feature, opt_options) {
   var /** @type {Array.<string>} */ encodedParts = [];
 
   // encode geometry
@@ -119131,11 +119133,10 @@ ngeo.format.FeatureHash.prototype.writeFeatureText =
  * Encode an array of features into a logical sequence of characters.
  * @param {Array.<ol.Feature>} features Feature.
  * @param {olx.format.ReadOptions=} opt_options Read options.
- * @return {string}
+ * @return {string} Encoded features.
  * @protected
  */
-ngeo.format.FeatureHash.prototype.writeFeaturesText =
-    function(features, opt_options) {
+ngeo.format.FeatureHash.prototype.writeFeaturesText = function(features, opt_options) {
   var textArray = [];
   if (features.length > 0) {
     textArray.push('F');
@@ -119151,11 +119152,10 @@ ngeo.format.FeatureHash.prototype.writeFeaturesText =
  * Encode a geometry into a logical sequence of characters.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {olx.format.ReadOptions=} opt_options Read options.
- * @return {string}
+ * @return {string} Encoded geometry.
  * @protected
  */
-ngeo.format.FeatureHash.prototype.writeGeometryText =
-    function(geometry, opt_options) {
+ngeo.format.FeatureHash.prototype.writeGeometryText = function(geometry, opt_options) {
   var geometryWriter = ngeo.format.FeatureHash.GEOMETRY_WRITERS_[
       geometry.getType()];
   goog.asserts.assert(goog.isDef(geometryWriter));
@@ -119210,7 +119210,6 @@ ngeo.MeasureEventType = {
 };
 
 
-
 /**
  * @classdesc
  * Events emitted by {@link ngeo.interaction.Interaction} instances are
@@ -119235,7 +119234,6 @@ ngeo.MeasureEvent = function(type, feature) {
 
 };
 goog.inherits(ngeo.MeasureEvent, ol.events.Event);
-
 
 
 /**
@@ -119393,8 +119391,7 @@ ngeo.interaction.Measure.getFormattedArea = function(polygon, projection) {
  * @param {ol.proj.Projection} projection Projection of the line string coords.
  * @return {string} Formatted string of length.
  */
-ngeo.interaction.Measure.getFormattedLength =
-    function(lineString, projection) {
+ngeo.interaction.Measure.getFormattedLength = function(lineString, projection) {
   var length = 0;
   var coordinates = lineString.getCoordinates();
   for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
@@ -119471,7 +119468,7 @@ ngeo.interaction.Measure.prototype.setMap = function(map) {
 
 /**
  * Handle draw interaction `drawstart` event.
- * @param {ol.interaction.DrawEvent} evt
+ * @param {ol.interaction.DrawEvent} evt Event.
  * @private
  */
 ngeo.interaction.Measure.prototype.onDrawStart_ = function(evt) {
@@ -119496,7 +119493,7 @@ ngeo.interaction.Measure.prototype.onDrawStart_ = function(evt) {
 
 /**
  * Handle draw interaction `drawend` event.
- * @param {ol.interaction.DrawEvent} evt
+ * @param {ol.interaction.DrawEvent} evt Event.
  * @private
  */
 ngeo.interaction.Measure.prototype.onDrawEnd_ = function(evt) {
@@ -119608,7 +119605,7 @@ ngeo.interaction.Measure.prototype.handleMeasure = goog.abstractMethod;
 
 /**
  * Get a reference to the tooltip element.
- * @return {Element}
+ * @return {Element} Tooltip Element.
  */
 ngeo.interaction.Measure.prototype.getTooltipElement = function() {
   return this.measureTooltipElement_;
@@ -119619,7 +119616,6 @@ goog.provide('ngeo.interaction.MeasureArea');
 goog.require('ngeo.interaction.Measure');
 goog.require('ol.geom.Polygon');
 goog.require('ol.interaction.Draw');
-
 
 
 /**
@@ -119704,7 +119700,6 @@ goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
 
 
-
 /**
  * @classdesc
  * Interaction dedicated to measure length.
@@ -119761,8 +119756,8 @@ ngeo.interaction.MeasureAzimut.prototype.handleMeasure = function(callback) {
 
 /**
  * Format measure output.
- * @param {ol.geom.LineString} line
- * @return {string}
+ * @param {ol.geom.LineString} line LineString.
+ * @return {string} Formated measure.
  * @private
  */
 ngeo.interaction.MeasureAzimut.prototype.formatMeasure_ = function(line) {
@@ -119777,7 +119772,6 @@ ngeo.interaction.MeasureAzimut.prototype.formatMeasure_ = function(line) {
   output += '<br/>' + ngeo.interaction.Measure.getFormattedLength(line, proj);
   return output;
 };
-
 
 
 /**
@@ -119943,8 +119937,7 @@ ngeo.interaction.DrawAzimut.prototype.handlePointerMove_ = function(event) {
  * @param {ol.MapBrowserEvent} event Event.
  * @private
  */
-ngeo.interaction.DrawAzimut.prototype.createOrUpdateSketchPoint_ =
-    function(event) {
+ngeo.interaction.DrawAzimut.prototype.createOrUpdateSketchPoint_ = function(event) {
   var coordinates = event.coordinate.slice();
   if (goog.isNull(this.sketchPoint_)) {
     this.sketchPoint_ = new ol.Feature(new ol.geom.Point(coordinates));
@@ -120090,7 +120083,6 @@ goog.require('ol.geom.LineString');
 goog.require('ol.interaction.Draw');
 
 
-
 /**
  * @classdesc
  * Interaction dedicated to measure length.
@@ -120169,12 +120161,11 @@ ngeo.BackgroundEventType = {
 };
 
 
-
 /**
  * @constructor
  * @extends {ol.events.Event}
  * @param {ngeo.BackgroundEventType} type Type.
- * @param {ol.layer.Base} previous
+ * @param {ol.layer.Base} previous Previous background layer.
  * @implements {ngeox.BackgroundEvent}
  */
 ngeo.BackgroundEvent = function(type, previous) {
@@ -120188,7 +120179,6 @@ ngeo.BackgroundEvent = function(type, previous) {
   this.previous = previous;
 };
 goog.inherits(ngeo.BackgroundEvent, ol.events.Event);
-
 
 
 /**
@@ -120396,6 +120386,8 @@ goog.provide('ngeo.Debounce');
 
 goog.require('ngeo');
 
+/* eslint-disable valid-jsdoc */
+// FIXME: eslint can't detect that the function returns a function
 
 /**
  * Provides a debounce service. That service is a function
@@ -120619,7 +120611,6 @@ goog.require('ol.source.ImageWMS');
 goog.require('ol.source.WMTS');
 
 
-
 /**
  * Provides help functions that helps you to create and manage layers.
  * @param {angular.$q} $q Angular promises/deferred service.
@@ -120650,7 +120641,7 @@ ngeo.LayerHelper = function($q, $http) {
  * separated layers names (see {@link ol.source.ImageWMS}).
  * @param {string} sourceURL The source URL.
  * @param {string} sourceLayersName A dot separated names string.
- * @return {ol.layer.Image}
+ * @return {ol.layer.Image} WMS Layer.
  * @export
  */
 ngeo.LayerHelper.prototype.createBasicWMSLayer = function(sourceURL,
@@ -120714,7 +120705,7 @@ ngeo.LayerHelper.prototype.createWMTSLayerFromCapabilitites = function(
  * directly add them in the returned group.
  * @param {ol.Collection.<ol.layer.Base>=} opt_layers The layer to add to the
  * returned Group.
- * @return {ol.layer.Group}
+ * @return {ol.layer.Group} Layer group.
  * @export
  */
 ngeo.LayerHelper.prototype.createBasicGroup = function(opt_layers) {
@@ -120730,7 +120721,7 @@ ngeo.LayerHelper.prototype.createBasicGroup = function(opt_layers) {
  * Get an array of all layers in a group. The group can contain multiple levels
  * of others groups.
  * @param {ol.layer.Base} layer The base layer, mostly a group of layers.
- * @return {Array.<ol.layer.Layer>}
+ * @return {Array.<ol.layer.Layer>} Layers.
  * @export
  */
 ngeo.LayerHelper.prototype.getFlatLayers = function(layer) {
@@ -120743,7 +120734,7 @@ ngeo.LayerHelper.prototype.getFlatLayers = function(layer) {
  * of others groups.
  * @param {ol.layer.Base} layer The base layer, mostly a group of layers.
  * @param {Array.<ol.layer.Base>} array An array to add layers.
- * @return {Array.<ol.layer.Layer>}
+ * @return {Array.<ol.layer.Layer>} Layers.
  * @private
  */
 ngeo.LayerHelper.prototype.getFlatLayers_ = function(layer, array) {
@@ -120774,7 +120765,6 @@ goog.require('ngeo');
  * @typedef {function(angular.$locationProvider)}
  */
 ngeo.MockLocationProvider;
-
 
 
 /**
@@ -120818,7 +120808,7 @@ ngeo.Location = function(location, history) {
 
 /**
  * Get the location's URI object.
- * @return {!goog.Uri}
+ * @return {!goog.Uri} URI.
  */
 ngeo.Location.prototype.getUri = function() {
   return this.uri_;
@@ -120882,7 +120872,7 @@ ngeo.Location.prototype.getParamKeys = function() {
 
 /**
  * Set or create a param in the location's URI.
- * @param {Object.<string, string>} params
+ * @param {Object.<string, string>} params Parameters.
  */
 ngeo.Location.prototype.updateParams = function(params) {
   var qd = this.uri_.getQueryData();
@@ -120968,29 +120958,58 @@ ngeo.mockLocationProvider = function($locationProvider) {
    */
   $locationProvider['$get'] = function() {
     var locationMock = /** @type {angular.$location} */ ({
+      /**
+       * @return {string} Absolute URL.
+       */
       absUrl: function() {
         return '';
       },
+      /**
+       * @param {string=} opt_path Path.
+       * @return {string} Hash.
+       */
       hash: function(opt_path) {
         return goog.isDef(opt_path) ? this : '';
       },
+      /**
+       * @return {string} Host.
+       */
       host: function() {
         return '';
       },
+      /**
+       * @param {string=} opt_path Path.
+       * @return {string} Path.
+       */
       path: function(opt_path) {
         return goog.isDef(opt_path) ? this : '';
       },
+      /**
+       * @return {number} Port.
+       */
       port: function() {
         return 0;
       },
+      /**
+       * @return {string} Protocol.
+       */
       protocol: function() {
         return '';
       },
       replace: function() {
       },
+      /**
+       * @param {string=} opt_search Search.
+       * @param {Object=} opt_paramValue Parameters.
+       * @return {Object} Search.
+       */
       search: function(opt_search, opt_paramValue) {
         return goog.isDef(opt_search) ? this : {};
       },
+      /**
+       * @param {string=} opt_url URL.
+       * @return {string} URL.
+       */
       url: function(opt_url) {
         return '';
       }
@@ -121016,7 +121035,6 @@ goog.require('ngeo.popupDirective');
  * @typedef {function():!ngeo.Popup}
  */
 ngeo.CreatePopup;
-
 
 
 /**
@@ -121182,7 +121200,6 @@ ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POINT] =
     ngeo.PrintStyleType.POINT;
 ngeo.PrintStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
     ngeo.PrintStyleType.POLYGON;
-
 
 
 /**
@@ -121410,7 +121427,7 @@ ngeo.Print.prototype.encodeWmsLayer_ = function(arr, opacity, url, params) {
 
 
 /**
- * @param {string} url
+ * @param {string} url URL.
  * @return {string} Absolute URL.
  * @private
  */
@@ -121594,8 +121611,7 @@ ngeo.Print.prototype.encodeVectorLayer_ = function(arr, layer, resolution) {
  * @param {string} featureStyleProp Feature style property name.
  * @private
  */
-ngeo.Print.prototype.encodeVectorStyle_ =
-    function(object, geometryType, style, styleId, featureStyleProp) {
+ngeo.Print.prototype.encodeVectorStyle_ = function(object, geometryType, style, styleId, featureStyleProp) {
   if (!(geometryType in ngeo.PrintStyleTypes_)) {
     // unsupported geometry type
     return;
@@ -121655,8 +121671,7 @@ ngeo.Print.prototype.encodeVectorStyleFill_ = function(symbolizer, fillStyle) {
  * @param {!ol.style.Stroke} strokeStyle Stroke style.
  * @private
  */
-ngeo.Print.prototype.encodeVectorStyleLine_ =
-    function(symbolizers, strokeStyle) {
+ngeo.Print.prototype.encodeVectorStyleLine_ = function(symbolizers, strokeStyle) {
   var symbolizer = /** @type {MapFishPrintSymbolizerLine} */ ({
     type: 'line'
   });
@@ -121671,8 +121686,7 @@ ngeo.Print.prototype.encodeVectorStyleLine_ =
  * @param {!ol.style.Image} imageStyle Image style.
  * @private
  */
-ngeo.Print.prototype.encodeVectorStylePoint_ =
-    function(symbolizers, imageStyle) {
+ngeo.Print.prototype.encodeVectorStylePoint_ = function(symbolizers, imageStyle) {
   var symbolizer;
   if (imageStyle instanceof ol.style.Circle) {
     symbolizer = /** @type {MapFishPrintSymbolizerPoint} */ ({
@@ -121713,8 +121727,7 @@ ngeo.Print.prototype.encodeVectorStylePoint_ =
  * @param {ol.style.Stroke} strokeStyle Stroke style.
  * @private
  */
-ngeo.Print.prototype.encodeVectorStylePolygon_ =
-    function(symbolizers, fillStyle, strokeStyle) {
+ngeo.Print.prototype.encodeVectorStylePolygon_ = function(symbolizers, fillStyle, strokeStyle) {
   var symbolizer = /** @type {MapFishPrintSymbolizerPolygon} */ ({
     type: 'polygon'
   });
@@ -121731,8 +121744,7 @@ ngeo.Print.prototype.encodeVectorStylePolygon_ =
  * @param {!ol.style.Stroke} strokeStyle Stroke style.
  * @private
  */
-ngeo.Print.prototype.encodeVectorStyleStroke_ =
-    function(symbolizer, strokeStyle) {
+ngeo.Print.prototype.encodeVectorStyleStroke_ = function(symbolizer, strokeStyle) {
   var strokeColor = strokeStyle.getColor();
   if (!goog.isNull(strokeColor)) {
     var strokeColorRgba = ol.color.asArray(strokeColor);
@@ -121812,7 +121824,7 @@ ngeo.Print.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
 
 
 /**
- * Return the WMTS URL to use in the print spec.
+ * Return the WMTS URL to use in the print spec.
  * @param {ol.source.WMTS} source The WMTS source.
  * @return {string} URL.
  * @private
@@ -121865,7 +121877,7 @@ ngeo.Print.prototype.getStatus = function(ref, opt_httpConfig) {
 
 
 /**
- * Get the URL of a report.
+ * Get the URL of a report.
  * @param {string} ref Print report reference.
  * @return {string} The report URL for this ref.
  */
@@ -121912,7 +121924,6 @@ goog.provide('ngeo.PrintUtils');
 goog.require('ngeo');
 
 
-
 /**
  * Provides a service with print utility functions.
  *
@@ -121948,8 +121959,7 @@ ngeo.PrintUtils.DOTS_PER_INCH_ = 72;
  * @return {function(ol.render.Event)} Function to use as a map postcompose
  * listener.
  */
-ngeo.PrintUtils.prototype.createPrintMaskPostcompose =
-    function(getSize, getScale) {
+ngeo.PrintUtils.prototype.createPrintMaskPostcompose = function(getSize, getScale) {
 
   return (
       /**
@@ -122473,7 +122483,6 @@ goog.require('ngeo');
 goog.require('ngeo.Location');
 
 
-
 /**
  * Provides a service for managing the application state.
  * The application state is written to both the URL and the local storage.
@@ -122555,7 +122564,7 @@ ngeo.StateManager.prototype.updateState = function(object) {
 
 /**
  * Delete a parameter
- * @param {string} key
+ * @param {string} key Key.
  */
 ngeo.StateManager.prototype.deleteParam = function(key) {
   this.ngeoLocation.deleteParam(key);
@@ -122674,7 +122683,6 @@ goog.provide('ngeo.ToolActivateMgr');
 goog.require('ngeo');
 
 
-
 /**
  * A simple object that can be managed by `ngeo.ToolActivateMgr`.
  *
@@ -122689,7 +122697,7 @@ ngeo.ToolActivate = function(toolContext, activePropertyName) {
 
   /**
    * A getter function to get the active state of the tool.
-   * @return {boolean}
+   * @return {boolean} Is active.
    * @export
    */
   this.getActive = function() {
@@ -122718,7 +122726,6 @@ ngeo.module.value('ngeoToolActivate', ngeo.ToolActivate);
  *    unlisten: (function(): void)}}
  */
 ngeo.ToolMgrEntry;
-
 
 
 /**
