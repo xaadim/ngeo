@@ -54,11 +54,11 @@ creating layer trees in application.</p>
 <p>The directive assumes that tree nodes that are not leaves have a &quot;children&quot;
 property referencing an array of child nodes.</p>
 <p>Example:</p>
-<pre class="prettyprint source"><code>&lt;div ngeo-layertree=&quot;ctrl.tree&quot;
-     ngeo-layertree-map=&quot;ctrl.map&quot;
-     ngeo-layertree-nodelayer=&quot;ctrl.getLayer(node)&quot;
-     ngeo-layertree-listeners=&quot;ctrl.listeners(treeScope, treeCtrl)&quot;
-&lt;/div></code></pre><p>The &quot;ngeo-layertree&quot;, &quot;ngeo-layertree-map&quot; and
+<pre class="prettyprint source"><code> &lt;div ngeo-layertree=&quot;ctrl.tree&quot;
+   ngeo-layertree-map=&quot;ctrl.map&quot;
+   ngeo-layertree-nodelayer=&quot;ctrl.getLayer(node)&quot;
+   ngeo-layertree-listeners=&quot;ctrl.listeners(treeScope, treeCtrl)&quot;
+ &lt;/div></code></pre><p>The &quot;ngeo-layertree&quot;, &quot;ngeo-layertree-map&quot; and
 &quot;ngeo-layertree-nodelayer&quot; attributes are mandatory attributes.</p>
 <ul>
 <li><p>&quot;ngeo-layertree&quot; specifies an expression providing the tree. The
@@ -87,12 +87,12 @@ can be changed by redefining the &quot;ngeoLayertreeTemplateUrl&quot; value (usi
 app.module.value('ngeoLayertreeTemplateUrl', 'path/layertree.html'), or
 by adding an &quot;ngeo-layertree-templateurl&quot; attribute to the element.</p>
 <p>Example:</p>
-<pre class="prettyprint source"><code>&lt;div ngeo-layertree=&quot;ctrl.tree&quot;
-     ngeo-layertree-templateurl=&quot;path/to/layertree.html&quot;
-     ngeo-layertree-map=&quot;ctrl.map&quot;
-     ngeo-layertree-nodelayer=&quot;ctrl.getLayer(node)&quot;
-     ngeo-layertree-listeners=&quot;ctrl.listeners(treeScope, treeCtrl)&quot;
-&lt;/div></code></pre><p>The directive has its own scope, but it is not an isolate scope. That scope
+<pre class="prettyprint source"><code> &lt;div ngeo-layertree=&quot;ctrl.tree&quot;
+   ngeo-layertree-templateurl=&quot;path/to/layertree.html&quot;
+   ngeo-layertree-map=&quot;ctrl.map&quot;
+   ngeo-layertree-nodelayer=&quot;ctrl.getLayer(node)&quot;
+   ngeo-layertree-listeners=&quot;ctrl.listeners(treeScope, treeCtrl)&quot;
+ &lt;/div></code></pre><p>The directive has its own scope, but it is not an isolate scope. That scope
 has a &quot;layertreeCtrl&quot; property which is a reference to the directive's
 controller: &quot;layertreeCtrl&quot;. You can refer to that property in a custom
 template for example.</p>

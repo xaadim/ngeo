@@ -109929,11 +109929,11 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
  *
  * Example:
  *
- *     <div ngeo-layertree="ctrl.tree"
- *          ngeo-layertree-map="ctrl.map"
- *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
- *          ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
- *     </div>
+ *      <div ngeo-layertree="ctrl.tree"
+ *        ngeo-layertree-map="ctrl.map"
+ *        ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *        ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
+ *      </div>
  *
  * The "ngeo-layertree", "ngeo-layertree-map" and
  * "ngeo-layertree-nodelayer" attributes are mandatory attributes.
@@ -109966,12 +109966,12 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
  *
  * Example:
  *
- *     <div ngeo-layertree="ctrl.tree"
- *          ngeo-layertree-templateurl="path/to/layertree.html"
- *          ngeo-layertree-map="ctrl.map"
- *          ngeo-layertree-nodelayer="ctrl.getLayer(node)"
- *          ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
- *     </div>
+ *      <div ngeo-layertree="ctrl.tree"
+ *        ngeo-layertree-templateurl="path/to/layertree.html"
+ *        ngeo-layertree-map="ctrl.map"
+ *        ngeo-layertree-nodelayer="ctrl.getLayer(node)"
+ *        ngeo-layertree-listeners="ctrl.listeners(treeScope, treeCtrl)"
+ *      </div>
  *
  * The directive has its own scope, but it is not an isolate scope. That scope
  * has a "layertreeCtrl" property which is a reference to the directive's
@@ -110171,7 +110171,9 @@ goog.require('ol.Map');
  * Provides a directive used to insert a user-defined OpenLayers
  * map in the DOM. The directive does not create an isolate scope.
  *
- *     <div ngeo-map="ctrl.map"></div>
+ * Example:
+ *
+ *      <div ngeo-map="ctrl.map"></div>
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
@@ -111159,9 +111161,9 @@ goog.require('ngeo.profile');
  * Example:
  *
  *     <div ngeo-profile="ctrl.profileData"
- *          ngeo-profile-options="ctrl.profileOptions"
- *          ngeo-profile-pois="ctrl.profilePois"
- *     ></div>
+ *       ngeo-profile-options="ctrl.profileOptions"
+ *       ngeo-profile-pois="ctrl.profilePois">
+ *     </div>
  *
  * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions};
  * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
@@ -111274,7 +111276,7 @@ goog.require('ngeo');
  * to a specific extent (by using `ngeo-extent`) or a specific zoom level
  * (by using `ngeo-zoom`).
  *
- * Example:
+ * Examples:
  *
  *     <div ngeo-recenter ngeo-recenter-map="::ctrl.map">
  *       <a href="#" ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</a>
@@ -114699,6 +114701,8 @@ goog.require('ngeo');
 /**
  * Provides the "ngeoSearch" directive, which uses Twitter's
  * typeahead component to change an input text into a search field.
+ *
+ * Example:
  *
  *     <input type="text"
  *       ngeo-search="ctrl.typeaheadOptions"
