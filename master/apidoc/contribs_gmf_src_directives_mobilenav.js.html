@@ -33,36 +33,37 @@ goog.require('gmf');
 
 
 /**
- * An "gmf-nav" directive defining the behavior of a tree-structured menu.
+ * An "gmf-mobile-nav" directive defining the behavior of a tree-structured menu.
  *
  * The directive is to be placed on a `nav` element, with the following
  * structure:
- * &lt;nav gmf-nav>
+ * &lt;nav gmf-mobile-nav>
  *   &lt;header>
- *     &lt;a class="go-back" href="void(0)">&lt;/a>
- *     &lt;span>Categories&lt;/span>
+ *     &lt;a class="go-back" href="#">&lt;/a>
  *   &lt;/header>
- *   &lt;ul>
- *     &lt;li class="has-children">
- *       &lt;a href="void(0)">Devices&lt;/a>
- *       &lt;ul class="is-hidden">
- *         &lt;li>
- *           &lt;a href="void(0)">Mobile Phones&lt;/a>
- *         &lt;/li>
- *         &lt;li>
- *           &lt;a href="void(0)">Televisions&lt;/a>
- *         &lt;/li>
- *       &lt;/ul>
- *     &lt;/li>
- *     &lt;li class="has-children">
- *       &lt;a href="void(0)">Cars&lt;/a>
- *       &lt;ul class="is-hidden">
- *         &lt;li>
- *           &lt;a href="void(0)">Camping Cars&lt;/a>
- *         &lt;/li>
- *       &lt;/ul>
- *     &lt;/li>
- *   &lt;/ul>
+ *   &lt;div class="active slide">
+ *     &lt;ul>
+ *       &lt;li>
+ *         &lt;a href data-target="#devices">Devices&lt;/a>
+ *       &lt;/li>
+ *       &lt;li>
+ *         &lt;a href data-target="#vehicles">Vehicles&lt;/a>
+ *       &lt;/li>
+ *     &lt;/ul>
+ *   &lt;/div>
+ *   &lt;div id="devices" class="slide" data-header-title="Devices">
+ *     &lt;ul>
+ *       &lt;li>Mobile Phones&lt;/li>
+ *       &lt;li>Televisions&lt;/li>
+ *     &lt;/ul>
+ *   &lt;/div>
+ *   &lt;div id="vehicles" class="slide" data-header-title="Vehicles">
+ *     &lt;ul>
+ *       &lt;li>Cars&lt;/li>
+ *       &lt;li>Planes&lt;/li>
+ *       &lt;li>Bicycles&lt;/li>
+ *     &lt;/ul>
+ *   &lt;/div>
  * &lt;/nav>
  *
  * When an element slides in the directive changes the text in the header.
@@ -163,7 +164,7 @@ gmf.MobileNavController.prototype.init = function(element) {
     slideOut.addClass('slide-out').removeClass('active');
 
     // element to slide in
-    var slideIn = $($(evt.target).attr('href'));
+    var slideIn = $($(evt.target).attr('data-target'));
 
     // slide the "new" element in
     slideIn.addClass('active');
