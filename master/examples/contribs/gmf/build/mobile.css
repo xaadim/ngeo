@@ -9743,6 +9743,46 @@ span.twitter-typeahead input {
 .search .clear-button:hover {
   cursor: pointer;
 }
+#measure-tools .measure-tools-button {
+  display: block;
+  margin-bottom: 5px;
+}
+.measure-tools-control {
+  bottom: 1em;
+  right: 1em;
+}
+gmf-map .tooltip {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+gmf-map .tooltip-measure {
+  opacity: 1;
+  font-weight: bold;
+}
+gmf-map .tooltip-static {
+  background-color: #ffcc33;
+  color: black;
+  border: 1px solid white;
+}
+gmf-map .tooltip-measure:before,
+gmf-map .tooltip-static:before {
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+gmf-map .tooltip-static:before {
+  border-top-color: #ffcc33;
+}
 @media (min-width: 768px) {
   .tt-menu {
     top: 4em !important;
