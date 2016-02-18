@@ -9661,12 +9661,13 @@ span.twitter-typeahead:after {
   font-family: FontAwesome;
   color: grey;
   position: absolute;
-  top: 0;
-  left: .25em;
-  line-height: 2.8em;
+  top: 0.3em;
+  left: 0;
+  font-size: 1.4em;
 }
 span.twitter-typeahead input {
-  padding-left: 1.5em;
+  padding-left: 1em;
+  margin-left: 0;
 }
 .tt-menu {
   position: fixed!important;
@@ -9687,6 +9688,7 @@ span.twitter-typeahead input {
   border-bottom: solid 1px black;
   margin: 0;
   padding: 10px 1em;
+  padding-left: 4rem;
   text-align: left;
 }
 .tt-menu .search-datum:hover {
@@ -9738,10 +9740,22 @@ span.twitter-typeahead input {
   content: '\f00d';
   color: grey;
   font-family: FontAwesome;
-  font-size: 1.5em;
+  font-size: 2em;
 }
 .search .clear-button:hover {
   cursor: pointer;
+}
+.search .form-control {
+  box-shadow: none;
+  background: initial !important;
+  border: none;
+  outline: none;
+}
+.search .form-control:focus {
+  box-shadow: none;
+}
+.search .form-control.ng-pristine.ng-untouched.ng-valid.tt-hint {
+  left: 1em !important;
 }
 #measure-tools .measure-tools-button {
   display: block;
@@ -9784,6 +9798,9 @@ gmf-map .tooltip-static:before {
   border-top-color: #ffcc33;
 }
 @media (min-width: 768px) {
+  span.twitter-typeahead {
+    left: -2.2rem;
+  }
   .tt-menu {
     top: 4em !important;
     width: 18em;
@@ -9800,7 +9817,8 @@ gmf-map .tooltip-static:before {
   .search input {
     margin: 0;
     border: none;
-    width: calc( 18em  - 2px);
+    width: 13.3em;
+    left: 15px;
   }
   .search .clear-button {
     right: 0;
