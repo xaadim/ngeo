@@ -111160,10 +111160,10 @@ goog.require('ngeo.profile');
  *
  * Example:
  *
- *     <div ngeo-profile="ctrl.profileData"
- *       ngeo-profile-options="ctrl.profileOptions"
- *       ngeo-profile-pois="ctrl.profilePois">
- *     </div>
+ *      <div ngeo-profile="ctrl.profileData"
+ *        ngeo-profile-options="ctrl.profileOptions"
+ *        ngeo-profile-pois="ctrl.profilePois">
+ *      </div>
  *
  * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions};
  * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
@@ -111276,21 +111276,20 @@ goog.require('ngeo');
  * to a specific extent (by using `ngeo-extent`) or a specific zoom level
  * (by using `ngeo-zoom`).
  *
- * Examples:
+ * Example:
  *
- *     <div ngeo-recenter ngeo-recenter-map="::ctrl.map">
- *       <a href="#" ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</a>
- *       <a href="#" ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</a>
- *       <a href="#" ngeo-zoom="1">Zoom to level 1</a>
- *     </div>
+ *      <div ngeo-recenter ngeo-recenter-map="::ctrl.map">
+ *        <a href="#" ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</a>
+ *        <a href="#" ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</a>
+ *        <a href="#" ngeo-zoom="1">Zoom to level 1</a>
+ *      </div>
  *
  * Or with a select:
  *
- *     <select ngeo-recenter ngeo-recenter-map="::ctrl.map">
- *       <option ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</option>
- *       <option ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</option>
- *     </select>
- *
+ *      <select ngeo-recenter ngeo-recenter-map="::ctrl.map">
+ *        <option ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</option>
+ *        <option ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</option>
+ *      </select>
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngdoc directive
@@ -114371,10 +114370,10 @@ goog.require('ol.Map');
  *
  * Example:
  *
- *          <div ng-class="ctrl.open ? 'open' : 'close' ngeo-resizemap="ctrl.map"
- *            ngeo-resizemap-state="open">
- *          <div>
- *          <input type="checkbox" ng-model="ctrl.open" />
+ *      <div ng-class="ctrl.open ? 'open' : 'close' ngeo-resizemap="ctrl.map"
+ *        ngeo-resizemap-state="open">
+ *      <div>
+ *      <input type="checkbox" ng-model="ctrl.open" />
  *
  * @param {angular.$window} $window Angular window service.
  * @param {angular.$animate} $animate Angular animate service.
@@ -114704,10 +114703,10 @@ goog.require('ngeo');
  *
  * Example:
  *
- *     <input type="text"
- *       ngeo-search="ctrl.typeaheadOptions"
- *       ngeo-search-datasets="ctrl.typeaheadDatasets"
- *       ngeo-search-listeners="crtl.typeaheadListeners">
+ *      <input type="text"
+ *        ngeo-search="ctrl.typeaheadOptions"
+ *        ngeo-search-datasets="ctrl.typeaheadDatasets"
+ *        ngeo-search-listeners="crtl.typeaheadListeners">
  *
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
