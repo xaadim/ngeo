@@ -214,8 +214,7 @@ gmf.SearchController = function($scope, $compile, $timeout, gettextCatalog,
   this.options = /** @type {TypeaheadOptions} */ ({
     highlight: true,
     hint: undefined,
-    minLength: undefined,
-    limit: undefined
+    minLength: undefined
   });
 
   /**
@@ -291,6 +290,7 @@ gmf.SearchController.prototype.createDataset_ = function(config, opt_filter) {
   var compile = this.compile_;
   var bloodhoundEngine = this.createAndInitBloodhound_(config, opt_filter);
   var typeaheadDataset = /** @type {TypeaheadDataset} */ ({
+    limit: Infinity,
     source: bloodhoundEngine.ttAdapter(),
     display: function(suggestion) {
       var feature = /** @type {ol.Feature} */ (suggestion);
@@ -391,7 +391,6 @@ gmf.SearchController.prototype.getBloodhoudRemoteOptions_ = function() {
         withCredentials: true
       };
       settings.url = url;
-      settings.sorter = undefined;
       return settings;
     }
   };
