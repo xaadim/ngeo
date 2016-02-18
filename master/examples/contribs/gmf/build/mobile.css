@@ -9858,6 +9858,17 @@ button[ngeo-mobile-geolocation] {
   right: 1em;
   left: auto;
 }
+@media (min-width: 375px) {
+  .twitter-typeahead {
+    width: 100%;
+    margin-left: 2.5em;
+  }
+  .search .clear-button {
+    left: inherit;
+    margin-left: inherit;
+    right: 3em;
+  }
+}
 @media (min-width: 768px) {
   .ol-zoom {
     top: auto;
