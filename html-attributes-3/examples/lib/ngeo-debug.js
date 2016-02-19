@@ -110247,7 +110247,7 @@ goog.require('ol.geom.Point');
  *
  * Example:
  *
- *      <button ngeo-mobile-geolocation=""
+ *      <button ngeo-mobile-geolocation
  *        ngeo-mobile-geolocation-map="ctrl.map"
  *        ngeo-mobile-geolocation-options="ctrl.mobileGeolocationOptions">
  *      </button>
