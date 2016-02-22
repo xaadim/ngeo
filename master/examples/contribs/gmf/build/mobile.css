@@ -10041,17 +10041,17 @@ button[ngeo-mobile-geolocation] {
   }
 }
 .gmf-theme-selector .gmf-icon-check:after,
-.gmf-mobile-background-layer-selector .gmf-icon-check:after {
+.gmf-mobile-backgroundlayerselector .gmf-icon-check:after {
   font-size: 1.2rem;
   position: relative;
   bottom: 0.8rem;
 }
 .gmf-theme-selector .gmf-text,
-.gmf-mobile-background-layer-selector .gmf-text {
+.gmf-mobile-backgroundlayerselector .gmf-text {
   margin: 3% 10px 0 0;
 }
 .gmf-theme-selector .gmf-thumb,
-.gmf-mobile-background-layer-selector .gmf-thumb {
+.gmf-mobile-backgroundlayerselector .gmf-thumb {
   height: auto;
   width: 25%;
 }
