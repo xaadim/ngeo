@@ -109096,6 +109096,7 @@ goog.require('ngeo');
  *
  *     <div ngeo-btn-group ngeo-btn-group-active="ctrl.drawToolActive">
  *
+ * @htmlAttribute {*} ng-model Any property on the scope. Ideally a boolean.
  * @param {angular.$parse} $parse Angular parse service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
