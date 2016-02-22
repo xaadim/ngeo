@@ -108,6 +108,206 @@ template for example.</p>
 
 
 
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">One theme (JSON).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree-templateurl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The template URL.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree-map</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The map.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree-nodelayer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Expression that will be parsed
+     to be a <code>Function</code> that return a <a href="http://openlayers.org/en/master/apidoc/ol.layer.Layer.html"><code>ol.layer.Layer</code></a>
+     with the argument:
+     {
+         'node': <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object"><code>Object</code></a>|undefined,
+         'depth': <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number"><code>number</code></a>
+     }</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree-nodelayerexpr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Expression that will be parsed
+     to be a <code>ngeo-layertree-nodelayer</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree-listeners</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Expression that will be parsed
+     to be a <code>Function</code> with the argument:
+     {
+         'treeScope': !<a href="https://docs.angularjs.org/guide/scope"><code>angular.Scope</code></a>,
+         'treeCtrl': <a href="ngeo.LayertreeController.html"><code>ngeo.LayertreeController</code></a>
+     }</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-layertree-listenersexpr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Expression that will be parsed
+     to be a <code>ngeo-layertree-listeners</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
 
 
 
@@ -142,8 +342,8 @@ template for example.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/e5b25b44ba24f5ba44a8719686d20eb5bcccf788/src/directives/layertree.js">src/directives/layertree.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/e5b25b44ba24f5ba44a8719686d20eb5bcccf788/src/directives/layertree.js#L86">line 86</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/4a42991d0e39460f4c50b343fafffd595afec770/src/directives/layertree.js">src/directives/layertree.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/4a42991d0e39460f4c50b343fafffd595afec770/src/directives/layertree.js#L106">line 106</a>
     </li></ul></dd>
     
 
