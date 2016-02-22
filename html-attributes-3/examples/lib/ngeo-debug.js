@@ -109267,7 +109267,7 @@ goog.require('ol.control.Control');
  * instance, and the expression passed to "ngeo-control-map" should
  * evaluate to a map instance.
  *
- * @htmlAttribute {ol.Map} ngeo-control-map The map
+ * @htmlAttribute {ol.Map} ngeo-control-map The map.
  * @return {angular.Directive} The directive specs.
  * @ngInject
  * @ngdoc directive
@@ -109665,8 +109665,8 @@ goog.require('ol.geom.Point');
  *        ngeo-desktop-geolocation-options="ctrl.desktopGeolocationOptions">
  *      </button>
  *
- * @htmlAttribute {ol.Map} gmf-geolocation-map The map
- * @htmlAttribute {ngeox.DesktopGeolocationDirectiveOptions} gmf-geolocation-options The options
+ * @htmlAttribute {ol.Map} gmf-geolocation-map The map.
+ * @htmlAttribute {ngeox.DesktopGeolocationDirectiveOptions} gmf-geolocation-options The options.
  * @return {angular.Directive} The Directive Definition Object.
  * @ngInject
  * @ngdoc directive
@@ -109858,8 +109858,8 @@ goog.require('ngeo');
  *      <input type="file" ngeo-filereader="ctrl.fileContent"
  *        ngeo-filereader-supported="ctrl.supported"/>
  *
- * @htmlAttribute {string} ngeo-filereader The content of the file read
- * @htmlAttribute {boolean} ngeo-filereader-supported Whether the FileReader API is supported
+ * @htmlAttribute {string} ngeo-filereader The content of the file read.
+ * @htmlAttribute {boolean=} ngeo-filereader-supported Whether the FileReader API is supported.
  * @param {angular.$window} $window The Angular $window service.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
@@ -109983,9 +109983,9 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
  * controller: "layertreeCtrl". You can refer to that property in a custom
  * template for example.
  *
- * @htmlAttribute {Object} ngeo-layertree One theme (JSON)
- * @htmlAttribute {string} ngeo-layertree-templateurl The template url
- * @htmlAttribute {ol.Map} ngeo-layertree-map The map
+ * @htmlAttribute {Object} ngeo-layertree One theme (JSON).
+ * @htmlAttribute {string} ngeo-layertree-templateurl The template URL.
+ * @htmlAttribute {ol.Map} ngeo-layertree-map The map.
  * @htmlAttribute {string} ngeo-layertree-nodelayer Expression that will be parsed
  *      to be a {@link Function} that return a {@link ol.layer.Layer}
  *      with the argument:
@@ -109994,7 +109994,7 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
  *          'depth': {@link number}
  *      }
  * @htmlAttribute {string} ngeo-layertree-nodelayerexpr Expression that will be parsed
- *      to be a {@link ngeo-layertree-nodelayer}
+ *      to be a {@link ngeo-layertree-nodelayer}.
  * @htmlAttribute {string} ngeo-layertree-listeners Expression that will be parsed
  *      to be a {@link Function} with the argument:
  *      {
@@ -110002,7 +110002,7 @@ ngeo.module.value('ngeoLayertreeTemplateUrl',
  *          'treeCtrl': {@link ngeo.LayertreeController}
  *      }
  * @htmlAttribute {string} ngeo-layertree-listenersexpr Expression that will be parsed
- *      to be a {@link ngeo-layertree-listeners}
+ *      to be a {@link ngeo-layertree-listeners}.
  * @param {angular.$compile} $compile Angular compile service.
  * @param {string|function(!angular.JQLite=, !angular.Attributes=)}
  *     ngeoLayertreeTemplateUrl Template URL for the directive.
@@ -110200,7 +110200,7 @@ goog.require('ol.Map');
  *
  *      <div ngeo-map="ctrl.map"></div>
  *
- * @htmlAttribute {ol.Map} ngeo-map The map
+ * @htmlAttribute {ol.Map} ngeo-map The map.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
@@ -110252,8 +110252,8 @@ goog.require('ol.geom.Point');
  *        ngeo-mobile-geolocation-options="ctrl.mobileGeolocationOptions">
  *      </button>
  *
- * @htmlAttribute {ol.Map} ngeo-mobile-geolocation-map The map
- * @htmlAttribute {ngeox.MobileGeolocationDirectiveOptions} ngeo-mobile-geolocation-options The options
+ * @htmlAttribute {ol.Map} ngeo-mobile-geolocation-map The map.
+ * @htmlAttribute {ngeox.MobileGeolocationDirectiveOptions} ngeo-mobile-geolocation-options The options.
  * @return {angular.Directive} The Directive Definition Object.
  * @ngInject
  * @ngdoc directive
@@ -111198,7 +111198,7 @@ goog.require('ngeo.profile');
  * processed by {@link ngeox.profile.ElevationExtractor} and
  * {@link ngeox.profile.PoiExtractor}.
  *
- * @htmlAttribute {ngeox.profile.ProfileOptions} ngeo-profile-options The options
+ * @htmlAttribute {ngeox.profile.ProfileOptions} ngeo-profile-options The options.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
@@ -111320,7 +111320,7 @@ goog.require('ngeo');
  *        <option ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</option>
  *      </select>
  *
- * @htmlAttribute {ol.Map} ngeo-recenter-map The map
+ * @htmlAttribute {ol.Map} ngeo-recenter-map The map.
  * @return {angular.Directive} Directive Definition Object.
  * @ngdoc directive
  * @ngname ngeoRecenter
@@ -114525,8 +114525,8 @@ ngeo.ScaleselectorOptions;
  * The directive doesn't create any watcher. In particular the object including
  * the scales information is now watched.
  *
- * @htmlAttribute {Object.<string, string>} ngeo-scaleselector-scales The available scales (key: scale, value: display text)
- * @htmlAttribute {ol.Map} ngeo-scaleselector-map The map
+ * @htmlAttribute {Object.<string, string>} ngeo-scaleselector-scales The available scales (key: scale, value: display text).
+ * @htmlAttribute {ol.Map} ngeo-scaleselector-map The map.
  * @param {string|function(!angular.JQLite=, !angular.Attributes=)}
  *     ngeoScaleselectorTemplateUrl Template URL for the directive.
  * @return {angular.Directive} Directive Definition Object.
@@ -114740,9 +114740,9 @@ goog.require('ngeo');
  *        ngeo-search-datasets="ctrl.typeaheadDatasets"
  *        ngeo-search-listeners="crtl.typeaheadListeners">
  *
- * @htmlAttribute {TypeaheadOptions} ngeo-search The options
- * @htmlAttribute {Array.<TypeaheadDataset>} ngeo-search-datasets The sources datasets
- * @htmlAttribute {ngeox.SearchDirectiveListeners} ngeo-search-listeners The listeners
+ * @htmlAttribute {TypeaheadOptions} ngeo-search The options.
+ * @htmlAttribute {Array.<TypeaheadDataset>} ngeo-search-datasets The sources datasets.
+ * @htmlAttribute {ngeox.SearchDirectiveListeners} ngeo-search-listeners The listeners.
  * @return {angular.Directive} Directive Definition Object.
  * @ngInject
  * @ngdoc directive
@@ -118054,8 +118054,8 @@ ngeo.SortableOptions;
  * if some outside code adds/removes elements to/from the "sortable" array,
  * the "ngeoSortable" directive will pick it up.
  *
- * @htmlAttribute {Array.<ol.layer.Base>} ngeo-sortable The layers to sort
- * @htmlAttribute {!ngeo.SortableOptions} ngeo-sortable The options
+ * @htmlAttribute {Array.<ol.layer.Base>} ngeo-sortable The layers to sort.
+ * @htmlAttribute {!ngeo.SortableOptions} ngeo-sortable The options.
  * @param {angular.$timeout} $timeout Angular timeout service.
  * @return {angular.Directive} The directive specs.
  * @ngInject
