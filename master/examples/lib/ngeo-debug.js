@@ -109539,6 +109539,18 @@ goog.require('ol.geom.Point');
 
 
 /**
+ * @enum {string}
+ * @export
+ */
+ngeo.DesktopGeolocationEventType = {
+  /**
+   * Triggered when an error occures.
+   */
+  ERROR: 'desktop-geolocation-error'
+};
+
+
+/**
  * Provide a "desktop geolocation" directive.
  *
  * Example:
@@ -109604,6 +109616,12 @@ ngeo.DesktopGeolocationController = function($scope, $element,
   goog.asserts.assertObject(options);
 
   /**
+   * @type {!angular.Scope}
+   * @private
+   */
+  this.$scope_ = $scope;
+
+  /**
    * @type {ngeo.FeatureOverlay}
    * @private
    */
@@ -109616,6 +109634,12 @@ ngeo.DesktopGeolocationController = function($scope, $element,
   this.geolocation_ = new ol.Geolocation({
     projection: map.getView().getProjection()
   });
+
+  // handle geolocation error.
+  this.geolocation_.on('error', function(error) {
+    this.deactivate_();
+    $scope.$emit(ngeo.DesktopGeolocationEventType.ERROR, error);
+  }, this);
 
   /**
    * @type {ol.Feature}
@@ -109708,6 +109732,16 @@ ngeo.DesktopGeolocationController.prototype.deactivate_ = function() {
  */
 ngeo.DesktopGeolocationController.prototype.setPosition_ = function(event) {
   var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
+
+  // if user is using Firefox and selects the "not now" option, OL geolocation
+  // doesn't return an error
+  if (!goog.isDef(position)) {
+    this.deactivate_();
+    this.$scope_.$emit(ngeo.DesktopGeolocationEventType.ERROR, null);
+    return;
+  }
+
+  goog.asserts.assert(goog.isDef(position));
   var point = new ol.geom.Point(position);
 
   this.positionFeature_.setGeometry(point);
@@ -110102,6 +110136,17 @@ goog.require('ol.geom.Point');
 
 
 /**
+ * @enum {string}
+ * @export
+ */
+ngeo.MobileGeolocationEventType = {
+  /**
+   * Triggered when an error occures.
+   */
+  ERROR: 'mobile-geolocation-error'
+};
+
+/**
  * Provide a "mobile geolocation" directive.
  *
  * Example:
@@ -110156,6 +110201,12 @@ ngeo.MobileGeolocationController = function($scope, $element,
   goog.asserts.assertInstanceof(map, ol.Map);
 
   /**
+   * @type {!angular.Scope}
+   * @private
+   */
+  this.$scope_ = $scope;
+
+  /**
    * @type {!ol.Map}
    * @private
    */
@@ -110177,6 +110228,12 @@ ngeo.MobileGeolocationController = function($scope, $element,
   this.geolocation_ = new ol.Geolocation({
     projection: map.getView().getProjection()
   });
+
+  // handle geolocation error.
+  this.geolocation_.on('error', function(error) {
+    this.untrack_();
+    $scope.$emit(ngeo.MobileGeolocationEventType.ERROR, error);
+  }, this);
 
   /**
    * @type {ol.Feature}
@@ -110267,6 +110324,14 @@ ngeo.MobileGeolocationController.prototype.toggleTracking = function() {
   if (this.geolocation_.getTracking()) {
     // if map center is different than geolocation position, then track again
     var currentPosition = this.geolocation_.getPosition();
+    // if user is using Firefox and selects the "not now" option, OL geolocation
+    // doesn't return an error
+    if (!goog.isDef(currentPosition)) {
+      this.untrack_();
+      this.$scope_.$emit(ngeo.MobileGeolocationEventType.ERROR, null);
+      return;
+    }
+    goog.asserts.assert(goog.isDef(currentPosition));
     var center = this.map_.getView().getCenter();
     if (currentPosition[0] === center[0] &&
         currentPosition[1] === center[1]) {
