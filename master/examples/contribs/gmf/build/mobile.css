@@ -9191,27 +9191,28 @@ gmf-layertree ul .treenode a {
 gmf-layertree ul .treenode a::after {
   display: none;
 }
-gmf-layertree ul .treenode .state,
 gmf-layertree ul .treenode .rightButtons *::after {
   background: none;
   color: black;
   display: inline;
   font-family: FontAwesome;
 }
-gmf-layertree ul .treenode .leaf .state.on::after {
-  content: "\f058";
+gmf-layertree ul .treenode .state {
+  font-family: gmf-icons;
+  color: #555;
 }
-gmf-layertree ul .treenode .leaf .state.off::after {
-  content: "\f1db";
+gmf-layertree ul .treenode .on .state {
+  color: #5c996a;
 }
-gmf-layertree ul .treenode .group .state.on::after {
-  content: "\f14a";
+gmf-layertree ul .treenode .off,
+gmf-layertree ul .treenode .off .legend img {
+  opacity: 0.5;
 }
-gmf-layertree ul .treenode .group .state.off::after {
-  content: "\f096";
+gmf-layertree ul .treenode .leaf .state::after {
+  content: "\e603";
 }
-gmf-layertree ul .treenode .group .state.indeterminate::after {
-  content: "\f147";
+gmf-layertree ul .treenode .group .state::after {
+  content: "\e600";
 }
 gmf-layertree ul .treenode .group .layerIcon {
   display: none;
@@ -9259,14 +9260,14 @@ gmf-layertree ul .treenode .noSource {
 gmf-layertree ul .treenode .noSource::after {
   content: "(source not available)";
 }
-gmf-layertree ul .treenode .outOfResolution {
-  opacity: 0.6;
-}
 gmf-layertree ul .treenode .outOfResolution .rightButtons .zoom {
   display: inline;
 }
 gmf-layertree ul .treenode .outOfResolution .rightButtons .legendButton {
   display: none;
+}
+gmf-layertree ul .treenode .outOfResolution.leaf .state::after {
+  content: "\e604";
 }
 gmf-layertree ul .treenode .legendButton a {
   padding: 0;
@@ -9637,13 +9638,14 @@ nav.nav-right .slide.slide-out {
   content: '\e604';
 }
 .mobiledisplayqueries {
+  width: 100%;
+  max-width: 100%;
+  margin-left: -50%;
+  right: 50%;
+  left: 50%;
+  bottom: 0;
   max-height: 400px;
-  width: 350px;
-  max-width: 350px;
-  margin-left: -175px;
   position: fixed;
-  right: 5px;
-  bottom: 5px;
   z-index: 3;
 }
 .mobiledisplayqueries .collapse-button {
@@ -9669,12 +9671,12 @@ nav.nav-right .slide.slide-out {
   position: relative;
   overflow: hidden;
   height: 60px;
-  margin: 0 15px;
+  margin: 0 5px;
   -webkit-transition: 0.3s ease-in all;
   transition: 0.3s ease-in all;
 }
 .mobiledisplayqueries .animation-container.detailed {
-  height: 160px;
+  height: 170px;
 }
 .mobiledisplayqueries .animation-container .slide-animation {
   height: 100%;
@@ -9730,7 +9732,17 @@ nav.nav-right .slide.slide-out {
   font-size: 0.9em;
 }
 .mobiledisplayqueries .details .key {
-  padding-right: 25px;
+  padding-right: 5px;
+  /** prevent glitch for swipe animation **/
+  min-width: calc(30vw - 30px);
+  max-width: calc(30vw - 30px);
+}
+.mobiledisplayqueries .details .value {
+  white-space: pre-wrap;
+  word-break: break-all;
+  /** prevent glitch for swipe animation **/
+  min-width: calc(70vw - 30px);
+  max-width: calc(70vw - 30px);
 }
 .mobiledisplayqueries .details .slide-animation.ng-enter-active .details .value {
   white-space: nowrap;
@@ -9738,25 +9750,8 @@ nav.nav-right .slide.slide-out {
 .mobiledisplayqueries .navigate {
   border-top: solid 1px black;
   text-align: center;
-  margin-top: 10px;
   padding-top: 5px;
   height: 32px;
-}
-.mobiledisplayqueries button {
-  background-color: white;
-  border: none;
-  font-family: FontAwesome;
-  height: initial;
-  width: 32px;
-}
-.mobiledisplayqueries button:hover {
-  background-color: white;
-}
-.mobiledisplayqueries button.close {
-  padding: 5px 5px 0 0;
-}
-.mobiledisplayqueries button.close:after {
-  content: "\f00d";
 }
 .mobiledisplayqueries .navigate .previous {
   float: left;
@@ -9770,14 +9765,42 @@ nav.nav-right .slide.slide-out {
 .mobiledisplayqueries .navigate .next:after {
   content: "\f054";
 }
-@media (max-width: 768px) {
+.mobiledisplayqueries button {
+  background-color: white;
+  border: none;
+  font-family: FontAwesome;
+  height: initial;
+  width: 32px;
+}
+.mobiledisplayqueries button:hover {
+  background-color: white;
+}
+.mobiledisplayqueries button.close {
+  z-index: 3;
+  position: absolute;
+  top: calc(34px);
+  right: 5px;
+}
+.mobiledisplayqueries button.close:after {
+  content: "\f00d";
+}
+@media (min-width: 768px) {
   .mobiledisplayqueries {
-    width: 100%;
-    max-width: 100%;
-    margin-left: -50%;
-    right: 50%;
-    left: 50%;
-    bottom: 0;
+    width: 350px;
+    max-width: 350px;
+    margin-left: -175px;
+    right: calc(5.1em + 2px);
+    left: initial;
+    bottom: 5px;
+    /** prevent glitch for swipe animation **/
+  }
+  .mobiledisplayqueries .details table .key {
+    min-width: calc(110.5px);
+    max-width: calc(110.5px);
+  }
+  .mobiledisplayqueries .details table .value {
+    min-width: calc(217.75px);
+    max-width: calc(224.45px);
   }
 }
 main > * {
