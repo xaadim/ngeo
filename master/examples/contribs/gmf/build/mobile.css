@@ -9191,28 +9191,27 @@ gmf-layertree ul .treenode a {
 gmf-layertree ul .treenode a::after {
   display: none;
 }
+gmf-layertree ul .treenode .state,
 gmf-layertree ul .treenode .rightButtons *::after {
   background: none;
   color: black;
   display: inline;
   font-family: FontAwesome;
 }
-gmf-layertree ul .treenode .state {
-  font-family: gmf-icons;
-  color: #555;
+gmf-layertree ul .treenode .leaf .state.on::after {
+  content: "\f058";
 }
-gmf-layertree ul .treenode .on .state {
-  color: #5c996a;
+gmf-layertree ul .treenode .leaf .state.off::after {
+  content: "\f1db";
 }
-gmf-layertree ul .treenode .off,
-gmf-layertree ul .treenode .off .legend img {
-  opacity: 0.5;
+gmf-layertree ul .treenode .group .state.on::after {
+  content: "\f14a";
 }
-gmf-layertree ul .treenode .leaf .state::after {
-  content: "\e603";
+gmf-layertree ul .treenode .group .state.off::after {
+  content: "\f096";
 }
-gmf-layertree ul .treenode .group .state::after {
-  content: "\e600";
+gmf-layertree ul .treenode .group .state.indeterminate::after {
+  content: "\f147";
 }
 gmf-layertree ul .treenode .group .layerIcon {
   display: none;
@@ -9260,14 +9259,14 @@ gmf-layertree ul .treenode .noSource {
 gmf-layertree ul .treenode .noSource::after {
   content: "(source not available)";
 }
+gmf-layertree ul .treenode .outOfResolution {
+  opacity: 0.6;
+}
 gmf-layertree ul .treenode .outOfResolution .rightButtons .zoom {
   display: inline;
 }
 gmf-layertree ul .treenode .outOfResolution .rightButtons .legendButton {
   display: none;
-}
-gmf-layertree ul .treenode .outOfResolution.leaf .state::after {
-  content: "\e604";
 }
 gmf-layertree ul .treenode .legendButton a {
   padding: 0;
