@@ -9175,6 +9175,121 @@ button[ngeo-mobile-geolocation] {
 .gmf-mobile-backgroundlayerselector .gmf-eol {
   clear: left;
 }
+.search {
+  top: 1em;
+  height: 3em;
+  left: 0;
+  right: 0;
+  margin-left: 1em;
+  margin-right: 1em;
+  padding: 0 10px;
+  background-color: white;
+  border: solid 1px black;
+  z-index: 2;
+}
+.search input {
+  height: 3em;
+}
+.search input::-ms-clear {
+  display: none;
+}
+.search .clear-button {
+  position: absolute;
+  top: 0;
+  right: 3.5em;
+  height: 3em;
+}
+.search .clear-button:after {
+  content: '\f00d';
+  color: #555;
+  font-family: FontAwesome;
+  font-size: 2em;
+}
+.search .clear-button:hover {
+  cursor: pointer;
+}
+.search .twitter-typeahead {
+  width: 100%;
+}
+.search .form-control {
+  box-shadow: none;
+  border: none;
+}
+.search .form-control:focus {
+  box-shadow: none;
+}
+.search .form-control.ng-pristine.ng-untouched.ng-valid.tt-hint {
+  display: none;
+}
+span.twitter-typeahead input {
+  padding-left: 3em;
+}
+.tt-menu {
+  position: fixed!important;
+  left: 0;
+  right: 0;
+  top: 5em !important;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: white;
+  border: solid 1px black;
+}
+.tt-menu .search-header {
+  display: none;
+}
+.tt-menu .search-datum {
+  border-bottom: solid 1px black;
+  padding: 10px 1em;
+  padding-left: 2.5em;
+  text-align: left;
+}
+.tt-menu .search-datum:hover {
+  cursor: pointer;
+  background-color: #cccccc;
+}
+.tt-menu .search-datum p {
+  margin: 0;
+}
+.tt-menu .search-datum .search-label {
+  color: black;
+}
+.tt-menu .search-datum .search-group {
+  color: #555;
+  font-size: 0.8em;
+}
+@media (min-width: 768px) {
+  .search {
+    left: 4em;
+    width: 18em;
+  }
+  .search .clear-button {
+    margin-right: 10px;
+    right: 0;
+  }
+  .tt-menu {
+    border-top: inherit;
+    border-bottom: inherit;
+    top: 4em !important;
+    left: 5em !important;
+    bottom: auto;
+    width: 18em;
+  }
+  span.twitter-typeahead:after {
+    content: '\f002';
+    font-family: FontAwesome;
+    color: #555;
+    position: absolute;
+    top: 0.3em;
+    left: 0;
+    font-size: 1.4em;
+  }
+  span.twitter-typeahead input {
+    width: 14em;
+    padding-left: 10px;
+    left: 1em;
+  }
+}
 gmf-layertree div {
   margin-right: 10px;
 }
@@ -9820,110 +9935,6 @@ gmf-map > div {
   bottom: 0;
   left: 0;
 }
-/**
- * Search (typeahead)
- */
-span.twitter-typeahead:after {
-  content: '\f002';
-  font-family: FontAwesome;
-  color: grey;
-  position: absolute;
-  top: 0.3em;
-  left: 0;
-  font-size: 1.4em;
-}
-span.twitter-typeahead input {
-  padding-left: 1em;
-  margin-left: 0;
-}
-.tt-menu {
-  position: fixed!important;
-  left: 0;
-  right: 0;
-  top: 5em !important;
-  bottom: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  width: 100vw;
-  background-color: white;
-  border: solid 1px black;
-}
-.tt-menu .search-header {
-  display: none;
-}
-.tt-menu .search-datum {
-  border-bottom: solid 1px black;
-  margin: 0;
-  padding: 10px 1em;
-  padding-left: 4rem;
-  text-align: left;
-}
-.tt-menu .search-datum:hover {
-  cursor: pointer;
-  background-color: #cccccc;
-}
-.tt-menu .search-datum p {
-  margin: 0;
-}
-.tt-menu .search-datum .search-label {
-  color: black;
-}
-.tt-menu .search-datum .search-group {
-  color: #808080;
-  font-size: 0.8em;
-}
-.search {
-  top: 1em;
-  height: 3em;
-  left: 0;
-  right: 0;
-  margin-left: 1em;
-  margin-right: 1em;
-  padding: 0 10px;
-  background-color: white;
-  border: solid 1px black;
-  z-index: 2;
-}
-.search input {
-  width: 200px;
-  padding: 0 5px;
-  border-width: 0;
-  border-radius: 0;
-  height: 2.8em;
-}
-.search input::-ms-clear {
-  display: none;
-}
-.search .clear-button {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  margin-left: calc( 100px  -  3em );
-  height: 3em;
-  width: 3em;
-  line-height: 3em;
-}
-.search .clear-button:after {
-  content: '\f00d';
-  color: grey;
-  font-family: FontAwesome;
-  font-size: 2em;
-}
-.search .clear-button:hover {
-  cursor: pointer;
-}
-.search .form-control {
-  box-shadow: none;
-  background: initial !important;
-  border: none;
-  outline: none;
-}
-.search .form-control:focus {
-  box-shadow: none;
-}
-.search .form-control.ng-pristine.ng-untouched.ng-valid.tt-hint {
-  left: 1em !important;
-}
 #measure-tools .measure-tools-button {
   display: block;
   margin-bottom: 5px;
@@ -9964,48 +9975,6 @@ gmf-map .tooltip-static:before {
 gmf-map .tooltip-static:before {
   border-top-color: #ffcc33;
 }
-@media (min-width: 768px) {
-  span.twitter-typeahead {
-    left: -2.2rem;
-  }
-  .tt-menu {
-    top: 4em !important;
-    width: 18em;
-    left: 5em !important;
-    bottom: auto;
-  }
-  .search {
-    left: 4em;
-    right: auto;
-    height: 3em;
-    width: 18em;
-    padding: 0;
-  }
-  .search input {
-    margin: 0;
-    border: none;
-    width: 13.3em;
-    left: 15px;
-  }
-  .search .clear-button {
-    right: 0;
-    left: auto;
-  }
-}
-@media (max-width: 767px) {
-  span.twitter-typeahead:after {
-    content: none !important;
-  }
-  span.twitter-typeahead input {
-    padding: 0 5px !important;
-  }
-  .tt-menu {
-    border-top: 1px solid black;
-    border-right: inherit;
-    border-bottom: inherit;
-    border-left: inherit;
-  }
-}
 .ol-control button,
 .ol-touch .ol-control button,
 .fa:after,
@@ -10016,6 +9985,8 @@ gmf-map .tooltip-static:before {
 }
 .ol-zoom {
   top: 5em;
+  right: 1em;
+  left: auto;
 }
 .ol-zoom .ol-zoom-in,
 .ol-zoom .ol-zoom-out {
@@ -10028,40 +9999,6 @@ gmf-map .tooltip-static:before {
 button[ngeo-mobile-geolocation] {
   right: 1em;
   top: 11.5em;
-}
-.ol-zoom {
-  right: 1em;
-  left: auto;
-}
-@media (min-width: 375px) {
-  .twitter-typeahead {
-    width: 100%;
-    margin-left: 2.5em;
-  }
-  .search .clear-button {
-    left: inherit;
-    margin-left: inherit;
-    right: 3em;
-  }
-}
-@media (min-width: 768px) {
-  .ol-zoom {
-    top: auto;
-    bottom: 8.5em;
-  }
-  button[ngeo-mobile-geolocation] {
-    top: auto;
-    bottom: 5.5em;
-  }
-  button[ngeo-mobile-geolocation] button:after {
-    content: 'b';
-  }
-  .tt-menu {
-    border-top: inherit;
-    border-right: 1px solid black;
-    border-bottom: inherit;
-    border-left: 1px solid black;
-  }
 }
 .gmf-theme-selector .gmf-icon-check:after,
 .gmf-mobile-backgroundlayerselector .gmf-icon-check:after {
@@ -10077,4 +10014,17 @@ button[ngeo-mobile-geolocation] {
 .gmf-mobile-backgroundlayerselector .gmf-thumb {
   height: auto;
   width: 25%;
+}
+@media (min-width: 768px) {
+  .ol-zoom {
+    top: auto;
+    bottom: 8.5em;
+  }
+  button[ngeo-mobile-geolocation] {
+    top: auto;
+    bottom: 5.5em;
+  }
+  button[ngeo-mobile-geolocation] button:after {
+    content: 'b';
+  }
 }
