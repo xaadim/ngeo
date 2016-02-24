@@ -9937,7 +9937,13 @@ gmf-map > div {
 }
 #measure-tools .measure-tools-button {
   display: block;
-  margin-bottom: 5px;
+  padding: 5px 0;
+  margin: 5px 0;
+  color: #555;
+}
+#measure-tools .measure-tools-button:hover {
+  cursor: pointer;
+  text-decoration: none;
 }
 .measure-tools-control {
   bottom: 1em;
