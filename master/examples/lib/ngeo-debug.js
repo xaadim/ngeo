@@ -108425,7 +108425,7 @@ ngeo.profile = function(options) {
    * Whether the simplified profile should be shown.
    * @type {boolean}
    */
-  var light = goog.isDef(options.light) ? options.light : false;
+  var light = options.light !== undefined ? options.light : false;
 
 
   /**
@@ -108438,14 +108438,14 @@ ngeo.profile = function(options) {
    * Hover callback function.
    * @type {function(Object, number, string, number, string)}
    */
-  var hoverCallback = goog.isDef(options.hoverCallback) ?
+  var hoverCallback = options.hoverCallback !== undefined ?
       options.hoverCallback : goog.nullFunction;
 
   /**
    * Out callback function.
    * @type {function()}
    */
-  var outCallback = goog.isDef(options.outCallback) ?
+  var outCallback = options.outCallback !== undefined ?
       options.outCallback : goog.nullFunction;
 
   /**
@@ -108473,7 +108473,7 @@ ngeo.profile = function(options) {
   /**
    * @type {number}
    */
-  var poiLabelAngle = goog.isDef(options.poiLabelAngle) ?
+  var poiLabelAngle = options.poiLabelAngle !== undefined ?
       options.poiLabelAngle : -60;
 
   /**
@@ -108514,14 +108514,14 @@ ngeo.profile = function(options) {
     }
   };
 
-  if (goog.isDef(options.formatter)) {
+  if (options.formatter !== undefined) {
     goog.object.extend(formatter, options.formatter);
   }
 
   /**
    * @type {boolean}
    */
-  var lightXAxis = goog.isDef(options.lightXAxis) ? options.lightXAxis : false;
+  var lightXAxis = options.lightXAxis !== undefined ? options.lightXAxis : false;
 
   // Objects shared with the showPois function
   /**
@@ -108574,7 +108574,7 @@ ngeo.profile = function(options) {
 
   var profile = function(selection) {
     selection.each(function(data) {
-      if (!goog.isDef(data)) {
+      if (data === undefined) {
         d3.select(this).selectAll('svg').remove();
         return;
       }
@@ -108613,7 +108613,7 @@ ngeo.profile = function(options) {
 
       // Otherwise, create the skeletal chart.
       var svgEnter = svg.enter().append('svg');
-      if (goog.isDef(styleDefs)) {
+      if (styleDefs !== undefined) {
         svgEnter.append('defs').append('style')
           .attr('type', 'text/css')
           .text(styleDefs);
@@ -108696,7 +108696,7 @@ ngeo.profile = function(options) {
       y.domain(yDomain);
 
       // set the ratio according to the horizontal distance
-      if (goog.isDef(scaleModifier)) {
+      if (scaleModifier !== undefined) {
         scaleModifier(x, y, width, height);
       } else {
         // By default, add a small padding so that it looks nicer
@@ -108849,8 +108849,8 @@ ngeo.profile = function(options) {
 
 
   profile.showPois = function(pois) {
-    pois = goog.isDef(pois) ? pois : [];
-    goog.asserts.assert(pois.length === 0 || goog.isDef(poiExtractor));
+    pois = pois !== undefined ? pois : [];
+    goog.asserts.assert(pois.length === 0 || poiExtractor !== undefined);
 
     var pe = poiExtractor;
     var g = svg.select('g');
@@ -109101,10 +109101,10 @@ ngeo.btnDirective = function($parse) {
           var ngModelSet = ngModelGet.assign;
 
           // Set ng-model value to false if undefined
-          if (!goog.isDef(ngModelGet(scope))) {
+          if (ngModelGet(scope) === undefined) {
             ngModelSet(scope, false);
           }
-          if (!goog.isNull(buttonsCtrl)) {
+          if (buttonsCtrl !== null) {
             indexInGroup = buttonsCtrl.addButton(ngModelGet);
           }
 
@@ -109118,7 +109118,7 @@ ngeo.btnDirective = function($parse) {
 
           // model -> UI
           ngModelCtrl.$render = function() {
-            if (ngModelCtrl.$viewValue && !goog.isNull(buttonsCtrl)) {
+            if (ngModelCtrl.$viewValue && buttonsCtrl !== null) {
               buttonsCtrl.activate(indexInGroup);
             }
             element.toggleClass('active', ngModelCtrl.$viewValue);
@@ -109300,7 +109300,7 @@ ngeo.FeatureOverlayMgr = function() {
    */
   this.layer_ = new ol.layer.Vector({
     source: this.source_,
-    style: goog.bind(this.styleFunction_, this),
+    style: this.styleFunction_.bind(this),
     updateWhileAnimating: true,
     updateWhileInteracting: true
   });
@@ -109391,7 +109391,7 @@ ngeo.FeatureOverlayMgr.prototype.init = function(map) {
 ngeo.FeatureOverlayMgr.prototype.setStyle = function(style, groupIndex) {
   goog.asserts.assert(groupIndex >= 0);
   goog.asserts.assert(groupIndex < this.groups_.length);
-  this.groups_[groupIndex].styleFunction = goog.isNull(style) ?
+  this.groups_[groupIndex].styleFunction = style === null ?
       ol.style.defaultStyleFunction : ol.style.createStyleFunction(style);
 };
 
@@ -109473,14 +109473,14 @@ ngeo.FeatureOverlay.prototype.clear = function() {
  * @param {ol.Collection.<ol.Feature>} features Feature collection.
  */
 ngeo.FeatureOverlay.prototype.setFeatures = function(features) {
-  if (!goog.isNull(this.features_)) {
+  if (this.features_ !== null) {
     this.features_.clear();
     ol.events.unlisten(this.features_, ol.CollectionEventType.ADD,
         this.handleFeatureAdd_, this);
     ol.events.unlisten(this.features_, ol.CollectionEventType.REMOVE,
         this.handleFeatureRemove_, this);
   }
-  if (!goog.isNull(features)) {
+  if (features !== null) {
     features.forEach(function(feature) {
       this.addFeature(feature);
     }, this);
@@ -109601,7 +109601,7 @@ ngeo.module.directive('ngeoDesktopGeolocation',
 ngeo.DesktopGeolocationController = function($scope, $element,
     ngeoDecorateGeolocation, ngeoFeatureOverlayMgr) {
 
-  $element.on('click', goog.bind(this.toggle, this));
+  $element.on('click', this.toggle.bind(this));
 
   var map = $scope['getDesktopMapFn']();
   goog.asserts.assertInstanceof(map, ol.Map);
@@ -109735,13 +109735,13 @@ ngeo.DesktopGeolocationController.prototype.setPosition_ = function(event) {
 
   // if user is using Firefox and selects the "not now" option, OL geolocation
   // doesn't return an error
-  if (!goog.isDef(position)) {
+  if (position === undefined) {
     this.deactivate_();
     this.$scope_.$emit(ngeo.DesktopGeolocationEventType.ERROR, null);
     return;
   }
 
-  goog.asserts.assert(goog.isDef(position));
+  goog.asserts.assert(position !== undefined);
   var point = new ol.geom.Point(position);
 
   this.positionFeature_.setGeometry(point);
@@ -109954,7 +109954,7 @@ ngeo.module.directive('ngeoLayertree', ngeo.layertreeDirective);
  */
 ngeo.LayertreeController = function($scope, $element, $attrs) {
 
-  var isRoot = !goog.isDef($attrs['ngeoLayertreeNotroot']);
+  var isRoot = $attrs['ngeoLayertreeNotroot'] === undefined;
 
   /**
    * @type {boolean}
@@ -109971,17 +109971,17 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
   this.node = undefined;
 
   if (isRoot) {
-    $scope.$watch(nodeExpr, goog.bind(function(newVal, oldVal) {
+    $scope.$watch(nodeExpr, function(newVal, oldVal) {
       this.node = newVal;
-    }, this));
+    }.bind(this));
   } else {
     this.node = /** @type {Object} */ ($scope.$eval(nodeExpr));
-    goog.asserts.assert(goog.isDef(this.node));
+    goog.asserts.assert(this.node !== undefined);
   }
 
   var mapExpr = $attrs['ngeoLayertreeMap'];
   var map = /** @type {ol.Map} */ ($scope.$eval(mapExpr));
-  goog.asserts.assert(goog.isDef(map));
+  goog.asserts.assert(map !== undefined);
 
   /**
    * @type {ngeo.LayertreeController}
@@ -110014,11 +110014,11 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
   this.map = map;
 
   var nodelayerExpr = $attrs['ngeoLayertreeNodelayer'];
-  if (!goog.isDef(nodelayerExpr)) {
+  if (nodelayerExpr === undefined) {
     var nodelayerexprExpr = $attrs['ngeoLayertreeNodelayerexpr'];
     nodelayerExpr = /** @type {string} */ ($scope.$eval(nodelayerexprExpr));
   }
-  goog.asserts.assert(goog.isDef(nodelayerExpr));
+  goog.asserts.assert(nodelayerExpr !== undefined);
 
   /**
    * @type {string}
@@ -110035,7 +110035,7 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
 
 
   var listenersExpr = $attrs['ngeoLayertreeListeners'];
-  if (!goog.isDef(listenersExpr)) {
+  if (listenersExpr === undefined) {
     var listenersexprExpr = $attrs['ngeoLayertreeListenersexpr'];
     listenersExpr = /** @type {string} */ ($scope.$eval(listenersexprExpr));
   }
@@ -110063,8 +110063,8 @@ ngeo.LayertreeController = function($scope, $element, $attrs) {
 ngeo.LayertreeController.prototype.getSetActive = function(val) {
   var layer = this.layer;
   var map = this.map;
-  goog.asserts.assert(!goog.isNull(this.layer));
-  if (goog.isDef(val)) {
+  goog.asserts.assert(this.layer !== null);
+  if (val !== undefined) {
     if (!val) {
       map.removeLayer(layer);
     } else {
@@ -110195,7 +110195,7 @@ ngeo.module.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
 ngeo.MobileGeolocationController = function($scope, $element,
     ngeoDecorateGeolocation, ngeoFeatureOverlayMgr) {
 
-  $element.on('click', goog.bind(this.toggleTracking, this));
+  $element.on('click', this.toggleTracking.bind(this));
 
   var map = $scope['getMobileMapFn']();
   goog.asserts.assertInstanceof(map, ol.Map);
@@ -110326,12 +110326,12 @@ ngeo.MobileGeolocationController.prototype.toggleTracking = function() {
     var currentPosition = this.geolocation_.getPosition();
     // if user is using Firefox and selects the "not now" option, OL geolocation
     // doesn't return an error
-    if (!goog.isDef(currentPosition)) {
+    if (currentPosition === undefined) {
       this.untrack_();
       this.$scope_.$emit(ngeo.MobileGeolocationEventType.ERROR, null);
       return;
     }
-    goog.asserts.assert(goog.isDef(currentPosition));
+    goog.asserts.assert(currentPosition !== undefined);
     var center = this.map_.getView().getCenter();
     if (currentPosition[0] === center[0] &&
         currentPosition[1] === center[1]) {
@@ -110821,18 +110821,15 @@ ngeo.Query.prototype.issueWMSGetFeatureInfoRequests_ = function(
     wmsGetFeatureInfoUrl =
         goog.uri.utils.setParam(wmsGetFeatureInfoUrl, 'QUERY_LAYERS', lyrStr);
 
-    this.$http_.get(wmsGetFeatureInfoUrl).then(goog.bind(
-        function(items, response) {
-          items.forEach(function(item) {
-            var format = item.source.format;
-            var features = format.readFeatures(response.data);
-            item['resultSource'].pending = false;
-            item['resultSource'].features = features;
-            this.result_.total += features.length;
-          }, this);
-        },
-        this,
-        items));
+    this.$http_.get(wmsGetFeatureInfoUrl).then(function(items, response) {
+      items.forEach(function(item) {
+        var format = item.source.format;
+        var features = format.readFeatures(response.data);
+        item['resultSource'].pending = false;
+        item['resultSource'].features = features;
+        this.result_.total += features.length;
+      }, this);
+    }.bind(this, items));
   }, this);
 };
 
@@ -111163,7 +111160,7 @@ ngeo.profileDirective = function() {
         function(scope, element, attrs) {
 
           var optionsAttr = attrs['ngeoProfileOptions'];
-          goog.asserts.assert(goog.isDef(optionsAttr));
+          goog.asserts.assert(optionsAttr !== undefined);
 
           var selection = d3.select(element[0]);
           var profile, elevationData, poiData;
@@ -111173,7 +111170,7 @@ ngeo.profileDirective = function() {
             var options = /** @type {ngeox.profile.ProfileOptions} */
                 (goog.object.clone(newVal));
 
-            if (goog.isDef(options)) {
+            if (options !== undefined) {
 
               // proxy the hoverCallback and outCallbackin order to be able to
               // call $applyAsync
@@ -111185,7 +111182,7 @@ ngeo.profileDirective = function() {
               //
               // For that reason we use $applyAsync instead of $apply here.
 
-              if (goog.isDef(options.hoverCallback)) {
+              if (options.hoverCallback !== undefined) {
                 var origHoverCallback = options.hoverCallback;
                 options.hoverCallback = function() {
                   origHoverCallback.apply(null, arguments);
@@ -111193,7 +111190,7 @@ ngeo.profileDirective = function() {
                 };
               }
 
-              if (goog.isDef(options.outCallback)) {
+              if (options.outCallback !== undefined) {
                 var origOutCallback = options.outCallback;
                 options.outCallback = function() {
                   origOutCallback();
@@ -111218,7 +111215,7 @@ ngeo.profileDirective = function() {
 
           scope.$watch(attrs['ngeoProfileHighlight'],
               function(newVal, oldVal) {
-                if (!goog.isDef(newVal)) {
+                if (newVal === undefined) {
                   return;
                 }
                 if (newVal > 0) {
@@ -111229,9 +111226,9 @@ ngeo.profileDirective = function() {
               });
 
           function refreshData() {
-            if (goog.isDef(profile)) {
+            if (profile !== undefined) {
               selection.datum(elevationData).call(profile);
-              if (goog.isDef(elevationData)) {
+              if (elevationData !== undefined) {
                 profile.showPois(poiData);
               }
             }
@@ -114377,7 +114374,7 @@ ngeo.resizemapDirective = function($window, $animate) {
           goog.asserts.assertInstanceof(map, ol.Map);
 
           var stateExpr = attrs['ngeoResizemapState'];
-          goog.asserts.assert(goog.isDef(stateExpr));
+          goog.asserts.assert(stateExpr !== undefined);
 
           var start;
 
@@ -114515,7 +114512,7 @@ ngeo.ScaleselectorController = function($scope, $element, $attrs) {
    */
   this.scales = /** @type {!Object.<string, string>} */
       ($scope.$eval(scalesExpr));
-  goog.asserts.assert(goog.isDef(this.scales));
+  goog.asserts.assert(this.scales !== undefined);
 
   var zoomLevels = Object.keys(this.scales).map(Number);
   zoomLevels.sort();
@@ -114563,9 +114560,9 @@ ngeo.ScaleselectorController = function($scope, $element, $attrs) {
   this.currentScale = undefined;
 
   var view = this.map_.getView();
-  if (!goog.isNull(view)) {
+  if (view !== null) {
     var currentZoom = this.map_.getView().getZoom();
-    if (goog.isDef(currentZoom)) {
+    if (currentZoom !== undefined) {
       this.currentScale = this.getScale(currentZoom);
     }
   }
@@ -114587,10 +114584,10 @@ ngeo.ScaleselectorController = function($scope, $element, $attrs) {
  */
 ngeo.ScaleselectorController.getOptions_ = function(options) {
   var ret;
-  if (!goog.isDef(options)) {
+  if (options === undefined) {
     ret = {'dropup': false};
   } else {
-    if (!goog.isDef(options['dropup'])) {
+    if (options['dropup'] === undefined) {
       options['dropup'] = false;
     }
     ret = /** @type {ngeo.ScaleselectorOptions} */ (options);
@@ -114637,11 +114634,9 @@ ngeo.ScaleselectorController.prototype.handleResolutionChange_ = function(e) {
   //
   // For that reason we use $applyAsync instead of $apply here.
 
-  this.$scope_.$applyAsync(
-      /** @type {function(?)} */ (
-      goog.bind(function() {
-        this.currentScale = currentScale;
-      }, this)));
+  this.$scope_.$applyAsync(function() {
+    this.currentScale = currentScale;
+  }.bind(this));
 };
 
 
@@ -114658,7 +114653,7 @@ ngeo.ScaleselectorController.prototype.handleViewChange_ = function(e) {
  * @private
  */
 ngeo.ScaleselectorController.prototype.registerResolutionChangeListener_ = function() {
-  if (!goog.isNull(this.resolutionChangeKey_)) {
+  if (this.resolutionChangeKey_ !== null) {
     ol.events.unlistenByKey(this.resolutionChangeKey_);
   }
   var view = this.map_.getView();
@@ -114792,7 +114787,7 @@ ngeo.searchDirective = function() {
 ngeo.searchDirective.adaptListeners_ = function(object) {
   /** @type {ngeox.SearchDirectiveListeners} */
   var typeaheadListeners;
-  if (!goog.isDef(object)) {
+  if (object === undefined) {
     typeaheadListeners = {
       open: goog.nullFunction,
       close: goog.nullFunction,
@@ -114802,15 +114797,15 @@ ngeo.searchDirective.adaptListeners_ = function(object) {
     };
   } else {
     typeaheadListeners = {
-      open: goog.isDef(object.open) ?
+      open: object.open !== undefined ?
           object.open : goog.nullFunction,
-      close: goog.isDef(object.close) ?
+      close: object.close !== undefined ?
           object.close : goog.nullFunction,
-      cursorchange: goog.isDef(object.cursorchange) ?
+      cursorchange: object.cursorchange !== undefined ?
           object.cursorchange : goog.nullFunction,
-      select: goog.isDef(object.select) ?
+      select: object.select !== undefined ?
           object.select : goog.nullFunction,
-      autocomplete: goog.isDef(object.autocomplete) ?
+      autocomplete: object.autocomplete !== undefined ?
           object.autocomplete : goog.nullFunction
     };
   }
@@ -118048,7 +118043,7 @@ ngeo.sortableDirective = function($timeout) {
               angular.element(children[i]).data('idx', i);
             }
 
-            if (!goog.isNull(dragListGroup)) {
+            if (dragListGroup !== null) {
               dragListGroup.dispose();
             }
 
@@ -118065,7 +118060,7 @@ ngeo.sortableDirective = function($timeout) {
                   return goog.dom.getElementByClass(className, dragItem);
                 });
 
-            if (goog.isDef(options['draggerClassName'])) {
+            if (options['draggerClassName'] !== undefined) {
               dragListGroup.setDraggerElClass(options['draggerClassName']);
             }
 
@@ -118082,7 +118077,7 @@ ngeo.sortableDirective = function($timeout) {
 
             goog.events.listen(dragListGroup, 'dragmove', function(e) {
               var next = e.hoverNextItem;
-              hoverNextItemIdx = goog.isNull(next) ? -1 :
+              hoverNextItemIdx = next === null ? -1 :
                   /** @type {number} */ (angular.element(next).data('idx'));
               hoverList = e.hoverList;
             });
@@ -118102,7 +118097,7 @@ ngeo.sortableDirective = function($timeout) {
                         sortable.splice(idx, 1)[0]);
                   });
                 }
-              } else if (!goog.isNull(hoverList)) {
+              } else if (hoverList !== null) {
                 // there's no next item, so push
                 scope.$apply(function() {
                   sortable.push(sortable.splice(idx, 1)[0]);
@@ -118120,10 +118115,10 @@ ngeo.sortableDirective = function($timeout) {
            */
           function getOptions(options) {
             var ret;
-            if (!goog.isDef(options)) {
+            if (options === undefined) {
               ret = {'handleClassName': 'handle'};
             } else {
-              if (!goog.isDef(options['handleClassName'])) {
+              if (options['handleClassName'] === undefined) {
                 options['handleClassName'] = 'handle';
               }
               ret = /** @type {ngeo.SortableOptions} */ (options);
@@ -118215,27 +118210,27 @@ ngeo.format.FeatureHashStyleTypes_[ol.geom.GeometryType.MULTI_POLYGON] =
 ngeo.format.FeatureHash = function(opt_options) {
   goog.base(this);
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   /**
    * @type {number}
    * @private
    */
-  this.accuracy_ = goog.isDef(options.accuracy) ?
+  this.accuracy_ = options.accuracy !== undefined ?
       options.accuracy : ngeo.format.FeatureHash.ACCURACY_;
 
   /**
    * @type {boolean}
    * @private
    */
-  this.encodeStyles_ = goog.isDef(options.encodeStyles) ?
+  this.encodeStyles_ = options.encodeStyles !== undefined ?
       options.encodeStyles : true;
 
   /**
    * @type {function(ol.Feature):Object.<string, (string|number)>}
    * @private
    */
-  this.propertiesFunction_ = goog.isDef(options.properties) ?
+  this.propertiesFunction_ = options.properties !== undefined ?
       options.properties : ngeo.format.FeatureHash.defaultPropertiesFunction_;
 
   /**
@@ -118328,7 +118323,7 @@ ngeo.format.FeatureHash.encodeNumber_ = function(num) {
  */
 ngeo.format.FeatureHash.encodeStyles_ = function(styles, geometryType, encodedStyles) {
   var styleType = ngeo.format.FeatureHashStyleTypes_[geometryType];
-  goog.asserts.assert(goog.isDef(styleType));
+  goog.asserts.assert(styleType !== undefined);
   for (var i = 0; i < styles.length; ++i) {
     var style = styles[i];
     var fillStyle = style.getFill();
@@ -118336,20 +118331,20 @@ ngeo.format.FeatureHash.encodeStyles_ = function(styles, geometryType, encodedSt
     var strokeStyle = style.getStroke();
     var textStyle = style.getText();
     if (styleType == ngeo.format.FeatureHashStyleType.POLYGON) {
-      if (!goog.isNull(fillStyle)) {
+      if (fillStyle !== null) {
         ngeo.format.FeatureHash.encodeStylePolygon_(
             fillStyle, strokeStyle, encodedStyles);
       }
     } else if (styleType == ngeo.format.FeatureHashStyleType.LINE_STRING) {
-      if (!goog.isNull(strokeStyle)) {
+      if (strokeStyle !== null) {
         ngeo.format.FeatureHash.encodeStyleLine_(strokeStyle, encodedStyles);
       }
     } else if (styleType == ngeo.format.FeatureHashStyleType.POINT) {
-      if (!goog.isNull(imageStyle)) {
+      if (imageStyle !== null) {
         ngeo.format.FeatureHash.encodeStylePoint_(imageStyle, encodedStyles);
       }
     }
-    if (!goog.isNull(textStyle)) {
+    if (textStyle !== null) {
       ngeo.format.FeatureHash.encodeStyleText_(textStyle, encodedStyles);
     }
   }
@@ -118383,11 +118378,11 @@ ngeo.format.FeatureHash.encodeStylePoint_ = function(imageStyle, encodedStyles) 
     }
     encodedStyles.push(encodeURIComponent('pointRadius*' + radius));
     var fillStyle = imageStyle.getFill();
-    if (!goog.isNull(fillStyle)) {
+    if (fillStyle !== null) {
       ngeo.format.FeatureHash.encodeStyleFill_(fillStyle, encodedStyles);
     }
     var strokeStyle = imageStyle.getStroke();
-    if (!goog.isNull(strokeStyle)) {
+    if (strokeStyle !== null) {
       ngeo.format.FeatureHash.encodeStyleStroke_(strokeStyle, encodedStyles);
     }
   }
@@ -118405,7 +118400,7 @@ ngeo.format.FeatureHash.encodeStylePoint_ = function(imageStyle, encodedStyles) 
  */
 ngeo.format.FeatureHash.encodeStylePolygon_ = function(fillStyle, strokeStyle, encodedStyles) {
   ngeo.format.FeatureHash.encodeStyleFill_(fillStyle, encodedStyles);
-  if (!goog.isNull(strokeStyle)) {
+  if (strokeStyle !== null) {
     ngeo.format.FeatureHash.encodeStyleStroke_(strokeStyle, encodedStyles);
   }
 };
@@ -118421,10 +118416,10 @@ ngeo.format.FeatureHash.encodeStylePolygon_ = function(fillStyle, strokeStyle, e
  * @private
  */
 ngeo.format.FeatureHash.encodeStyleFill_ = function(fillStyle, encodedStyles, opt_propertyName) {
-  var propertyName = goog.isDef(opt_propertyName) ?
+  var propertyName = opt_propertyName !== undefined ?
       opt_propertyName : 'fillColor';
   var fillColor = fillStyle.getColor();
-  if (!goog.isNull(fillColor)) {
+  if (fillColor !== null) {
     goog.asserts.assert(goog.isArray(fillColor), 'only supporting fill colors');
     var fillColorRgba = ol.color.asArray(fillColor);
     var fillColorHex = goog.color.rgbArrayToHex(fillColorRgba);
@@ -118446,7 +118441,7 @@ ngeo.format.FeatureHash.encodeStyleFill_ = function(fillStyle, encodedStyles, op
  */
 ngeo.format.FeatureHash.encodeStyleStroke_ = function(strokeStyle, encodedStyles) {
   var strokeColor = strokeStyle.getColor();
-  if (!goog.isNull(strokeColor)) {
+  if (strokeColor !== null) {
     var strokeColorRgba = ol.color.asArray(strokeColor);
     var strokeColorHex = goog.color.rgbArrayToHex(strokeColorRgba);
     if (encodedStyles.length > 0) {
@@ -118455,7 +118450,7 @@ ngeo.format.FeatureHash.encodeStyleStroke_ = function(strokeStyle, encodedStyles
     encodedStyles.push(encodeURIComponent('strokeColor*' + strokeColorHex));
   }
   var strokeWidth = strokeStyle.getWidth();
-  if (goog.isDef(strokeWidth)) {
+  if (strokeWidth !== undefined) {
     if (encodedStyles.length > 0) {
       encodedStyles.push('\'');
     }
@@ -118473,7 +118468,7 @@ ngeo.format.FeatureHash.encodeStyleStroke_ = function(strokeStyle, encodedStyles
  */
 ngeo.format.FeatureHash.encodeStyleText_ = function(textStyle, encodedStyles) {
   var fontStyle = textStyle.getFont();
-  if (goog.isDef(fontStyle)) {
+  if (fontStyle !== undefined) {
     var font = fontStyle.split(' ');
     if (font.length >= 3) {
       if (encodedStyles.length > 0) {
@@ -118483,7 +118478,7 @@ ngeo.format.FeatureHash.encodeStyleText_ = function(textStyle, encodedStyles) {
     }
   }
   var fillStyle = textStyle.getFill();
-  if (!goog.isNull(fillStyle)) {
+  if (fillStyle !== null) {
     ngeo.format.FeatureHash.encodeStyleFill_(
         fillStyle, encodedStyles, 'fontColor');
   }
@@ -118676,20 +118671,20 @@ ngeo.format.FeatureHash.setStyleInFeature_ = function(text, feature) {
     }
   }
   var fillStyle = null;
-  if (goog.isDef(fillColor)) {
+  if (fillColor !== undefined) {
     fillStyle = new ol.style.Fill({
       color: fillColor
     });
   }
   var strokeStyle = null;
-  if (goog.isDef(strokeColor) && goog.isDef(strokeWidth)) {
+  if (strokeColor !== undefined && strokeWidth !== undefined) {
     strokeStyle = new ol.style.Stroke({
       color: strokeColor,
       width: strokeWidth
     });
   }
   var imageStyle = null;
-  if (goog.isDef(pointRadius)) {
+  if (pointRadius !== undefined) {
     imageStyle = new ol.style.Circle({
       radius: pointRadius,
       fill: fillStyle,
@@ -118698,7 +118693,7 @@ ngeo.format.FeatureHash.setStyleInFeature_ = function(text, feature) {
     fillStyle = strokeStyle = null;
   }
   var textStyle = null;
-  if (goog.isDef(fontSize) && goog.isDef(fontColor)) {
+  if (fontSize !== undefined && fontColor !== undefined) {
     textStyle = new ol.style.Text({
       font: fontSize + ' sans-serif',
       fill: new ol.style.Fill({
@@ -118916,7 +118911,7 @@ ngeo.format.FeatureHash.GEOMETRY_WRITERS_ = {
 ngeo.format.FeatureHash.prototype.decodeCoordinates_ = function(text, opt_flatCoordinates) {
   var len = text.length;
   var index = 0;
-  var flatCoordinates = goog.isDef(opt_flatCoordinates) ?
+  var flatCoordinates = opt_flatCoordinates !== undefined ?
       opt_flatCoordinates : [];
   var i = flatCoordinates.length;
   while (index < len) {
@@ -119047,7 +119042,7 @@ ngeo.format.FeatureHash.prototype.readFeaturesFromText = function(text, opt_opti
  */
 ngeo.format.FeatureHash.prototype.readGeometryFromText = function(text, opt_options) {
   var geometryReader = ngeo.format.FeatureHash.GEOMETRY_READERS_[text[0]];
-  goog.asserts.assert(goog.isDef(geometryReader));
+  goog.asserts.assert(geometryReader !== undefined);
   this.prevX_ = 0;
   this.prevY_ = 0;
   return geometryReader.call(this, text);
@@ -119108,9 +119103,9 @@ ngeo.format.FeatureHash.prototype.writeFeatureText = function(feature, opt_optio
 
   if (this.encodeStyles_) {
     var styleFunction = feature.getStyleFunction();
-    if (goog.isDef(styleFunction)) {
+    if (styleFunction !== undefined) {
       var styles = styleFunction.call(feature, 0);
-      if (!goog.isNull(styles)) {
+      if (styles !== null) {
         var encodedStyles = [];
         styles = goog.isArray(styles) ? styles : [styles];
         ngeo.format.FeatureHash.encodeStyles_(
@@ -119159,7 +119154,7 @@ ngeo.format.FeatureHash.prototype.writeFeaturesText = function(features, opt_opt
 ngeo.format.FeatureHash.prototype.writeGeometryText = function(geometry, opt_options) {
   var geometryWriter = ngeo.format.FeatureHash.GEOMETRY_WRITERS_[
       geometry.getType()];
-  goog.asserts.assert(goog.isDef(geometryWriter));
+  goog.asserts.assert(geometryWriter !== undefined);
   var transformedGeometry = /** @type {ol.geom.Geometry} */
       (ol.format.Feature.transformWithOptions(geometry, true, opt_options));
   this.prevX_ = 0;
@@ -119246,7 +119241,7 @@ goog.inherits(ngeo.MeasureEvent, ol.events.Event);
  */
 ngeo.interaction.Measure = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   goog.base(this, {
     handleEvent: ngeo.interaction.Measure.handleEvent_
@@ -119310,14 +119305,14 @@ ngeo.interaction.Measure = function(opt_options) {
    * @type {boolean}
    * @private
    */
-  this.displayHelpTooltip_ = goog.isDef(options.displayHelpTooltip) ?
+  this.displayHelpTooltip_ = options.displayHelpTooltip !== undefined ?
       options.displayHelpTooltip : true;
 
   /**
    * The message to show when user is about to start drawing.
    * @type {Element}
    */
-  this.startMsg = goog.isDef(options.startMsg) ? options.startMsg :
+  this.startMsg = options.startMsg !== undefined ? options.startMsg :
       goog.dom.createDom(goog.dom.TagName.SPAN, {}, 'Click to start drawing.');
 
   /**
@@ -119327,7 +119322,7 @@ ngeo.interaction.Measure = function(opt_options) {
    */
   this.changeEventKey_ = null;
 
-  var style = goog.isDef(options.style) ? options.style :
+  var style = options.style !== undefined ? options.style :
       [
         new ol.style.Style({
           fill: new ol.style.Fill({
@@ -119490,7 +119485,7 @@ ngeo.interaction.Measure.handleEvent_ = function(evt) {
   }
 
   var helpMsg = this.startMsg;
-  if (!goog.isNull(this.sketchFeature)) {
+  if (this.sketchFeature !== null) {
     helpMsg = this.continueMsg;
   }
 
@@ -119533,11 +119528,11 @@ ngeo.interaction.Measure.prototype.setMap = function(map) {
   this.vectorLayer_.setMap(map);
 
   var prevMap = this.drawInteraction_.getMap();
-  if (!goog.isNull(prevMap)) {
+  if (prevMap !== null) {
     prevMap.removeInteraction(this.drawInteraction_);
   }
 
-  if (!goog.isNull(map)) {
+  if (map !== null) {
     map.addInteraction(this.drawInteraction_);
   }
 };
@@ -119555,16 +119550,16 @@ ngeo.interaction.Measure.prototype.onDrawStart_ = function(evt) {
 
   var geometry = this.sketchFeature.getGeometry();
 
-  goog.asserts.assert(goog.isDef(geometry));
+  goog.asserts.assert(geometry !== undefined);
   this.changeEventKey_ = ol.events.listen(geometry,
       ol.events.EventType.CHANGE,
       function() {
-        this.handleMeasure(goog.bind(function(measure, coord) {
-          if (!goog.isNull(coord)) {
+        this.handleMeasure(function(measure, coord) {
+          if (coord !== null) {
             this.measureTooltipElement_.innerHTML = measure;
             this.measureTooltipOverlay_.setPosition(coord);
           }
-        }, this));
+        }.bind(this));
       }, this);
 };
 
@@ -119580,7 +119575,7 @@ ngeo.interaction.Measure.prototype.onDrawEnd_ = function(evt) {
   this.dispatchEvent(new ngeo.MeasureEvent(ngeo.MeasureEventType.MEASUREEND,
       this.sketchFeature));
   this.sketchFeature = null;
-  if (!goog.isNull(this.changeEventKey_)) {
+  if (this.changeEventKey_ !== null) {
     ol.events.unlistenByKey(this.changeEventKey_);
   }
 };
@@ -119612,7 +119607,7 @@ ngeo.interaction.Measure.prototype.createHelpTooltip_ = function() {
 ngeo.interaction.Measure.prototype.removeHelpTooltip_ = function() {
   if (this.displayHelpTooltip_) {
     this.getMap().removeOverlay(this.helpTooltipOverlay_);
-    if (!goog.isNull(this.helpTooltipElement_)) {
+    if (this.helpTooltipElement_ !== null) {
       this.helpTooltipElement_.parentNode.removeChild(this.helpTooltipElement_);
     }
     this.helpTooltipElement_ = null;
@@ -119645,7 +119640,7 @@ ngeo.interaction.Measure.prototype.createMeasureTooltip_ = function() {
  * @private
  */
 ngeo.interaction.Measure.prototype.removeMeasureTooltip_ = function() {
-  if (!goog.isNull(this.measureTooltipElement_)) {
+  if (this.measureTooltipElement_ !== null) {
     this.measureTooltipElement_.parentNode.removeChild(
         this.measureTooltipElement_);
     this.measureTooltipElement_ = null;
@@ -119729,7 +119724,7 @@ goog.require('ol.interaction.Draw');
  */
 ngeo.interaction.MeasureArea = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   goog.base(this, options);
 
@@ -119738,7 +119733,7 @@ ngeo.interaction.MeasureArea = function(opt_options) {
    * Message to show after the first point is clicked.
    * @type {Element}
    */
-  this.continueMsg = goog.isDef(options.continueMsg) ? options.continueMsg :
+  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
       goog.dom.createDom(goog.dom.TagName.SPAN, {},
           'Click to continue drawing the polygon.',
           goog.dom.createDom(goog.dom.TagName.BR),
@@ -119813,7 +119808,7 @@ goog.require('ol.source.Vector');
  */
 ngeo.interaction.MeasureAzimut = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   goog.base(this, options);
 
@@ -119822,7 +119817,7 @@ ngeo.interaction.MeasureAzimut = function(opt_options) {
    * Message to show after the first point is clicked.
    * @type {Element}
    */
-  this.continueMsg = goog.isDef(options.continueMsg) ? options.continueMsg :
+  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
       goog.dom.createDom(goog.dom.TagName.SPAN, {}, 'Click to finish.');
 
 };
@@ -119906,7 +119901,7 @@ ngeo.interaction.DrawAzimut = function(options) {
    * @type {ol.source.Vector}
    * @private
    */
-  this.source_ = goog.isDef(options.source) ? options.source : null;
+  this.source_ = options.source !== undefined ? options.source : null;
 
   /**
    * Tglls whether the drawing has started or not.
@@ -119950,7 +119945,7 @@ ngeo.interaction.DrawAzimut = function(options) {
       useSpatialIndex: false,
       wrapX: false
     }),
-    style: goog.isDef(options.style) ?
+    style: options.style !== undefined ?
         options.style : ol.interaction.Draw.getDefaultStyleFunction()
   });
 
@@ -120043,7 +120038,7 @@ ngeo.interaction.DrawAzimut.prototype.handlePointerMove_ = function(event) {
  */
 ngeo.interaction.DrawAzimut.prototype.createOrUpdateSketchPoint_ = function(event) {
   var coordinates = event.coordinate.slice();
-  if (goog.isNull(this.sketchPoint_)) {
+  if (this.sketchPoint_ === null) {
     this.sketchPoint_ = new ol.Feature(new ol.geom.Point(coordinates));
     this.updateSketchFeatures_();
   } else {
@@ -120060,10 +120055,10 @@ ngeo.interaction.DrawAzimut.prototype.createOrUpdateSketchPoint_ = function(even
  */
 ngeo.interaction.DrawAzimut.prototype.updateSketchFeatures_ = function() {
   var sketchFeatures = [];
-  if (!goog.isNull(this.sketchFeature_)) {
+  if (this.sketchFeature_ !== null) {
     sketchFeatures.push(this.sketchFeature_);
   }
-  if (!goog.isNull(this.sketchPoint_)) {
+  if (this.sketchPoint_ !== null) {
     sketchFeatures.push(this.sketchPoint_);
   }
   var source = this.sketchLayer_.getSource();
@@ -120083,7 +120078,7 @@ ngeo.interaction.DrawAzimut.prototype.startDrawing_ = function(event) {
   var line = new ol.geom.LineString([start.slice(), start.slice()]);
   var circle = new ol.geom.Circle(start, 0);
   var geometry = new ol.geom.GeometryCollection([line, circle]);
-  goog.asserts.assert(goog.isDef(geometry));
+  goog.asserts.assert(geometry !== undefined);
   this.sketchFeature_ = new ol.Feature();
   this.sketchFeature_.setGeometry(geometry);
   this.updateSketchFeatures_();
@@ -120128,7 +120123,7 @@ ngeo.interaction.DrawAzimut.prototype.modifyDrawing_ = function(event) {
 ngeo.interaction.DrawAzimut.prototype.abortDrawing_ = function() {
   this.started_ = false;
   var sketchFeature = this.sketchFeature_;
-  if (!goog.isNull(sketchFeature)) {
+  if (sketchFeature !== null) {
     this.sketchFeature_ = null;
     this.sketchPoint_ = null;
     this.sketchLayer_.getSource().clear(true);
@@ -120149,7 +120144,7 @@ ngeo.interaction.DrawAzimut.prototype.shouldStopEvent = goog.functions.FALSE;
 ngeo.interaction.DrawAzimut.prototype.updateState_ = function() {
   var map = this.getMap();
   var active = this.getActive();
-  if (goog.isNull(map) || !active) {
+  if (map === null || !active) {
     this.abortDrawing_();
   }
   this.sketchLayer_.setMap(active ? map : null);
@@ -120162,9 +120157,9 @@ ngeo.interaction.DrawAzimut.prototype.updateState_ = function() {
  */
 ngeo.interaction.DrawAzimut.prototype.finishDrawing_ = function() {
   var sketchFeature = this.abortDrawing_();
-  goog.asserts.assert(!goog.isNull(sketchFeature));
+  goog.asserts.assert(sketchFeature !== null);
 
-  if (!goog.isNull(this.source_)) {
+  if (this.source_ !== null) {
     this.source_.addFeature(sketchFeature);
   }
   this.dispatchEvent(new ol.interaction.DrawEvent(
@@ -120197,7 +120192,7 @@ goog.require('ol.interaction.Draw');
  */
 ngeo.interaction.MeasureLength = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   goog.base(this, options);
 
@@ -120206,7 +120201,7 @@ ngeo.interaction.MeasureLength = function(opt_options) {
    * Message to show after the first point is clicked.
    * @type {Element}
    */
-  this.continueMsg = goog.isDef(options.continueMsg) ? options.continueMsg :
+  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
       goog.dom.createDom(goog.dom.TagName.SPAN, {},
           'Click to continue drawing the line.',
           goog.dom.createDom(goog.dom.TagName.BR),
@@ -120737,7 +120732,7 @@ goog.require('ngeo.interaction.MobileDraw');
  */
 ngeo.interaction.MeasureLengthMobile = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   goog.object.extend(options, {displayHelpTooltip: false});
 
@@ -120778,7 +120773,7 @@ goog.require('ol.geom.Point');
  */
 ngeo.interaction.MeasurePointMobile = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   goog.object.extend(options, {displayHelpTooltip: false});
 
@@ -120932,15 +120927,15 @@ ngeo.BackgroundLayerMgr.prototype.get = function(map) {
 ngeo.BackgroundLayerMgr.prototype.set = function(map, layer) {
   var mapUid = goog.getUid(map).toString();
   var previous = this.get(map);
-  if (!goog.isNull(previous)) {
+  if (previous !== null) {
     goog.asserts.assert(mapUid in this.mapUids_);
-    if (!goog.isNull(layer)) {
+    if (layer !== null) {
       map.getLayers().setAt(0, layer);
     } else {
       map.getLayers().removeAt(0);
       delete this.mapUids_[mapUid];
     }
-  } else if (!goog.isNull(layer)) {
+  } else if (layer !== null) {
     map.getLayers().insertAt(0, layer);
     this.mapUids_[mapUid] = true;
   }
@@ -121027,7 +121022,7 @@ ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
         /** @type {GeoJSONFeatureCollection} */
         var featureCollection = /** @type {GeoJSONFeatureCollection} */
             (parsedResponse);
-        if (goog.isDef(opt_filter)) {
+        if (opt_filter !== undefined) {
           featureCollection = /** @type {GeoJSONFeatureCollection} */ ({
             type: 'FeatureCollection',
             features: featureCollection.features.filter(opt_filter)
@@ -121102,7 +121097,7 @@ ngeo.debounceServiceFactory = function($timeout) {
                 timeout = null;
                 func.apply(context, args);
               };
-              if (!goog.isNull(timeout)) {
+              if (timeout !== null) {
                 $timeout.cancel(timeout);
               }
               timeout = $timeout(later, wait, invokeApply);
@@ -121363,7 +121358,7 @@ ngeo.LayerHelper.prototype.createWMTSLayerFromCapabilitites = function(
     if (response.data) {
       result = parser.read(response.data);
     }
-    if (goog.isDef(result)) {
+    if (result !== undefined) {
       var options = ol.source.WMTS.optionsFromCapabilities(result,
           {layer: layerName, requestEncoding: 'REST'});
       layer.setSource(new ol.source.WMTS(options));
@@ -121538,7 +121533,7 @@ ngeo.Location.prototype.getPath = function() {
  */
 ngeo.Location.prototype.getUriString = function(opt_params) {
   var extendedUri;
-  if (goog.isDef(opt_params)) {
+  if (opt_params !== undefined) {
     extendedUri = this.uri_.clone();
     extendedUri.getQueryData().extend(opt_params);
   } else {
@@ -121633,7 +121628,7 @@ ngeo.LocationFactory = function($rootScope, $window) {
     if (lastUri !== newUri) {
       $rootScope.$evalAsync(function() {
         lastUri = newUri;
-        if (goog.isDef(history) && goog.isDef(history.replaceState)) {
+        if (history !== undefined && history.replaceState !== undefined) {
           history.replaceState(null, '', newUri);
         }
         $rootScope.$broadcast('ngeoLocationChange');
@@ -121676,7 +121671,7 @@ ngeo.mockLocationProvider = function($locationProvider) {
        * @return {string} Hash.
        */
       hash: function(opt_path) {
-        return goog.isDef(opt_path) ? this : '';
+        return opt_path !== undefined ? this : '';
       },
       /**
        * @return {string} Host.
@@ -121689,7 +121684,7 @@ ngeo.mockLocationProvider = function($locationProvider) {
        * @return {string} Path.
        */
       path: function(opt_path) {
-        return goog.isDef(opt_path) ? this : '';
+        return opt_path !== undefined ? this : '';
       },
       /**
        * @return {number} Port.
@@ -121711,7 +121706,7 @@ ngeo.mockLocationProvider = function($locationProvider) {
        * @return {Object} Search.
        */
       search: function(opt_search, opt_paramValue) {
-        return goog.isDef(opt_search) ? this : {};
+        return opt_search !== undefined ? this : {};
       },
       /**
        * @param {string=} opt_url URL.
@@ -121977,7 +121972,7 @@ ngeo.Print.FEAT_STYLE_PROP_PREFIX_ = '_ngeo_style_';
  * @return {angular.$http.HttpPromise} HTTP promise.
  */
 ngeo.Print.prototype.cancel = function(ref, opt_httpConfig) {
-  var httpConfig = goog.isDef(opt_httpConfig) ? opt_httpConfig :
+  var httpConfig = opt_httpConfig !== undefined ? opt_httpConfig :
       /** @type {angular.$http.Config} */ ({});
   var url = this.url_ + '/cancel/' + ref;
   // "delete" is a reserved word, so use ['delete']
@@ -122030,8 +122025,8 @@ ngeo.Print.prototype.encodeMap_ = function(map, scale, object) {
   var viewResolution = view.getResolution();
   var viewRotation = view.getRotation();
 
-  goog.asserts.assert(goog.isDef(viewCenter));
-  goog.asserts.assert(goog.isDef(viewProjection));
+  goog.asserts.assert(viewCenter !== undefined);
+  goog.asserts.assert(viewProjection !== undefined);
 
   object.center = viewCenter;
   object.projection = viewProjection.getCode();
@@ -122040,7 +122035,7 @@ ngeo.Print.prototype.encodeMap_ = function(map, scale, object) {
   object.layers = [];
 
   var layersCollection = map.getLayers();
-  goog.asserts.assert(!goog.isNull(layersCollection));
+  goog.asserts.assert(layersCollection !== null);
   var layers = layersCollection.getArray().slice().reverse();
 
   layers.forEach(
@@ -122051,7 +122046,7 @@ ngeo.Print.prototype.encodeMap_ = function(map, scale, object) {
        */
       function(layer, idx, layers) {
         if (layer.getVisible()) {
-          goog.asserts.assert(goog.isDef(viewResolution));
+          goog.asserts.assert(viewResolution !== undefined);
           this.encodeLayer(object.layers, layer, viewResolution);
         }
       }, this);
@@ -122100,7 +122095,7 @@ ngeo.Print.prototype.encodeImageWmsLayer_ = function(arr, layer) {
   goog.asserts.assertInstanceof(source, ol.source.ImageWMS);
 
   var url = source.getUrl();
-  if (goog.isDef(url)) {
+  if (url !== undefined) {
     this.encodeWmsLayer_(
         arr, layer.getOpacity(), url, source.getParams());
   }
@@ -122267,11 +122262,11 @@ ngeo.Print.prototype.encodeVectorLayer_ = function(arr, layer, resolution) {
 
     var styleData = null;
     var styleFunction = feature.getStyleFunction();
-    if (goog.isDef(styleFunction)) {
+    if (styleFunction !== undefined) {
       styleData = styleFunction.call(feature, resolution);
     } else {
       styleFunction = layer.getStyleFunction();
-      if (goog.isDef(styleFunction)) {
+      if (styleFunction !== undefined) {
         styleData = styleFunction.call(layer, feature, resolution);
       }
     }
@@ -122283,9 +122278,9 @@ ngeo.Print.prototype.encodeVectorLayer_ = function(arr, layer, resolution) {
         [styleData] : styleData;
     goog.asserts.assert(goog.isArray(styles));
 
-    if (!goog.isNull(styles) && styles.length > 0) {
+    if (styles !== null && styles.length > 0) {
       geojsonFeatures.push(geojsonFeature);
-      if (goog.isNull(geojsonFeature.properties)) {
+      if (geojsonFeature.properties === null) {
         geojsonFeature.properties = {};
       }
       for (var j = 0, jj = styles.length; j < jj; ++j) {
@@ -122348,20 +122343,20 @@ ngeo.Print.prototype.encodeVectorStyle_ = function(object, geometryType, style, 
   var strokeStyle = style.getStroke();
   var textStyle = style.getText();
   if (styleType == ngeo.PrintStyleType.POLYGON) {
-    if (!goog.isNull(fillStyle)) {
+    if (fillStyle !== null) {
       this.encodeVectorStylePolygon_(
           styleObject.symbolizers, fillStyle, strokeStyle);
     }
   } else if (styleType == ngeo.PrintStyleType.LINE_STRING) {
-    if (!goog.isNull(strokeStyle)) {
+    if (strokeStyle !== null) {
       this.encodeVectorStyleLine_(styleObject.symbolizers, strokeStyle);
     }
   } else if (styleType == ngeo.PrintStyleType.POINT) {
-    if (!goog.isNull(imageStyle)) {
+    if (imageStyle !== null) {
       this.encodeVectorStylePoint_(styleObject.symbolizers, imageStyle);
     }
   }
-  if (!goog.isNull(textStyle)) {
+  if (textStyle !== null) {
     this.encodeTextStyle_(styleObject.symbolizers, textStyle);
   }
 };
@@ -122375,7 +122370,7 @@ ngeo.Print.prototype.encodeVectorStyle_ = function(object, geometryType, style, 
 ngeo.Print.prototype.encodeVectorStyleFill_ = function(symbolizer, fillStyle) {
   var fillColor = fillStyle.getColor();
   goog.asserts.assert(goog.isArray(fillColor), 'only supporting fill colors');
-  if (!goog.isNull(fillColor)) {
+  if (fillColor !== null) {
     var fillColorRgba = ol.color.asArray(fillColor);
     symbolizer.fillColor = goog.color.rgbArrayToHex(fillColorRgba);
     symbolizer.fillOpacity = fillColorRgba[3];
@@ -122412,16 +122407,16 @@ ngeo.Print.prototype.encodeVectorStylePoint_ = function(symbolizers, imageStyle)
     });
     symbolizer.pointRadius = imageStyle.getRadius();
     var fillStyle = imageStyle.getFill();
-    if (!goog.isNull(fillStyle)) {
+    if (fillStyle !== null) {
       this.encodeVectorStyleFill_(symbolizer, fillStyle);
     }
     var strokeStyle = imageStyle.getStroke();
-    if (!goog.isNull(strokeStyle)) {
+    if (strokeStyle !== null) {
       this.encodeVectorStyleStroke_(symbolizer, strokeStyle);
     }
   } else if (imageStyle instanceof ol.style.Icon) {
     var src = imageStyle.getSrc();
-    if (goog.isDef(src)) {
+    if (src !== undefined) {
       symbolizer = /** @type {MapFishPrintSymbolizerPoint} */ ({
         type: 'point',
         externalGraphic: src
@@ -122432,7 +122427,7 @@ ngeo.Print.prototype.encodeVectorStylePoint_ = function(symbolizers, imageStyle)
       }
     }
   }
-  if (goog.isDef(symbolizer)) {
+  if (symbolizer !== undefined) {
     symbolizers.push(symbolizer);
   }
 };
@@ -122450,7 +122445,7 @@ ngeo.Print.prototype.encodeVectorStylePolygon_ = function(symbolizers, fillStyle
     type: 'polygon'
   });
   this.encodeVectorStyleFill_(symbolizer, fillStyle);
-  if (!goog.isNull(strokeStyle)) {
+  if (strokeStyle !== null) {
     this.encodeVectorStyleStroke_(symbolizer, strokeStyle);
   }
   symbolizers.push(symbolizer);
@@ -122464,13 +122459,13 @@ ngeo.Print.prototype.encodeVectorStylePolygon_ = function(symbolizers, fillStyle
  */
 ngeo.Print.prototype.encodeVectorStyleStroke_ = function(symbolizer, strokeStyle) {
   var strokeColor = strokeStyle.getColor();
-  if (!goog.isNull(strokeColor)) {
+  if (strokeColor !== null) {
     var strokeColorRgba = ol.color.asArray(strokeColor);
     symbolizer.strokeColor = goog.color.rgbArrayToHex(strokeColorRgba);
     symbolizer.strokeOpacity = strokeColorRgba[3];
   }
   var strokeWidth = strokeStyle.getWidth();
-  if (goog.isDef(strokeWidth)) {
+  if (strokeWidth !== undefined) {
     symbolizer.strokeWidth = strokeWidth;
   }
 };
@@ -122487,22 +122482,22 @@ ngeo.Print.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
     type: 'Text'
   });
   var label = textStyle.getText();
-  if (goog.isDef(label)) {
+  if (label !== undefined) {
     symbolizer.label = label;
 
     var labelAlign = textStyle.getTextAlign();
-    if (goog.isDef(labelAlign)) {
+    if (labelAlign !== undefined) {
       symbolizer.labelAlign = labelAlign;
     }
 
     var labelRotation = textStyle.getRotation();
-    if (goog.isDef(labelRotation)) {
+    if (labelRotation !== undefined) {
       // Mapfish Print expects a string, not a number to rotate text
       symbolizer.labelRotation = (labelRotation * 180 / Math.PI).toString();
     }
 
     var fontStyle = textStyle.getFont();
-    if (goog.isDef(fontStyle)) {
+    if (fontStyle !== undefined) {
       var font = fontStyle.split(' ');
       if (font.length >= 3) {
         symbolizer.fontWeight = font[0];
@@ -122512,18 +122507,18 @@ ngeo.Print.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
     }
 
     var strokeStyle = textStyle.getStroke();
-    if (!goog.isNull(strokeStyle)) {
+    if (strokeStyle !== null) {
       var strokeColorRgba = ol.color.asArray(strokeStyle.getColor());
       symbolizer.haloColor = goog.color.rgbArrayToHex(strokeColorRgba);
       symbolizer.haloOpacity = strokeColorRgba[3];
       var width = strokeStyle.getWidth();
-      if (goog.isDef(width)) {
+      if (width !== undefined) {
         symbolizer.haloRadius = width;
       }
     }
 
     var fillStyle = textStyle.getFill();
-    if (!goog.isNull(fillStyle)) {
+    if (fillStyle !== null) {
       var fillColor = fillStyle.getColor();
       goog.asserts.assert(
           goog.isArray(fillColor), 'only supporting fill colors');
@@ -122532,7 +122527,7 @@ ngeo.Print.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
     }
 
     // Mapfish Print allows offset only if labelAlign is defined.
-    if (goog.isDef(symbolizer.labelAlign)) {
+    if (symbolizer.labelAlign !== undefined) {
       symbolizer.labelXOffset = textStyle.getOffsetX();
       // Mapfish uses the opposite direction of OpenLayers for y axis, so the
       // minus sign is required for the y offset to be identical.
@@ -122578,7 +122573,7 @@ ngeo.Print.prototype.createReport = function(printSpec, opt_httpConfig) {
     }
   });
   goog.object.extend(httpConfig,
-      goog.isDef(opt_httpConfig) ? opt_httpConfig : {});
+      opt_httpConfig !== undefined ? opt_httpConfig : {});
   return this.$http_.post(url, printSpec, httpConfig);
 };
 
@@ -122590,7 +122585,7 @@ ngeo.Print.prototype.createReport = function(printSpec, opt_httpConfig) {
  * @return {angular.$http.HttpPromise} HTTP promise.
  */
 ngeo.Print.prototype.getStatus = function(ref, opt_httpConfig) {
-  var httpConfig = goog.isDef(opt_httpConfig) ? opt_httpConfig :
+  var httpConfig = opt_httpConfig !== undefined ? opt_httpConfig :
       /** @type {angular.$http.Config} */ ({});
   var url = this.url_ + '/status/' + ref + '.json';
   return this.$http_.get(url, httpConfig);
@@ -122613,7 +122608,7 @@ ngeo.Print.prototype.getReportUrl = function(ref) {
  * @return {angular.$http.HttpPromise} HTTP promise.
  */
 ngeo.Print.prototype.getCapabilities = function(opt_httpConfig) {
-  var httpConfig = goog.isDef(opt_httpConfig) ? opt_httpConfig :
+  var httpConfig = opt_httpConfig !== undefined ? opt_httpConfig :
           /** @type {angular.$http.Config} */ ({});
   var url = this.url_ + '/capabilities.json';
   return this.$http_.get(url, httpConfig);
@@ -123291,7 +123286,7 @@ ngeo.StateManager = function(ngeoLocation) {
       var count = this.localStorage.getCount();
       for (i = 0; i < count; ++i) {
         key = this.localStorage.key(i);
-        goog.asserts.assert(!goog.isNull(key));
+        goog.asserts.assert(key !== null);
         this.initialState[key] = this.localStorage.get(key);
       }
     }
