@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ToolActivateMgr <small>service:ngeoToolActivateMgr</small></title>
+    <title>JSDoc: Class: Popover</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: ToolActivateMgr <small>service:ngeoToolActivateMgr</small></h1>
+    <h1 class="page-title">Class: Popover</h1>
 
     
 
@@ -28,9 +28,12 @@
 
 <header>
     
-        <h2 id="ToolActivateMgr">
-            <span class="ancestors">ngeo.</span>ToolActivateMgr
+        <h2 id="Popover">
+            <span class="ancestors">ngeo.</span>Popover
         </h2>
+        
+            <div class="class-description"><p>An openlayers overlay that uses bootstrap popover to produce a popup
+for maps.</p></div>
         
     
 </header>
@@ -41,447 +44,14 @@
         
 
     
-
-    <h4 class="name" id="ToolActivateMgr"><span class="type-signature"></span>new ToolActivateMgr<span class="signature">($rootScope)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Provides a service to manage the activation of <code>ngeo.toolActivate</code> objects.</p>
-<p>Example:</p>
-<p>Each tool must be registered before using it.</p>
-<pre class="prettyprint source"><code>var tool = new ngeo.ToolActivate(interaction, 'active');
-ngeoToolActivateMgr.registerTool('mapTools', tool);</code></pre><p>A tool will be registered in a group identified by a group name.
-Once registered a tool can be activated and deactivated. When activating a
-tool, all others tools in the same group will be deactivated.</p>
-<pre class="prettyprint source"><code>ngeoToolActivateMgr.activateTool(tool);
-ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>$rootScope</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://docs.angularjs.org/guide/scope">angular.Scope</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rootScope provider.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js">src/services/toolActivateMgr.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js#L75">line 75</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="activateTool"><span class="type-signature"></span>activateTool<span class="signature">(tool)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Activate a tool.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tool</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeo.ToolActivate.html">ngeo.ToolActivate</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Tool to activate.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js">src/services/toolActivateMgr.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js#L180">line 180</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="deactivateTool"><span class="type-signature"></span>deactivateTool<span class="signature">(tool)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Deactivate a tool.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tool</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeo.ToolActivate.html">ngeo.ToolActivate</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Tool to deactivate.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+    <h2>Constructor</h2>
     
 
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js">src/services/toolActivateMgr.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js#L190">line 190</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
+    <h4 class="name" id="Popover"><span class="type-signature"></span>new Popover<span class="signature">(opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="registerTool"><span class="type-signature"></span>registerTool<span class="signature">(groupName, tool, opt_defaultActivate<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
-
     
-
 
 
-<div class="description">
-    <p>Register a tool.</p>
-</div>
 
 
 
@@ -518,75 +88,13 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
 
         <tr>
             
-                <td class="name"><code>groupName</code></td>
+                <td class="name"><code>opt_options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Name of the group of this tool.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>tool</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeo.ToolActivate.html">ngeo.ToolActivate</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Tool to register.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_defaultActivate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+<span class="param-type">olx.OverlayOptions</span>
 
 
             
@@ -606,8 +114,7 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
 
             
 
-            <td class="description last"><p>If true, this tool will be activated
-    when all other tools in the group are deactivated.</p></td>
+            <td class="description last"><p>Overlay options.</p></td>
         </tr>
 
     
@@ -651,8 +158,8 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js">src/services/toolActivateMgr.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js#L99">line 99</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/ol-ext/popover.js#L16">line 16</a>
     </li></ul></dd>
     
 
@@ -678,20 +185,45 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
 
 
 
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="http://openlayers.org/en/master/apidoc/ol.Overlay.html">ol.Overlay</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
         
             
 
     
 
-    <h4 class="name" id="unregisterGroup"><span class="type-signature"></span>unregisterGroup<span class="signature">(groupName)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">(map)</span><span class="type-signature"></span></h4>
 
     
 
 
-
-<div class="description">
-    <p>Unregister each tool from a group.</p>
-</div>
 
 
 
@@ -726,13 +258,16 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
 
         <tr>
             
-                <td class="name"><code>groupName</code></td>
+                <td class="name"><code>map</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
             
@@ -742,7 +277,7 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
 
             
 
-            <td class="description last"><p>Name of the group of tools to unregister.</p></td>
+            <td class="description last"><p>Map.</p></td>
         </tr>
 
     
@@ -786,166 +321,8 @@ ngeoToolActivateMgr.deactivateTool(tool);</code></pre>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js">src/services/toolActivateMgr.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js#L164">line 164</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="unregisterTool"><span class="type-signature"></span>unregisterTool<span class="signature">(groupName, tool)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Unregister a tool from a group.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>groupName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of the group of this tool.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>tool</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeo.ToolActivate.html">ngeo.ToolActivate</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Tool to unregister.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js">src/services/toolActivateMgr.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/services/toolActivateMgr.js#L145">line 145</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/299a696312c6bb34bcc041a03907a9caed2cff4e/src/ol-ext/popover.js#L64">line 64</a>
     </li></ul></dd>
     
 
