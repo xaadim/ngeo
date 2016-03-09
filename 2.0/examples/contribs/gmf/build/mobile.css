@@ -9973,6 +9973,7 @@ main > * {
 main button {
   height: 4rem;
   width: 4rem;
+  padding: 0;
 }
 gmf-map {
   position: initial;
