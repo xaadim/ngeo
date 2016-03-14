@@ -109114,7 +109114,7 @@ goog.require('ol.control.Control');
 
 
 /**
- * Provides a directive can be used to add a control to the map
+ * Provides a directive that can be used to add a control to the map
  * using a DOM element.
  *
  * Example:
