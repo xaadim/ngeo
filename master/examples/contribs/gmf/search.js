@@ -12,13 +12,11 @@ app.module.constant('gmfTreeUrl', 'data/themes.json');
 
 
 /**
- * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
- *     overlay manager service.
  * @param {gmf.Themes} gmfThemes Themes service.
  * @constructor
  * @ngInject
  */
-app.MainController = function(ngeoFeatureOverlayMgr, gmfThemes) {
+app.MainController = function(gmfThemes) {
 
   gmfThemes.loadThemes();
 
@@ -48,7 +46,6 @@ app.MainController = function(ngeoFeatureOverlayMgr, gmfThemes) {
     })
   });
 
-  ngeoFeatureOverlayMgr.init(this.map);
 };
 
 
