@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: profileDirective <small>directive:ngeoProfile</small></title>
+    <title>JSDoc: Class: AutoProjection <small>service:ngeoAutoProjection</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: profileDirective <small>directive:ngeoProfile</small></h1>
+    <h1 class="page-title">Class: AutoProjection <small>service:ngeoAutoProjection</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="profileDirective">
-            <span class="ancestors">ngeo.</span>profileDirective
+        <h2 id="AutoProjection">
+            <span class="ancestors">ngeo.</span>AutoProjection
         </h2>
         
     
@@ -42,24 +42,12 @@
 
     
 
-    <h4 class="name" id="profileDirective"><span class="type-signature"></span>new profileDirective<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="https://docs.angularjs.org/guide/directive">angular.Directive</a>}</span></h4>
+    <h4 class="name" id="AutoProjection"><span class="type-signature"></span>new AutoProjection<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>Provides a directive used to insert an elevation profile chart
-in the DOM.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code> &lt;div ngeo-profile=&quot;ctrl.profileData&quot;
-   ngeo-profile-options=&quot;ctrl.profileOptions&quot;
-   ngeo-profile-pois=&quot;ctrl.profilePois&quot;>
- &lt;/div></code></pre><p>Where &quot;ctrl.profileOptions&quot; is of type <a href="ngeox.profile.html#ProfileOptions"><code>ngeox.profile.ProfileOptions</code></a>;
-&quot;ctrl.profileData&quot; and &quot;ctrl.profilePois&quot; are arrays which will be
-processed by <a href="ngeox.profile.html#ElevationExtractor"><code>ngeox.profile.ElevationExtractor</code></a> and
-<a href="ngeox.profile.html#PoiExtractor"><code>ngeox.profile.PoiExtractor</code></a>.</p>
-</div>
 
 
 
@@ -68,164 +56,6 @@ processed by <a href="ngeox.profile.html#ElevationExtractor"><code>ngeox.profile
 
 
 
-
-
-
-    <h5>HTML attributes:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeo-profile</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                    &lt;nullable><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The profile data.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeo-profile-options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeox.profile.html#ProfileOptions">ngeox.profile.ProfileOptions</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The options.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeo-profile-pois</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                    &lt;nullable><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The data for POIs.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeo-profile-highlight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Any property on the scope which
-evaluated value may correspond to distance from origin.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -262,8 +92,163 @@ evaluated value may correspond to distance from origin.</td>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/directives/profile.js">src/directives/profile.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/directives/profile.js#L34">line 34</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js">src/services/autoprojection.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js#L12">line 12</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="getProjectionList"><span class="type-signature"></span>getProjectionList<span class="signature">(projectionsCodes)</span><span class="type-signature"> &rarr; (nullable) {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a>>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get an array of projections corresponding to their EPSG codes. Log an error
+    for each code that are not defined in ol projections.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>projectionsCodes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>EPSG codes (f.i 'EPSG:3857',
+    'epsg:3857' or '3857').</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js">src/services/autoprojection.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js#L43">line 43</a>
     </li></ul></dd>
     
 
@@ -290,7 +275,7 @@ evaluated value may correspond to distance from origin.</td>
 
         
 <div class="param-desc">
-    <p>Directive Definition Object.</p>
+    <p>An array of projections.</p>
 </div>
 
 
@@ -301,7 +286,7 @@ evaluated value may correspond to distance from origin.</td>
     </dt>
     <dd>
         
-<span class="param-type"><a href="https://docs.angularjs.org/guide/directive">angular.Directive</a></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a>></span>
 
 
     </dd>
@@ -311,21 +296,697 @@ evaluated value may correspond to distance from origin.</td>
 
 
 
-    
-    </div>
+        
+            
 
     
 
+    <h4 class="name" id="stringToCoordinates"><span class="type-signature"></span>stringToCoordinates<span class="signature">(str)</span><span class="type-signature"> &rarr; (nullable) {<a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Parse a tring and return a coordinate if the result is valid. Given string
+must be a two numbers separated by a space.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>str</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the string to parse.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
     
 
     
 
-     
+    
+
+    
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js">src/services/autoprojection.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js#L22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A coordinate or null if the format is not valid.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="tryProjections"><span class="type-signature"></span>tryProjections<span class="signature">(coordinates, extent, viewProjection, opt_projections<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {<a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>It projects the point using the projection array and finds the first one for
+which it falls inside of the viewProjection extent.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>coordinates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The point to test.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>extent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Extent">ol.Extent</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Limits in which coordinates can be valid.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewProjection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Target projection the point.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_projections</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional array of
+    projections. The point is tested in each projection, in the order of
+    the array.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js">src/services/autoprojection.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js#L75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A coordinates in the view's projection if it match
+    in one of the given projection, or null else.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="tryProjectionsWithInversion"><span class="type-signature"></span>tryProjectionsWithInversion<span class="signature">(coordinates, extent, viewProjection, opt_projections<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {<a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Same as AutoProjection.tryProjections but if tryProjections return null,
+re-call it with coordinates in reverse order.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>coordinates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The point to test.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>extent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Extent">ol.Extent</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Limits in which coordinates can be valid.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewProjection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Target projection the point.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_projections</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional array of
+    projections. The point is tested in each projection, in the order of
+    the array.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js">src/services/autoprojection.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/95f6b6321950eeada1e1654a6f5a8b4284ca6c81/src/services/autoprojection.js#L105">line 105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A coordinates in the view's projection if it match
+    in one of the given projection, or null else.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.Coordinate">ol.Coordinate</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     
