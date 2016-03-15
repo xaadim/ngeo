@@ -239,8 +239,8 @@ objects in the tree returned by the &quot;themes&quot; web service.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js#L35">line 35</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L35">line 35</a>
     </li></ul></dd>
     
 
@@ -294,6 +294,362 @@ objects in the tree returned by the &quot;themes&quot; web service.</p>
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".findGroupByLayerName"><span class="type-signature">(static) </span>findGroupByLayerName<span class="signature">(themes, name)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>themes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Array of &quot;theme&quot; objects.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer name.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The group.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".findGroupByName"><span class="type-signature">(static) </span>findGroupByName<span class="signature">(themes, name)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Find a layer group object by its name. Return null if not found.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>themes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Array of &quot;theme&quot; objects.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The group name.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L111">line 111</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The group.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
         
             
@@ -426,8 +782,8 @@ objects in the tree returned by the &quot;themes&quot; web service.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js#L104">line 104</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L145">line 145</a>
     </li></ul></dd>
     
 
@@ -534,8 +890,8 @@ objects in the tree returned by the &quot;themes&quot; web service.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js#L114">line 114</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L155">line 155</a>
     </li></ul></dd>
     
 
@@ -691,8 +1047,8 @@ objects in the tree returned by the &quot;themes&quot; web service.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js#L170">line 170</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L211">line 211</a>
     </li></ul></dd>
     
 
@@ -799,8 +1155,8 @@ objects in the tree returned by the &quot;themes&quot; web service.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js#L188">line 188</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L229">line 229</a>
     </li></ul></dd>
     
 
@@ -965,8 +1321,8 @@ Load themes from the &quot;themes&quot; service.</p></td>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7512a23157faf361c9006669013016af35171583/contribs/gmf/src/services/themesservice.js#L206">line 206</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js">contribs/gmf/src/services/themesservice.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ed62b014aeefff164ec6be85230c6d53fb01f933/contribs/gmf/src/services/themesservice.js#L247">line 247</a>
     </li></ul></dd>
     
 
