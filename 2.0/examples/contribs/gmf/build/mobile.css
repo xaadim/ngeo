@@ -9308,6 +9308,9 @@ gmf-layertree div {
 gmf-layertree ul .treenode {
   padding-top: 1rem;
 }
+gmf-layertree ul .treenode ul ul {
+  padding-left: 20px;
+}
 gmf-layertree ul .treenode a {
   color: #555;
   display: inline;
