@@ -9318,6 +9318,12 @@ gmf-layertree ul .treenode a {
 gmf-layertree ul .treenode a::after {
   display: none;
 }
+gmf-layertree ul .treenode a.expand-node.fa::before {
+  content: "\f054";
+}
+gmf-layertree ul .treenode a.expand-node.fa[aria-expanded="true"]::before {
+  content: "\f078";
+}
 gmf-layertree ul .treenode .rightButtons *::after {
   background: none;
   color: black;
