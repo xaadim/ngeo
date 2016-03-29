@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Popover</title>
+    <title>JSDoc: Class: colorpickerDirective <small>directive:ngeoColorpicker</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Popover</h1>
+    <h1 class="page-title">Class: colorpickerDirective <small>directive:ngeoColorpicker</small></h1>
 
     
 
@@ -28,12 +28,9 @@
 
 <header>
     
-        <h2 id="Popover">
-            <span class="ancestors">ngeo.</span>Popover
+        <h2 id="colorpickerDirective">
+            <span class="ancestors">ngeo.</span>colorpickerDirective
         </h2>
-        
-            <div class="class-description"><p>An openlayers overlay that uses bootstrap popover to produce a popup
-for maps.</p></div>
         
     
 </header>
@@ -44,15 +41,20 @@ for maps.</p></div>
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="Popover"><span class="type-signature"></span>new Popover<span class="signature">(opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="colorpickerDirective"><span class="type-signature"></span>new colorpickerDirective<span class="signature">(ngeoColorpickerTemplateUrl)</span><span class="type-signature"> &rarr; {<a href="https://docs.angularjs.org/guide/directive">angular.Directive</a>}</span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Provides the &quot;ngeoColorpicker&quot; directive, a widget for
+selecting a color among predefined ones.</p>
+<p>Example:</p>
+<pre class="prettyprint source"><code>&lt;div ngeo-colorpicker=&quot;ctrl.colors&quot;>
+&lt;/div></code></pre>
+</div>
 
 
 
@@ -60,66 +62,6 @@ for maps.</p></div>
 
 
 
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.OverlayOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Overlay options.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -158,8 +100,8 @@ for maps.</p></div>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js#L16">line 16</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js">src/directives/colorpicker.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js#L36">line 36</a>
     </li></ul></dd>
     
 
@@ -182,22 +124,33 @@ for maps.</p></div>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Directive Definition Object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://docs.angularjs.org/guide/directive">angular.Directive</a></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
     
     </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.Overlay.html">ol.Overlay</a></li>
-    </ul>
-
 
     
 
@@ -211,144 +164,6 @@ for maps.</p></div>
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">(map)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>map</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Map.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js#L64">line 64</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     

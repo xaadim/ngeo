@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Popover</title>
+    <title>JSDoc: Class: ColorpickerController <small>controller:NgeoScaleselectorController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Popover</h1>
+    <h1 class="page-title">Class: ColorpickerController <small>controller:NgeoScaleselectorController</small></h1>
 
     
 
@@ -28,12 +28,9 @@
 
 <header>
     
-        <h2 id="Popover">
-            <span class="ancestors">ngeo.</span>Popover
+        <h2 id="ColorpickerController">
+            <span class="ancestors">ngeo.</span>ColorpickerController
         </h2>
-        
-            <div class="class-description"><p>An openlayers overlay that uses bootstrap popover to produce a popup
-for maps.</p></div>
         
     
 </header>
@@ -44,10 +41,8 @@ for maps.</p></div>
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="Popover"><span class="type-signature"></span>new Popover<span class="signature">(opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ColorpickerController"><span class="type-signature"></span>new ColorpickerController<span class="signature">($scope, $element, $attrs)</span><span class="type-signature"></span></h4>
 
     
 
@@ -74,8 +69,6 @@ for maps.</p></div>
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -88,33 +81,69 @@ for maps.</p></div>
 
         <tr>
             
-                <td class="name"><code>opt_options</code></td>
+                <td class="name"><code>$scope</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">olx.OverlayOptions</span>
+<span class="param-type"><a href="https://docs.angularjs.org/guide/scope">angular.Scope</a></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
+            <td class="description last"><p>Directive scope.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$element</code></td>
+            
+
+            <td class="type">
+            
                 
-                </td>
+<span class="param-type">angular.JQLite</span>
+
+
+            
+            </td>
+
             
 
             
 
-            <td class="description last"><p>Overlay options.</p></td>
+            <td class="description last"><p>Element.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$attrs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">angular.Attributes</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attributes.</p></td>
         </tr>
 
     
@@ -158,8 +187,8 @@ for maps.</p></div>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js#L16">line 16</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js">src/directives/colorpicker.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js#L73">line 73</a>
     </li></ul></dd>
     
 
@@ -189,17 +218,6 @@ for maps.</p></div>
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.Overlay.html">ol.Overlay</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -210,6 +228,161 @@ for maps.</p></div>
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="color"><span class="type-signature"></span>color<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>The selected color</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js">src/directives/colorpicker.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js#L86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="colors"><span class="type-signature"></span>colors<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>>></span></h4>
+
+
+
+
+<div class="description">
+    <p>The set of color</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js">src/directives/colorpicker.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js#L80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -219,7 +392,7 @@ for maps.</p></div>
 
     
 
-    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">(map)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setColor"><span class="type-signature"></span>setColor<span class="signature">(color)</span><span class="type-signature"></span></h4>
 
     
 
@@ -258,16 +431,13 @@ for maps.</p></div>
 
         <tr>
             
-                <td class="name"><code>map</code></td>
+                <td class="name"><code>color</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
 
 
             
@@ -277,7 +447,7 @@ for maps.</p></div>
 
             
 
-            <td class="description last"><p>Map.</p></td>
+            <td class="description last"><p>The color to select.</p></td>
         </tr>
 
     
@@ -321,8 +491,8 @@ for maps.</p></div>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/ol-ext/popover.js#L64">line 64</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js">src/directives/colorpicker.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/ea6d88fda8597553b6be6513553e230a57f983f0/src/directives/colorpicker.js#L93">line 93</a>
     </li></ul></dd>
     
 
