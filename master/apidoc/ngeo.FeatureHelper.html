@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: FeatureHash</title>
+    <title>JSDoc: Class: FeatureHelper <small>service:ngeoFeatureHelper</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: FeatureHash</h1>
+    <h1 class="page-title">Class: FeatureHelper <small>service:ngeoFeatureHelper</small></h1>
 
     
 
@@ -28,24 +28,9 @@
 
 <header>
     
-        <h2 id="FeatureHash">
-            <span class="ancestors">ngeo.format.</span>FeatureHash
+        <h2 id="FeatureHelper">
+            <span class="ancestors">ngeo.</span>FeatureHelper
         </h2>
-        
-            <div class="class-description"><p>Provide an OpenLayers format for encoding and decoding features for use
-in permalinks.</p>
-<p>The code is based on Stéphane Brunner's URLCompressed format.</p>
-<p>TODOs:</p>
-<ul>
-<li>The OpenLayers-URLCompressed format has options where the user
-can define attribute and style transformers. This is currently
-not supported by this format.</li>
-<li>The OpenLayers-URLCompressed format has a &quot;simplify&quot; option.
-This format does not have it.</li>
-<li>ol.style.Icon styles are not supported.</li>
-<li>Transformation of coordinates during encoding and decoding is
-not supported.</li>
-</ul></div>
         
     
 </header>
@@ -56,14 +41,20 @@ not supported.</li>
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="FeatureHash"><span class="type-signature"></span>new FeatureHash<span class="signature">(opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="FeatureHelper"><span class="type-signature"></span>new FeatureHelper<span class="signature">($injector)</span><span class="type-signature"></span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Provides methods for features, such as:</p>
+<ul>
+<li>style setting / getting</li>
+<li>measurement</li>
+</ul>
+</div>
 
 
 
@@ -86,8 +77,6 @@ not supported.</li>
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -100,33 +89,23 @@ not supported.</li>
 
         <tr>
             
-                <td class="name"><code>opt_options</code></td>
+                <td class="name"><code>$injector</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="ngeox.format.html#FeatureHashOptions">ngeox.format.FeatureHashOptions</a></span>
+<span class="param-type"><a href="https://docs.angularjs.org/api/auto/service/$injector">angular.$injector</a></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>Options.</p></td>
+            <td class="description last"><p>Main injector.</p></td>
         </tr>
 
     
@@ -170,20 +149,13 @@ not supported.</li>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L77">line 77</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L23">line 23</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://github.com/sbrunner/OpenLayers-URLCompressed">https://github.com/sbrunner/OpenLayers-URLCompressed</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -208,17 +180,6 @@ not supported.</li>
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.format.TextFeature.html">ol.format.TextFeature</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -229,370 +190,6 @@ not supported.</li>
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="readFeature"><span class="type-signature"></span>readFeature<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L123">line 123</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="readFeatures"><span class="type-signature"></span>readFeatures<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L130">line 130</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="readGeometry"><span class="type-signature"></span>readGeometry<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L137">line 137</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="writeFeature"><span class="type-signature"></span>writeFeature<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L144">line 144</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="writeFeatures"><span class="type-signature"></span>writeFeatures<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L151">line 151</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="writeGeometry"><span class="type-signature"></span>writeGeometry<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L158">line 158</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -602,15 +199,11 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="readFeatureFromText"><span class="type-signature">(protected) </span>readFeatureFromText<span class="signature">(text, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>}</span></h4>
+    <h4 class="name" id="getAngleProperty"><span class="type-signature"></span>getAngleProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>}</span></h4>
 
     
 
 
-
-<div class="description">
-    <p>Read a feature from a logical sequence of characters.</p>
-</div>
 
 
 
@@ -632,808 +225,6 @@ not supported.</li>
 
         <th>Type</th>
 
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Text.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.format.ReadOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Read options.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L889">line 889</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Feature.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="readFeaturesFromText"><span class="type-signature">(protected) </span>readFeaturesFromText<span class="signature">(text, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Read multiple features from a logical sequence of characters.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Text.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.format.ReadOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Read options.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L928">line 928</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Features.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="readGeometryFromText"><span class="type-signature">(protected) </span>readGeometryFromText<span class="signature">(text, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="http://openlayers.org/en/master/apidoc/ol.geom.Geometry.html">ol.geom.Geometry</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Read a geometry from a logical sequence of characters.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Text.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.format.ReadOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Read options.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L952">line 952</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Geometry.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.geom.Geometry.html">ol.geom.Geometry</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="writeFeaturesText"><span class="type-signature">(protected) </span>writeFeaturesText<span class="signature">(features, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Encode an array of features into a logical sequence of characters.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>features</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Feature.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.format.ReadOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Read options.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L1044">line 1044</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Encoded features.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="writeFeatureText"><span class="type-signature">(protected) </span>writeFeatureText<span class="signature">(feature, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Encode a feature into a logical sequence of characters.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
         
 
         
@@ -1460,51 +251,10 @@ not supported.</li>
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
             <td class="description last"><p>Feature.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.format.ReadOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Read options.</p></td>
         </tr>
 
     
@@ -1548,8 +298,8 @@ not supported.</li>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L968">line 968</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L225">line 225</a>
     </li></ul></dd>
     
 
@@ -1576,7 +326,160 @@ not supported.</li>
 
         
 <div class="param-desc">
-    <p>Encoded feature.</p>
+    <p>Angle.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getColorProperty"><span class="type-signature"></span>getColorProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L238">line 238</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Color.</p>
 </div>
 
 
@@ -1602,14 +505,933 @@ not supported.</li>
 
     
 
-    <h4 class="name" id="writeGeometryText"><span class="type-signature">(protected) </span>writeGeometryText<span class="signature">(geometry, opt_options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
+    <h4 class="name" id="getMeasure"><span class="type-signature"></span>getMeasure<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L348">line 348</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Measure.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getNameProperty"><span class="type-signature"></span>getNameProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L253">line 253</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Name.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getOpacityProperty"><span class="type-signature"></span>getOpacityProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L265">line 265</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Opacity.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getShowMeasureProperty"><span class="type-signature"></span>getShowMeasureProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L278">line 278</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Show measure.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getSizeProperty"><span class="type-signature"></span>getSizeProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L294">line 294</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Size.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getStrokeProperty"><span class="type-signature"></span>getStrokeProperty<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L306">line 306</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Stroke.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getStyle"><span class="type-signature"></span>getStyle<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Encode a geometry into a logical sequence of characters.</p>
+    <p>Create and return a style object from a given feature using its inner
+properties and depending on its geometry type.</p>
 </div>
 
 
@@ -1633,8 +1455,6 @@ not supported.</li>
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -1647,64 +1467,23 @@ not supported.</li>
 
         <tr>
             
-                <td class="name"><code>geometry</code></td>
+                <td class="name"><code>feature</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.geom.Geometry.html">ol.geom.Geometry</a></span>
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>Geometry.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opt_options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">olx.format.ReadOptions</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Read options.</p></td>
+            <td class="description last"><p>Feature.</p></td>
         </tr>
 
     
@@ -1748,8 +1527,8 @@ not supported.</li>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js">src/ol-ext/format/featurehash.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/ol-ext/format/featurehash.js#L1063">line 1063</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L75">line 75</a>
     </li></ul></dd>
     
 
@@ -1776,7 +1555,165 @@ not supported.</li>
 
         
 <div class="param-desc">
-    <p>Encoded geometry.</p>
+    <p>The style object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getType"><span class="type-signature"></span>getType<span class="signature">(feature)</span><span class="type-signature"> &rarr; {<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Return the type of geometry of a feature using its geometry property and
+some inner properties.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L377">line 377</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The type of geometry.</p>
 </div>
 
 
@@ -1794,6 +1731,273 @@ not supported.</li>
 </dl>
 
     
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setProjection"><span class="type-signature"></span>setProjection<span class="signature">(projection)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>projection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.proj.Projection.html">ol.proj.Projection</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Projection.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setStyle"><span class="type-signature"></span>setStyle<span class="signature">(feature)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Set the style of a feature using its inner properties and depending on
+its geometry type.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Feature.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js">src/services/featurehelper.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/69003a24fa7345a884efb92b1bef422a7c304540/src/services/featurehelper.js#L62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
