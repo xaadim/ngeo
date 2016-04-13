@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: desktopGeolocationDirective <small>directive:ngeoDesktopGeolocation</small></title>
+    <title>JSDoc: Class: ModifyCircle</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: desktopGeolocationDirective <small>directive:ngeoDesktopGeolocation</small></h1>
+    <h1 class="page-title">Class: ModifyCircle</h1>
 
     
 
@@ -28,9 +28,11 @@
 
 <header>
     
-        <h2 id="desktopGeolocationDirective">
-            <span class="ancestors">ngeo.</span>desktopGeolocationDirective
+        <h2 id="ModifyCircle">
+            <span class="ancestors">ngeo.interaction.</span>ModifyCircle
         </h2>
+        
+            <div class="class-description"><p>Interaction for modifying feature geometries.</p></div>
         
     
 </header>
@@ -41,21 +43,15 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
-    <h4 class="name" id="desktopGeolocationDirective"><span class="type-signature"></span>new desktopGeolocationDirective<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ModifyCircle"><span class="type-signature"></span>new ModifyCircle<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>Provide a &quot;desktop geolocation&quot; directive.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code> &lt;button ngeo-desktop-geolocation=&quot;&quot;
-   ngeo-desktop-geolocation-map=&quot;ctrl.map&quot;
-   ngeo-desktop-geolocation-options=&quot;ctrl.desktopGeolocationOptions&quot;>
- &lt;/button></code></pre><p>See our live example: <code>../examples/desktopgeolocation.html</code></p>
-</div>
 
 
 
@@ -64,10 +60,7 @@
 
 
 
-
-
-
-    <h5>HTML attributes:</h5>
+    <h5>Parameters:</h5>
     
 
 <table class="params">
@@ -92,15 +85,10 @@
 
         <tr>
             
-                <td class="name"><code>gmf-geolocation-map</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-
-
             
             </td>
 
@@ -108,35 +96,14 @@
 
             
 
-            <td class="description last">The map.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-geolocation-options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeox.html#DesktopGeolocationDirectiveOptions">ngeox.DesktopGeolocationDirectiveOptions</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The options.</td>
+            <td class="description last"><p>Options.</p></td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -173,8 +140,124 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/directives/desktopgeolocation.js">src/directives/desktopgeolocation.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/directives/desktopgeolocation.js#L45">line 45</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js">src/ol-ext/interaction/modifycircle.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js#L47">line 47</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<h5>Fires:</h5>
+<ul>
+    <li>ngeo.interaction.event:ModifyCircleEvent</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="http://openlayers.org/en/master/apidoc/ol.interaction.Pointer.html">ol.interaction.Pointer</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getDefaultStyleFunction"><span class="type-signature">(static) </span>getDefaultStyleFunction<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js">src/ol-ext/interaction/modifycircle.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js#L516">line 516</a>
     </li></ul></dd>
     
 
@@ -200,21 +283,223 @@
 
 
 
-    
-    </div>
+        
+            
 
     
 
+    <h4 class="name" id=".handleEvent"><span class="type-signature">(static) </span>handleEvent<span class="signature">(mapBrowserEvent)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Handles the <a href="http://openlayers.org/en/master/apidoc/ol.MapBrowserEvent.html"><code>map browser event</code></a> and may modify the
+geometry.</p>
+</div>
+
+
+
+
+
+
+
+    <h5>This:</h5>
+    <ul><li>{<a href="ngeo.interaction.ModifyCircle.html">ngeo.interaction.ModifyCircle</a>}</li></ul>
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mapBrowserEvent</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Map browser event.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
     
 
     
 
-     
+    
+
+    
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js">src/ol-ext/interaction/modifycircle.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js#L410">line 410</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js">src/ol-ext/interaction/modifycircle.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/789ed822089cfe09dd0b6dc42686a06351c84c5b/src/ol-ext/interaction/modifycircle.js#L216">line 216</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
