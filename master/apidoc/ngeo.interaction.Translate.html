@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SyncArrays <small>service:ngeoSyncArrays</small></title>
+    <title>JSDoc: Class: Translate</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SyncArrays <small>service:ngeoSyncArrays</small></h1>
+    <h1 class="page-title">Class: Translate</h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="SyncArrays">
-            <span class="ancestors">ngeo.</span>SyncArrays
+        <h2 id="Translate">
+            <span class="ancestors">ngeo.interaction.</span>Translate
         </h2>
         
     
@@ -42,26 +42,20 @@
 
     
 
-    <h4 class="name" id="SyncArrays"><span class="type-signature"></span>new SyncArrays<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Translate"><span class="type-signature"></span>new Translate<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provides a function that synchronizes two arrays, arr1 and
-arr2. arr2 is a subset of arr1, it includes the elements of arr1 that passes
-the filter. When elements are added to/removed from arr1, arr2 is updated to
-include the elements of arr1 that pass the filter. When the order of
-elements in arr2 changes, arr1 is reordered to have the same order as arr2.</p>
-<p>This can for example be used to synchronize the array of layers in the map
-with the array of selected layers, where layers may be added to/removed from
-the map, and the order of selected layers may change.</p>
-<pre class="prettyprint source"><code>var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
-    true, scope, function(layer) {
-      // exclude the layer at index 0 in the map
-      return map.getLayers().indexOf(layer) !== 0;
-    });</code></pre><p>This will return a function that can be called to cancel synchronization.</p>
+    <p>An extension of the OpenLayers Translate interaction that adds the following
+features to it:</p>
+<ul>
+<li>show a small arrow icon in the middle of the features allowing a visual
+aspect that tells the user &quot;this feature can be moved&quot;</li>
+<li>pressing the ESC key automatically deactivate the interaction.</li>
+</ul>
 </div>
 
 
@@ -70,6 +64,50 @@ the map, and the order of selected layers may change.</p>
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -108,8 +146,8 @@ the map, and the order of selected layers may change.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/services/syncarrays.js">src/services/syncarrays.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/services/syncarrays.js#L31">line 31</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/interaction/translate.js">src/ol-ext/interaction/translate.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/interaction/translate.js#L26">line 26</a>
     </li></ul></dd>
     
 
@@ -139,6 +177,17 @@ the map, and the order of selected layers may change.</p>
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="http://openlayers.org/en/master/apidoc/ol.interaction.Translate.html">ol.interaction.Translate</a></li>
+    </ul>
+
+
+    
 
     
 
@@ -150,6 +199,272 @@ the map, and the order of selected layers may change.</p>
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="setActive"><span class="type-signature"></span>setActive<span class="signature">(active)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Activate or deactivate the interaction.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>active</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Active.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/interaction/translate.js">src/ol-ext/interaction/translate.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/interaction/translate.js#L87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">(map)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Remove the interaction from its current map and attach it to the new map.
+Subclasses may set up event handlers to get notified about changes to
+the map here.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>map</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Map.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/interaction/translate.js">src/ol-ext/interaction/translate.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/interaction/translate.js#L116">line 116</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

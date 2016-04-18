@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SyncArrays <small>service:ngeoSyncArrays</small></title>
+    <title>JSDoc: Class: Menu</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SyncArrays <small>service:ngeoSyncArrays</small></h1>
+    <h1 class="page-title">Class: Menu</h1>
 
     
 
@@ -28,9 +28,14 @@
 
 <header>
     
-        <h2 id="SyncArrays">
-            <span class="ancestors">ngeo.</span>SyncArrays
+        <h2 id="Menu">
+            <span class="ancestors">ngeo.</span>Menu
         </h2>
+        
+            <div class="class-description"><p>An OpenLayers overlay that shows a contextual menu with configurable actions
+anchored from its top left to a specific location. An event is fired when
+any of the action is clicked. It can be closed using the close button, or
+can be automatically closed when any action is clicked.</p></div>
         
     
 </header>
@@ -41,28 +46,209 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
-    <h4 class="name" id="SyncArrays"><span class="type-signature"></span>new SyncArrays<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Menu"><span class="type-signature"></span>new Menu<span class="signature">([menuOptions]<span class="signature-attributes">opt</span>, [opt_overlayOptions]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>Provides a function that synchronizes two arrays, arr1 and
-arr2. arr2 is a subset of arr1, it includes the elements of arr1 that passes
-the filter. When elements are added to/removed from arr1, arr2 is updated to
-include the elements of arr1 that pass the filter. When the order of
-elements in arr2 changes, arr1 is reordered to have the same order as arr2.</p>
-<p>This can for example be used to synchronize the array of layers in the map
-with the array of selected layers, where layers may be added to/removed from
-the map, and the order of selected layers may change.</p>
-<pre class="prettyprint source"><code>var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
-    true, scope, function(layer) {
-      // exclude the layer at index 0 in the map
-      return map.getLayers().indexOf(layer) !== 0;
-    });</code></pre><p>This will return a function that can be called to cancel synchronization.</p>
-</div>
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>[menuOptions]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Menu options.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_overlayOptions]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Overlay options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/menu.js">src/ol-ext/menu.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/menu.js#L58">line 58</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="http://openlayers.org/en/master/apidoc/ol.Overlay.html">ol.Overlay</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="close"><span class="type-signature"></span>close<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
 
 
 
@@ -108,8 +294,8 @@ the map, and the order of selected layers may change.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/services/syncarrays.js">src/services/syncarrays.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/services/syncarrays.js#L31">line 31</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/menu.js">src/ol-ext/menu.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/menu.js#L199">line 199</a>
     </li></ul></dd>
     
 
@@ -135,21 +321,133 @@ the map, and the order of selected layers may change.</p>
 
 
 
-    
-    </div>
+        
+            
 
     
 
+    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">(map)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>map</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Map.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
     
 
     
 
-     
+    
+
+    
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/menu.js">src/ol-ext/menu.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2cb8371e8bfedcc902ad6313098ecb35b7697ab4/src/ol-ext/menu.js#L149">line 149</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
