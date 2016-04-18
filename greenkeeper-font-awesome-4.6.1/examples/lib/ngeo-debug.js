@@ -49920,10 +49920,11 @@ goog.inherits(ol.render.canvas.Replay, ol.render.VectorContext);
  * @param {number} offset Offset.
  * @param {number} end End.
  * @param {number} stride Stride.
+ * @param {boolean} close Close.
  * @protected
  * @return {number} My end.
  */
-ol.render.canvas.Replay.prototype.appendFlatCoordinates = function(flatCoordinates, offset, end, stride) {
+ol.render.canvas.Replay.prototype.appendFlatCoordinates = function(flatCoordinates, offset, end, stride, close) {
 
   var myEnd = this.coordinates.length;
   var extent = this.getBufferedMaxExtent();
@@ -49962,6 +49963,10 @@ ol.render.canvas.Replay.prototype.appendFlatCoordinates = function(flatCoordinat
     this.coordinates[myEnd++] = lastCoord[1];
   }
 
+  if (close) {
+    this.coordinates[myEnd++] = flatCoordinates[offset];
+    this.coordinates[myEnd++] = flatCoordinates[offset + 1];
+  }
   return myEnd;
 };
 
@@ -50533,7 +50538,8 @@ goog.inherits(ol.render.canvas.ImageReplay, ol.render.canvas.Replay);
  * @return {number} My end.
  */
 ol.render.canvas.ImageReplay.prototype.drawCoordinates_ = function(flatCoordinates, offset, end, stride) {
-  return this.appendFlatCoordinates(flatCoordinates, offset, end, stride);
+  return this.appendFlatCoordinates(
+      flatCoordinates, offset, end, stride, false);
 };
 
 
@@ -50754,7 +50760,8 @@ goog.inherits(ol.render.canvas.LineStringReplay, ol.render.canvas.Replay);
  */
 ol.render.canvas.LineStringReplay.prototype.drawFlatCoordinates_ = function(flatCoordinates, offset, end, stride) {
   var myBegin = this.coordinates.length;
-  var myEnd = this.appendFlatCoordinates(flatCoordinates, offset, end, stride);
+  var myEnd = this.appendFlatCoordinates(
+      flatCoordinates, offset, end, stride, false);
   var moveToLineToInstruction =
       [ol.render.canvas.Instruction.MOVE_TO_LINE_TO, myBegin, myEnd];
   this.instructions.push(moveToLineToInstruction);
@@ -50956,9 +50963,7 @@ ol.render.canvas.PolygonReplay = function(tolerance, maxExtent, resolution) {
    *         lineDash: Array.<number>,
    *         lineJoin: (string|undefined),
    *         lineWidth: (number|undefined),
-   *         miterLimit: (number|undefined),
-   *         pendingFill: number,
-   *         pendingStroke: number}|null}
+   *         miterLimit: (number|undefined)}|null}
    */
   this.state_ = {
     currentFillStyle: undefined,
@@ -50974,9 +50979,7 @@ ol.render.canvas.PolygonReplay = function(tolerance, maxExtent, resolution) {
     lineDash: null,
     lineJoin: undefined,
     lineWidth: undefined,
-    miterLimit: undefined,
-    pendingFill: 0,
-    pendingStroke: 0
+    miterLimit: undefined
   };
 
 };
@@ -50993,19 +50996,15 @@ goog.inherits(ol.render.canvas.PolygonReplay, ol.render.canvas.Replay);
  */
 ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(flatCoordinates, offset, ends, stride) {
   var state = this.state_;
-  if (state.pendingFill > 200 || state.pendingStroke > 200) {
-    this.fillStroke_();
-  }
   var beginPathInstruction = [ol.render.canvas.Instruction.BEGIN_PATH];
-  if (!state.pendingFill && !state.pendingStroke) {
-    this.instructions.push(beginPathInstruction);
-  }
+  this.instructions.push(beginPathInstruction);
   this.hitDetectionInstructions.push(beginPathInstruction);
   var i, ii;
   for (i = 0, ii = ends.length; i < ii; ++i) {
     var end = ends[i];
     var myBegin = this.coordinates.length;
-    var myEnd = this.appendFlatCoordinates(flatCoordinates, offset, end, stride);
+    var myEnd = this.appendFlatCoordinates(
+        flatCoordinates, offset, end, stride, true);
     var moveToLineToInstruction =
         [ol.render.canvas.Instruction.MOVE_TO_LINE_TO, myBegin, myEnd];
     var closePathInstruction = [ol.render.canvas.Instruction.CLOSE_PATH];
@@ -51014,15 +51013,19 @@ ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(flatCo
         closePathInstruction);
     offset = end;
   }
-  this.hitDetectionInstructions.push([ol.render.canvas.Instruction.FILL]);
+  // FIXME is it quicker to fill and stroke each polygon individually,
+  // FIXME or all polygons together?
+  var fillInstruction = [ol.render.canvas.Instruction.FILL];
+  this.hitDetectionInstructions.push(fillInstruction);
   if (state.fillStyle !== undefined) {
-    state.pendingFill++;
+    this.instructions.push(fillInstruction);
   }
   if (state.strokeStyle !== undefined) {
     goog.asserts.assert(state.lineWidth !== undefined,
         'state.lineWidth should be defined');
-    state.pendingStroke++;
-    this.hitDetectionInstructions.push([ol.render.canvas.Instruction.STROKE]);
+    var strokeInstruction = [ol.render.canvas.Instruction.STROKE];
+    this.instructions.push(strokeInstruction);
+    this.hitDetectionInstructions.push(strokeInstruction);
   }
   return offset;
 };
@@ -51059,23 +51062,22 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   var stride = circleGeometry.getStride();
   var myBegin = this.coordinates.length;
   this.appendFlatCoordinates(
-      flatCoordinates, 0, flatCoordinates.length, stride);
+      flatCoordinates, 0, flatCoordinates.length, stride, false);
   var beginPathInstruction = [ol.render.canvas.Instruction.BEGIN_PATH];
   var circleInstruction = [ol.render.canvas.Instruction.CIRCLE, myBegin];
-  if (!state.pendingFill && !state.pendingStroke) {
-    this.instructions.push(beginPathInstruction);
-  }
-  this.instructions.push(circleInstruction);
-  this.hitDetectionInstructions.push(circleInstruction, beginPathInstruction);
-  this.hitDetectionInstructions.push([ol.render.canvas.Instruction.FILL]);
+  this.instructions.push(beginPathInstruction, circleInstruction);
+  this.hitDetectionInstructions.push(beginPathInstruction, circleInstruction);
+  var fillInstruction = [ol.render.canvas.Instruction.FILL];
+  this.hitDetectionInstructions.push(fillInstruction);
   if (state.fillStyle !== undefined) {
-    state.pendingFill++;
+    this.instructions.push(fillInstruction);
   }
   if (state.strokeStyle !== undefined) {
     goog.asserts.assert(state.lineWidth !== undefined,
         'state.lineWidth should be defined');
-    state.pendingStroke++;
-    this.hitDetectionInstructions.push([ol.render.canvas.Instruction.STROKE]);
+    var strokeInstruction = [ol.render.canvas.Instruction.STROKE];
+    this.instructions.push(strokeInstruction);
+    this.hitDetectionInstructions.push(strokeInstruction);
   }
   this.endGeometry(circleGeometry, feature);
 };
@@ -51157,27 +51159,12 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
 
 
 /**
- * @private
- */
-ol.render.canvas.PolygonReplay.prototype.fillStroke_ = function() {
-  var state = this.state_;
-  if (state.pendingFill) {
-    this.instructions.push([ol.render.canvas.Instruction.FILL]);
-    state.pendingFill = 0;
-  }
-  if (state.pendingStroke) {
-    this.instructions.push([ol.render.canvas.Instruction.STROKE]);
-    state.pendingStroke = 0;
-  }
-};
-
-
-/**
  * @inheritDoc
  */
 ol.render.canvas.PolygonReplay.prototype.finish = function() {
   goog.asserts.assert(this.state_, 'this.state_ should not be null');
   this.reverseHitDetectionInstructions_();
+  this.state_ = null;
   // We want to preserve topology when drawing polygons.  Polygons are
   // simplified using quantization and point elimination. However, we might
   // have received a mix of quantized and non-quantized geometries, so ensure
@@ -51190,8 +51177,6 @@ ol.render.canvas.PolygonReplay.prototype.finish = function() {
       coordinates[i] = ol.geom.flat.simplify.snap(coordinates[i], tolerance);
     }
   }
-  this.fillStroke_();
-  this.state_ = null;
 };
 
 
@@ -51274,7 +51259,6 @@ ol.render.canvas.PolygonReplay.prototype.setFillStrokeStyles_ = function() {
   var lineWidth = state.lineWidth;
   var miterLimit = state.miterLimit;
   if (fillStyle !== undefined && state.currentFillStyle != fillStyle) {
-    this.fillStroke_();
     this.instructions.push(
         [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle]);
     state.currentFillStyle = state.fillStyle;
@@ -51292,7 +51276,6 @@ ol.render.canvas.PolygonReplay.prototype.setFillStrokeStyles_ = function() {
         state.currentLineJoin != lineJoin ||
         state.currentLineWidth != lineWidth ||
         state.currentMiterLimit != miterLimit) {
-      this.fillStroke_();
       this.instructions.push(
           [ol.render.canvas.Instruction.SET_STROKE_STYLE,
            strokeStyle, lineWidth, lineCap, lineJoin, miterLimit, lineDash]);
@@ -51407,7 +51390,8 @@ ol.render.canvas.TextReplay.prototype.drawText = function(flatCoordinates, offse
   this.setReplayTextState_(this.textState_);
   this.beginGeometry(geometry, feature);
   var myBegin = this.coordinates.length;
-  var myEnd = this.appendFlatCoordinates(flatCoordinates, offset, end, stride);
+  var myEnd =
+      this.appendFlatCoordinates(flatCoordinates, offset, end, stride, false);
   var fill = !!this.textFillState_;
   var stroke = !!this.textStrokeState_;
   var drawTextInstruction = [
@@ -106481,8 +106465,12 @@ goog.provide('ngeo.FeatureHelper')
 
 goog.require('ngeo');
 goog.require('ngeo.interaction.Measure');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.MultiPoint');
+goog.require('ol.geom.Polygon');
 goog.require('ol.style.Circle');
 goog.require('ol.style.Fill');
+goog.require('ol.style.RegularShape');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('ol.style.Text');
@@ -106536,11 +106524,19 @@ ngeo.FeatureHelper.prototype.setProjection = function(projection) {
  * Set the style of a feature using its inner properties and depending on
  * its geometry type.
  * @param {ol.Feature} feature Feature.
+ * @param {boolean=} opt_select Whether the feature should be rendered as
+ *     selected, which includes additional vertex and halo styles.
  * @export
  */
-ngeo.FeatureHelper.prototype.setStyle = function(feature) {
-  var style = this.getStyle(feature);
-  feature.setStyle(style);
+ngeo.FeatureHelper.prototype.setStyle = function(feature, opt_select) {
+  var styles = [this.getStyle(feature)];
+  if (opt_select) {
+    if (this.supportsVertex_(feature)) {
+      styles.push(this.getVertexStyle());
+    }
+    styles.unshift(this.getHaloStyle_(feature));
+  }
+  feature.setStyle(styles);
 };
 
 
@@ -106693,6 +106689,129 @@ ngeo.FeatureHelper.prototype.getTextStyle_ = function(feature) {
 };
 
 
+/**
+ * Create and return a style object to be used for vertex.
+ * @param {boolean=} opt_incGeomFunc Whether to include the geometry function
+ *     or not. One wants to use the geometry function when you want to draw
+ *     the vertex of features that don't have point geometries. One doesn't
+ *     want to include the geometry function if you just want to have the
+ *     style object itself to be used to draw features that have point
+ *     geometries. Defaults to `true`.
+ * @return {ol.style.Style} Style.
+ * @export
+ */
+ngeo.FeatureHelper.prototype.getVertexStyle = function(opt_incGeomFunc) {
+  var incGeomFunc = opt_incGeomFunc !== undefined ? opt_incGeomFunc : true;
+
+  var options = {
+    image: new ol.style.RegularShape({
+      radius: 6,
+      points: 4,
+      angle: Math.PI / 4,
+      fill: new ol.style.Fill({
+        color: [255, 255, 255, 0.5]
+      }),
+      stroke: new ol.style.Stroke({
+        color: [0, 0, 0, 1]
+      })
+    })
+  };
+
+  if (incGeomFunc) {
+    options.geometry = function(feature) {
+      var geom = feature.getGeometry();
+
+      if (geom.getType() == ol.geom.GeometryType.POINT) {
+        return;
+      }
+
+      var coordinates;
+      if (geom instanceof ol.geom.LineString) {
+        coordinates = feature.getGeometry().getCoordinates();
+        return new ol.geom.MultiPoint(coordinates);
+      } else if (geom instanceof ol.geom.Polygon) {
+        coordinates = feature.getGeometry().getCoordinates()[0];
+        return new ol.geom.MultiPoint(coordinates);
+      } else {
+        return feature.getGeometry();
+      }
+    }
+  }
+
+  return new ol.style.Style(options);
+};
+
+
+/**
+ * @param {ol.Feature} feature Feature.
+ * @return {boolean} Whether the feature supports vertex or not.
+ * @private
+ */
+ngeo.FeatureHelper.prototype.supportsVertex_ = function(feature) {
+  var supported = [
+    ngeo.GeometryType.LINE_STRING,
+    ngeo.GeometryType.POLYGON,
+    ngeo.GeometryType.RECTANGLE
+  ];
+  var type = this.getType(feature);
+  return ol.array.includes(supported, type);
+};
+
+
+/**
+ * @param {ol.Feature} feature Feature.
+ * @return {ol.style.Style} Style.
+ * @private
+ */
+ngeo.FeatureHelper.prototype.getHaloStyle_ = function(feature) {
+  var type = this.getType(feature);
+  var style;
+  var haloSize = 3;
+  var size;
+
+  switch (type) {
+    case ngeo.GeometryType.POINT:
+      size = this.getSizeProperty(feature);
+      style = new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: size + haloSize,
+          fill: new ol.style.Fill({
+            color: 'white'
+          })
+        })
+      });
+      break;
+    case ngeo.GeometryType.LINE_STRING:
+    case ngeo.GeometryType.CIRCLE:
+    case ngeo.GeometryType.POLYGON:
+    case ngeo.GeometryType.RECTANGLE:
+      var strokeWidth = this.getStrokeProperty(feature);
+      style = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: 'white',
+          width: strokeWidth + haloSize * 2
+        })
+      });
+      break;
+    case ngeo.GeometryType.TEXT:
+      var label = this.getNameProperty(feature);
+      size = this.getSizeProperty(feature);
+      var angle = this.getAngleProperty(feature);
+      var color = 'white';
+      style = new ol.style.Style({
+        text: this.createTextStyle_(label, size, angle, color, haloSize * 2)
+      })
+      break;
+    default:
+      break;
+  }
+
+  goog.asserts.assert(style, 'Style should be thruthy');
+
+  return style;
+};
+
+
 // === PROPERTY GETTERS ===
 
 
@@ -106797,23 +106916,25 @@ ngeo.FeatureHelper.prototype.getStrokeProperty = function(feature) {
  * @param {string} text The text to display.
  * @param {number} size The size in `pt` of the text font.
  * @param {number=} opt_angle The angle in degrees of the text.
- * @param {string=} opt_color The color of the text
+ * @param {string=} opt_color The color of the text.
+ * @param {number=} opt_width The width of the outline color.
  * @return {ol.style.Text} Style.
  * @private
  */
 ngeo.FeatureHelper.prototype.createTextStyle_ = function(text, size,
-                                                        opt_angle, opt_color) {
+    opt_angle, opt_color, opt_width) {
 
   var angle = opt_angle !== undefined ? opt_angle : 0;
   var rotation = angle * Math.PI / 180;
   var font = ['normal', size + 'pt', 'Arial'].join(' ');
   var color = opt_color !== undefined ? opt_color : '#000000';
+  var width = opt_width !== undefined ? opt_width : 3;
 
   return new ol.style.Text({
     font: font,
     text: text,
     fill: new ol.style.Fill({color: color}),
-    stroke: new ol.style.Stroke({color: '#ffffff', width: 3}),
+    stroke: new ol.style.Stroke({color: '#ffffff', width: width}),
     rotation: rotation
   });
 };
@@ -118447,193 +118568,6 @@ ngeo.interaction.MeasurePointMobile.prototype.handleMeasure = function(
   callback(output, coord);
 };
 
-goog.provide('ngeo.interaction.Modify');
-
-goog.require('ol.interaction.Interaction');
-goog.require('ol.Collection');
-goog.require('ol.interaction.Modify');
-
-
-/**
- * This interaction combines multiple kind of feature modification interactions
- * in order to be able to modify vector features depending on their geometry
- * type. The different kind of interactions supported are:
- *
- * - `ol.interaction.Modify`
- * - `ngeo.interaction.ModifyCircle`
- * - `ngeo.interaction.ModifyCircle`
- *
- * This interaction receives a collection of features. Its job is to listen
- * to added/removed features to and from it and add them in the proper
- * collection that is uniquely used for each inner interaction. Those inner
- * interactions follow the `active` property of this interaction, i.e. when
- * this interaction is activated, so do the inner interactions. Since they will
- * never share the same feature, they don't collide with one an other.
- *
- * @constructor
- * @extends {ol.interaction.Interaction}
- * @param {ngeo.interaction.MeasureBaseOptions} options Options.
- * @export
- */
-ngeo.interaction.Modify = function(options) {
-
-  /**
-   * @type {ol.Collection.<ol.Feature>}
-   * @private
-   */
-  this.features_ = options.features;
-
-  /**
-   * @type {!Array.<ol.events.Key>}
-   * @private
-   */
-  this.listenerKeys_ = [];
-
-  /**
-   * @type {Array.<ol.interaction.Interaction>}
-   * @private
-   */
-  this.interactions_ = [];
-
-  /**
-   * @type {ol.Collection.<ol.Feature>}
-   * @private
-   */
-  this.otherFeatures_ = new ol.Collection();
-
-  this.interactions_.push(new ol.interaction.Modify({
-    features: this.otherFeatures_
-  }));
-
-  goog.base(this, {
-    handleEvent: goog.functions.TRUE
-  });
-
-};
-goog.inherits(ngeo.interaction.Modify, ol.interaction.Interaction);
-
-
-/**
- * Activate or deactivate the interaction.
- * @param {boolean} active Active.
- * @export
- */
-ngeo.interaction.Modify.prototype.setActive = function(active) {
-  goog.base(this, 'setActive', active);
-  this.setState_();
-};
-
-
-/**
- * Remove the interaction from its current map and attach it to the new map.
- * Subclasses may set up event handlers to get notified about changes to
- * the map here.
- * @param {ol.Map} map Map.
- */
-ngeo.interaction.Modify.prototype.setMap = function(map) {
-
-  var interactions = this.interactions_;
-
-  var currentMap = this.getMap();
-  if (currentMap) {
-    interactions.forEach(function(interaction) {
-      currentMap.removeInteraction(interaction);
-    }, this);
-  }
-
-  goog.base(this, 'setMap', map);
-
-  if (map) {
-    interactions.forEach(function(interaction) {
-      map.addInteraction(interaction);
-    }, this);
-  }
-
-  this.setState_();
-};
-
-
-/**
- * Toggle interactions.
- * @private
- */
-ngeo.interaction.Modify.prototype.setState_ = function() {
-  var map = this.getMap();
-  var active = this.getActive();
-  var interactions = this.interactions_;
-  var keys = this.listenerKeys_;
-
-  interactions.forEach(function(interaction) {
-    interaction.setActive(active && !!map);
-  }, this);
-
-  if (active && map) {
-    this.features_.forEach(this.addFeature_, this);
-    keys.push(ol.events.listen(this.features_, ol.CollectionEventType.ADD,
-        this.handleFeaturesAdd_, this));
-    keys.push(ol.events.listen(this.features_, ol.CollectionEventType.REMOVE,
-        this.handleFeaturesRemove_, this));
-  } else {
-    keys.forEach(function(key) {
-      ol.events.unlistenByKey(key);
-    }, this);
-    this.features_.forEach(this.removeFeature_, this);
-  }
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Event.
- * @private
- */
-ngeo.interaction.Modify.prototype.handleFeaturesAdd_ = function(evt) {
-  var feature = evt.element;
-  goog.asserts.assertInstanceof(feature, ol.Feature,
-      'feature should be an ol.Feature');
-  this.addFeature_(feature);
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Event.
- * @private
- */
-ngeo.interaction.Modify.prototype.handleFeaturesRemove_ = function(evt) {
-  var feature = /** @type {ol.Feature} */ (evt.element);
-  this.removeFeature_(feature);
-};
-
-
-/**
- * @param {ol.Feature} feature Feature.
- * @private
- */
-ngeo.interaction.Modify.prototype.addFeature_ = function(feature) {
-  var collection = this.getFeatureCollection_(feature);
-  collection.push(feature);
-};
-
-
-/**
- * @param {ol.Feature} feature Feature.
- * @private
- */
-ngeo.interaction.Modify.prototype.removeFeature_ = function(feature) {
-  var collection = this.getFeatureCollection_(feature);
-  collection.remove(feature);
-};
-
-
-/**
- * @param {ol.Feature} feature Feature.
- * @return {ol.Collection.<ol.Feature>} Collection of features for this feature.
- * @private
- */
-ngeo.interaction.Modify.prototype.getFeatureCollection_ = function(feature) {
-  // FIXME - update when more than one interaction is supported here
-  return this.otherFeatures_;
-};
-
 goog.provide('ngeo.interaction.ModifyCircle');
 
 goog.require('goog.asserts');
@@ -119154,6 +119088,215 @@ ngeo.interaction.ModifyCircle.getDefaultStyleFunction = function() {
   return function(feature, resolution) {
     return style[ol.geom.GeometryType.POINT];
   };
+};
+
+goog.provide('ngeo.interaction.Modify');
+
+goog.require('ngeo.interaction.ModifyCircle');
+goog.require('ol.interaction.Interaction');
+goog.require('ol.Collection');
+goog.require('ol.interaction.Modify');
+
+
+/**
+ * This interaction combines multiple kind of feature modification interactions
+ * in order to be able to modify vector features depending on their geometry
+ * type. The different kind of interactions supported are:
+ *
+ * - `ol.interaction.Modify`
+ * - `ngeo.interaction.ModifyCircle`
+ * - `ngeo.interaction.ModifyCircle`
+ *
+ * This interaction receives a collection of features. Its job is to listen
+ * to added/removed features to and from it and add them in the proper
+ * collection that is uniquely used for each inner interaction. Those inner
+ * interactions follow the `active` property of this interaction, i.e. when
+ * this interaction is activated, so do the inner interactions. Since they will
+ * never share the same feature, they don't collide with one an other.
+ *
+ * @constructor
+ * @extends {ol.interaction.Interaction}
+ * @param {olx.interaction.ModifyOptions} options Options.
+ * @export
+ */
+ngeo.interaction.Modify = function(options) {
+
+  /**
+   * @type {ol.Collection.<ol.Feature>}
+   * @private
+   */
+  this.features_ = options.features;
+
+  /**
+   * @type {!Array.<ol.events.Key>}
+   * @private
+   */
+  this.listenerKeys_ = [];
+
+  /**
+   * @type {Array.<ol.interaction.Interaction>}
+   * @private
+   */
+  this.interactions_ = [];
+
+  /**
+   * @type {ol.Collection.<ol.Feature>}
+   * @private
+   */
+  this.otherFeatures_ = new ol.Collection();
+
+  this.interactions_.push(new ol.interaction.Modify({
+    features: this.otherFeatures_,
+    pixelTolerance: options.pixelTolerance,
+    style: options.style,
+    wrapX: options.wrapX
+  }));
+
+  /**
+   * @type {ol.Collection.<ol.Feature>}
+   * @private
+   */
+  this.circleFeatures_ = new ol.Collection();
+
+  this.interactions_.push(new ngeo.interaction.ModifyCircle({
+    features: this.circleFeatures_,
+    pixelTolerance: options.pixelTolerance,
+    style: options.style,
+    wrapX: options.wrapX
+  }));
+
+  goog.base(this, {
+    handleEvent: goog.functions.TRUE
+  });
+
+};
+goog.inherits(ngeo.interaction.Modify, ol.interaction.Interaction);
+
+
+/**
+ * Activate or deactivate the interaction.
+ * @param {boolean} active Active.
+ * @export
+ */
+ngeo.interaction.Modify.prototype.setActive = function(active) {
+  goog.base(this, 'setActive', active);
+  this.setState_();
+};
+
+
+/**
+ * Remove the interaction from its current map and attach it to the new map.
+ * Subclasses may set up event handlers to get notified about changes to
+ * the map here.
+ * @param {ol.Map} map Map.
+ */
+ngeo.interaction.Modify.prototype.setMap = function(map) {
+
+  var interactions = this.interactions_;
+
+  var currentMap = this.getMap();
+  if (currentMap) {
+    interactions.forEach(function(interaction) {
+      currentMap.removeInteraction(interaction);
+    }, this);
+  }
+
+  goog.base(this, 'setMap', map);
+
+  if (map) {
+    interactions.forEach(function(interaction) {
+      map.addInteraction(interaction);
+    }, this);
+  }
+
+  this.setState_();
+};
+
+
+/**
+ * Toggle interactions.
+ * @private
+ */
+ngeo.interaction.Modify.prototype.setState_ = function() {
+  var map = this.getMap();
+  var active = this.getActive();
+  var interactions = this.interactions_;
+  var keys = this.listenerKeys_;
+
+  interactions.forEach(function(interaction) {
+    interaction.setActive(active && !!map);
+  }, this);
+
+  if (active && map) {
+    this.features_.forEach(this.addFeature_, this);
+    keys.push(ol.events.listen(this.features_, ol.CollectionEventType.ADD,
+        this.handleFeaturesAdd_, this));
+    keys.push(ol.events.listen(this.features_, ol.CollectionEventType.REMOVE,
+        this.handleFeaturesRemove_, this));
+  } else {
+    keys.forEach(function(key) {
+      ol.events.unlistenByKey(key);
+    }, this);
+    this.features_.forEach(this.removeFeature_, this);
+  }
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Event.
+ * @private
+ */
+ngeo.interaction.Modify.prototype.handleFeaturesAdd_ = function(evt) {
+  var feature = evt.element;
+  goog.asserts.assertInstanceof(feature, ol.Feature,
+      'feature should be an ol.Feature');
+  this.addFeature_(feature);
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Event.
+ * @private
+ */
+ngeo.interaction.Modify.prototype.handleFeaturesRemove_ = function(evt) {
+  var feature = /** @type {ol.Feature} */ (evt.element);
+  this.removeFeature_(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature Feature.
+ * @private
+ */
+ngeo.interaction.Modify.prototype.addFeature_ = function(feature) {
+  var collection = this.getFeatureCollection_(feature);
+  collection.push(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature Feature.
+ * @private
+ */
+ngeo.interaction.Modify.prototype.removeFeature_ = function(feature) {
+  var collection = this.getFeatureCollection_(feature);
+  collection.remove(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature Feature.
+ * @return {ol.Collection.<ol.Feature>} Collection of features for this feature.
+ * @private
+ */
+ngeo.interaction.Modify.prototype.getFeatureCollection_ = function(feature) {
+  var features;
+  if (feature.get(ngeo.FeatureProperties.IS_CIRCLE) === true) {
+    features = this.circleFeatures_;
+  } else {
+    features = this.otherFeatures_;
+  }
+  return features;
 };
 
 goog.provide('ngeo.Popover');
