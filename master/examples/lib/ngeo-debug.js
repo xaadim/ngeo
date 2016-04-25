@@ -106662,7 +106662,7 @@ ngeo.FeatureHelper.prototype.getLineStringStyle_ = function(feature) {
 
   var strokeWidth = this.getStrokeProperty(feature);
   var showMeasure = this.getShowMeasureProperty(feature);
-  var color = this.getColorProperty(feature);
+  var color = this.getRGBAColorProperty(feature);
 
   var options = {
     stroke: new ol.style.Stroke({
@@ -106688,7 +106688,7 @@ ngeo.FeatureHelper.prototype.getLineStringStyle_ = function(feature) {
 ngeo.FeatureHelper.prototype.getPointStyle_ = function(feature) {
 
   var size = this.getSizeProperty(feature);
-  var color = this.getColorProperty(feature);
+  var color = this.getRGBAColorProperty(feature);
 
   var options = {
     image: new ol.style.Circle({
@@ -106719,13 +106719,11 @@ ngeo.FeatureHelper.prototype.getPolygonStyle_ = function(feature) {
 
   var strokeWidth = this.getStrokeProperty(feature);
   var opacity = this.getOpacityProperty(feature);
-  var color = this.getColorProperty(feature);
+  var color = this.getRGBAColorProperty(feature);
 
   // fill color with opacity
-  var rgbColor = ol.color.fromString(color);
-  var rgbaColor = rgbColor.slice();
-  rgbaColor[3] = opacity;
-  var fillColor = ol.color.toString(rgbaColor);
+  var fillColor = color.slice();
+  fillColor[3] = opacity;
 
   var options = {
     fill: new ol.style.Fill({
@@ -106758,7 +106756,7 @@ ngeo.FeatureHelper.prototype.getTextStyle_ = function(feature) {
   var label = this.getNameProperty(feature);
   var size = this.getSizeProperty(feature);
   var angle = this.getAngleProperty(feature);
-  var color = this.getColorProperty(feature);
+  var color = this.getRGBAColorProperty(feature);
 
   return new ol.style.Style({
     text: this.createTextStyle_(label, size, angle, color)
@@ -106853,7 +106851,7 @@ ngeo.FeatureHelper.prototype.getHaloStyle_ = function(feature) {
         image: new ol.style.Circle({
           radius: size + haloSize,
           fill: new ol.style.Fill({
-            color: 'white'
+            color: [255, 255, 255, 1]
           })
         })
       });
@@ -106865,7 +106863,7 @@ ngeo.FeatureHelper.prototype.getHaloStyle_ = function(feature) {
       var strokeWidth = this.getStrokeProperty(feature);
       style = new ol.style.Style({
         stroke: new ol.style.Stroke({
-          color: 'white',
+          color: [255, 255, 255, 1],
           width: strokeWidth + haloSize * 2
         })
       });
@@ -106874,7 +106872,7 @@ ngeo.FeatureHelper.prototype.getHaloStyle_ = function(feature) {
       var label = this.getNameProperty(feature);
       size = this.getSizeProperty(feature);
       var angle = this.getAngleProperty(feature);
-      var color = 'white';
+      var color = [255, 255, 255, 1];
       style = new ol.style.Style({
         text: this.createTextStyle_(label, size, angle, color, haloSize * 2)
       })
@@ -106922,6 +106920,16 @@ ngeo.FeatureHelper.prototype.getColorProperty = function(feature) {
 
 /**
  * @param {ol.Feature} feature Feature.
+ * @return {ol.Color} Color.
+ * @export
+ */
+ngeo.FeatureHelper.prototype.getRGBAColorProperty = function(feature) {
+  return ol.color.fromString(this.getColorProperty(feature));
+};
+
+
+/**
+ * @param {ol.Feature} feature Feature.
  * @return {string} Name.
  * @export
  */
@@ -106951,13 +106959,14 @@ ngeo.FeatureHelper.prototype.getOpacityProperty = function(feature) {
  * @export
  */
 ngeo.FeatureHelper.prototype.getShowMeasureProperty = function(feature) {
-  var showMeasure = (/** @type {boolean} */ (
-        feature.get(ngeo.FeatureProperties.SHOW_MEASURE)));
+  var showMeasure = feature.get(ngeo.FeatureProperties.SHOW_MEASURE);
   if (showMeasure === undefined) {
     showMeasure = false;
+  } else if (typeof showMeasure === 'string') {
+    showMeasure = (showMeasure === 'true') ? true : false;
   }
   goog.asserts.assertBoolean(showMeasure);
-  return showMeasure;
+  return /** @type {boolean} */ (showMeasure);
 };
 
 
@@ -107089,7 +107098,7 @@ ngeo.FeatureHelper.prototype.export_ = function(features, format, fileName,
  * @param {string} text The text to display.
  * @param {number} size The size in `pt` of the text font.
  * @param {number=} opt_angle The angle in degrees of the text.
- * @param {string=} opt_color The color of the text.
+ * @param {ol.Color=} opt_color The color of the text.
  * @param {number=} opt_width The width of the outline color.
  * @return {ol.style.Text} Style.
  * @private
@@ -107100,14 +107109,14 @@ ngeo.FeatureHelper.prototype.createTextStyle_ = function(text, size,
   var angle = opt_angle !== undefined ? opt_angle : 0;
   var rotation = angle * Math.PI / 180;
   var font = ['normal', size + 'pt', 'Arial'].join(' ');
-  var color = opt_color !== undefined ? opt_color : '#000000';
+  var color = opt_color !== undefined ? opt_color : [0, 0, 0, 1];
   var width = opt_width !== undefined ? opt_width : 3;
 
   return new ol.style.Text({
     font: font,
     text: text,
     fill: new ol.style.Fill({color: color}),
-    stroke: new ol.style.Stroke({color: '#ffffff', width: width}),
+    stroke: new ol.style.Stroke({color: [255, 255, 255, 1], width: width}),
     rotation: rotation
   });
 };
@@ -120506,9 +120515,11 @@ ngeo.interaction.Modify.prototype.removeFeature_ = function(feature) {
  */
 ngeo.interaction.Modify.prototype.getFeatureCollection_ = function(feature) {
   var features;
-  if (feature.get(ngeo.FeatureProperties.IS_CIRCLE) === true) {
+  var isCircle = feature.get(ngeo.FeatureProperties.IS_CIRCLE);
+  var isRectangle = feature.get(ngeo.FeatureProperties.IS_RECTANGLE);
+  if (isCircle === true || isCircle === 'true') {
     features = this.circleFeatures_;
-  } else if (feature.get(ngeo.FeatureProperties.IS_RECTANGLE) === true) {
+  } else if (isRectangle === true || isRectangle === 'true') {
     features = this.rectangleFeatures_;
   } else {
     features = this.otherFeatures_;
