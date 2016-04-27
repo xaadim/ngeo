@@ -106534,7 +106534,7 @@ ngeo.interaction.Measure.prototype.handleDrawInteractionActiveChange_ =
       }
     };
 
-goog.provide('ngeo.FeatureHelper')
+goog.provide('ngeo.FeatureHelper');
 
 goog.require('ngeo');
 goog.require('ngeo.interaction.Measure');
@@ -106810,7 +106810,7 @@ ngeo.FeatureHelper.prototype.getVertexStyle = function(opt_incGeomFunc) {
       } else {
         return feature.getGeometry();
       }
-    }
+    };
   }
 
   return new ol.style.Style(options);
@@ -106875,7 +106875,7 @@ ngeo.FeatureHelper.prototype.getHaloStyle_ = function(feature) {
       var color = [255, 255, 255, 1];
       style = new ol.style.Style({
         text: this.createTextStyle_(label, size, angle, color, haloSize * 2)
-      })
+      });
       break;
     default:
       break;
@@ -107008,10 +107008,10 @@ ngeo.FeatureHelper.prototype.getStrokeProperty = function(feature) {
 ngeo.FeatureHelper.prototype.export = function(features, formatType) {
   switch (formatType) {
     case ngeo.FeatureHelper.FormatType.GPX:
-      this.exportGPX(features)
+      this.exportGPX(features);
       break;
     case ngeo.FeatureHelper.FormatType.KML:
-      this.exportKML(features)
+      this.exportKML(features);
       break;
     default:
       break;
@@ -108095,7 +108095,7 @@ ngeo.measurelengthDirective = function($compile, gettext) {
       });
 
       drawFeatureCtrl.registerInteraction(measureLength);
-      drawFeatureCtrl.measureLength = measureLength
+      drawFeatureCtrl.measureLength = measureLength;
 
       ol.events.listen(
           measureLength,
@@ -108819,7 +108819,7 @@ ngeo.layertreeDirective = function($compile, ngeoLayertreeTemplateUrl) {
     scope: true,
     templateUrl: ngeoLayertreeTemplateUrl,
     controller: 'NgeoLayertreeController'
-  }
+  };
 };
 
 
@@ -109979,7 +109979,7 @@ ngeo.Query.prototype.getLayerSourceId_ = function(layer) {
 ngeo.Query.prototype.getLayerSourceIds_ = function(layer) {
   var ids = layer.get(this.sourceIdsProperty_) || [];
   goog.asserts.assertArray(ids);
-  var clone = ids.slice()
+  var clone = ids.slice();
   return clone;
 };
 
@@ -110197,7 +110197,7 @@ ngeo.popoverDirective = function() {
         ngeoPopoverCtrl.shown = true;
         ngeoPopoverCtrl.bodyElm.parent().on('click', function(e) {
           e.stopPropagation();
-        })
+        });
       });
 
       ngeoPopoverCtrl.anchorElm.popover({
@@ -110210,9 +110210,9 @@ ngeo.popoverDirective = function() {
         ngeoPopoverCtrl.anchorElm.popover('destroy');
         ngeoPopoverCtrl.anchorElm.unbind('inserted.bs.popover');
         ngeoPopoverCtrl.anchorElm.unbind('hidden.bs.popover');
-      })
+      });
     }
-  }
+  };
 };
 
 /**
@@ -110228,7 +110228,7 @@ ngeo.popoverAnchorDirective = function() {
     link: function(scope, elem, attrs, ngeoPopoverCtrl) {
       ngeoPopoverCtrl.anchorElm = elem;
     }
-  }
+  };
 };
 
 /**
@@ -110247,7 +110247,7 @@ ngeo.popoverContentDirective = function() {
         ngeoPopoverCtrl.bodyElm = transcludedElm;
       });
     }
-  }
+  };
 };
 
 /**
@@ -110293,7 +110293,7 @@ ngeo.PopoverController = function($scope) {
 
   $scope.$on('$destroy', function() {
     angular.element('body').off('click', onClick);
-  })
+  });
 };
 
 ngeo.module.controller('NgeoPopoverController', ngeo.PopoverController);
@@ -119980,7 +119980,7 @@ ngeo.interaction.ModifyRectangle = function(options) {
    * @type {Object.<number, ngeo.interaction.ModifyRectangle.CacheItem>}
    * @private
    */
-  this.cache_ = {}
+  this.cache_ = {};
 
   ol.events.listen(this.features_, ol.CollectionEventType.ADD,
       this.handleFeatureAdd_, this);
@@ -121205,7 +121205,7 @@ ngeo.interaction.Translate.prototype.getGeometryCenterPoint_ = function(
   var point;
 
   if (geometry instanceof ol.geom.Polygon) {
-    point = geometry.getInteriorPoint()
+    point = geometry.getInteriorPoint();
   } else if (geometry instanceof ol.geom.LineString) {
     center = geometry.getCoordinateAt(0.5);
   } else {
@@ -121668,7 +121668,7 @@ ngeo.AutoProjection.prototype.stringToCoordinates = function(str) {
       return [x, y];
     }
   }
-  return null
+  return null;
 };
 
 
@@ -122134,7 +122134,7 @@ ngeo.decorateLayer = function(layer) {
 
 ngeo.module.value('ngeoDecorateLayer', ngeo.decorateLayer);
 
-goog.provide('ngeo.Features')
+goog.provide('ngeo.Features');
 goog.require('ngeo');
 
 goog.require('ol.Collection');
@@ -123044,7 +123044,7 @@ ngeo.Print.prototype.encodeVectorLayer_ = function(arr, layer, resolution) {
             isOriginalFeatureAdded = true;
           }
         } else {
-          var styledFeature = originalFeature.clone()
+          var styledFeature = originalFeature.clone();
           styledFeature.setGeometry(geometry);
           geojsonFeature = geojsonFormat.writeFeatureObject(styledFeature);
           geometry = styledFeature.getGeometry();
