@@ -117593,7 +117593,7 @@ ngeo.sortableDirective = function($timeout) {
 
           var sortable = /** @type {Array} */
               (scope.$eval(attrs['ngeoSortable'])) || [];
-          goog.asserts.assert(goog.isArray(sortable));
+          goog.asserts.assert(Array.isArray(sortable));
 
           var optionsObject = scope.$eval(attrs['ngeoSortableOptions']);
           var options = getOptions(optionsObject);
@@ -118048,7 +118048,7 @@ ngeo.format.FeatureHash.encodeStyleFill_ = function(fillStyle, encodedStyles, op
       opt_propertyName : 'fillColor';
   var fillColor = fillStyle.getColor();
   if (fillColor !== null) {
-    goog.asserts.assert(goog.isArray(fillColor), 'only supporting fill colors');
+    goog.asserts.assert(Array.isArray(fillColor), 'only supporting fill colors');
     var fillColorRgba = ol.color.asArray(fillColor);
     var fillColorHex = goog.color.rgbArrayToHex(fillColorRgba);
     if (encodedStyles.length > 0) {
@@ -118735,7 +118735,7 @@ ngeo.format.FeatureHash.prototype.writeFeatureText = function(feature, opt_optio
       var styles = styleFunction.call(feature, 0);
       if (styles !== null) {
         var encodedStyles = [];
-        styles = goog.isArray(styles) ? styles : [styles];
+        styles = Array.isArray(styles) ? styles : [styles];
         ngeo.format.FeatureHash.encodeStyles_(
             styles, geometry.getType(), encodedStyles);
         if (encodedStyles.length > 0) {
@@ -120022,7 +120022,7 @@ ngeo.interaction.ModifyRectangle.prototype.addFeature_ = function(feature) {
     var pointFeatures = [];
     var cornerPoint;
     var cornerFeature;
-    goog.array.forEach(corners, function(corner) {
+    corners.forEach(function(corner) {
       cornerPoint = new ol.geom.Point(corner);
       cornerFeature = new ol.Feature({
         'corner': true,
@@ -120043,7 +120043,7 @@ ngeo.interaction.ModifyRectangle.prototype.addFeature_ = function(feature) {
 
     var previousFeature;
     var nextFeature;
-    goog.array.forEach(pointFeatures, function(cornerFeature, index) {
+    pointFeatures.forEach(function(cornerFeature, index) {
       previousFeature = pointFeatures[index - 1];
       if (!previousFeature) {
         previousFeature = pointFeatures[pointFeatures.length - 1];
@@ -120114,7 +120114,7 @@ ngeo.interaction.ModifyRectangle.prototype.handleCornerGeometryChange_ = functio
   // update box
   var boxExtent = ol.extent.createEmpty();
   var pointFeatures = this.vectorPoints_.getSource().getFeatures();
-  goog.array.forEach(pointFeatures, function(pointFeature) {
+  pointFeatures.forEach(function(pointFeature) {
     point = pointFeature.getGeometry();
     ol.extent.extendCoordinate(boxExtent, /** @type {ol.geom.Point} */ (point).getCoordinates());
   });
@@ -122176,7 +122176,7 @@ ngeo.getBrowserLanguageFactory = function($window) {
         var nav = $window.navigator;
         var browserLanguages = nav.languages || nav.language ||
             nav.browserLanguage || nav.systemLanguage || nav.userLanguage;
-        if (!goog.isArray(browserLanguages)) {
+        if (!Array.isArray(browserLanguages)) {
           browserLanguages = [browserLanguages];
         }
         browserLanguages = browserLanguages.map(function(item) {
@@ -123021,9 +123021,9 @@ ngeo.Print.prototype.encodeVectorLayer_ = function(arr, layer, resolution) {
     /**
      * @type {Array<ol.style.Style>}
      */
-    var styles = (styleData !== null && !goog.isArray(styleData)) ?
+    var styles = (styleData !== null && !Array.isArray(styleData)) ?
         [styleData] : styleData;
-    goog.asserts.assert(goog.isArray(styles));
+    goog.asserts.assert(Array.isArray(styles));
 
     if (styles !== null && styles.length > 0) {
       var isOriginalFeatureAdded = false;
@@ -123140,7 +123140,7 @@ ngeo.Print.prototype.encodeVectorStyle_ = function(object, geometryType, style, 
  */
 ngeo.Print.prototype.encodeVectorStyleFill_ = function(symbolizer, fillStyle) {
   var fillColor = fillStyle.getColor();
-  goog.asserts.assert(goog.isArray(fillColor), 'only supporting fill colors');
+  goog.asserts.assert(Array.isArray(fillColor), 'only supporting fill colors');
   if (fillColor !== null) {
     var fillColorRgba = ol.color.asArray(fillColor);
     symbolizer.fillColor = goog.color.rgbArrayToHex(fillColorRgba);
@@ -123356,7 +123356,7 @@ ngeo.Print.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
     if (fillStyle !== null) {
       var fillColor = fillStyle.getColor();
       goog.asserts.assert(
-          goog.isArray(fillColor), 'only supporting fill colors');
+          Array.isArray(fillColor), 'only supporting fill colors');
       var fillColorRgba = ol.color.asArray(fillColor);
       symbolizer.fontColor = goog.color.rgbArrayToHex(fillColorRgba);
     }
