@@ -110185,7 +110185,6 @@ ngeo.popoverDirective = function() {
     scope : true,
     controller: 'NgeoPopoverController',
     link : function(scope, elem, attrs, ngeoPopoverCtrl) {
-
       ngeoPopoverCtrl.anchorElm.on('hidden.bs.popover', function() {
         /**
          * @type {{inState : Object}}
@@ -117593,7 +117592,7 @@ ngeo.sortableDirective = function($timeout) {
         function(scope, element, attrs) {
 
           var sortable = /** @type {Array} */
-              (scope.$eval(attrs['ngeoSortable']));
+              (scope.$eval(attrs['ngeoSortable'])) || [];
           goog.asserts.assert(goog.isArray(sortable));
 
           var optionsObject = scope.$eval(attrs['ngeoSortableOptions']);
@@ -117607,7 +117606,7 @@ ngeo.sortableDirective = function($timeout) {
           scope.$watchCollection(function() {
             return sortable;
           }, function() {
-            resetUpDragDrop();
+            sortable.length && $timeout(resetUpDragDrop, 0);
           });
 
           /**
@@ -117641,6 +117640,10 @@ ngeo.sortableDirective = function($timeout) {
               dragListGroup.setDraggerElClass(options['draggerClassName']);
             }
 
+            if (options['currDragItemClassName'] !== undefined) {
+              dragListGroup.setCurrDragItemClass(options['currDragItemClassName']);
+            }
+
             /** @type {number} */
             var hoverNextItemIdx = -1;
 
@@ -117650,6 +117653,11 @@ ngeo.sortableDirective = function($timeout) {
             goog.events.listen(dragListGroup, 'dragstart', function(e) {
               hoverNextItemIdx = -1;
               hoverList = null;
+              /**
+               * Adding dynamically the width of the draggerEl to fit the currDragItem width.
+               * - > the draggerEl is clipped to the body with an absolute position.
+               */
+              angular.element(e.draggerEl).css('width', e.currDragItem.offsetWidth);
             });
 
             goog.events.listen(dragListGroup, 'dragmove', function(e) {
