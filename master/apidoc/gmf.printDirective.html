@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Popover</title>
+    <title>JSDoc: Class: printDirective <small>directive:gmfPrint</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Popover</h1>
+    <h1 class="page-title">Class: printDirective <small>directive:gmfPrint</small></h1>
 
     
 
@@ -28,12 +28,9 @@
 
 <header>
     
-        <h2 id="Popover">
-            <span class="ancestors">ngeo.</span>Popover
+        <h2 id="printDirective">
+            <span class="ancestors">gmf.</span>printDirective
         </h2>
-        
-            <div class="class-description"><p>An openlayers overlay that uses bootstrap popover to produce a popup
-for maps.</p></div>
         
     
 </header>
@@ -44,15 +41,25 @@ for maps.</p></div>
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="Popover"><span class="type-signature"></span>new Popover<span class="signature">([opt_options]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="printDirective"><span class="type-signature"></span>new printDirective<span class="signature">(gmfPrintTemplateUrl)</span><span class="type-signature"></span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Provide a directive that display a print panel. This panel is populated with
+a form corresponding to the capabilities delivered by a GMF print v3 server.
+If you want to use another template for your print panel, you can see the
+available fields in the 'gmfx.PrintFields' classes.</p>
+<p>Example:</p>
+<pre class="prettyprint source"><code> &lt;gmf-print
+   gmf-print-map=&quot;mainCtrl.map&quot;
+   gmf-print-active=&quot;printActive&quot;
+   gmf-print-rotatemask=&quot;true&quot;>
+ &lt;/gmf-print></code></pre>
+</div>
 
 
 
@@ -61,7 +68,10 @@ for maps.</p></div>
 
 
 
-    <h5>Parameters:</h5>
+
+
+
+    <h5>HTML attributes:</h5>
     
 
 <table class="params">
@@ -73,8 +83,6 @@ for maps.</p></div>
 
         <th>Type</th>
 
-        
-        <th>Attributes</th>
         
 
         
@@ -88,35 +96,76 @@ for maps.</p></div>
 
         <tr>
             
-                <td class="name"><code>[opt_options]</code></td>
+                <td class="name"><code>gmf-print-map</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+            
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
+            <td class="description last">The map.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-print-active</code></td>
+            
+
+            <td class="type">
+            
                 
-                </td>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
             
 
             
 
-            <td class="description last"><p>Overlay options.</p></td>
+            <td class="description last">A boolean that informs if the
+    panel is open or not.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-print-rotatemask</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Optionnal. True to rotate the
+    mask instead of the map on rotation. By default, the map rotates.</td>
         </tr>
 
     
     </tbody>
 </table>
-
-
 
 
 
@@ -153,8 +202,8 @@ for maps.</p></div>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/4f5bf0f993ed112945755eb56b275f5b80761877/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/4f5bf0f993ed112945755eb56b275f5b80761877/src/ol-ext/popover.js#L16">line 16</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/4f5bf0f993ed112945755eb56b275f5b80761877/contribs/gmf/src/directives/print.js">contribs/gmf/src/directives/print.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/4f5bf0f993ed112945755eb56b275f5b80761877/contribs/gmf/src/directives/print.js#L89">line 89</a>
     </li></ul></dd>
     
 
@@ -184,17 +233,6 @@ for maps.</p></div>
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.Overlay.html">ol.Overlay</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -206,136 +244,6 @@ for maps.</p></div>
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">(map)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>map</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Map.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/4f5bf0f993ed112945755eb56b275f5b80761877/src/ol-ext/popover.js">src/ol-ext/popover.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/4f5bf0f993ed112945755eb56b275f5b80761877/src/ol-ext/popover.js#L64">line 64</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     
