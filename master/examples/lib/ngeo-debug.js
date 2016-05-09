@@ -108779,11 +108779,141 @@ ngeo.decorateLayer = function(layer) {
 
 ngeo.module.value('ngeoDecorateLayer', ngeo.decorateLayer);
 
+goog.provide('ngeo.DecorateLayerLoading');
+
+goog.require('goog.asserts');
+goog.require('ngeo');
+
+
+/**
+ * Provides a function that adds a 'loading 'property (using
+ * `Object.defineProperty`) to an ol.layer.Group or a layer with
+ * an ol.source.Tile or an ol.source.Image source.
+ * This property is true when the layer is loading and false otherwise.
+ *
+ * Example:
+ *
+ *      <span ng-if="layer.loading">please wait</span>
+ *
+ * @typedef {function(ol.layer.Base, angular.Scope)}
+ * @ngdoc service
+ * @ngname ngeoDecorateLayerLoading
+ */
+ngeo.DecorateLayerLoading;
+
+
+/**
+ * @param {ol.layer.Base} layer Layer to decorate.
+ * @param {angular.Scope} $scope Scope.
+ */
+ngeo.decorateLayerLoading = function(layer, $scope) {
+
+  var source;
+
+  /**
+   * @type {Array<string>|null}
+   */
+  var incrementEvents = null;
+
+  /**
+   * @type {Array<string>|null}
+   */
+  var decrementEvents = null;
+
+  /**
+   * @function
+   * @private
+   */
+  var incrementLoadCount_ = increment_;
+
+  /**
+   * @function
+   * @private
+   */
+  var decrementLoadCount_ = decrement_;
+
+  layer.set('load_count', 0, true);
+
+  if (layer instanceof ol.layer.Group) {
+    layer.getLayers().on('add', function(olEvent) {
+      var newLayer = olEvent.element;
+      newLayer.set('parent_group', layer);
+    });
+  }
+
+  if (layer instanceof ol.layer.Layer) {
+    source = layer.getSource();
+    if (source instanceof ol.source.Tile) {
+      incrementEvents = ['tileloadstart'];
+      decrementEvents = ['tileloadend', 'tileloaderror'];
+    } else if (source instanceof ol.source.Image) {
+      incrementEvents = ['imageloadstart'];
+      decrementEvents = ['imageloadend', 'imageloaderror'];
+    } else {
+      goog.asserts.fail('unsupported source type');
+    }
+
+    source.on(incrementEvents, function() {
+      incrementLoadCount_(layer);
+      $scope.$applyAsync();
+    });
+
+    source.on(decrementEvents, function() {
+      decrementLoadCount_(layer);
+      $scope.$applyAsync();
+    });
+  }
+
+  Object.defineProperty(layer, 'loading', {
+    configurable: true,
+    get:
+        /**
+         * @return {boolean} Loading.
+         */
+        function() {
+          return /** @type {number} */ (layer.get('load_count')) > 0;
+        }
+  });
+
+  /**
+   * @function
+   * @param {ol.layer.Base} layer Layer
+   * @private
+   */
+  function increment_(layer) {
+    var load_count = /** @type {number} */ (layer.get('load_count'));
+    var parent = /** @type {ol.layer.Base} */ (layer.get('parent_group'));
+    layer.set('load_count', ++load_count, true);
+    if (parent) {
+      increment_(parent);
+    }
+  }
+
+  /**
+   * @function
+   * @param {ol.layer.Base} layer Layer
+   * @private
+   */
+  function decrement_(layer) {
+    var load_count = /** @type {number} */ (layer.get('load_count'));
+    var parent = /** @type {ol.layer.Base} */ (layer.get('parent_group'));
+    layer.set('load_count', --load_count, true);
+    if (parent) {
+      decrement_(parent);
+    }
+  }
+
+};
+
+
+ngeo.module.value('ngeoDecorateLayerLoading', ngeo.decorateLayerLoading);
+
 goog.provide('ngeo.LayertreeController');
 goog.provide('ngeo.layertreeDirective');
 
 goog.require('ngeo');
 goog.require('ngeo.DecorateLayer');
+goog.require('ngeo.DecorateLayerLoading');
 
 ngeo.module.value('ngeoLayertreeTemplateUrl',
     /**
@@ -108905,13 +109035,14 @@ ngeo.module.directive('ngeoLayertree', ngeo.layertreeDirective);
  * @param {angular.JQLite} $element Element.
  * @param {angular.Attributes} $attrs Attributes.
  * @param {ngeo.DecorateLayer} ngeoDecorateLayer layer decorator service.
+ * @param {ngeo.DecorateLayerLoading} ngeoDecorateLayerLoading Decorate Layer service.
  * @constructor
  * @ngInject
  * @export
  * @ngdoc controller
  * @ngname NgeoLayertreeController
  */
-ngeo.LayertreeController = function($scope, $element, $attrs, ngeoDecorateLayer) {
+ngeo.LayertreeController = function($scope, $element, $attrs, ngeoDecorateLayer, ngeoDecorateLayerLoading) {
 
   var isRoot = $attrs['ngeoLayertreeNotroot'] === undefined;
 
@@ -108993,6 +109124,7 @@ ngeo.LayertreeController = function($scope, $element, $attrs, ngeoDecorateLayer)
       ($scope.$eval(nodelayerExpr, {'node': this.node, 'depth': this.depth, 'parentCtrl' : this.parent}));
 
   if (this.layer) {
+    ngeoDecorateLayerLoading(this.layer, $scope);
     ngeoDecorateLayer(this.layer);
   }
 
@@ -122335,89 +122467,6 @@ ngeo.debounceServiceFactory = function($timeout) {
 
 
 ngeo.module.factory('ngeoDebounce', ngeo.debounceServiceFactory);
-
-goog.provide('ngeo.DecorateLayerLoading');
-
-goog.require('goog.asserts');
-goog.require('ngeo');
-
-
-/**
- * Provides a function that adds a 'loading 'property (using
- * `Object.defineProperty`) to an ol.layer.Group or a layer with
- * an ol.source.Tile or an ol.source.Image source.
- * This property is true when the layer is loading and false otherwise.
- *
- * Example:
- *
- *      <span ng-if="layer.loading">please wait</span>
- *
- * @typedef {function(ol.layer.Base, angular.Scope)}
- * @ngdoc service
- * @ngname ngeoDecorateLayerLoading
- */
-ngeo.DecorateLayerLoading;
-
-
-/**
- * @param {ol.layer.Base} layer Layer to decorate.
- * @param {angular.Scope} $scope Scope.
- */
-ngeo.decorateLayerLoading = function(layer, $scope) {
-  goog.asserts.assertInstanceof(layer, ol.layer.Base);
-
-  var sources = [];
-  if (layer instanceof ol.layer.Group) {
-    // layer group
-    sources = layer.getLayersArray().map(function(layer) {
-      goog.asserts.assert(layer instanceof ol.layer.Layer);
-      return layer.getSource();
-    });
-  } else {
-    goog.asserts.assert(layer instanceof ol.layer.Layer);
-    sources = [layer.getSource()];
-  }
-
-  layer.set('load_count', 0, true);
-  sources.forEach(function(source) {
-    var incrementEvents, decrementEvents;
-    if (source instanceof ol.source.Tile) {
-      incrementEvents = ['tileloadstart'];
-      decrementEvents = ['tileloadend', 'tileloaderror'];
-    } else if (source instanceof ol.source.Image) {
-      incrementEvents = ['imageloadstart'];
-      decrementEvents = ['imageloadend', 'imageloaderror'];
-    } else {
-      goog.asserts.fail('unsupported source type');
-    }
-    source.on(incrementEvents, function() {
-      var load_count = /** @type {number} */ (layer.get('load_count'));
-      layer.set('load_count', ++load_count, true);
-      $scope.$applyAsync();
-    });
-    source.on(decrementEvents, function() {
-      var load_count = /** @type {number} */ (layer.get('load_count'));
-      layer.set('load_count', --load_count, true);
-      $scope.$applyAsync();
-    });
-
-  });
-
-  Object.defineProperty(layer, 'loading', {
-    configurable: true,
-    get:
-        /**
-         * @return {boolean} Loading.
-         */
-        function() {
-          return /** @type {number} */ (layer.get('load_count')) > 0;
-        }
-  });
-
-};
-
-
-ngeo.module.value('ngeoDecorateLayerLoading', ngeo.decorateLayerLoading);
 
 goog.provide('ngeo.Features');
 goog.require('ngeo');
