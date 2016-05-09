@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: QueryManager <small>service:gmfThemes</small></title>
+    <title>JSDoc: Class: Scalify <small>filter:ngeoScalify</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: QueryManager <small>service:gmfThemes</small></h1>
+    <h1 class="page-title">Class: Scalify <small>filter:ngeoScalify</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="QueryManager">
-            <span class="ancestors">gmf.</span>QueryManager
+        <h2 id="Scalify">
+            <span class="ancestors">ngeo.</span>Scalify
         </h2>
         
     
@@ -42,23 +42,21 @@
 
     
 
-    <h4 class="name" id="QueryManager"><span class="type-signature"></span>new QueryManager<span class="signature">(ngeoQuery, gmfThemes, gmfWmsUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Scalify"><span class="type-signature"></span>new Scalify<span class="signature">($filter)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>The QueryManager service, uses the
-c2cgeoportal's themes to configure ngeo's query service with each layer
-found.</p>
-<p>Used UI metadata:</p>
+    <p>Format a number as a localized scale.
+For instance:</p>
 <ul>
-<li>identifierAttributeField: Field used to identify the feature (like a title).</li>
-<li>queryLayers: The alternate layers used to do the query.</li>
-<li>wmsLayers: The layers used to do the query, used if queryLayers is not provided.</li>
-<li>wmsUrl: An alternate wmsUrl used to do the query (essential to query WMTS layer).</li>
+<li>For 'fr-CH' the value 25000 will become '1 : 25 000'.</li>
+<li>For 'en-US' the value 25000 will become '1 : 25,000'.</li>
 </ul>
+<p>Example:</p>
+<pre class="prettyprint source"><code> &lt;p>{{25000 | ngeoScalify}}&lt;/p></code></pre>
 </div>
 
 
@@ -94,7 +92,7 @@ found.</p>
 
         <tr>
             
-                <td class="name"><code>ngeoQuery</code></td>
+                <td class="name"><code>$filter</code></td>
             
 
             <td class="type">
@@ -105,43 +103,7 @@ found.</p>
 
             
 
-            <td class="description last"><p>The ngeo Query service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmfThemes</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The gmf Themes service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmfWmsUrl</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>URL to the wms service to use by default.</p></td>
+            <td class="description last"><p>Angular filter</p></td>
         </tr>
 
     
@@ -185,8 +147,8 @@ found.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/1c6c31c2fea534c32475a03d22faf98fb9f5ef5a/contribs/gmf/src/services/querymanager.js">contribs/gmf/src/services/querymanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/1c6c31c2fea534c32475a03d22faf98fb9f5ef5a/contribs/gmf/src/services/querymanager.js#L28">line 28</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/1c6c31c2fea534c32475a03d22faf98fb9f5ef5a/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/1c6c31c2fea534c32475a03d22faf98fb9f5ef5a/src/services/filters.js#L23">line 23</a>
     </li></ul></dd>
     
 
