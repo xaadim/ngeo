@@ -111575,6 +111575,7 @@ ngeo.popoverDirective = function() {
       });
 
       ngeoPopoverCtrl.anchorElm.on('inserted.bs.popover', function() {
+        ngeoPopoverCtrl.bodyElm.show();
         ngeoPopoverCtrl.shown = true;
         ngeoPopoverCtrl.bodyElm.parent().on('click', function(e) {
           e.stopPropagation();
@@ -111586,6 +111587,13 @@ ngeo.popoverDirective = function() {
         html: true,
         content: ngeoPopoverCtrl.bodyElm
       });
+
+      if (attrs['ngeoPopoverDismiss']) {
+        $(attrs['ngeoPopoverDismiss']).on('scroll', function() {
+          ngeoPopoverCtrl.anchorElm.popover('hide');
+          ngeoPopoverCtrl.shown = false;
+        });
+      }
 
       scope.$on('$destroy', function() {
         ngeoPopoverCtrl.anchorElm.popover('destroy');
@@ -111621,12 +111629,10 @@ ngeo.popoverAnchorDirective = function() {
 ngeo.popoverContentDirective = function() {
   return {
     restrict: 'A',
-    transclude: 'element',
     require: '^^ngeoPopover',
-    link: function(scope, elem, attrs, ngeoPopoverCtrl, transclude) {
-      transclude(scope, function(transcludedElm, scope) {
-        ngeoPopoverCtrl.bodyElm = transcludedElm.contents();
-      });
+    link : function(scope, elem, attrs, ngeoPopoverCtrl) {
+      ngeoPopoverCtrl.bodyElm = elem;
+      elem.hide();
     }
   };
 };
