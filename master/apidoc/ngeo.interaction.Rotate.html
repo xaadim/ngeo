@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: MeasureLength</title>
+    <title>JSDoc: Class: Rotate</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: MeasureLength</h1>
+    <h1 class="page-title">Class: Rotate</h1>
 
     
 
@@ -28,12 +28,11 @@
 
 <header>
     
-        <h2 id="MeasureLength">
-            <span class="ancestors">ngeo.interaction.</span>MeasureLength
+        <h2 id="Rotate">
+            <span class="ancestors">ngeo.interaction.</span>Rotate
         </h2>
         
-            <div class="class-description"><p>Interaction dedicated to measure length.</p>
-<p>See our live example: <code>../examples/measure.html</code></p></div>
+            <div class="class-description"><p>Interaction to rotate features.</p></div>
         
     
 </header>
@@ -47,7 +46,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="MeasureLength"><span class="type-signature"></span>new MeasureLength<span class="signature">([opt_options]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Rotate"><span class="type-signature"></span>new Rotate<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
@@ -74,8 +73,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -88,7 +85,7 @@
 
         <tr>
             
-                <td class="name"><code>[opt_options]</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
@@ -96,20 +93,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>Options</p></td>
+            <td class="description last"><p>Options.</p></td>
         </tr>
 
     
@@ -153,8 +140,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measurelength.js">src/ol-ext/interaction/measurelength.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measurelength.js#L19">line 19</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/rotate.js">src/ol-ext/interaction/rotate.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/rotate.js#L71">line 71</a>
     </li></ul></dd>
     
 
@@ -168,6 +155,11 @@
 
 
 
+
+<h5>Fires:</h5>
+<ul>
+    <li>ngeo.interaction.event:ModifyCircleEvent</li>
+</ul>
 
 
 
@@ -190,7 +182,7 @@
 
 
     <ul>
-        <li><a href="ngeo.interaction.Measure.html">ngeo.interaction.Measure</a></li>
+        <li><a href="http://openlayers.org/en/master/apidoc/ol.interaction.Pointer.html">ol.interaction.Pointer</a></li>
     </ul>
 
 
@@ -205,466 +197,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="continueMsg"><span class="type-signature"></span>continueMsg<span class="type-signature"> :Element</span></h4>
-
-
-
-
-<div class="description">
-    <p>Message to show after the first point is clicked.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Element</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#continueMsg">ngeo.interaction.Measure#continueMsg</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measurelength.js">src/ol-ext/interaction/measurelength.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measurelength.js#L30">line 30</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="createDrawInteraction"><span class="type-signature">(protected) </span>createDrawInteraction<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Creates the draw interaction.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#createDrawInteraction">ngeo.interaction.Measure#createDrawInteraction</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L390">line 390</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="decimals"><span class="type-signature">(protected, nullable) </span>decimals<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
-
-
-
-
-<div class="description">
-    <p>Defines the number of decimals to keep in the measurement. If not defined,
-then the default behaviour occurs depending on the measure type.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#decimals">ngeo.interaction.Measure#decimals</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L140">line 140</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="handleMeasure"><span class="type-signature">(protected) </span>handleMeasure<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Function implemented in inherited classes to compute measurement, determine
-where to place the tooltip and determine which help message to display.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#handleMeasure">ngeo.interaction.Measure#handleMeasure</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L555">line 555</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="sketchFeature"><span class="type-signature">(protected) </span>sketchFeature<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span></h4>
-
-
-
-
-<div class="description">
-    <p>The sketch feature.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#sketchFeature">ngeo.interaction.Measure#sketchFeature</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L126">line 126</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="startMsg"><span class="type-signature"></span>startMsg<span class="type-signature"> :Element</span></h4>
-
-
-
-
-<div class="description">
-    <p>The message to show when user is about to start drawing.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Element</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#startMsg">ngeo.interaction.Measure#startMsg</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L154">line 154</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -674,101 +206,14 @@ where to place the tooltip and determine which help message to display.</p>
 
     
 
-    <h4 class="name" id="getDrawInteraction"><span class="type-signature"></span>getDrawInteraction<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#getDrawInteraction">ngeo.interaction.Measure#getDrawInteraction</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L377">line 377</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getTooltipElement"><span class="type-signature"></span>getTooltipElement<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setActive"><span class="type-signature"></span>setActive<span class="signature">(active)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Get a reference to the tooltip element.</p>
+    <p>Activate or deactivate the interaction.</p>
 </div>
 
 
@@ -779,6 +224,50 @@ where to place the tooltip and determine which help message to display.</p>
 
 
 
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>active</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Active.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
 
 
 
@@ -791,11 +280,6 @@ where to place the tooltip and determine which help message to display.</p>
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#getTooltipElement">ngeo.interaction.Measure#getTooltipElement</a>
-    </li></ul></dd>
     
 
     
@@ -820,8 +304,8 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L563">line 563</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/rotate.js">src/ol-ext/interaction/rotate.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/rotate.js#L169">line 169</a>
     </li></ul></dd>
     
 
@@ -879,11 +363,6 @@ where to place the tooltip and determine which help message to display.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#setMap">ngeo.interaction.Measure#setMap</a>
-    </li></ul></dd>
-    
 
     
 
@@ -907,8 +386,8 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/measure.js#L396">line 396</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/rotate.js">src/ol-ext/interaction/rotate.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/34e96f4b00d232404d5ab408ec7ee6dbe85b47f5/src/ol-ext/interaction/rotate.js#L256">line 256</a>
     </li></ul></dd>
     
 
