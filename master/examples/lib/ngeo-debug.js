@@ -111605,6 +111605,7 @@ ngeo.popoverDirective = function() {
     restrict: 'A',
     scope: true,
     controller: 'NgeoPopoverController',
+    controllerAs : 'popoverCtrl',
     link: function(scope, elem, attrs, ngeoPopoverCtrl) {
       ngeoPopoverCtrl.anchorElm.on('hidden.bs.popover', function() {
         /**
@@ -111630,8 +111631,7 @@ ngeo.popoverDirective = function() {
 
       if (attrs['ngeoPopoverDismiss']) {
         $(attrs['ngeoPopoverDismiss']).on('scroll', function() {
-          ngeoPopoverCtrl.anchorElm.popover('hide');
-          ngeoPopoverCtrl.shown = false;
+          ngeoPopoverCtrl.dismissPopover();
         });
       }
 
@@ -111687,7 +111687,6 @@ ngeo.popoverContentDirective = function() {
  * @param {angular.Scope} $scope Scope.
  */
 ngeo.PopoverController = function($scope) {
-  var self = this;
   /**
    * The state of the popover (displayed or not)
    * @type {boolean}
@@ -111708,19 +111707,26 @@ ngeo.PopoverController = function($scope) {
   this.bodyElm = undefined;
 
   function onClick(clickEvent) {
-
-    if (self.anchorElm[0] !== clickEvent.target && self.shown) {
-      self.shown = false;
-      self.anchorElm.popover('hide');
+    if (this.anchorElm[0] !== clickEvent.target && this.shown) {
+      this.dismissPopover();
     }
-
   }
 
-  angular.element('body').on('click', onClick);
+  angular.element('body').on('click', onClick.bind(this));
 
   $scope.$on('$destroy', function() {
     angular.element('body').off('click', onClick);
   });
+};
+
+
+/**
+ * Dissmiss popover function
+ * @export
+ */
+ngeo.PopoverController.prototype.dismissPopover = function() {
+  this.shown = false;
+  this.anchorElm.popover('hide');
 };
 
 ngeo.module.controller('NgeoPopoverController', ngeo.PopoverController);
