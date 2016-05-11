@@ -2835,8 +2835,6 @@ ol.nullFunction = function() {};
 
 ol.global = Function('return this')();
 
-// FIXME factor out common code between usedTiles and wantedTiles
-
 goog.provide('ol.PostRenderFunction');
 goog.provide('ol.PreRenderFunction');
 
@@ -6270,6 +6268,12 @@ ol.events.EventTarget = function() {
 
   /**
    * @private
+   * @type {!Object.<string, number>}
+   */
+  this.dispatching_ = {};
+
+  /**
+   * @private
    * @type {!Object.<string, Array.<ol.events.ListenerFunctionType>>}
    */
   this.listeners_ = {};
@@ -6307,19 +6311,25 @@ ol.events.EventTarget.prototype.dispatchEvent = function(event) {
   var listeners = this.listeners_[type];
   var propagate;
   if (listeners) {
-    if (!(type in this.pendingRemovals_)) {
+    if (!(type in this.dispatching_)) {
+      this.dispatching_[type] = 0;
       this.pendingRemovals_[type] = 0;
     }
+    ++this.dispatching_[type];
     for (var i = 0, ii = listeners.length; i < ii; ++i) {
       if (listeners[i].call(this, evt) === false || evt.propagationStopped) {
         propagate = false;
         break;
       }
     }
-    var pendingRemovals = this.pendingRemovals_[type];
-    delete this.pendingRemovals_[type];
-    while (pendingRemovals--) {
-      this.removeEventListener(type, ol.nullFunction);
+    --this.dispatching_[type];
+    if (this.dispatching_[type] === 0) {
+      var pendingRemovals = this.pendingRemovals_[type];
+      delete this.pendingRemovals_[type];
+      while (pendingRemovals--) {
+        this.removeEventListener(type, ol.nullFunction);
+      }
+      delete this.dispatching_[type];
     }
     return propagate;
   }
@@ -35531,10 +35541,14 @@ ol.control.Attribution.prototype.insertLogos_ = function(frameState) {
 
   var image, logoElement, logoKey;
   for (logoKey in logos) {
+    var logoValue = logos[logoKey];
+    if (logoValue instanceof HTMLElement) {
+      this.logoLi_.appendChild(logoValue);
+      logoElements[logoKey] = logoValue;
+    }
     if (!(logoKey in logoElements)) {
       image = new Image();
       image.src = logoKey;
-      var logoValue = logos[logoKey];
       if (logoValue === '') {
         logoElement = image;
       } else {
@@ -43876,6 +43890,21 @@ ol.events.condition.targetNotEditable = function(mapBrowserEvent) {
 ol.events.condition.mouseOnly = function(mapBrowserEvent) {
   // see http://www.w3.org/TR/pointerevents/#widl-PointerEvent-pointerType
   return mapBrowserEvent.pointerEvent.pointerType == 'mouse';
+};
+
+
+/**
+ * Return `true` if the event originates from a primary pointer in
+ * contact with the surface or if the left mouse button is pressed.
+ * @see http://www.w3.org/TR/pointerevents/#button-states
+ *
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @return {boolean} True if the event originates from a primary pointer.
+ * @api
+ */
+ol.events.condition.primaryAction = function(mapBrowserEvent) {
+  var pointerEvent = mapBrowserEvent.pointerEvent;
+  return pointerEvent.isPrimary && pointerEvent.button === 0;
 };
 
 goog.provide('ol.interaction.Pointer');
@@ -54944,6 +54973,8 @@ goog.require('ol.TileCoord');
 
 
 /**
+ * One of `all`, `bbox`, `tile`.
+ *
  * @typedef {function(ol.Extent, number): Array.<ol.Extent>}
  * @api
  */
@@ -58027,13 +58058,6 @@ goog.require('ol.tilecoord');
  * @api
  */
 ol.TileUrlFunctionType;
-
-
-/**
- * @typedef {function(ol.TileCoord, ol.proj.Projection, ol.TileCoord=):
- *     ol.TileCoord}
- */
-ol.TileCoordTransformType;
 
 
 /**
@@ -68067,6 +68091,7 @@ ol.Map.prototype.renderFrame_ = function(time) {
 
   var size = this.getSize();
   var view = this.getView();
+  var extent = ol.extent.createEmpty();
   /** @type {?olx.FrameState} */
   var frameState = null;
   if (size !== undefined && ol.size.hasArea(size) && view && view.isDef()) {
@@ -68081,7 +68106,7 @@ ol.Map.prototype.renderFrame_ = function(time) {
       animate: false,
       attributions: {},
       coordinateToPixelMatrix: this.coordinateToPixelMatrix_,
-      extent: null,
+      extent: extent,
       focus: !this.focus_ ? viewState.center : this.focus_,
       index: this.frameIndex_++,
       layerStates: layerStates,
@@ -68113,8 +68138,7 @@ ol.Map.prototype.renderFrame_ = function(time) {
     preRenderFunctions.length = n;
 
     frameState.extent = ol.extent.getForViewAndSize(viewState.center,
-        viewState.resolution, viewState.rotation, frameState.size,
-        this.frameState_ ? this.frameState_.extent : undefined);
+        viewState.resolution, viewState.rotation, frameState.size, extent);
   }
 
   this.frameState_ = frameState;
@@ -68234,7 +68258,7 @@ ol.Map.prototype.unskipFeature = function(feature) {
  * @typedef {{controls: ol.Collection.<ol.control.Control>,
  *            interactions: ol.Collection.<ol.interaction.Interaction>,
  *            keyboardEventTarget: (Element|Document),
- *            logos: Object.<string, string>,
+ *            logos: (Object.<string, (string|Element)>),
  *            overlays: ol.Collection.<ol.Overlay>,
  *            rendererConstructor:
  *                function(new: ol.renderer.Map, Element, ol.Map),
@@ -68274,6 +68298,8 @@ ol.Map.createOptionsInternal = function(options) {
     var logo = options.logo;
     if (typeof logo === 'string') {
       logos[logo] = '';
+    } else if (logo instanceof HTMLElement) {
+      logos[goog.getUid(logo).toString()] = logo;
     } else if (goog.isObject(logo)) {
       goog.asserts.assertString(logo.href, 'logo.href should be a string');
       goog.asserts.assertString(logo.src, 'logo.src should be a string');
@@ -95955,6 +95981,14 @@ ol.interaction.Modify = function(options) {
 
   /**
    * @private
+   * @type {ol.events.ConditionType}
+   */
+  this.condition_ = options.condition ?
+      options.condition : ol.events.condition.primaryAction;
+
+
+  /**
+   * @private
    * @param {ol.MapBrowserEvent} mapBrowserEvent Browser event.
    * @return {boolean} Combined condition result.
    */
@@ -96394,6 +96428,9 @@ ol.interaction.Modify.compareIndexes_ = function(a, b) {
  * @private
  */
 ol.interaction.Modify.handleDownEvent_ = function(evt) {
+  if (!this.condition_(evt)) {
+    return false;
+  }
   this.handlePointerAtPixel_(evt.pixel, evt.map);
   this.dragSegments_.length = 0;
   this.modified_ = false;
@@ -101708,15 +101745,16 @@ ol.source.Raster.prototype.getImage = function(extent, resolution, pixelRatio, p
     return null;
   }
 
-  if (!this.isDirty_(extent, resolution)) {
+  var currentExtent = extent.slice();
+  if (!this.isDirty_(currentExtent, resolution)) {
     return this.renderedImageCanvas_;
   }
 
   var context = this.canvasContext_;
   var canvas = context.canvas;
 
-  var width = Math.round(ol.extent.getWidth(extent) / resolution);
-  var height = Math.round(ol.extent.getHeight(extent) / resolution);
+  var width = Math.round(ol.extent.getWidth(currentExtent) / resolution);
+  var height = Math.round(ol.extent.getHeight(currentExtent) / resolution);
 
   if (width !== canvas.width ||
       height !== canvas.height) {
@@ -101724,16 +101762,16 @@ ol.source.Raster.prototype.getImage = function(extent, resolution, pixelRatio, p
     canvas.height = height;
   }
 
-  var frameState = this.updateFrameState_(extent, resolution, projection);
+  var frameState = this.updateFrameState_(currentExtent, resolution, projection);
 
   var imageCanvas = new ol.ImageCanvas(
-      extent, resolution, 1, this.getAttributions(), canvas,
+      currentExtent, resolution, 1, this.getAttributions(), canvas,
       this.composeFrame_.bind(this, frameState));
 
   this.renderedImageCanvas_ = imageCanvas;
 
   this.renderedState_ = {
-    extent: extent,
+    extent: currentExtent,
     resolution: resolution,
     revision: this.getRevision()
   };
@@ -111567,6 +111605,7 @@ ngeo.popoverDirective = function() {
     restrict: 'A',
     scope: true,
     controller: 'NgeoPopoverController',
+    controllerAs : 'popoverCtrl',
     link: function(scope, elem, attrs, ngeoPopoverCtrl) {
       ngeoPopoverCtrl.anchorElm.on('hidden.bs.popover', function() {
         /**
@@ -111592,8 +111631,7 @@ ngeo.popoverDirective = function() {
 
       if (attrs['ngeoPopoverDismiss']) {
         $(attrs['ngeoPopoverDismiss']).on('scroll', function() {
-          ngeoPopoverCtrl.anchorElm.popover('hide');
-          ngeoPopoverCtrl.shown = false;
+          ngeoPopoverCtrl.dismissPopover();
         });
       }
 
@@ -111649,7 +111687,6 @@ ngeo.popoverContentDirective = function() {
  * @param {angular.Scope} $scope Scope.
  */
 ngeo.PopoverController = function($scope) {
-  var self = this;
   /**
    * The state of the popover (displayed or not)
    * @type {boolean}
@@ -111670,19 +111707,26 @@ ngeo.PopoverController = function($scope) {
   this.bodyElm = undefined;
 
   function onClick(clickEvent) {
-
-    if (self.anchorElm[0] !== clickEvent.target && self.shown) {
-      self.shown = false;
-      self.anchorElm.popover('hide');
+    if (this.anchorElm[0] !== clickEvent.target && this.shown) {
+      this.dismissPopover();
     }
-
   }
 
-  angular.element('body').on('click', onClick);
+  angular.element('body').on('click', onClick.bind(this));
 
   $scope.$on('$destroy', function() {
     angular.element('body').off('click', onClick);
   });
+};
+
+
+/**
+ * Dissmiss popover function
+ * @export
+ */
+ngeo.PopoverController.prototype.dismissPopover = function() {
+  this.shown = false;
+  this.anchorElm.popover('hide');
 };
 
 ngeo.module.controller('NgeoPopoverController', ngeo.PopoverController);
@@ -123011,13 +123055,13 @@ ngeo.interaction.Translate.prototype.setMap = function(map) {
 
   var currentMap = this.getMap();
   if (currentMap) {
-    currentMap.removeLayer(this.vectorLayer_);
+    this.vectorLayer_.setMap(null);
   }
 
   goog.base(this, 'setMap', map);
 
   if (map) {
-    map.addLayer(this.vectorLayer_);
+    this.vectorLayer_.setMap(map);
   }
 
   this.setState_();
@@ -130154,6 +130198,10 @@ goog.exportSymbol(
 goog.exportSymbol(
     'ol.events.condition.pointerMove',
     ol.events.condition.pointerMove);
+
+goog.exportSymbol(
+    'ol.events.condition.primaryAction',
+    ol.events.condition.primaryAction);
 
 goog.exportSymbol(
     'ol.events.condition.shiftKeyOnly',
