@@ -16,6 +16,13 @@
       button[ngeo-mobile-geolocation]:after {
         content: 'Toggle tracking'
       }
+      .ngeo-notification {
+        left: 50%;
+        margin: 0 0 0 -100px;
+        position: absolute;
+        top: 0;
+        width: 200px;
+      }
     </style>
   </head>
   <body ng-controller="MainController as ctrl">
@@ -32,6 +39,7 @@
     </div>
     <script src="lib/jquery.min.js"></script>
     <script src="lib/angular.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
     <script src="lib/angular-gettext.min.js"></script>
     <script src="lib/ngeo.js"></script>
     <script src="mobilegeolocation.js"></script>
