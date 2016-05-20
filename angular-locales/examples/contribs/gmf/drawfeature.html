@@ -52,7 +52,9 @@
       /* drawfeature */
 
       ngeo-drawfeature {
-        margin: 10px 0;
+        border-bottom: 1px solid #333;
+        margin: 0 0 10px 0;
+        padding: 0 0 20px 0;
       }
 
       .gmf-icon-circle:before {
@@ -189,6 +191,8 @@
     <label for="checkbox-pointermove"> PointerMove</label>
     <span id="pointermove-feature"></span>
 
+    <h2>Draw & Measure</h2>
+
     <gmf-drawfeature
       ng-show="ctrl.drawFeatureActive === true"
       gmf-drawfeature-active="ctrl.drawFeatureActive"
@@ -208,8 +212,13 @@
     <script src="../../lib/angular-touch.min.js"></script>
     <script src="../../lib/bootstrap.min.js"></script>
     <script src="../../lib/angular-gettext.min.js"></script>
+    <script src="../../lib/tmhDynamicLocale.min.js" type="text/javascript"></script>
     <script src="../../lib/gmf.js"></script>
     <script src="drawfeature.js"></script>
     <script src="../../lib/watchwatchers.js"></script>
+    <script>
+      var gmfModule = angular.module('gmf');
+      gmfModule.constant('angularLocaleScript', '../build/angular-locale_{{locale}}.js');
+    </script>
   </body>
 </html>
