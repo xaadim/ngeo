@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DrawAzimut</title>
+    <title>JSDoc: Class: mousepositionDirective <small>directive:gmfMouseposition</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DrawAzimut</h1>
+    <h1 class="page-title">Class: mousepositionDirective <small>directive:gmfMouseposition</small></h1>
 
     
 
@@ -28,11 +28,9 @@
 
 <header>
     
-        <h2 id="DrawAzimut">
-            <span class="ancestors">ngeo.interaction.</span>DrawAzimut
+        <h2 id="mousepositionDirective">
+            <span class="ancestors">gmf.</span>mousepositionDirective
         </h2>
-        
-            <div class="class-description"><p>Interaction dedicated to measure azimut.</p></div>
         
     
 </header>
@@ -43,15 +41,23 @@
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="DrawAzimut"><span class="type-signature"></span>new DrawAzimut<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="mousepositionDirective"><span class="type-signature"></span>new mousepositionDirective<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Provide a directive to display the mouse position coordinates depending
+on the chosen projection. The directive also provides a projection picker
+to choose how the coordinates are displayed.
+service.</p>
+<p>Example:
+ <gmf-mouseposition gmf-mouseposition-map="ctrl.map"
+    gmf-mouseposition-projections="ctrl.projections">
+ </gmf-mouseposition></p>
+</div>
 
 
 
@@ -60,7 +66,10 @@
 
 
 
-    <h5>Parameters:</h5>
+
+
+
+    <h5>HTML attributes:</h5>
     
 
 <table class="params">
@@ -85,10 +94,15 @@
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>gmf-mouseposition-map</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
             
             </td>
 
@@ -96,14 +110,35 @@
 
             
 
-            <td class="description last"><p>Options.</p></td>
+            <td class="description last">The map.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-mouseposition-projection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="gmfx.html#MousePositionProjection">gmfx.MousePositionProjection</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The list of the projections.</td>
         </tr>
 
     
     </tbody>
 </table>
-
-
 
 
 
@@ -140,8 +175,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js">src/ol-ext/interaction/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js#L110">line 110</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/contribs/gmf/src/directives/mouseposition.js">contribs/gmf/src/directives/mouseposition.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/contribs/gmf/src/directives/mouseposition.js#L28">line 28</a>
     </li></ul></dd>
     
 
@@ -171,17 +206,6 @@
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.interaction.Pointer.html">ol.interaction.Pointer</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -192,157 +216,7 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
 
-        
-            
-<h4 class="name" id="shouldStopEvent"><span class="type-signature"></span>shouldStopEvent<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js">src/ol-ext/interaction/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js#L359">line 359</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js">src/ol-ext/interaction/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js#L394">line 394</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     

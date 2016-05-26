@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DrawAzimut</title>
+    <title>JSDoc: Class: NumberCoordinates <small>filter:ngeoNumberCoordinates</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DrawAzimut</h1>
+    <h1 class="page-title">Class: NumberCoordinates <small>filter:ngeoNumberCoordinates</small></h1>
 
     
 
@@ -28,11 +28,9 @@
 
 <header>
     
-        <h2 id="DrawAzimut">
-            <span class="ancestors">ngeo.interaction.</span>DrawAzimut
+        <h2 id="NumberCoordinates">
+            <span class="ancestors">ngeo.</span>NumberCoordinates
         </h2>
-        
-            <div class="class-description"><p>Interaction dedicated to measure azimut.</p></div>
         
     
 </header>
@@ -43,14 +41,32 @@
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="DrawAzimut"><span class="type-signature"></span>new DrawAzimut<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="NumberCoordinates"><span class="type-signature"></span>new NumberCoordinates<span class="signature">($filter)</span><span class="type-signature"></span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Format a couple of numbers as number coordinates.</p>
+<p>Example without parameters (en-US localization):</p>
+<pre class="prettyprint source"><code> &lt;p>{{[7.1234, 46.9876] | ngeoNumberCoordinates}}&lt;/p>
+ &lt;!-- will Become 7 47 --></code></pre><p>Example with defined fractionDigits and template (en-US localization):</p>
+<pre class="prettyprint source"><code> &lt;p>{{[7.1234, 46.9876] | ngeoNumberCoordinates:2:co {x} E; {y} N}}&lt;/p>
+ &lt;!-- will Become co 7.12 E; 46.99 N --></code></pre><p>Example without fractionDigits but with defined template and localize:</p>
+<pre class="prettyprint source"><code> &lt;!-- With en-US localization (opt_localize can be true or undefined) -->
+ &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}:true}}&lt;/p>
+ &lt;!-- will Become 2,600,000, 1,600,000 -->
+ &lt;br/>
+ &lt;!-- With fr-CH localization (opt_localize can be true or undefined) -->
+ &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}:true}}&lt;/p>
+ &lt;!-- will Become 2'600'000, 1'600'000 -->
+ &lt;br/>
+ &lt;!-- With en-US localization but with localization to false -->
+ &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}:false}}&lt;/p>
+ &lt;!-- will Become 2'600'000, 1'600'000 --></code></pre>
+</div>
 
 
 
@@ -85,7 +101,7 @@
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>$filter</code></td>
             
 
             <td class="type">
@@ -96,7 +112,7 @@
 
             
 
-            <td class="description last"><p>Options.</p></td>
+            <td class="description last"><p>Angular filter</p></td>
         </tr>
 
     
@@ -140,8 +156,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js">src/ol-ext/interaction/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js#L110">line 110</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/services/filters.js#L68">line 68</a>
     </li></ul></dd>
     
 
@@ -171,17 +187,6 @@
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.interaction.Pointer.html">ol.interaction.Pointer</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -192,70 +197,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="shouldStopEvent"><span class="type-signature"></span>shouldStopEvent<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js">src/ol-ext/interaction/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js#L359">line 359</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -265,7 +206,7 @@
 
     
 
-    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~filterFn"><span class="type-signature">(inner) </span>filterFn<span class="signature">(coordinates, [opt_fractionDigits]<span class="signature-attributes">opt</span>, [opt_template]<span class="signature-attributes">opt</span>, [opt_localize]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -277,6 +218,151 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>coordinates</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Array of two numbers.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_fractionDigits]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional number of digit.
+    Default to 0.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_template]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional template. Default to '{x} {y}'.
+    Where &quot;{x}&quot; will be replaced by the first coordinate and &quot;{y}&quot; by the
+    second one. Note: Use a html entity to use the semicolon symbole
+    into a template.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_localize]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional. If true or not defined,
+    format number as the current local system (see Angular number filter).
+    Set it explicitely to false to use always &quot;.&quot; as the decimal separator
+    and include &quot;'&quot; group separators after each third digit.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -315,8 +401,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js">src/ol-ext/interaction/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/ol-ext/interaction/measureazimut.js#L394">line 394</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/06161e3338b72f47f80786d5660c62b9ee122432/src/services/filters.js#L83">line 83</a>
     </li></ul></dd>
     
 
