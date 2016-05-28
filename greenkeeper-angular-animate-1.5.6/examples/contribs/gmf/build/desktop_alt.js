@@ -408,7 +408,7 @@ G=h("script,style"),u=e.extend({},A,q,k,v),z=h("background,cite,href,longdesc,sr
 //# sourceMappingURL=angular-sanitize.min.js.map
 
 /*
- AngularJS v1.5.5
+ AngularJS v1.5.6
  (c) 2010-2016 Google, Inc. http://angularjs.org
  License: MIT
 */
