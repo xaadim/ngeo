@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: TreeManager <small>service:gmfTreeManager</small></title>
+    <title>JSDoc: Class: Message</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: TreeManager <small>service:gmfTreeManager</small></h1>
+    <h1 class="page-title">Class: Message</h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="TreeManager">
-            <span class="ancestors">gmf.</span>TreeManager
+        <h2 id="Message">
+            <span class="ancestors">ngeo.</span>Message
         </h2>
         
     
@@ -42,22 +42,14 @@
 
     
 
-    <h4 class="name" id="TreeManager"><span class="type-signature"></span>new TreeManager<span class="signature">(gmfThemes, gmfTreeManagerModeFlush)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Message"><span class="type-signature"></span>new Message<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Manage a tree with children. This service can be used in mode 'flush' (default) or
-not (mode 'add'). In mode 'flush', each theme, group or group by layer that
-you add will replace the previous children's array. In mode 'add', children
-will be just pushed in this array. The default state can be changed by setting
-the value <code>gmfTreeManagerModeFlush</code>, e.g.:</p>
-<p>   var module = angular.module('app');
-   module.value('gmfTreeManagerModeFlush', false);</p>
-<p>This service's theme is a GmfThemesNode with only children and a name.
-Thought to be the tree source of the gmf layertree directive.</p>
+    <p>Abstract class for services that display messages.</p>
 </div>
 
 
@@ -66,68 +58,6 @@ Thought to be the tree source of the gmf layertree directive.</p>
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>gmfThemes</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>gmf Themes service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmfTreeManagerModeFlush</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Flush mode active?</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -166,8 +96,8 @@ Thought to be the tree source of the gmf layertree directive.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L32">line 32</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L37">line 37</a>
     </li></ul></dd>
     
 
@@ -211,22 +141,16 @@ Thought to be the tree source of the gmf layertree directive.</p>
 
         
             
-<h4 class="name" id="tree"><span class="type-signature"></span>tree<span class="type-signature"> :<a href="GmfThemesNode.html">GmfThemesNode</a></span></h4>
+<h4 class="name" id="showMessage"><span class="type-signature">(protected) </span>showMessage<span class="type-signature"></span></h4>
 
 
 
 
+<div class="description">
+    <p>Show the message.</p>
+</div>
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="GmfThemesNode.html">GmfThemesNode</a></span>
-
-
-        </li>
-    </ul>
 
 
 
@@ -262,8 +186,8 @@ Thought to be the tree source of the gmf layertree directive.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L50">line 50</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L45">line 45</a>
     </li></ul></dd>
     
 
@@ -290,538 +214,14 @@ Thought to be the tree source of the gmf layertree directive.</p>
 
     
 
-    <h4 class="name" id="addCustomGroups"><span class="type-signature"></span>addCustomGroups<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="error"><span class="type-signature"></span>error<span class="signature">(message)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>The same as <code>addGroups</code>, with the exception</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L142">line 142</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="addGroupByLayerName"><span class="type-signature"></span>addGroupByLayerName<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Retrieve a group by the name of a layer that is contained in this group
-(first found). This group will be added in the tree. Do nothing if any
-corresponding group is found.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L194">line 194</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="addGroupByName"><span class="type-signature"></span>addGroupByName<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Retrieve a group (first found) by its name and add in the tree. Do nothing
-if any corresponding group is found.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L176">line 176</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="addGroups"><span class="type-signature"></span>addGroups<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Add some groups as tree's children. If the service use mode 'flush', the
-previous tree's children will be removed. Add only groups that are not
-already in the tree.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L103">line 103</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="addTheme"><span class="type-signature"></span>addTheme<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Set the current theme name (mode 'flush' only) and add its children. Add
-only groups that are not already in the tree.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L87">line 87</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="addThemeByName"><span class="type-signature"></span>addThemeByName<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Retrieve a theme (first found) by its name and add in the tree. Do nothing
-if any corresponding theme is found.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L159">line 159</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="cloneGroupNode_"><span class="type-signature"></span>cloneGroupNode_<span class="signature">(group, names)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Clone a group node and recursively set all child node <code>isChecked</code> using
-the given list of layer names.</p>
+    <p>Display the given error message or list of error messages.</p>
 </div>
 
 
@@ -857,7 +257,7 @@ the given list of layer names.</p>
 
         <tr>
             
-                <td class="name"><code>group</code></td>
+                <td class="name"><code>message</code></td>
             
 
             <td class="type">
@@ -868,26 +268,7 @@ the given list of layer names.</p>
 
             
 
-            <td class="description last"><p>The original group node.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>names</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Array of node names to check (i.e. that
-    should have their checkbox checked)</p></td>
+            <td class="description last"><p>Message or list of messages.</p></td>
         </tr>
 
     
@@ -931,8 +312,8 @@ the given list of layer names.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L235">line 235</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L66">line 66</a>
     </li></ul></dd>
     
 
@@ -963,276 +344,17 @@ the given list of layer names.</p>
 
     
 
-    <h4 class="name" id="isModeFlush"><span class="type-signature"></span>isModeFlush<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getMessageObjects"><span class="type-signature">(protected) </span>getMessageObjects<span class="signature">(object, [opt_type]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Return the current 'mode' of this service.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L62">line 62</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="removeGroup"><span class="type-signature"></span>removeGroup<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Remove a group from this tree's children. The first group that is found (
-based on its name) will be removed. If any is found, nothing will append.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L211">line 211</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setModeFlush"><span class="type-signature"></span>setModeFlush<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Set the 'mode' of this service. In mode 'flush', you'll replace previous
-tree's children with groups that you add. In mode 'add', you'll add them to
-the array.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L75">line 75</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toggleNodeCheck_"><span class="type-signature"></span>toggleNodeCheck_<span class="signature">(node, names)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Set the child nodes metadata <code>isChecked</code> if its name is among the list of
-given names. If a child node also has children, check those instead.</p>
+    <p>Returns an array of message object from any given message string, list of
+message strings, message object or list message objects. The type can be
+overriden here as well OR defined (if the message(s) is/are string(s),
+defaults to 'information').</p>
 </div>
 
 
@@ -1256,6 +378,8 @@ given names. If a child node also has children, check those instead.</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -1268,7 +392,7 @@ given names. If a child node also has children, check those instead.</p>
 
         <tr>
             
-                <td class="name"><code>node</code></td>
+                <td class="name"><code>object</code></td>
             
 
             <td class="type">
@@ -1276,17 +400,25 @@ given names. If a child node also has children, check those instead.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>The original node.</p></td>
+            <td class="description last"><p>A message or list of messages as text or configuration objects.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>names</code></td>
+                <td class="name"><code>[opt_type]</code></td>
             
 
             <td class="type">
@@ -1294,11 +426,20 @@ given names. If a child node also has children, check those instead.</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>Array of node names to check (i.e. that
-    should have their checkbox checked)</p></td>
+            <td class="description last"><p>The type of message to override the messages with.</p></td>
         </tr>
 
     
@@ -1342,8 +483,529 @@ given names. If a child node also has children, check those instead.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/contribs/gmf/src/services/treemanager.js#L250">line 250</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L112">line 112</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="info"><span class="type-signature"></span>info<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Display the given info message or list of info messages.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Message or list of messages.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L76">line 76</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="show"><span class="type-signature"></span>show<span class="signature">(object)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Show disclaimer message string or object or list of disclame message
+strings or objects.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>object</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A message or list of messages as text or configuration objects.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L55">line 55</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="success"><span class="type-signature"></span>success<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Display the given success message or list of success messages.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Message or list of messages.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="warn"><span class="type-signature"></span>warn<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Display the given warning message or list of warning messages.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Message or list of messages.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js">src/services/message.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/47b50d5b6299d1e26663744a8ba9f8dd9edf41bf/src/services/message.js#L96">line 96</a>
     </li></ul></dd>
     
 
