@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="TreeManager"><span class="type-signature"></span>new TreeManager<span class="signature">(gmfThemes, gmfTreeManagerModeFlush)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TreeManager"><span class="type-signature"></span>new TreeManager<span class="signature">(gettextCatalog, ngeoNotification, gmfThemes, gmfTreeManagerModeFlush)</span><span class="type-signature"></span></h4>
 
     
 
@@ -89,6 +89,42 @@ Thought to be the tree source of the gmf layertree directive.</p>
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gettextCatalog</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Gettext catalog.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoNotification</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ngeo notification service.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -166,8 +202,8 @@ Thought to be the tree source of the gmf layertree directive.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L32">line 32</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L35">line 35</a>
     </li></ul></dd>
     
 
@@ -262,8 +298,8 @@ Thought to be the tree source of the gmf layertree directive.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L50">line 50</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L66">line 66</a>
     </li></ul></dd>
     
 
@@ -297,7 +333,8 @@ Thought to be the tree source of the gmf layertree directive.</p>
 
 
 <div class="description">
-    <p>The same as <code>addGroups</code>, with the exception</p>
+    <p>The same as <code>addGroups</code>, with the exception that the given group will be
+deep cloned. Only the clone will be added to the tree.</p>
 </div>
 
 
@@ -344,8 +381,8 @@ Thought to be the tree source of the gmf layertree directive.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L142">line 142</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L166">line 166</a>
     </li></ul></dd>
     
 
@@ -432,8 +469,8 @@ corresponding group is found.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L194">line 194</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L224">line 224</a>
     </li></ul></dd>
     
 
@@ -519,8 +556,8 @@ if any corresponding group is found.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L176">line 176</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L206">line 206</a>
     </li></ul></dd>
     
 
@@ -607,8 +644,8 @@ already in the tree.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L103">line 103</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L119">line 119</a>
     </li></ul></dd>
     
 
@@ -694,8 +731,8 @@ only groups that are not already in the tree.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L87">line 87</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L103">line 103</a>
     </li></ul></dd>
     
 
@@ -781,8 +818,8 @@ if any corresponding theme is found.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L159">line 159</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L189">line 189</a>
     </li></ul></dd>
     
 
@@ -931,8 +968,8 @@ the given list of layer names.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L235">line 235</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L265">line 265</a>
     </li></ul></dd>
     
 
@@ -1017,8 +1054,8 @@ the given list of layer names.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L62">line 62</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L78">line 78</a>
     </li></ul></dd>
     
 
@@ -1104,8 +1141,8 @@ based on its name) will be removed. If any is found, nothing will append.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L211">line 211</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L241">line 241</a>
     </li></ul></dd>
     
 
@@ -1192,8 +1229,8 @@ the array.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L75">line 75</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L91">line 91</a>
     </li></ul></dd>
     
 
@@ -1342,8 +1379,8 @@ given names. If a child node also has children, check those instead.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f369b42560aadc4e695362612e3cae6dd5d0d87a/contribs/gmf/src/services/treemanager.js#L250">line 250</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js">contribs/gmf/src/services/treemanager.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/db40518da57758082f472a143cff793915f9a86a/contribs/gmf/src/services/treemanager.js#L280">line 280</a>
     </li></ul></dd>
     
 
