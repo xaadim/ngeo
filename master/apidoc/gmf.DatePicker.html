@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: searchDirective <small>directive:gmfSearch</small></title>
+    <title>JSDoc: Class: DatePicker <small>directive:gmfDatePicker</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: searchDirective <small>directive:gmfSearch</small></h1>
+    <h1 class="page-title">Class: DatePicker <small>directive:gmfDatePicker</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="searchDirective">
-            <span class="ancestors">gmf.</span>searchDirective
+        <h2 id="DatePicker">
+            <span class="ancestors">gmf.</span>DatePicker
         </h2>
         
     
@@ -42,48 +42,14 @@
 
     
 
-    <h4 class="name" id="searchDirective"><span class="type-signature"></span>new searchDirective<span class="signature">(gmfSearchTemplateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="DatePicker"><span class="type-signature"></span>new DatePicker<span class="signature">(gmfDatePickerTemplateUrl, $timeout)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>A directive that allows to search and recenter on a selected
-result's feature.
-It can search in multiple GeoJSON datasources.
-It can filter and group results by a feature's property.</p>
-<p>This directive uses the <a href="ngeo.FeatureOverlayMgr.html"><code>ngeo.FeatureOverlayMgr</code></a> to create a
-feature overlay for drawing features on the map. The application
-is responsible to initialize the <a href="ngeo.FeatureOverlayMgr.html"><code>ngeo.FeatureOverlayMgr</code></a>
-with the map.</p>
-<p>Example flat results:</p>
-<pre class="prettyprint source"><code> &lt;gmf-search gmf-search-map=&quot;ctrl.map&quot;
-   gmf-search-datasources=&quot;ctrl.searchDatasources&quot;
-   gmf-search-coordinatesprojections=&quot;ctrl.searchCoordinatesProjections&quot;
-   gmf-search-clearbutton=&quot;true&quot;>
- &lt;/gmf-search>
- &lt;script>
-   (function() {
-     var module = angular.module('app');
-     module.constant('fulltextsearchUrl', '${request.route_url('fulltextsearch', _query={&quot;limit&quot;: 20}) | n}');
-     module.constant('gmfSearchGroups', []);
-     module.constant('gmfSearchActions', ['add_theme', 'add_group', 'add_layer']);
-   })();
- &lt;/script></code></pre><p>Example with categories:</p>
-<pre class="prettyprint source"><code> &lt;gmf-search gmf-search-map=&quot;ctrl.map&quot;
-   gmf-search-datasources=&quot;ctrl.searchDatasources&quot;
-   gmf-search-coordinatesprojections=&quot;ctrl.searchCoordinatesProjections&quot;
-   gmf-search-clearbutton=&quot;true&quot;>
- &lt;/gmf-search>
- &lt;script>
-   (function() {
-     var module = angular.module('app');
-     module.constant('fulltextsearchUrl', '${request.route_url('fulltextsearch', _query={&quot;limit&quot;: 30, &quot;partitionlimit&quot;: 5}) | n}');
-     module.constant('gmfSearchGroups', ${dumps(fulltextsearch_groups) | n});
-     module.constant('gmfSearchActions', []);
-   })();
- &lt;/script></code></pre>
+    <p>Provide a directive to select a signle date or a range of dates</p>
 </div>
 
 
@@ -94,150 +60,6 @@ with the map.</p>
 
 
 
-
-
-    <h5>HTML attributes:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-search-map</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The map.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-search-datasource</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="gmfx.html#SearchDirectiveDatasource">gmfx.SearchDirectiveDatasource</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The datasources.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-search-coordinatesprojections</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">codes
-     of supported projections for coordinates search (projections must be
-     defined in ol3). If not provided, only the map's view projection
-     format will be supported.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-search-clearbutton</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The clear button.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-search-listeners</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ngeox.html#SearchDirectiveListeners">ngeox.SearchDirectiveListeners</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The listeners.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -274,8 +96,8 @@ with the map.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/9902acef87e7f2989090a854f850fded259cc988/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/9902acef87e7f2989090a854f850fded259cc988/contribs/gmf/src/directives/search.js#L94">line 94</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/9902acef87e7f2989090a854f850fded259cc988/contribs/gmf/src/directives/datepicker.js">contribs/gmf/src/directives/datepicker.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9902acef87e7f2989090a854f850fded259cc988/contribs/gmf/src/directives/datepicker.js#L29">line 29</a>
     </li></ul></dd>
     
 
