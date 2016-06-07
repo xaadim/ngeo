@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SearchController <small>controller:GmfSearchController</small></title>
+    <title>JSDoc: Class: ElevationController <small>controller:gmfElevationController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SearchController <small>controller:GmfSearchController</small></h1>
+    <h1 class="page-title">Class: ElevationController <small>controller:gmfElevationController</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="SearchController">
-            <span class="ancestors">gmf.</span>SearchController
+        <h2 id="ElevationController">
+            <span class="ancestors">gmf.</span>ElevationController
         </h2>
         
     
@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="SearchController"><span class="type-signature"></span>new SearchController<span class="signature">($scope, $compile, $timeout, gettextCatalog, ngeoAutoProjection, ngeoCreateGeoJSONBloodhound, ngeoFeatureOverlayMgr, gmfTreeManager)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ElevationController"><span class="type-signature"></span>new ElevationController<span class="signature">(ngeoDebounce, gmfAltitude)</span><span class="type-signature"></span></h4>
 
     
 
@@ -81,7 +81,7 @@
 
         <tr>
             
-                <td class="name"><code>$scope</code></td>
+                <td class="name"><code>ngeoDebounce</code></td>
             
 
             <td class="type">
@@ -92,14 +92,14 @@
 
             
 
-            <td class="description last"><p>The directive's scope.</p></td>
+            <td class="description last"><p>Ngeo debounce service</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$compile</code></td>
+                <td class="name"><code>gmfAltitude</code></td>
             
 
             <td class="type">
@@ -110,117 +110,7 @@
 
             
 
-            <td class="description last"><p>Angular compile service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$timeout</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Angular timeout service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gettextCatalog</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Gettext catalog.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeoAutoProjection</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The ngeo coordinates service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeoCreateGeoJSONBloodhound</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The ngeo
-    create GeoJSON Bloodhound service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ngeoFeatureOverlayMgr</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The ngeo feature
-    overlay manager service.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmfTreeManager</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>gmf Tree Manager service.</p></td>
+            <td class="description last"><p>Gmf altitude service</p></td>
         </tr>
 
     
@@ -264,8 +154,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L146">line 146</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js#L87">line 87</a>
     </li></ul></dd>
     
 
@@ -309,15 +199,10 @@
 
         
             
-<h4 class="name" id="clearButton"><span class="type-signature"></span>clearButton<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
+<h4 class="name" id="active"><span class="type-signature"></span>active<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
 
 
 
-
-<div class="description">
-    <p>Whether or not to show a button to clear the search text.
-Default to false.</p>
-</div>
 
 
 
@@ -365,8 +250,8 @@ Default to false.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L208">line 208</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js#L105">line 105</a>
     </li></ul></dd>
     
 
@@ -384,7 +269,7 @@ Default to false.</p>
 
         
             
-<h4 class="name" id="datasets"><span class="type-signature"></span>datasets<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets">TypeaheadDataset</a>></span></h4>
+<h4 class="name" id="elevation"><span class="type-signature"></span>elevation<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
@@ -395,7 +280,10 @@ Default to false.</p>
     <ul>
         <li>
             
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets">TypeaheadDataset</a>></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
         </li>
@@ -435,8 +323,8 @@ Default to false.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L254">line 254</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js#L111">line 111</a>
     </li></ul></dd>
     
 
@@ -454,7 +342,77 @@ Default to false.</p>
 
         
             
-<h4 class="name" id="input_value"><span class="type-signature"></span>input_value<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+<h4 class="name" id="lastValue_"><span class="type-signature">(nullable) </span>lastValue_<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js#L129">line 129</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="layer"><span class="type-signature"></span>layer<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
@@ -466,6 +424,9 @@ Default to false.</p>
         <li>
             
 <span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
         </li>
@@ -505,8 +466,8 @@ Default to false.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L260">line 260</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js#L117">line 117</a>
     </li></ul></dd>
     
 
@@ -524,147 +485,7 @@ Default to false.</p>
 
         
             
-<h4 class="name" id="listeners"><span class="type-signature"></span>listeners<span class="type-signature"> :<a href="ngeox.html#SearchDirectiveListeners">ngeox.SearchDirectiveListeners</a></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="ngeox.html#SearchDirectiveListeners">ngeox.SearchDirectiveListeners</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L316">line 316</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="options"><span class="type-signature"></span>options<span class="type-signature"> :TypeaheadOptions</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">TypeaheadOptions</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L244">line 244</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="~groupActions"><span class="type-signature">(inner) </span>groupActions<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span></h4>
+<h4 class="name" id="layers"><span class="type-signature"></span>layers<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></h4>
 
 
 
@@ -676,6 +497,9 @@ Default to false.</p>
         <li>
             
 <span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
         </li>
@@ -715,78 +539,8 @@ Default to false.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L269">line 269</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="~groupValues"><span class="type-signature">(inner) </span>groupValues<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L267">line 267</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/elevation.js#L123">line 123</a>
     </li></ul></dd>
     
 
@@ -805,256 +559,6 @@ Default to false.</p>
         
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="blur"><span class="type-signature"></span>blur<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L576">line 576</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L561">line 561</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="onClearButton"><span class="type-signature"></span>onClearButton<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js">contribs/gmf/src/directives/search.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/565c00ba2faa8d1c5e838b320cafb1583ffb73f3/contribs/gmf/src/directives/search.js#L552">line 552</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     
