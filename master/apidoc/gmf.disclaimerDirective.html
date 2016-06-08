@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DecorateInteraction <small>service:ngeoDecorateInteraction</small></title>
+    <title>JSDoc: Class: disclaimerDirective <small>directive:gmfDisclaimer</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DecorateInteraction <small>service:ngeoDecorateInteraction</small></h1>
+    <h1 class="page-title">Class: disclaimerDirective <small>directive:gmfDisclaimer</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="DecorateInteraction">
-            <span class="ancestors">ngeo.</span>DecorateInteraction
+        <h2 id="disclaimerDirective">
+            <span class="ancestors">gmf.</span>disclaimerDirective
         </h2>
         
     
@@ -42,18 +42,19 @@
 
     
 
-    <h4 class="name" id="DecorateInteraction"><span class="type-signature"></span>new DecorateInteraction<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="disclaimerDirective"><span class="type-signature"></span>new disclaimerDirective<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provides a function that adds an &quot;active&quot; property (using
-<code>Object.defineProperty</code>) to an interaction, making it possible to use ngModel
-to activate/deactivate interactions.</p>
+    <p>Provide a &quot;disclaimer&quot; directive for GeoMapFish that is bound to the
+layers added and removed from a map.</p>
 <p>Example:</p>
-<pre class="prettyprint source"><code> &lt;input type=&quot;checkbox&quot; ngModel=&quot;interaction.active&quot; /></code></pre><p>See our live example: <code>../examples/interactiontoggle.html</code></p>
+<pre class="prettyprint source"><code> &lt;gmf-disclaimer
+   gmf-disclaimer-map=&quot;::ctrl.map&quot;>
+ &lt;/gmf-disclaimer></code></pre>
 </div>
 
 
@@ -64,6 +65,67 @@ to activate/deactivate interactions.</p>
 
 
 
+
+
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-disclaimer-map</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The map.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -100,8 +162,8 @@ to activate/deactivate interactions.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/src/services/decorateinteraction.js">src/services/decorateinteraction.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/src/services/decorateinteraction.js#L22">line 22</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/contribs/gmf/src/directives/disclaimer.js">contribs/gmf/src/directives/disclaimer.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/contribs/gmf/src/directives/disclaimer.js#L26">line 26</a>
     </li></ul></dd>
     
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DecorateInteraction <small>service:ngeoDecorateInteraction</small></title>
+    <title>JSDoc: Class: DisclaimerController <small>controller:GmfDisclaimerController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DecorateInteraction <small>service:ngeoDecorateInteraction</small></h1>
+    <h1 class="page-title">Class: DisclaimerController <small>controller:GmfDisclaimerController</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="DecorateInteraction">
-            <span class="ancestors">ngeo.</span>DecorateInteraction
+        <h2 id="DisclaimerController">
+            <span class="ancestors">gmf.</span>DisclaimerController
         </h2>
         
     
@@ -42,19 +42,12 @@
 
     
 
-    <h4 class="name" id="DecorateInteraction"><span class="type-signature"></span>new DecorateInteraction<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="DisclaimerController"><span class="type-signature"></span>new DisclaimerController<span class="signature">($element, $scope, ngeoDisclaimer, ngeoEventHelper, ngeoLayerHelper)</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>Provides a function that adds an &quot;active&quot; property (using
-<code>Object.defineProperty</code>) to an interaction, making it possible to use ngModel
-to activate/deactivate interactions.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code> &lt;input type=&quot;checkbox&quot; ngModel=&quot;interaction.active&quot; /></code></pre><p>See our live example: <code>../examples/interactiontoggle.html</code></p>
-</div>
 
 
 
@@ -62,6 +55,121 @@ to activate/deactivate interactions.</p>
 
 
 
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$element</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular scope.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoDisclaimer</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ngeo Disclaimer service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoEventHelper</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ngeo Event Helper.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoLayerHelper</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ngeo Layer Helper.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -100,8 +208,8 @@ to activate/deactivate interactions.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/src/services/decorateinteraction.js">src/services/decorateinteraction.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/src/services/decorateinteraction.js#L22">line 22</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/contribs/gmf/src/directives/disclaimer.js">contribs/gmf/src/directives/disclaimer.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/contribs/gmf/src/directives/disclaimer.js#L55">line 55</a>
     </li></ul></dd>
     
 
@@ -140,6 +248,80 @@ to activate/deactivate interactions.</p>
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="map"><span class="type-signature"></span>map<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/contribs/gmf/src/directives/disclaimer.js">contribs/gmf/src/directives/disclaimer.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/7b19bb0992d63d060bb8984a05d311b693cd5fd2/contribs/gmf/src/directives/disclaimer.js#L62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
