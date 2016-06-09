@@ -78,7 +78,7 @@ main {
   }
 }
 
-@nav-bar-height: 50px;
+@nav-bar-height: 5rem;
 
 .nav-left-is-visible nav.nav-right,
 .nav-right-is-visible nav.nav-left  {
@@ -119,7 +119,7 @@ nav.nav-right {
       visibility: hidden;
       height: @nav-bar-height;
       width: @nav-back-width;
-      padding-left: 24px;
+      padding-left: 2.4rem;
       color: @back-color;
 
       &.active {
@@ -128,7 +128,7 @@ nav.nav-right {
       }
 
       &::before, &::after {
-        transform-origin: 1px 50%;
+        transform-origin: 0.1rem 50%;
         left: @app-margin;
       }
     }
@@ -175,7 +175,7 @@ nav.nav-right {
     &::before, &::after {
       /* arrow goes on the right side - children navigation */
       right: 0;
-      transform-origin: 9px 50%;
+      transform-origin: 0.9rem 50%;
     }
   }
 
@@ -186,9 +186,9 @@ nav.nav-right {
       content: '';
       position: absolute;
       top: 50%;
-      margin-top: -1px;
+      margin-top: -0.1rem;
       display: inline-block;
-      height: 2px;
+      height: 0.2rem;
       width: @app-margin;
       background: @back-color;
       .backface-visibility(hidden);
@@ -273,7 +273,7 @@ nav.nav-right {
   color: @map-tools-color;
   z-index: @above-search-index;
   height: @map-tools-size;
-  border: 1px solid @border-color;
+  border: 0.1rem solid @border-color;
   .fa, .gmf-icon {
     font-size: 2rem;
   }
@@ -282,13 +282,13 @@ nav.nav-right {
 .nav-left-trigger {
   left: @app-margin;
   border-right: none;
-  box-shadow: 3px 0 5px -2px #bbb;
+  box-shadow: 0.3rem 0 0.5rem -0.2rem #bbb;
 }
 
 .nav-right-trigger {
   right: @app-margin;
   border-left: none;
-  box-shadow: -3px 0 5px -2px #bbb;
+  box-shadow: -0.3rem 0 0.5rem -0.2rem #bbb;
 }
 
 /**
@@ -314,7 +314,7 @@ nav.nav-right {
 
   .nav-trigger {
     margin: 0;
-    border: solid 1px @border-color;
+    border: solid 0.1rem @border-color;
     box-shadow: none;
   }
 

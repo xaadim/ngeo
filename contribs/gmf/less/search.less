@@ -9,7 +9,7 @@
   padding: 0 @app-margin;
   background-color: @map-tools-bg-color;
   border: solid 0 @border-color;
-  border-width: 1px 0;
+  border-width: 0.1rem 0;
   z-index: @content-index;
   input {
     height: @map-tools-size;
@@ -71,12 +71,12 @@ span.twitter-typeahead input {
   overflow-x: hidden;
   overflow-y: auto;
   background-color: @map-tools-bg-color;
-  border: solid 1px @border-color;
+  border: solid 0.1rem @border-color;
   .search-header {
     display: none;
   }
   .search-datum {
-    border-bottom: solid 1px @border-color;
+    border-bottom: solid 0.1rem @border-color;
     padding: @app-margin;
     padding-left: @app-margin + 2rem + @app-margin;
     text-align: left;
@@ -104,7 +104,7 @@ span.twitter-typeahead input {
     margin: 0;
     left: 2 * @app-margin + @map-tools-size;
     width: @search-width;
-    border-width: 1px;
+    border-width: 0.1rem;
     .clear-button {
       margin-right: @app-margin;
       right: 0;
@@ -113,7 +113,7 @@ span.twitter-typeahead input {
 
   /** Some "!important" notation because some rules are in typeahead's html */
   .tt-menu {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.175);
     border-top: inherit;
     border-bottom: inherit;
     top: @app-margin + @map-tools-size !important;
