@@ -124822,10 +124822,284 @@ ngeo.debounceServiceFactory = function($timeout) {
 
 ngeo.module.factory('ngeoDebounce', ngeo.debounceServiceFactory);
 
+goog.provide('ngeo.CreatePopup');
+goog.provide('ngeo.Popup');
+
+goog.require('ngeo');
+
+/**
+ * This goog.require is needed because of 'ngeo-popup' used in
+ * the template.
+ * @suppress {extraRequire}
+ */
+goog.require('ngeo.popupDirective');
+
+
+/**
+ * @typedef {function():!ngeo.Popup}
+ */
+ngeo.CreatePopup;
+
+
+/**
+ * Provides a factory to create a popup in the page.
+ * The factory returns a ngeo.Popup object.
+ *
+ * Example:
+ *
+ *     var popup = ngeoCreatePopup();
+ *     popup.setTitle("A title");
+ *     popup.setContent("Some content");
+ *     popup.setOpen(true);
+ *
+ * @constructor
+ * @param {angular.$compile} $compile The compile provider.
+ * @param {angular.Scope} $rootScope The rootScope provider.
+ * @param {angular.$sce} $sce Angular sce service.
+ * @param {angular.$timeout} $timeout Angular timeout service.
+ * @ngdoc service
+ * @ngname ngeoCreatePopup
+ */
+ngeo.Popup = function($compile, $rootScope, $sce, $timeout) {
+
+  /**
+   * The scope the compiled element is link to.
+   * @type {angular.Scope}
+   * @export
+   */
+  this.scope = $rootScope.$new(true);
+
+  // manage the auto destruction of the popup
+  this.scope.$watch(
+    function() {
+      return this.scope['open'];
+    }.bind(this),
+    function(open) {
+      if (!open && this.autoDestroy_) {
+        this.timeout_(function() {
+          this.destroy();
+        }.bind(this));
+      }
+    }.bind(this)
+  );
+
+  /**
+   * @private
+   * @type {angular.$sce}
+   */
+  this.sce_ = $sce;
+
+  /**
+   * @type {angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
+
+  /**
+   * The element.
+   * @type {angular.JQLite}
+   * @private
+   */
+  this.element_ = angular.element('<div ngeo-popup></div>');
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.autoDestroy_ = false;
+
+
+  // Compile the element, link it to the scope and add it to the document.
+  $compile(this.element_)(this.scope);
+  angular.element(document.body).append(this.element_);
+};
+
+
+/**
+ * Get the current popup state.
+ * @return {boolean} `true` if the popup is currently, otherwise `false`.
+ * @export
+ */
+ngeo.Popup.prototype.getOpen = function() {
+  return this.scope['open'];
+};
+
+
+/**
+ * Show/hide the popup.
+ * @param {boolean} open `true` to show the popup, `false` to hide it.
+ * @export
+ */
+ngeo.Popup.prototype.setOpen = function(open) {
+  this.scope['open'] = open;
+};
+
+
+/**
+ * Destroy the popup.
+ * @export
+ */
+ngeo.Popup.prototype.destroy = function() {
+  this.scope.$destroy();
+  this.element_.remove();
+};
+
+
+/**
+ * Set the popup's title.
+ * @param {string} title The title.
+ * @export
+ */
+ngeo.Popup.prototype.setTitle = function(title) {
+  var trustedTitle = this.sce_.trustAsHtml(title);
+  this.scope['title'] = trustedTitle;
+};
+
+
+/**
+ * Set the popup's content.
+ * Note: the type of the `content` param is `*` instead of `string`, this
+ * is because the content may be trusted using `$sce.trustAsHtml`.
+ * @param {*} content The content.
+ * @export
+ */
+ngeo.Popup.prototype.setContent = function(content) {
+  this.scope['content'] = content;
+};
+
+
+/**
+ * Set the popup's content with an iframe using the given url.
+ * @param {string} url The url of the page.
+ * @export
+ */
+ngeo.Popup.prototype.setUrl = function(url) {
+  var content = this.sce_.trustAsHtml(
+    '<iframe src="' + url + '" width="100%" height="100%"></iframe>'
+  );
+  this.setContent(content);
+};
+
+
+/**
+ * Set the popup's width. The `max-width` is also set to override the one set
+ * by the bootstrap popover class.
+ * @param {string} width Width the popup should have.
+ * @export
+ */
+ngeo.Popup.prototype.setWidth = function(width) {
+  this.element_.width(width);
+  this.element_.css('max-width', width);
+};
+
+
+/**
+ * Set the popup's height.
+ * @param {string} height Height the popup should have.
+ * @export
+ */
+ngeo.Popup.prototype.setHeight = function(height) {
+  this.element_.height(height);
+};
+
+
+/**
+ * Set the popup's width and height.
+ * @param {string} width Width the popup should have.
+ * @param {string} height Height the popup should have.
+ * @export
+ */
+ngeo.Popup.prototype.setSize = function(width, height) {
+  this.setWidth(width);
+  this.setHeight(height);
+};
+
+
+/**
+ * Set the popup's autoDestroy property.
+ * @param {boolean} autoDestroy Whether to automatically destroy the popup when
+ *     being closed or not.
+ * @export
+ */
+ngeo.Popup.prototype.setAutoDestroy = function(autoDestroy) {
+  this.autoDestroy_ = autoDestroy;
+};
+
+
+/**
+ * Add an extra CSS class name to the popup.
+ * @param {string} cls Class name to add to the popup element.
+ * @export
+ */
+ngeo.Popup.prototype.addClass = function(cls) {
+  this.element_.addClass(cls);
+};
+
+
+/**
+ * Open a popup with the given properties.
+ * @param {ngeox.PopupOptions} options Options.
+ * @export
+ */
+ngeo.Popup.prototype.open = function(options) {
+
+  if (options.url) {
+    this.setUrl(options.url);
+  } else if (options.content) {
+    this.setContent(options.content);
+  } else {
+    goog.asserts.fail('ngeo.Popup options requirest "url" or "content".');
+  }
+
+  if (options.autoDestroy !== undefined) {
+    this.setAutoDestroy(options.autoDestroy);
+  }
+
+  if (options.cls !== undefined) {
+    this.addClass(options.cls);
+  }
+
+  if (options.height !== undefined) {
+    this.setHeight(options.height);
+  }
+
+  if (options.title !== undefined) {
+    this.setTitle(options.title);
+  }
+
+  if (options.width !== undefined) {
+    this.setWidth(options.width);
+  }
+
+  this.setOpen(true);
+};
+
+
+/**
+ * @param {angular.$compile} $compile Angular compile service.
+ * @param {angular.Scope} $rootScope Angular rootScope service.
+ * @param {angular.$sce} $sce Angular sce service.
+ * @param {angular.$timeout} $timeout Angular timeout service.
+ * @return {ngeo.CreatePopup} The function to create a popup.
+ * @ngInject
+ */
+ngeo.createPopupServiceFactory = function($compile, $rootScope, $sce,
+    $timeout) {
+  return (
+      /**
+       * @return {!ngeo.Popup} The popup instance.
+       */
+      function() {
+        return new ngeo.Popup($compile, $rootScope, $sce, $timeout);
+      });
+};
+ngeo.module.factory('ngeoCreatePopup', ngeo.createPopupServiceFactory);
+
 goog.provide('ngeo.Disclaimer');
 
 goog.require('goog.asserts');
 goog.require('ngeo');
+goog.require('ngeo.CreatePopup');
 goog.require('ngeo.Message');
 
 
@@ -124834,13 +125108,34 @@ goog.require('ngeo.Message');
  * etc. Requires Bootstrap library (both CSS and JS) to display the alerts
  * properly.
  *
+ * @param {angular.$sce} $sce Angular sce service.
+ * @param {angularGettext.Catalog} gettextCatalog Gettext service.
+ * @param {ngeo.CreatePopup} ngeoCreatePopup Popup service.
  * @constructor
  * @extends {ngeo.Message}
  * @ngdoc service
  * @ngname ngeoDisclaimer
  * @ngInject
  */
-ngeo.Disclaimer = function() {
+ngeo.Disclaimer = function($sce, gettextCatalog, ngeoCreatePopup) {
+
+  /**
+   * @private
+   * @type {angular.$sce}
+   */
+  this.sce_ = $sce;
+
+  /**
+   * @type {angularGettext.Catalog}
+   * @private
+   */
+  this.gettextCatalog_ = gettextCatalog;
+
+  /**
+   * @private
+   * @type {ngeo.CreatePopup}
+   */
+  this.createPopup_ = ngeoCreatePopup;
 
   goog.base(this);
 
@@ -124855,7 +125150,7 @@ ngeo.Disclaimer = function() {
 
   /**
    * Cache of messages.
-   * @type {Object.<string, angular.JQLite>}
+   * @type {Object.<string, angular.JQLite|ngeo.Popup>}
    * @private
    */
   this.messages_ = {};
@@ -124898,55 +125193,80 @@ ngeo.Disclaimer.prototype.showMessage = function(message) {
   var type = message.type;
   goog.asserts.assertString(type, 'Type should be set.');
 
+  // No need to do anything if message already exist.
   var uid = this.getMessageUid_(message);
   if (this.messages_[uid] !== undefined) {
     return;
   }
 
-  var classNames = ['alert', 'fade', 'alert-dismissible'];
-  switch (type) {
-    case ngeo.MessageType.ERROR:
-      classNames.push('alert-danger');
-      break;
-    case ngeo.MessageType.INFORMATION:
-      classNames.push('alert-info');
-      break;
-    case ngeo.MessageType.SUCCESS:
-      classNames.push('alert-success');
-      break;
-    case ngeo.MessageType.WARNING:
-      classNames.push('alert-warning');
-      break;
-    default:
-      break;
-  }
+  var showInModal = message.modal === true;
 
-  var el = angular.element(
-    '<div role="alert" class="' + classNames.join(' ') + '"></div>');
-  var button = angular.element(
-    '<button type="button" class="close" data-dismiss="alert" aria-label="' +
-    'Close' +  // FIXME i18n
-    '"><span aria-hidden="true">&times;</span></button>');
-  var msg = angular.element('<span />').html(message.msg);
-  el.append(button).append(msg);
+  if (showInModal) {
+    // display the message in a modal, i.e. using the ngeo create popup
+    var popup = this.createPopup_();
+    var content = this.sce_.trustAsHtml(message.msg);
+    popup.open({
+      autoDestroy: true,
+      content: content,
+      title: '&nbsp;'
+    });
 
-  var container;
+    // Watch the open property
+    popup.scope.$watch('open', function(newVal, oldVal) {
+      if (!newVal) {
+        this.closeMessage_(message);
+      }
+    }.bind(this));
 
-  if (message.target) {
-    container = angular.element(message.target);
+    this.messages_[uid] =  popup;
+
   } else {
-    container = this.container_;
+    // display the message using a boostrap dismissible alert
+    var classNames = ['alert', 'fade', 'alert-dismissible'];
+    switch (type) {
+      case ngeo.MessageType.ERROR:
+        classNames.push('alert-danger');
+        break;
+      case ngeo.MessageType.INFORMATION:
+        classNames.push('alert-info');
+        break;
+      case ngeo.MessageType.SUCCESS:
+        classNames.push('alert-success');
+        break;
+      case ngeo.MessageType.WARNING:
+        classNames.push('alert-warning');
+        break;
+      default:
+        break;
+    }
+
+    var el = angular.element(
+      '<div role="alert" class="' + classNames.join(' ') + '"></div>');
+    var button = angular.element(
+      '<button type="button" class="close" data-dismiss="alert" aria-label="' +
+        this.gettextCatalog_.getString('Close') +
+        '"><span aria-hidden="true">&times;</span></button>');
+    var msg = angular.element('<span />').html(message.msg);
+    el.append(button).append(msg);
+
+    var container;
+
+    if (message.target) {
+      container = angular.element(message.target);
+    } else {
+      container = this.container_;
+    }
+
+    container.append(el);
+    el.addClass('in');
+
+    // Listen when the message gets closed to cleanup the cache of messages
+    el.on('closed.bs.alert', function() {
+      this.closeMessage_(message);
+    }.bind(this));
+
+    this.messages_[uid] =  el;
   }
-
-  container.append(el);
-  el.addClass('in');
-
-  // Listen when the message gets closed to cleanup the cache of messages
-  el.on('closed.bs.alert', function() {
-    this.closeMessage_(message);
-  }.bind(this));
-
-  this.messages_[uid] =  el;
 };
 
 
@@ -124967,16 +125287,25 @@ ngeo.Disclaimer.prototype.getMessageUid_ = function(message) {
  */
 ngeo.Disclaimer.prototype.closeMessage_ = function(message) {
   var uid = this.getMessageUid_(message);
+  var obj = this.messages_[uid];
 
   // (1) No need to do anything if message doesn't exist
-  if (this.messages_[uid] === undefined) {
+  if (obj === undefined) {
     return;
   }
 
-  // (2) Check if the message hasn't been closed using the UI, i.e. by
-  //     clicking the close button. If not, then close it.
-  if (this.messages_[uid].hasClass('in')) {
-    this.messages_[uid].alert('close');
+  // (2) Close message (popup or alert)
+  if (obj instanceof ngeo.Popup) {
+    // (2.1) Close popup, if not already closed
+    if (obj.getOpen()) {
+      obj.setOpen(false);
+    }
+  } else {
+    // (2.2) Check if the message hasn't been closed using the UI, i.e. by
+    //       clicking the close button. If not, then close it.
+    if (obj.hasClass('in')) {
+      obj.alert('close');
+    }
   }
 
   // (3) Remove message from cache since it's closed now.
@@ -125621,278 +125950,6 @@ ngeo.mockLocationProvider = function($locationProvider) {
     return locationMock;
   };
 };
-
-goog.provide('ngeo.CreatePopup');
-goog.provide('ngeo.Popup');
-
-goog.require('ngeo');
-
-/**
- * This goog.require is needed because of 'ngeo-popup' used in
- * the template.
- * @suppress {extraRequire}
- */
-goog.require('ngeo.popupDirective');
-
-
-/**
- * @typedef {function():!ngeo.Popup}
- */
-ngeo.CreatePopup;
-
-
-/**
- * Provides a factory to create a popup in the page.
- * The factory returns a ngeo.Popup object.
- *
- * Example:
- *
- *     var popup = ngeoCreatePopup();
- *     popup.setTitle("A title");
- *     popup.setContent("Some content");
- *     popup.setOpen(true);
- *
- * @constructor
- * @param {angular.$compile} $compile The compile provider.
- * @param {angular.Scope} $rootScope The rootScope provider.
- * @param {angular.$sce} $sce Angular sce service.
- * @param {angular.$timeout} $timeout Angular timeout service.
- * @ngdoc service
- * @ngname ngeoCreatePopup
- */
-ngeo.Popup = function($compile, $rootScope, $sce, $timeout) {
-
-  /**
-   * The scope the compiled element is link to.
-   * @type {angular.Scope}
-   * @private
-   */
-  this.scope_ = $rootScope.$new(true);
-
-  // manage the auto destruction of the popup
-  this.scope_.$watch(
-    function() {
-      return this.scope_['open'];
-    }.bind(this),
-    function(open) {
-      if (!open && this.autoDestroy_) {
-        this.timeout_(function() {
-          this.destroy();
-        }.bind(this));
-      }
-    }.bind(this)
-  );
-
-  /**
-   * @private
-   * @type {angular.$sce}
-   */
-  this.sce_ = $sce;
-
-  /**
-   * @type {angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
-
-  /**
-   * The element.
-   * @type {angular.JQLite}
-   * @private
-   */
-  this.element_ = angular.element('<div ngeo-popup></div>');
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.autoDestroy_ = false;
-
-
-  // Compile the element, link it to the scope and add it to the document.
-  $compile(this.element_)(this.scope_);
-  angular.element(document.body).append(this.element_);
-};
-
-
-/**
- * Get the current popup state.
- * @return {boolean} `true` if the popup is currently, otherwise `false`.
- * @export
- */
-ngeo.Popup.prototype.getOpen = function() {
-  return this.scope_['open'];
-};
-
-
-/**
- * Show/hide the popup.
- * @param {boolean} open `true` to show the popup, `false` to hide it.
- * @export
- */
-ngeo.Popup.prototype.setOpen = function(open) {
-  this.scope_['open'] = open;
-};
-
-
-/**
- * Destroy the popup.
- * @export
- */
-ngeo.Popup.prototype.destroy = function() {
-  this.scope_.$destroy();
-  this.element_.remove();
-};
-
-
-/**
- * Set the popup's title.
- * @param {string} title The title.
- * @export
- */
-ngeo.Popup.prototype.setTitle = function(title) {
-  this.scope_['title'] = title;
-};
-
-
-/**
- * Set the popup's content.
- * Note: the type of the `content` param is `*` instead of `string`, this
- * is because the content may be trusted using `$sce.trustAsHtml`.
- * @param {*} content The content.
- * @export
- */
-ngeo.Popup.prototype.setContent = function(content) {
-  this.scope_['content'] = content;
-};
-
-
-/**
- * Set the popup's content with an iframe using the given url.
- * @param {string} url The url of the page.
- * @export
- */
-ngeo.Popup.prototype.setUrl = function(url) {
-  var content = this.sce_.trustAsHtml(
-    '<iframe src="' + url + '" width="100%" height="100%"></iframe>'
-  );
-  this.setContent(content);
-};
-
-
-/**
- * Set the popup's width. The `max-width` is also set to override the one set
- * by the bootstrap popover class.
- * @param {string} width Width the popup should have.
- * @export
- */
-ngeo.Popup.prototype.setWidth = function(width) {
-  this.element_.width(width);
-  this.element_.css('max-width', width);
-};
-
-
-/**
- * Set the popup's height.
- * @param {string} height Height the popup should have.
- * @export
- */
-ngeo.Popup.prototype.setHeight = function(height) {
-  this.element_.height(height);
-};
-
-
-/**
- * Set the popup's width and height.
- * @param {string} width Width the popup should have.
- * @param {string} height Height the popup should have.
- * @export
- */
-ngeo.Popup.prototype.setSize = function(width, height) {
-  this.setWidth(width);
-  this.setHeight(height);
-};
-
-
-/**
- * Set the popup's autoDestroy property.
- * @param {boolean} autoDestroy Whether to automatically destroy the popup when
- *     being closed or not.
- * @export
- */
-ngeo.Popup.prototype.setAutoDestroy = function(autoDestroy) {
-  this.autoDestroy_ = autoDestroy;
-};
-
-
-/**
- * Add an extra CSS class name to the popup.
- * @param {string} cls Class name to add to the popup element.
- * @export
- */
-ngeo.Popup.prototype.addClass = function(cls) {
-  this.element_.addClass(cls);
-};
-
-
-/**
- * Open a popup with the given properties.
- * @param {ngeox.PopupOptions} options Options.
- * @export
- */
-ngeo.Popup.prototype.open = function(options) {
-
-  if (options.url) {
-    this.setUrl(options.url);
-  } else if (options.content) {
-    this.setContent(options.content);
-  } else {
-    goog.asserts.fail('ngeo.Popup options requirest "url" or "content".');
-  }
-
-  if (options.autoDestroy !== undefined) {
-    this.setAutoDestroy(options.autoDestroy);
-  }
-
-  if (options.cls !== undefined) {
-    this.addClass(options.cls);
-  }
-
-  if (options.height !== undefined) {
-    this.setHeight(options.height);
-  }
-
-  if (options.title !== undefined) {
-    this.setTitle(options.title);
-  }
-
-  if (options.width !== undefined) {
-    this.setWidth(options.width);
-  }
-
-  this.setOpen(true);
-};
-
-
-/**
- * @param {angular.$compile} $compile Angular compile service.
- * @param {angular.Scope} $rootScope Angular rootScope service.
- * @param {angular.$sce} $sce Angular sce service.
- * @param {angular.$timeout} $timeout Angular timeout service.
- * @return {ngeo.CreatePopup} The function to create a popup.
- * @ngInject
- */
-ngeo.createPopupServiceFactory = function($compile, $rootScope, $sce,
-    $timeout) {
-  return (
-      /**
-       * @return {!ngeo.Popup} The popup instance.
-       */
-      function() {
-        return new ngeo.Popup($compile, $rootScope, $sce, $timeout);
-      });
-};
-ngeo.module.factory('ngeoCreatePopup', ngeo.createPopupServiceFactory);
 
 // Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
@@ -128709,7 +128766,7 @@ goog.require('ngeo');
    * @ngInject
    */
   var runner = function($templateCache) {
-    $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span>{{title}}</span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
+    $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span ng-bind-html=title></span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
     $templateCache.put('ngeo/scaleselector.html', '<div class="form-group form-group-sm dropdown" ng-class="::{\'dropup\': scaleselectorCtrl.options.dropup}"> <div class="btn-group btn-block"> <button type=button class="btn btn-default dropdown-toggle form-control" data-toggle=dropdown aria-expanded=false> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<i class=caret></i> </button> <ul class="dropdown-menu btn-block" role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> </div> ');
     $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr ngeo-layertree-listenersexpr=layertreeCtrl.listenersExpr> </li> </ul> ');
     $templateCache.put('ngeo/colorpicker.html', '<table class=palette> <tr ng-repeat="colors in ::ctrl.colors"> <td ng-repeat="color in ::colors" ng-click=ctrl.setColor(color) ng-class="{\'selected\': color == ctrl.color}"> <div ng-style="::{\'background-color\': color}"></div> </td> </tr> </table> ');

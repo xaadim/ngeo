@@ -23,8 +23,9 @@ app.module.value('gmfWmsUrl',
  * @constructor
  * @param {gmf.Themes} gmfThemes The gme themes service.
  * @param {gmf.TreeManager} gmfTreeManager gmf Tree Manager service.
+ * @param {ngeo.Location} ngeoLocation ngeo location service.
  */
-app.MainController = function(gmfThemes, gmfTreeManager) {
+app.MainController = function(gmfThemes, gmfTreeManager, ngeoLocation) {
 
   gmfThemes.loadThemes();
 
@@ -48,6 +49,15 @@ app.MainController = function(gmfThemes, gmfTreeManager) {
       zoom: 3
     })
   });
+
+  // How should disclaimer message be displayed: in modals or alerts
+  var modal = ngeoLocation.getParam('modal');
+
+  /**
+   * @type {boolean}
+   * @export
+   */
+  this.modal = modal === 'true';
 
   /**
    * @type {gmf.TreeManager}
