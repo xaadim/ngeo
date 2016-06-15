@@ -57,7 +57,7 @@ constant of the application.</p>
 <pre class="prettyprint source"><code> &lt;span gmf-elevation
        gmf-elevation-active=&quot;elevationActive&quot;
        gmf-elevation-elevation=&quot;elevationValue&quot;
-       gmf-elevation-layer=&quot;mainCtrl.elevationLayer&quot;
+       gmf-elevation-selectedlayer=&quot;mainCtrl.selectedElevationLayer&quot;
        gmf-elevation-layers=&quot;::mainCtrl.elevationLayers&quot;
        gmf-elevation-map=&quot;::mainCtrl.map&quot;>
        {{elevationValue | number:2}}m
@@ -165,7 +165,7 @@ constant of the application.</p>
 
         <tr>
             
-                <td class="name"><code>gmf-elevation-layer</code></td>
+                <td class="name"><code>gmf-elevation-selectedlayer</code></td>
             
 
             <td class="type">
@@ -191,8 +191,9 @@ constant of the application.</p>
 
             
 
-            <td class="description last">Optional elevation layer to
-    display. If not provided, display the first value.</td>
+            <td class="description last">Optional elevation layer
+    to use. If not provided, use always the first available value in the
+    server response object.</td>
         </tr>
 
     
@@ -299,8 +300,8 @@ constant of the application.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/f2dacd752e50949ea20244a77e2ed8734c1e012b/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/f2dacd752e50949ea20244a77e2ed8734c1e012b/contribs/gmf/src/directives/elevation.js#L41">line 41</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/8bc4a6c083817b7ea8d39c0a9d38dc2f50af69b1/contribs/gmf/src/directives/elevation.js">contribs/gmf/src/directives/elevation.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/8bc4a6c083817b7ea8d39c0a9d38dc2f50af69b1/contribs/gmf/src/directives/elevation.js#L42">line 42</a>
     </li></ul></dd>
     
 
