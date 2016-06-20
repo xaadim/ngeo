@@ -111087,298 +111087,6 @@ ngeo.mapDirective = function() {
 
 ngeo.module.directive('ngeoMap', ngeo.mapDirective);
 
-goog.provide('ngeo.MobileGeolocationController');
-goog.provide('ngeo.mobileGeolocationDirective');
-
-goog.require('ngeo');
-goog.require('ngeo.DecorateGeolocation');
-goog.require('ngeo.FeatureOverlay');
-goog.require('ngeo.FeatureOverlayMgr');
-goog.require('ngeo.Notification');
-goog.require('ol.Feature');
-goog.require('ol.Geolocation');
-goog.require('ol.Map');
-goog.require('ol.geom.Point');
-
-
-/**
- * @enum {string}
- * @export
- */
-ngeo.MobileGeolocationEventType = {
-  /**
-   * Triggered when an error occures.
-   */
-  ERROR: 'mobile-geolocation-error'
-};
-
-/**
- * Provide a "mobile geolocation" directive.
- *
- * Example:
- *
- *      <button ngeo-mobile-geolocation
- *        ngeo-mobile-geolocation-map="ctrl.map"
- *        ngeo-mobile-geolocation-options="ctrl.mobileGeolocationOptions">
- *      </button>
- *
- * See our live example: {@link ../examples/mobilegeolocation.html}
- *
- * @htmlAttribute {ol.Map} ngeo-mobile-geolocation-map The map.
- * @htmlAttribute {ngeox.MobileGeolocationDirectiveOptions} ngeo-mobile-geolocation-options The options.
- * @return {angular.Directive} The Directive Definition Object.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoMobileGeolocation
- */
-ngeo.mobileGeolocationDirective = function() {
-  return {
-    restrict: 'A',
-    scope: {
-      'getMobileMapFn': '&ngeoMobileGeolocationMap',
-      'getMobileGeolocationOptionsFn': '&ngeoMobileGeolocationOptions'
-    },
-    controller: 'NgeoMobileGeolocationController',
-    controllerAs: 'ctrl'
-  };
-};
-
-
-ngeo.module.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
-
-
-/**
- * @constructor
- * @param {angular.Scope} $scope The directive's scope.
- * @param {angular.JQLite} $element Element.
- * @param {ngeo.DecorateGeolocation} ngeoDecorateGeolocation Decorate
- *     Geolocation service.
- * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
- *     overlay manager service.
- * @param {ngeo.Notification} ngeoNotification Ngeo notification service.
- * @export
- * @ngInject
- * @ngdoc controller
- * @ngname NgeoMobileGeolocationController
- */
-ngeo.MobileGeolocationController = function($scope, $element,
-    ngeoDecorateGeolocation, ngeoFeatureOverlayMgr, ngeoNotification) {
-
-  $element.on('click', this.toggleTracking.bind(this));
-
-  var map = $scope['getMobileMapFn']();
-  goog.asserts.assertInstanceof(map, ol.Map);
-
-  /**
-   * @type {!angular.Scope}
-   * @private
-   */
-  this.$scope_ = $scope;
-
-  /**
-   * @type {!ol.Map}
-   * @private
-   */
-  this.map_ = map;
-
-  var options = $scope['getMobileGeolocationOptionsFn']() || {};
-  goog.asserts.assertObject(options);
-
-  /**
-   * @type {ngeo.Notification}
-   * @private
-   */
-  this.notification_ = ngeoNotification;
-
-  /**
-   * @type {ngeo.FeatureOverlay}
-   * @private
-   */
-  this.featureOverlay_ = ngeoFeatureOverlayMgr.getFeatureOverlay();
-
-  /**
-   * @type {ol.Geolocation}
-   * @private
-   */
-  this.geolocation_ = new ol.Geolocation({
-    projection: map.getView().getProjection()
-  });
-
-  // handle geolocation error.
-  this.geolocation_.on('error', function(error) {
-    this.untrack_();
-    this.notification_.error(error.message);
-    $scope.$emit(ngeo.MobileGeolocationEventType.ERROR, error);
-  }, this);
-
-  /**
-   * @type {ol.Feature}
-   * @private
-   */
-  this.positionFeature_ = new ol.Feature();
-
-  if (options.positionFeatureStyle) {
-    this.positionFeature_.setStyle(options.positionFeatureStyle);
-  }
-
-  /**
-   * @type {ol.Feature}
-   * @private
-   */
-  this.accuracyFeature_ = new ol.Feature();
-
-  if (options.accuracyFeatureStyle) {
-    this.accuracyFeature_.setStyle(options.accuracyFeatureStyle);
-  }
-
-  /**
-   * @type {number|undefined}
-   * @private
-   */
-  this.zoom_ = options.zoom;
-
-  /**
-   * Whether to recenter the map at the position it gets updated
-   * @type {boolean}
-   * @private
-   */
-  this.follow_ = false;
-
-  /**
-   * A flag used to determine whether the view was changed by me or something
-   * else. In the latter case, stop following.
-   * @type {boolean}
-   * @private
-   */
-  this.viewChangedByMe_ = false;
-
-  ol.events.listen(
-      this.geolocation_,
-      ol.Object.getChangeEventType(ol.GeolocationProperty.ACCURACY_GEOMETRY),
-      function() {
-        this.accuracyFeature_.setGeometry(
-            this.geolocation_.getAccuracyGeometry());
-      },
-      this);
-
-  ol.events.listen(
-      this.geolocation_,
-      ol.Object.getChangeEventType(ol.GeolocationProperty.POSITION),
-      function(e) {
-        this.setPosition_(e);
-      },
-      this);
-
-  var view = map.getView();
-
-  ol.events.listen(
-      view,
-      ol.Object.getChangeEventType(ol.ViewProperty.CENTER),
-      this.handleViewChange_,
-      this);
-
-  ol.events.listen(
-      view,
-      ol.Object.getChangeEventType(ol.ViewProperty.RESOLUTION),
-      this.handleViewChange_,
-      this);
-
-  ol.events.listen(
-      view,
-      ol.Object.getChangeEventType(ol.ViewProperty.ROTATION),
-      this.handleViewChange_,
-      this);
-
-  ngeoDecorateGeolocation(this.geolocation_);
-};
-
-
-/**
- * @export
- */
-ngeo.MobileGeolocationController.prototype.toggleTracking = function() {
-  if (this.geolocation_.getTracking()) {
-    // if map center is different than geolocation position, then track again
-    var currentPosition = this.geolocation_.getPosition();
-    // if user is using Firefox and selects the "not now" option, OL geolocation
-    // doesn't return an error
-    if (currentPosition === undefined) {
-      this.untrack_();
-      this.$scope_.$emit(ngeo.MobileGeolocationEventType.ERROR, null);
-      return;
-    }
-    goog.asserts.assert(currentPosition !== undefined);
-    var center = this.map_.getView().getCenter();
-    if (currentPosition[0] === center[0] &&
-        currentPosition[1] === center[1]) {
-      this.untrack_();
-    } else {
-      this.untrack_();
-      this.track_();
-    }
-  } else {
-    this.track_();
-  }
-};
-
-
-/**
- * @private
- */
-ngeo.MobileGeolocationController.prototype.track_ = function() {
-  this.featureOverlay_.addFeature(this.positionFeature_);
-  this.featureOverlay_.addFeature(this.accuracyFeature_);
-  this.follow_ = true;
-  this.geolocation_.setTracking(true);
-};
-
-
-/**
- * @private
- */
-ngeo.MobileGeolocationController.prototype.untrack_ = function() {
-  this.featureOverlay_.clear();
-  this.follow_ = false;
-  this.geolocation_.setTracking(false);
-  this.notification_.clear();
-};
-
-
-/**
- * @param {ol.ObjectEvent} event Event.
- * @private
- */
-ngeo.MobileGeolocationController.prototype.setPosition_ = function(event) {
-  var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
-  var point = new ol.geom.Point(position);
-
-  this.positionFeature_.setGeometry(point);
-
-  if (this.follow_) {
-    this.viewChangedByMe_ = true;
-    this.map_.getView().setCenter(position);
-    if (this.zoom_ !== undefined) {
-      this.map_.getView().setZoom(this.zoom_);
-    }
-    this.viewChangedByMe_ = false;
-  }
-};
-
-
-/**
- * @param {ol.ObjectEvent} event Event.
- * @private
- */
-ngeo.MobileGeolocationController.prototype.handleViewChange_ = function(event) {
-  if (this.follow_ && !this.viewChangedByMe_) {
-    this.follow_ = false;
-  }
-};
-
-
-ngeo.module.controller('NgeoMobileGeolocationController',
-    ngeo.MobileGeolocationController);
-
 goog.provide('ngeo.LayerHelper');
 
 goog.require('ngeo');
@@ -111670,7 +111378,7 @@ goog.require('ol.source.TileWMS');
 
 /**
  * @typedef {{
- *     resultSource: (ngeo.QueryResultSource),
+ *     resultSource: (ngeox.QueryResultSource),
  *     source: (ngeox.QuerySource)
  * }}
  */
@@ -111686,30 +111394,10 @@ ngeo.QueryInfoFormatType = {
 
 
 /**
- * @typedef {{
- *     sources: (Array.<ngeo.QueryResultSource>),
- *     total: (number)
- * }}
- */
-ngeo.QueryResult;
-
-
-/**
- * @typedef {{
- *     features: (Array.<ol.Feature>),
- *     id: (number|string),
- *     label: (string),
- *     pending: (boolean)
- * }}
- */
-ngeo.QueryResultSource;
-
-
-/**
  * The `ngeoQueryResult` is the value service where the features of the query
  * result are added.
  */
-ngeo.module.value('ngeoQueryResult', /** @type {ngeo.QueryResult} */ ({
+ngeo.module.value('ngeoQueryResult', /** @type {ngeox.QueryResult} */ ({
   sources: [],
   total: 0
 }));
@@ -111726,7 +111414,7 @@ ngeo.module.value('ngeoQueryResult', /** @type {ngeo.QueryResult} */ ({
  *
  * @constructor
  * @param {angular.$http} $http Angular $http service.
- * @param {ngeo.QueryResult} ngeoQueryResult The ngeo query result service.
+ * @param {ngeox.QueryResult} ngeoQueryResult The ngeo query result service.
  * @param {ngeox.QueryOptions|undefined} ngeoQueryOptions The options to
  *     configure the ngeo query service with.
  * @param {ngeo.LayerHelper} ngeoLayerHelper Ngeo Layer Helper.
@@ -111772,7 +111460,7 @@ ngeo.Query = function($http, ngeoQueryResult, ngeoQueryOptions,
   this.$http_ = $http;
 
   /**
-   * @type {ngeo.QueryResult}
+   * @type {ngeox.QueryResult}
    * @private
    */
   this.result_ = ngeoQueryResult;
@@ -111894,12 +111582,13 @@ ngeo.Query.prototype.addSource = function(source) {
       source.identifierAttributeField !== undefined ?
       source.identifierAttributeField : sourceId;
 
-  var resultSource = /** @type {ngeo.QueryResultSource} */ ({
+  var resultSource = /** @type {ngeox.QueryResultSource} */ ({
     'features': [],
     'id': sourceId,
     'identifierAttributeField': sourceIdentifierAttributeField,
     'label': sourceLabel,
-    'pending': false
+    'pending': false,
+    'queried': false
   });
 
   this.result_.sources.push(resultSource);
@@ -112038,6 +111727,7 @@ ngeo.Query.prototype.issueWMSGetFeatureInfoRequests_ = function(
       }
 
       item['resultSource'].pending = true;
+      item['resultSource'].queried = true;
       infoFormat = item.source.infoFormat;
 
       // Sources that use GML as info format are combined together if they
@@ -112104,6 +111794,8 @@ ngeo.Query.prototype.clearResult_ = function() {
   this.result_.total = 0;
   this.result_.sources.forEach(function(source) {
     source.features.length = 0;
+    source.pending = false;
+    source.queried = false;
   }, this);
 };
 
@@ -112138,14 +111830,14 @@ ngeo.Query.prototype.getLayerSourceIds_ = function(layer) {
 
 ngeo.module.service('ngeoQuery', ngeo.Query);
 
-goog.provide('ngeo.mobileQueryDirective');
+goog.provide('ngeo.mapQueryDirective');
 
 goog.require('ngeo');
 goog.require('ngeo.Query');
 
 
 /**
- * Provide a "mobile query" directive.
+ * Provides a "map query" directive.
  *
  * This directive is responsible of binding a map and the ngeo query service
  * together. While active, clicks made on the map are listened by the directive
@@ -112158,25 +111850,25 @@ goog.require('ngeo.Query');
  * Example:
  *
  *      <span
- *        ngeo-mobile-query=""
- *        ngeo-mobile-query-map="::ctrl.map"
- *        ngeo-mobile-query-active="ctrl.queryActive">
+ *        ngeo-map-query=""
+ *        ngeo-map-query-map="::ctrl.map"
+ *        ngeo-map-query-active="ctrl.queryActive">
  *      </span>
  *
- * See our live example: {@link ../examples/mobilequery.html}
+ * See our live example: {@link ../examples/mapquery.html}
  *
  * @param {ngeo.Query} ngeoQuery The ngeo Query service.
  * @return {angular.Directive} The Directive Definition Object.
  * @ngInject
  * @ngdoc directive
- * @ngname ngeoMobileQuery
+ * @ngname ngeoMapQuery
  */
-ngeo.mobileQueryDirective = function(ngeoQuery) {
+ngeo.mapQueryDirective = function(ngeoQuery) {
   return {
     restrict: 'A',
     scope: false,
     link: function(scope, elem, attrs) {
-      var map = scope.$eval(attrs['ngeoMobileQueryMap']);
+      var map = scope.$eval(attrs['ngeoMapQueryMap']);
       var clickEventKey_ = null;
 
       /**
@@ -112209,7 +111901,7 @@ ngeo.mobileQueryDirective = function(ngeoQuery) {
       };
 
       // watch 'active' property -> activate/deactivate accordingly
-      scope.$watch(attrs['ngeoMobileQueryActive'],
+      scope.$watch(attrs['ngeoMapQueryActive'],
           function(newVal, oldVal) {
             if (newVal) {
               activate_();
@@ -112222,7 +111914,299 @@ ngeo.mobileQueryDirective = function(ngeoQuery) {
   };
 };
 
-ngeo.module.directive('ngeoMobileQuery', ngeo.mobileQueryDirective);
+ngeo.module.directive('ngeoMapQuery', ngeo.mapQueryDirective);
+
+goog.provide('ngeo.MobileGeolocationController');
+goog.provide('ngeo.mobileGeolocationDirective');
+
+goog.require('ngeo');
+goog.require('ngeo.DecorateGeolocation');
+goog.require('ngeo.FeatureOverlay');
+goog.require('ngeo.FeatureOverlayMgr');
+goog.require('ngeo.Notification');
+goog.require('ol.Feature');
+goog.require('ol.Geolocation');
+goog.require('ol.Map');
+goog.require('ol.geom.Point');
+
+
+/**
+ * @enum {string}
+ * @export
+ */
+ngeo.MobileGeolocationEventType = {
+  /**
+   * Triggered when an error occures.
+   */
+  ERROR: 'mobile-geolocation-error'
+};
+
+/**
+ * Provide a "mobile geolocation" directive.
+ *
+ * Example:
+ *
+ *      <button ngeo-mobile-geolocation
+ *        ngeo-mobile-geolocation-map="ctrl.map"
+ *        ngeo-mobile-geolocation-options="ctrl.mobileGeolocationOptions">
+ *      </button>
+ *
+ * See our live example: {@link ../examples/mobilegeolocation.html}
+ *
+ * @htmlAttribute {ol.Map} ngeo-mobile-geolocation-map The map.
+ * @htmlAttribute {ngeox.MobileGeolocationDirectiveOptions} ngeo-mobile-geolocation-options The options.
+ * @return {angular.Directive} The Directive Definition Object.
+ * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoMobileGeolocation
+ */
+ngeo.mobileGeolocationDirective = function() {
+  return {
+    restrict: 'A',
+    scope: {
+      'getMobileMapFn': '&ngeoMobileGeolocationMap',
+      'getMobileGeolocationOptionsFn': '&ngeoMobileGeolocationOptions'
+    },
+    controller: 'NgeoMobileGeolocationController',
+    controllerAs: 'ctrl'
+  };
+};
+
+
+ngeo.module.directive('ngeoMobileGeolocation', ngeo.mobileGeolocationDirective);
+
+
+/**
+ * @constructor
+ * @param {angular.Scope} $scope The directive's scope.
+ * @param {angular.JQLite} $element Element.
+ * @param {ngeo.DecorateGeolocation} ngeoDecorateGeolocation Decorate
+ *     Geolocation service.
+ * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
+ *     overlay manager service.
+ * @param {ngeo.Notification} ngeoNotification Ngeo notification service.
+ * @export
+ * @ngInject
+ * @ngdoc controller
+ * @ngname NgeoMobileGeolocationController
+ */
+ngeo.MobileGeolocationController = function($scope, $element,
+    ngeoDecorateGeolocation, ngeoFeatureOverlayMgr, ngeoNotification) {
+
+  $element.on('click', this.toggleTracking.bind(this));
+
+  var map = $scope['getMobileMapFn']();
+  goog.asserts.assertInstanceof(map, ol.Map);
+
+  /**
+   * @type {!angular.Scope}
+   * @private
+   */
+  this.$scope_ = $scope;
+
+  /**
+   * @type {!ol.Map}
+   * @private
+   */
+  this.map_ = map;
+
+  var options = $scope['getMobileGeolocationOptionsFn']() || {};
+  goog.asserts.assertObject(options);
+
+  /**
+   * @type {ngeo.Notification}
+   * @private
+   */
+  this.notification_ = ngeoNotification;
+
+  /**
+   * @type {ngeo.FeatureOverlay}
+   * @private
+   */
+  this.featureOverlay_ = ngeoFeatureOverlayMgr.getFeatureOverlay();
+
+  /**
+   * @type {ol.Geolocation}
+   * @private
+   */
+  this.geolocation_ = new ol.Geolocation({
+    projection: map.getView().getProjection()
+  });
+
+  // handle geolocation error.
+  this.geolocation_.on('error', function(error) {
+    this.untrack_();
+    this.notification_.error(error.message);
+    $scope.$emit(ngeo.MobileGeolocationEventType.ERROR, error);
+  }, this);
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.positionFeature_ = new ol.Feature();
+
+  if (options.positionFeatureStyle) {
+    this.positionFeature_.setStyle(options.positionFeatureStyle);
+  }
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.accuracyFeature_ = new ol.Feature();
+
+  if (options.accuracyFeatureStyle) {
+    this.accuracyFeature_.setStyle(options.accuracyFeatureStyle);
+  }
+
+  /**
+   * @type {number|undefined}
+   * @private
+   */
+  this.zoom_ = options.zoom;
+
+  /**
+   * Whether to recenter the map at the position it gets updated
+   * @type {boolean}
+   * @private
+   */
+  this.follow_ = false;
+
+  /**
+   * A flag used to determine whether the view was changed by me or something
+   * else. In the latter case, stop following.
+   * @type {boolean}
+   * @private
+   */
+  this.viewChangedByMe_ = false;
+
+  ol.events.listen(
+      this.geolocation_,
+      ol.Object.getChangeEventType(ol.GeolocationProperty.ACCURACY_GEOMETRY),
+      function() {
+        this.accuracyFeature_.setGeometry(
+            this.geolocation_.getAccuracyGeometry());
+      },
+      this);
+
+  ol.events.listen(
+      this.geolocation_,
+      ol.Object.getChangeEventType(ol.GeolocationProperty.POSITION),
+      function(e) {
+        this.setPosition_(e);
+      },
+      this);
+
+  var view = map.getView();
+
+  ol.events.listen(
+      view,
+      ol.Object.getChangeEventType(ol.ViewProperty.CENTER),
+      this.handleViewChange_,
+      this);
+
+  ol.events.listen(
+      view,
+      ol.Object.getChangeEventType(ol.ViewProperty.RESOLUTION),
+      this.handleViewChange_,
+      this);
+
+  ol.events.listen(
+      view,
+      ol.Object.getChangeEventType(ol.ViewProperty.ROTATION),
+      this.handleViewChange_,
+      this);
+
+  ngeoDecorateGeolocation(this.geolocation_);
+};
+
+
+/**
+ * @export
+ */
+ngeo.MobileGeolocationController.prototype.toggleTracking = function() {
+  if (this.geolocation_.getTracking()) {
+    // if map center is different than geolocation position, then track again
+    var currentPosition = this.geolocation_.getPosition();
+    // if user is using Firefox and selects the "not now" option, OL geolocation
+    // doesn't return an error
+    if (currentPosition === undefined) {
+      this.untrack_();
+      this.$scope_.$emit(ngeo.MobileGeolocationEventType.ERROR, null);
+      return;
+    }
+    goog.asserts.assert(currentPosition !== undefined);
+    var center = this.map_.getView().getCenter();
+    if (currentPosition[0] === center[0] &&
+        currentPosition[1] === center[1]) {
+      this.untrack_();
+    } else {
+      this.untrack_();
+      this.track_();
+    }
+  } else {
+    this.track_();
+  }
+};
+
+
+/**
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.track_ = function() {
+  this.featureOverlay_.addFeature(this.positionFeature_);
+  this.featureOverlay_.addFeature(this.accuracyFeature_);
+  this.follow_ = true;
+  this.geolocation_.setTracking(true);
+};
+
+
+/**
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.untrack_ = function() {
+  this.featureOverlay_.clear();
+  this.follow_ = false;
+  this.geolocation_.setTracking(false);
+  this.notification_.clear();
+};
+
+
+/**
+ * @param {ol.ObjectEvent} event Event.
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.setPosition_ = function(event) {
+  var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
+  var point = new ol.geom.Point(position);
+
+  this.positionFeature_.setGeometry(point);
+
+  if (this.follow_) {
+    this.viewChangedByMe_ = true;
+    this.map_.getView().setCenter(position);
+    if (this.zoom_ !== undefined) {
+      this.map_.getView().setZoom(this.zoom_);
+    }
+    this.viewChangedByMe_ = false;
+  }
+};
+
+
+/**
+ * @param {ol.ObjectEvent} event Event.
+ * @private
+ */
+ngeo.MobileGeolocationController.prototype.handleViewChange_ = function(event) {
+  if (this.follow_ && !this.viewChangedByMe_) {
+    this.follow_ = false;
+  }
+};
+
+
+ngeo.module.controller('NgeoMobileGeolocationController',
+    ngeo.MobileGeolocationController);
 
 goog.provide('ngeo.modalDirective');
 
@@ -128208,7 +128192,7 @@ goog.require('ngeo');
  * A simple object that can be managed by `ngeo.ToolActivateMgr`.
  *
  * See our live examples:
- * {@link ../examples/mobilequery.html}
+ * {@link ../examples/mapquery.html}
  * {@link ../examples/toolActivate.html}
  *
  * @param {Object} toolContext An object which acts as the context for the tool.
@@ -128272,7 +128256,7 @@ ngeo.ToolMgrEntry;
  *     ngeoToolActivateMgr.deactivateTool(tool);
  *
  * See our live examples:
- * {@link ../examples/mobilequery.html}
+ * {@link ../examples/mapquery.html}
  * {@link ../examples/toolActivate.html}
  *
  * @param {angular.Scope} $rootScope The rootScope provider.
@@ -128497,7 +128481,7 @@ ngeo.module.constant('ngeoWfsPermalinkOptions',
  *
  * @constructor
  * @param {angular.$http} $http Angular $http service.
- * @param {ngeo.QueryResult} ngeoQueryResult The ngeo query result service.
+ * @param {ngeox.QueryResult} ngeoQueryResult The ngeo query result service.
  * @param {ngeox.WfsPermalinkOptions} ngeoWfsPermalinkOptions The options to
  *     configure the ngeo wfs permalink service with.
  * @ngdoc service
@@ -128554,7 +128538,7 @@ ngeo.WfsPermalink = function($http, ngeoQueryResult, ngeoWfsPermalinkOptions) {
   this.$http_ = $http;
 
   /**
-   * @type {ngeo.QueryResult}
+   * @type {ngeox.QueryResult}
    * @private
    */
   this.result_ = ngeoQueryResult;
@@ -128572,7 +128556,7 @@ ngeo.WfsPermalink.prototype.clear = function() {
 
 /**
  * Build a WFS GetFeature request for the given query parameter data, send the
- * request and add the received features to {@link ngeo.QueryResult}.
+ * request and add the received features to {@link ngeox.QueryResult}.
  *
  * @param {ngeo.WfsPermalinkData} queryData Query data for the WFS request.
  * @param {ol.Map} map The ol3 map object to get the current projection from.
@@ -128637,7 +128621,7 @@ ngeo.WfsPermalink.prototype.issueRequest_ = function(wfsType, filter, map, showF
 
     // then show if requested
     if (showFeatures) {
-      var resultSource = /** @type {ngeo.QueryResultSource} */ ({
+      var resultSource = /** @type {ngeox.QueryResultSource} */ ({
         'features': features,
         'id': wfsType.featureType,
         'identifierAttributeField': wfsType.label,

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: mobileMeasurePointDirective <small>directive:gmfMobileMeasurePoint</small></title>
+    <title>JSDoc: Class: displayqueriesDirective <small>directive:gmfDisplayqueries</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: mobileMeasurePointDirective <small>directive:gmfMobileMeasurePoint</small></h1>
+    <h1 class="page-title">Class: displayqueriesDirective <small>directive:gmfDisplayqueries</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="mobileMeasurePointDirective">
-            <span class="ancestors">gmf.</span>mobileMeasurePointDirective
+        <h2 id="displayqueriesDirective">
+            <span class="ancestors">gmf.</span>displayqueriesDirective
         </h2>
         
     
@@ -42,19 +42,24 @@
 
     
 
-    <h4 class="name" id="mobileMeasurePointDirective"><span class="type-signature"></span>new mobileMeasurePointDirective<span class="signature">(gmfMobileMeasurePointTemplateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="displayqueriesDirective"><span class="type-signature"></span>new displayqueriesDirective<span class="signature">(gmfDisplayqueriesTemplateUrl)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provide a directive to do a point (coordinate and élévation) measure on the mobile devices.</p>
+    <p>Provide a directive to display results of the <code>ngeo.queryResult</code>
+and shows related features on the map using the <a href="ngeo.FeatureOverlayMgr.html"><code>ngeo.FeatureOverlayMgr</code></a>.</p>
+<p>You can override the default directive's template by setting the
+value <code>gmfDisplayqueriesTemplateUrl</code>.</p>
+<p>Features displayed on the map use a default style but you can override these
+styles by passing ol.style.Style objects as attributes of this directive.</p>
 <p>Example:</p>
-<pre class="prettyprint source"><code> &lt;div gmf-mobile-measure-point=&quot;&quot;
-   gmf-mobile-measure-point-active=&quot;ctrl.measurePointActive&quot;
-   gmf-mobile-measure-point-map=&quot;::ctrl.map&quot;>
- &lt;/div></code></pre>
+<pre class="prettyprint source"><code> &lt;gmf-displayqueries
+   gmf-displayqueries-featuresstyle=&quot;ctrl.styleForAllFeatures&quot;
+   gmf-displayqueries-selectedfeaturestyle=&quot;ctrl.styleForTheCurrentFeature&quot;>
+ &lt;/gmf-displayqueries></code></pre>
 </div>
 
 
@@ -65,6 +70,128 @@
 
 
 
+
+
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-displayqueries-featuresstyle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A style
+    object for all features from the result of the query.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>selectedfeaturestyle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A style
+    object for the current displayed feature.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>desktop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If the directive is used in the desktop
+    application.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>showunqueriedlayers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If also layers, that have not
+    been queried for the last query, should be shown in the filter.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -101,8 +228,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/mobilemeasurepoint.js">contribs/gmf/src/directives/mobilemeasurepoint.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/mobilemeasurepoint.js#L46">line 46</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L58">line 58</a>
     </li></ul></dd>
     
 

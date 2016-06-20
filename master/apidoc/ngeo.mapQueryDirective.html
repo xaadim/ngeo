@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: mobileMeasurePointDirective <small>directive:gmfMobileMeasurePoint</small></title>
+    <title>JSDoc: Class: mapQueryDirective <small>directive:ngeoMapQuery</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: mobileMeasurePointDirective <small>directive:gmfMobileMeasurePoint</small></h1>
+    <h1 class="page-title">Class: mapQueryDirective <small>directive:ngeoMapQuery</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="mobileMeasurePointDirective">
-            <span class="ancestors">gmf.</span>mobileMeasurePointDirective
+        <h2 id="mapQueryDirective">
+            <span class="ancestors">ngeo.</span>mapQueryDirective
         </h2>
         
     
@@ -42,19 +42,26 @@
 
     
 
-    <h4 class="name" id="mobileMeasurePointDirective"><span class="type-signature"></span>new mobileMeasurePointDirective<span class="signature">(gmfMobileMeasurePointTemplateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="mapQueryDirective"><span class="type-signature"></span>new mapQueryDirective<span class="signature">(ngeoQuery)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provide a directive to do a point (coordinate and élévation) measure on the mobile devices.</p>
+    <p>Provides a &quot;map query&quot; directive.</p>
+<p>This directive is responsible of binding a map and the ngeo query service
+together. While active, clicks made on the map are listened by the directive
+and a request gets issued to the query service.</p>
+<p>This directive doesn't require to be rendered in a visible DOM element, but
+it could be used with a ngeo-btn to manage the activation of the directive.
+See below an example without any use of UI:</p>
 <p>Example:</p>
-<pre class="prettyprint source"><code> &lt;div gmf-mobile-measure-point=&quot;&quot;
-   gmf-mobile-measure-point-active=&quot;ctrl.measurePointActive&quot;
-   gmf-mobile-measure-point-map=&quot;::ctrl.map&quot;>
- &lt;/div></code></pre>
+<pre class="prettyprint source"><code> &lt;span
+   ngeo-map-query=&quot;&quot;
+   ngeo-map-query-map=&quot;::ctrl.map&quot;
+   ngeo-map-query-active=&quot;ctrl.queryActive&quot;>
+ &lt;/span></code></pre><p>See our live example: <code>../examples/mapquery.html</code></p>
 </div>
 
 
@@ -101,8 +108,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/mobilemeasurepoint.js">contribs/gmf/src/directives/mobilemeasurepoint.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/mobilemeasurepoint.js#L46">line 46</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/directives/mapquery.js">src/directives/mapquery.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/directives/mapquery.js#L34">line 34</a>
     </li></ul></dd>
     
 

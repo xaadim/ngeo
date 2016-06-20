@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: MeasureLength</title>
+    <title>JSDoc: Class: DisplayqueriesController <small>Controller:GmfDisplayqueriesController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: MeasureLength</h1>
+    <h1 class="page-title">Class: DisplayqueriesController <small>Controller:GmfDisplayqueriesController</small></h1>
 
     
 
@@ -28,12 +28,9 @@
 
 <header>
     
-        <h2 id="MeasureLength">
-            <span class="ancestors">ngeo.interaction.</span>MeasureLength
+        <h2 id="DisplayqueriesController">
+            <span class="ancestors">gmf.</span>DisplayqueriesController
         </h2>
-        
-            <div class="class-description"><p>Interaction dedicated to measure length.</p>
-<p>See our live example: <code>../examples/measure.html</code></p></div>
         
     
 </header>
@@ -44,10 +41,8 @@
         
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="MeasureLength"><span class="type-signature"></span>new MeasureLength<span class="signature">([opt_options]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="DisplayqueriesController"><span class="type-signature"></span>new DisplayqueriesController<span class="signature">($scope, ngeoQueryResult, ngeoFeatureOverlayMgr)</span><span class="type-signature"></span></h4>
 
     
 
@@ -74,8 +69,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -88,7 +81,7 @@
 
         <tr>
             
-                <td class="name"><code>[opt_options]</code></td>
+                <td class="name"><code>$scope</code></td>
             
 
             <td class="type">
@@ -96,20 +89,47 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
-                
-                </td>
+            <td class="description last"><p>Angular scope.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoQueryResult</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
             
 
             
 
-            <td class="description last"><p>Options</p></td>
+            <td class="description last"><p>ngeo query result.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoFeatureOverlayMgr</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ngeo feature
+    overlay manager service.</p></td>
         </tr>
 
     
@@ -153,8 +173,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measurelength.js">src/ol-ext/interaction/measurelength.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measurelength.js#L19">line 19</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L91">line 91</a>
     </li></ul></dd>
     
 
@@ -184,17 +204,6 @@
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="ngeo.interaction.Measure.html">ngeo.interaction.Measure</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -209,163 +218,10 @@
 
         
             
-<h4 class="name" id="continueMsg"><span class="type-signature"></span>continueMsg<span class="type-signature"> :Element</span></h4>
+<h4 class="name" id="animate"><span class="type-signature"></span>animate<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
 
 
 
-
-<div class="description">
-    <p>Message to show after the first point is clicked.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Element</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#continueMsg">ngeo.interaction.Measure#continueMsg</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measurelength.js">src/ol-ext/interaction/measurelength.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measurelength.js#L30">line 30</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="createDrawInteraction"><span class="type-signature">(protected) </span>createDrawInteraction<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Creates the draw interaction.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#createDrawInteraction">ngeo.interaction.Measure#createDrawInteraction</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L390">line 390</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="decimals"><span class="type-signature">(protected, nullable) </span>decimals<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
-
-
-
-
-<div class="description">
-    <p>Defines the number of decimals to keep in the measurement. If not defined,
-then the default behaviour occurs depending on the measure type.</p>
-</div>
 
 
 
@@ -390,11 +246,6 @@ then the default behaviour occurs depending on the measure type.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#decimals">ngeo.interaction.Measure#decimals</a>
-    </li></ul></dd>
-    
 
     
 
@@ -418,8 +269,8 @@ then the default behaviour occurs depending on the measure type.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L140">line 140</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L209">line 209</a>
     </li></ul></dd>
     
 
@@ -437,17 +288,27 @@ then the default behaviour occurs depending on the measure type.</p>
 
         
             
-<h4 class="name" id="handleMeasure"><span class="type-signature">(protected) </span>handleMeasure<span class="type-signature"></span></h4>
+<h4 class="name" id="collapsed"><span class="type-signature"></span>collapsed<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
 
 
 
 
 <div class="description">
-    <p>Function implemented in inherited classes to compute measurement, determine
-where to place the tooltip and determine which help message to display.</p>
+    <p>Is the window currently collapsed?
+When used for Desktop, it is shown non-collapsed.</p>
 </div>
 
 
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+        </li>
+    </ul>
 
 
 
@@ -462,10 +323,75 @@ where to place the tooltip and determine which help message to display.</p>
     
 
     
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#handleMeasure">ngeo.interaction.Measure#handleMeasure</a>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L112">line 112</a>
     </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="currentResult"><span class="type-signature"></span>currentResult<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
     
 
     
@@ -488,8 +414,8 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L555">line 555</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L197">line 197</a>
     </li></ul></dd>
     
 
@@ -507,14 +433,80 @@ where to place the tooltip and determine which help message to display.</p>
 
         
             
-<h4 class="name" id="sketchFeature"><span class="type-signature">(protected) </span>sketchFeature<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span></h4>
+<h4 class="name" id="desktop"><span class="type-signature"></span>desktop<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
 
 
 
 
-<div class="description">
-    <p>The sketch feature.</p>
-</div>
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="feature"><span class="type-signature"></span>feature<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span></h4>
+
+
+
 
 
 
@@ -539,11 +531,6 @@ where to place the tooltip and determine which help message to display.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#sketchFeature">ngeo.interaction.Measure#sketchFeature</a>
-    </li></ul></dd>
-    
 
     
 
@@ -567,8 +554,8 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L126">line 126</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L191">line 191</a>
     </li></ul></dd>
     
 
@@ -586,14 +573,10 @@ where to place the tooltip and determine which help message to display.</p>
 
         
             
-<h4 class="name" id="startMsg"><span class="type-signature"></span>startMsg<span class="type-signature"> :Element</span></h4>
+<h4 class="name" id="isNext"><span class="type-signature"></span>isNext<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
 
 
 
-
-<div class="description">
-    <p>The message to show when user is about to start drawing.</p>
-</div>
 
 
 
@@ -601,7 +584,7 @@ where to place the tooltip and determine which help message to display.</p>
     <ul>
         <li>
             
-<span class="param-type">Element</span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
 
 
         </li>
@@ -617,11 +600,6 @@ where to place the tooltip and determine which help message to display.</p>
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#startMsg">ngeo.interaction.Measure#startMsg</a>
-    </li></ul></dd>
     
 
     
@@ -646,8 +624,362 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L154">line 154</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L203">line 203</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ngeoQueryResult"><span class="type-signature"></span>ngeoQueryResult<span class="type-signature"> :<a href="ngeox.html#QueryResult">ngeox.QueryResult</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ngeox.html#QueryResult">ngeox.QueryResult</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="open"><span class="type-signature"></span>open<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L215">line 215</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="selectedSource"><span class="type-signature">(nullable) </span>selectedSource<span class="type-signature"> :<a href="ngeox.html#QueryResultSource">ngeox.QueryResultSource</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ngeox.html#QueryResultSource">ngeox.QueryResultSource</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L138">line 138</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="source"><span class="type-signature">(nullable) </span>source<span class="type-signature"> :<a href="ngeox.html#QueryResultSource">ngeox.QueryResultSource</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ngeox.html#QueryResultSource">ngeox.QueryResultSource</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L185">line 185</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="sourcesFilter"><span class="type-signature"></span>sourcesFilter<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Object that is used to filter the source list in the template.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L126">line 126</a>
     </li></ul></dd>
     
 
@@ -674,101 +1006,15 @@ where to place the tooltip and determine which help message to display.</p>
 
     
 
-    <h4 class="name" id="getDrawInteraction"><span class="type-signature"></span>getDrawInteraction<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#getDrawInteraction">ngeo.interaction.Measure#getDrawInteraction</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L377">line 377</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getTooltipElement"><span class="type-signature"></span>getTooltipElement<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Get a reference to the tooltip element.</p>
+    <p>Remove the current selected feature and source and remove all features
+from the map.</p>
 </div>
 
 
@@ -792,11 +1038,6 @@ where to place the tooltip and determine which help message to display.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#getTooltipElement">ngeo.interaction.Measure#getTooltipElement</a>
-    </li></ul></dd>
-    
 
     
 
@@ -820,8 +1061,8 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L563">line 563</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L452">line 452</a>
     </li></ul></dd>
     
 
@@ -852,7 +1093,268 @@ where to place the tooltip and determine which help message to display.</p>
 
     
 
-    <h4 class="name" id="setMap"><span class="type-signature"></span>setMap<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="close"><span class="type-signature"></span>close<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Remove the current selected feature and source and remove all features
+from the map.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L441">line 441</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getFeatureValues"><span class="type-signature"></span>getFeatureValues<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Delete the unwanted ol3 properties from the current feature then return the
+properties.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L370">line 370</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getResultLength"><span class="type-signature"></span>getResultLength<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the total count of features in the result of the query. If a source
+has been select, only the number of features of that source are returned.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L337">line 337</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="isFirst"><span class="type-signature"></span>isFirst<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -879,10 +1381,87 @@ where to place the tooltip and determine which help message to display.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ngeo.interaction.Measure.html#setMap">ngeo.interaction.Measure#setMap</a>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L350">line 350</a>
     </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="isLast"><span class="type-signature"></span>isLast<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
     
 
     
@@ -907,8 +1486,396 @@ where to place the tooltip and determine which help message to display.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/src/ol-ext/interaction/measure.js#L396">line 396</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L359">line 359</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="next"><span class="type-signature"></span>next<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Select the logical next source and feature then highlight this feature on
+the map.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L318">line 318</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="previous"><span class="type-signature"></span>previous<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Select the logical previous source and feature then highlight this feature on
+the map.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L301">line 301</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setSelectedSource"><span class="type-signature"></span>setSelectedSource<span class="signature">(source)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The source to select.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L466">line 466</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="show"><span class="type-signature"></span>show<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Remove current displayed results then get new results from the
+ngeoQueryResult sevice. Display all results on the map and display,
+highlight the first feature.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js">contribs/gmf/src/directives/displayqueries.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/915511500ca6d5a5723bdeabf779d0fe9690b60b/contribs/gmf/src/directives/displayqueries.js#L237">line 237</a>
     </li></ul></dd>
     
 
