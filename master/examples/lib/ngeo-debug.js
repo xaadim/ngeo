@@ -225,7 +225,7 @@ goog.define('goog.TRUSTED_SITE', true);
  *
  * This define can be used to trigger alternate implementations compatible with
  * running in EcmaScript Strict mode or warn about unavailable functionality.
- * @see https://goo.gl/g5EoHI
+ * @see https://goo.gl/PudQ4y
  *
  */
 goog.define('goog.STRICT_MODE_COMPATIBLE', false);
@@ -805,12 +805,23 @@ goog.loadedModules_ = {};
 goog.DEPENDENCIES_ENABLED = !COMPILED && goog.ENABLE_DEBUG_LOADER;
 
 
-/** @define {boolean} Whether to always transpile every file. */
-goog.define('goog.ALWAYS_TRANSPILE', false);
+/**
+ * @define {string} How to decide whether to transpile.  Valid values
+ * are 'always', 'never', and 'detect'.  The default ('detect') is to
+ * use feature detection to determine which language levels need
+ * transpilation.
+ */
+// NOTE(user): we could expand this to accept a language level to bypass
+// detection: e.g. goog.TRANSPILE == 'es5' would transpile ES6 files but
+// would leave ES3 and ES5 files alone.
+goog.define('goog.TRANSPILE', 'detect');
 
 
-/** @define {boolean} Never transpile if this is set. */
-goog.define('goog.NEVER_TRANSPILE', false);
+/**
+ * @define {string} Path to the transpiler.  Executing the script at this
+ * path (relative to base.js) should define a function $jscomp.transpile.
+ */
+goog.define('goog.TRANSPILER', 'transpile.js');
 
 
 if (goog.DEPENDENCIES_ENABLED) {
@@ -1088,68 +1099,6 @@ if (goog.DEPENDENCIES_ENABLED) {
 
 
   /**
-   * @param {function(?):?|string} moduleDef The module definition.
-   */
-  goog.loadModule = function(moduleDef) {
-    // NOTE: we allow function definitions to be either in the from
-    // of a string to eval (which keeps the original source intact) or
-    // in a eval forbidden environment (CSP) we allow a function definition
-    // which in its body must call {@code goog.module}, and return the exports
-    // of the module.
-    var previousState = goog.moduleLoaderState_;
-    try {
-      goog.moduleLoaderState_ = {
-        moduleName: undefined,
-        declareLegacyNamespace: false
-      };
-      var exports;
-      if (goog.isFunction(moduleDef)) {
-        exports = moduleDef.call(goog.global, {});
-      } else if (goog.isString(moduleDef)) {
-        exports = goog.loadModuleFromSource_.call(goog.global, moduleDef);
-      } else {
-        throw Error('Invalid module definition');
-      }
-
-      var moduleName = goog.moduleLoaderState_.moduleName;
-      if (!goog.isString(moduleName) || !moduleName) {
-        throw Error('Invalid module name \"' + moduleName + '\"');
-      }
-
-      // Don't seal legacy namespaces as they may be uses as a parent of
-      // another namespace
-      if (goog.moduleLoaderState_.declareLegacyNamespace) {
-        goog.constructNamespace_(moduleName, exports);
-      } else if (goog.SEAL_MODULE_EXPORTS && Object.seal) {
-        Object.seal(exports);
-      }
-
-      goog.loadedModules_[moduleName] = exports;
-    } finally {
-      goog.moduleLoaderState_ = previousState;
-    }
-  };
-
-
-  /**
-   * @private @const {function(string):?}
-   *
-   * The new type inference warns because this function has no formal
-   * parameters, but its jsdoc says that it takes one argument.
-   * (The argument is used via arguments[0], but NTI does not detect this.)
-   * @suppress {newCheckTypes}
-   */
-  goog.loadModuleFromSource_ = function() {
-    // NOTE: we avoid declaring parameters or local variables here to avoid
-    // masking globals or leaking values into the module definition.
-    'use strict';
-    var exports = {};
-    eval(arguments[0]);
-    return exports;
-  };
-
-
-  /**
    * Writes a new script pointing to {@code src} directly into the DOM.
    *
    * NOTE: This method is not CSP-compliant. @see goog.appendScriptSrcNode_ for
@@ -1262,9 +1211,9 @@ if (goog.DEPENDENCIES_ENABLED) {
    * @private
    */
   goog.needsTranspile_ = function(lang) {
-    if (goog.ALWAYS_TRANSPILE) {
+    if (goog.TRANSPILE == 'always') {
       return true;
-    } else if (goog.NEVER_TRANSPILE) {
+    } else if (goog.TRANSPILE == 'never') {
       return false;
     } else if (!goog.transpiledLanguages_) {
       goog.transpiledLanguages_ = {'es5': true, 'es6': true, 'es6-impl': true};
@@ -1445,6 +1394,68 @@ if (goog.DEPENDENCIES_ENABLED) {
 
 
 /**
+ * @param {function(?):?|string} moduleDef The module definition.
+ */
+goog.loadModule = function(moduleDef) {
+  // NOTE: we allow function definitions to be either in the from
+  // of a string to eval (which keeps the original source intact) or
+  // in a eval forbidden environment (CSP) we allow a function definition
+  // which in its body must call {@code goog.module}, and return the exports
+  // of the module.
+  var previousState = goog.moduleLoaderState_;
+  try {
+    goog.moduleLoaderState_ = {
+      moduleName: undefined,
+      declareLegacyNamespace: false
+    };
+    var exports;
+    if (goog.isFunction(moduleDef)) {
+      exports = moduleDef.call(undefined, {});
+    } else if (goog.isString(moduleDef)) {
+      exports = goog.loadModuleFromSource_.call(undefined, moduleDef);
+    } else {
+      throw Error('Invalid module definition');
+    }
+
+    var moduleName = goog.moduleLoaderState_.moduleName;
+    if (!goog.isString(moduleName) || !moduleName) {
+      throw Error('Invalid module name \"' + moduleName + '\"');
+    }
+
+    // Don't seal legacy namespaces as they may be uses as a parent of
+    // another namespace
+    if (goog.moduleLoaderState_.declareLegacyNamespace) {
+      goog.constructNamespace_(moduleName, exports);
+    } else if (goog.SEAL_MODULE_EXPORTS && Object.seal) {
+      Object.seal(exports);
+    }
+
+    goog.loadedModules_[moduleName] = exports;
+  } finally {
+    goog.moduleLoaderState_ = previousState;
+  }
+};
+
+
+/**
+ * @private @const {function(string):?}
+ *
+ * The new type inference warns because this function has no formal
+ * parameters, but its jsdoc says that it takes one argument.
+ * (The argument is used via arguments[0], but NTI does not detect this.)
+ * @suppress {newCheckTypes}
+ */
+goog.loadModuleFromSource_ = function() {
+  // NOTE: we avoid declaring parameters or local variables here to avoid
+  // masking globals or leaking values into the module definition.
+  'use strict';
+  var exports = {};
+  eval(arguments[0]);
+  return exports;
+};
+
+
+/**
  * Normalize a file path by removing redundant ".." and extraneous "." file
  * path components.
  * @param {string} path
@@ -1479,11 +1490,20 @@ goog.loadFileSync_ = function(src) {
   if (goog.global.CLOSURE_LOAD_FILE_SYNC) {
     return goog.global.CLOSURE_LOAD_FILE_SYNC(src);
   } else {
-    /** @type {XMLHttpRequest} */
-    var xhr = new goog.global['XMLHttpRequest']();
-    xhr.open('get', src, false);
-    xhr.send();
-    return xhr.status == 200 ? xhr.responseText : null;
+    try {
+      /** @type {XMLHttpRequest} */
+      var xhr = new goog.global['XMLHttpRequest']();
+      xhr.open('get', src, false);
+      xhr.send();
+      // NOTE: Successful http: requests have a status of 200, but successful
+      // file: requests may have a status of zero.  Any other status, or a
+      // thrown exception (particularly in case of file: requests) indicates
+      // some sort of error, which we treat as a missing or unavailable file.
+      return xhr.status == 0 || xhr.status == 200 ? xhr.responseText : null;
+    } catch (err) {
+      // No need to rethrow or log, since errors should show up on their own.
+      return null;
+    }
   }
 };
 
@@ -1545,7 +1565,7 @@ goog.transpile_ = function(code, path) {
   }
   var transpile = jscomp.transpile;
   if (!transpile) {
-    var transpilerPath = goog.basePath + 'transpile.js';
+    var transpilerPath = goog.basePath + goog.TRANSPILER;
     var transpilerCode = goog.loadFileSync_(transpilerPath);
     if (transpilerCode) {
       // This must be executed synchronously, since by the time we know we
@@ -4897,7 +4917,7 @@ goog.asserts.assert = function(condition, opt_message, var_args) {
  *  switch(type) {
  *    case FOO: doSomething(); break;
  *    case BAR: doSomethingElse(); break;
- *    default: goog.assert.fail('Unrecognized type: ' + type);
+ *    default: goog.asserts.fail('Unrecognized type: ' + type);
  *      // We have only 2 types - "default:" section is unreachable code.
  *  }
  * </pre>
@@ -26270,6 +26290,474 @@ goog.dom.safe.openInWindow = function(
       opt_replace);
 };
 
+// Copyright 2014 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview The SafeScript type and its builders.
+ *
+ * TODO(xtof): Link to document stating type contract.
+ */
+
+goog.provide('goog.html.SafeScript');
+
+goog.require('goog.asserts');
+goog.require('goog.string.Const');
+goog.require('goog.string.TypedString');
+
+
+
+/**
+ * A string-like object which represents JavaScript code and that carries the
+ * security type contract that its value, as a string, will not cause execution
+ * of unconstrained attacker controlled code (XSS) when evaluated as JavaScript
+ * in a browser.
+ *
+ * Instances of this type must be created via the factory method
+ * {@code goog.html.SafeScript.fromConstant} and not by invoking its
+ * constructor. The constructor intentionally takes no parameters and the type
+ * is immutable; hence only a default instance corresponding to the empty string
+ * can be obtained via constructor invocation.
+ *
+ * A SafeScript's string representation can safely be interpolated as the
+ * content of a script element within HTML. The SafeScript string should not be
+ * escaped before interpolation.
+ *
+ * Note that the SafeScript might contain text that is attacker-controlled but
+ * that text should have been interpolated with appropriate escaping,
+ * sanitization and/or validation into the right location in the script, such
+ * that it is highly constrained in its effect (for example, it had to match a
+ * set of whitelisted words).
+ *
+ * A SafeScript can be constructed via security-reviewed unchecked
+ * conversions. In this case producers of SafeScript must ensure themselves that
+ * the SafeScript does not contain unsafe script. Note in particular that
+ * {@code &lt;} is dangerous, even when inside JavaScript strings, and so should
+ * always be forbidden or JavaScript escaped in user controlled input. For
+ * example, if {@code &lt;/script&gt;&lt;script&gt;evil&lt;/script&gt;"} were
+ * interpolated inside a JavaScript string, it would break out of the context
+ * of the original script element and {@code evil} would execute. Also note
+ * that within an HTML script (raw text) element, HTML character references,
+ * such as "&lt;" are not allowed. See
+ * http://www.w3.org/TR/html5/scripting-1.html#restrictions-for-contents-of-script-elements.
+ *
+ * @see goog.html.SafeScript#fromConstant
+ * @constructor
+ * @final
+ * @struct
+ * @implements {goog.string.TypedString}
+ */
+goog.html.SafeScript = function() {
+  /**
+   * The contained value of this SafeScript.  The field has a purposely
+   * ugly name to make (non-compiled) code that attempts to directly access this
+   * field stand out.
+   * @private {string}
+   */
+  this.privateDoNotAccessOrElseSafeScriptWrappedValue_ = '';
+
+  /**
+   * A type marker used to implement additional run-time type checking.
+   * @see goog.html.SafeScript#unwrap
+   * @const
+   * @private
+   */
+  this.SAFE_SCRIPT_TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ =
+      goog.html.SafeScript.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_;
+};
+
+
+/**
+ * @override
+ * @const
+ */
+goog.html.SafeScript.prototype.implementsGoogStringTypedString = true;
+
+
+/**
+ * Type marker for the SafeScript type, used to implement additional
+ * run-time type checking.
+ * @const {!Object}
+ * @private
+ */
+goog.html.SafeScript.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ = {};
+
+
+/**
+ * Creates a SafeScript object from a compile-time constant string.
+ *
+ * @param {!goog.string.Const} script A compile-time-constant string from which
+ *     to create a SafeScript.
+ * @return {!goog.html.SafeScript} A SafeScript object initialized to
+ *     {@code script}.
+ */
+goog.html.SafeScript.fromConstant = function(script) {
+  var scriptString = goog.string.Const.unwrap(script);
+  if (scriptString.length === 0) {
+    return goog.html.SafeScript.EMPTY;
+  }
+  return goog.html.SafeScript.createSafeScriptSecurityPrivateDoNotAccessOrElse(
+      scriptString);
+};
+
+
+/**
+ * Returns this SafeScript's value as a string.
+ *
+ * IMPORTANT: In code where it is security relevant that an object's type is
+ * indeed {@code SafeScript}, use {@code goog.html.SafeScript.unwrap} instead of
+ * this method. If in doubt, assume that it's security relevant. In particular,
+ * note that goog.html functions which return a goog.html type do not guarantee
+ * the returned instance is of the right type. For example:
+ *
+ * <pre>
+ * var fakeSafeHtml = new String('fake');
+ * fakeSafeHtml.__proto__ = goog.html.SafeHtml.prototype;
+ * var newSafeHtml = goog.html.SafeHtml.htmlEscape(fakeSafeHtml);
+ * // newSafeHtml is just an alias for fakeSafeHtml, it's passed through by
+ * // goog.html.SafeHtml.htmlEscape() as fakeSafeHtml
+ * // instanceof goog.html.SafeHtml.
+ * </pre>
+ *
+ * @see goog.html.SafeScript#unwrap
+ * @override
+ */
+goog.html.SafeScript.prototype.getTypedStringValue = function() {
+  return this.privateDoNotAccessOrElseSafeScriptWrappedValue_;
+};
+
+
+if (goog.DEBUG) {
+  /**
+   * Returns a debug string-representation of this value.
+   *
+   * To obtain the actual string value wrapped in a SafeScript, use
+   * {@code goog.html.SafeScript.unwrap}.
+   *
+   * @see goog.html.SafeScript#unwrap
+   * @override
+   */
+  goog.html.SafeScript.prototype.toString = function() {
+    return 'SafeScript{' +
+        this.privateDoNotAccessOrElseSafeScriptWrappedValue_ + '}';
+  };
+}
+
+
+/**
+ * Performs a runtime check that the provided object is indeed a
+ * SafeScript object, and returns its value.
+ *
+ * @param {!goog.html.SafeScript} safeScript The object to extract from.
+ * @return {string} The safeScript object's contained string, unless
+ *     the run-time type check fails. In that case, {@code unwrap} returns an
+ *     innocuous string, or, if assertions are enabled, throws
+ *     {@code goog.asserts.AssertionError}.
+ */
+goog.html.SafeScript.unwrap = function(safeScript) {
+  // Perform additional Run-time type-checking to ensure that
+  // safeScript is indeed an instance of the expected type.  This
+  // provides some additional protection against security bugs due to
+  // application code that disables type checks.
+  // Specifically, the following checks are performed:
+  // 1. The object is an instance of the expected type.
+  // 2. The object is not an instance of a subclass.
+  // 3. The object carries a type marker for the expected type. "Faking" an
+  // object requires a reference to the type marker, which has names intended
+  // to stand out in code reviews.
+  if (safeScript instanceof goog.html.SafeScript &&
+      safeScript.constructor === goog.html.SafeScript &&
+      safeScript.SAFE_SCRIPT_TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ ===
+          goog.html.SafeScript.TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_) {
+    return safeScript.privateDoNotAccessOrElseSafeScriptWrappedValue_;
+  } else {
+    goog.asserts.fail('expected object of type SafeScript, got \'' +
+        safeScript + '\' of type ' + goog.typeOf(safeScript));
+    return 'type_error:SafeScript';
+  }
+};
+
+
+/**
+ * Package-internal utility method to create SafeScript instances.
+ *
+ * @param {string} script The string to initialize the SafeScript object with.
+ * @return {!goog.html.SafeScript} The initialized SafeScript object.
+ * @package
+ */
+goog.html.SafeScript.createSafeScriptSecurityPrivateDoNotAccessOrElse =
+    function(script) {
+  return new goog.html.SafeScript().initSecurityPrivateDoNotAccessOrElse_(
+      script);
+};
+
+
+/**
+ * Called from createSafeScriptSecurityPrivateDoNotAccessOrElse(). This
+ * method exists only so that the compiler can dead code eliminate static
+ * fields (like EMPTY) when they're not accessed.
+ * @param {string} script
+ * @return {!goog.html.SafeScript}
+ * @private
+ */
+goog.html.SafeScript.prototype.initSecurityPrivateDoNotAccessOrElse_ = function(
+    script) {
+  this.privateDoNotAccessOrElseSafeScriptWrappedValue_ = script;
+  return this;
+};
+
+
+/**
+ * A SafeScript instance corresponding to the empty string.
+ * @const {!goog.html.SafeScript}
+ */
+goog.html.SafeScript.EMPTY =
+    goog.html.SafeScript.createSafeScriptSecurityPrivateDoNotAccessOrElse('');
+
+// Copyright 2013 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Unchecked conversions to create values of goog.html types from
+ * plain strings.  Use of these functions could potentially result in instances
+ * of goog.html types that violate their type contracts, and hence result in
+ * security vulnerabilties.
+ *
+ * Therefore, all uses of the methods herein must be carefully security
+ * reviewed.  Avoid use of the methods in this file whenever possible; instead
+ * prefer to create instances of goog.html types using inherently safe builders
+ * or template systems.
+ *
+ *
+ *
+ * @visibility {//closure/goog/html:approved_for_unchecked_conversion}
+ * @visibility {//closure/goog/bin/sizetests:__pkg__}
+ */
+
+
+goog.provide('goog.html.uncheckedconversions');
+
+goog.require('goog.asserts');
+goog.require('goog.html.SafeHtml');
+goog.require('goog.html.SafeScript');
+goog.require('goog.html.SafeStyle');
+goog.require('goog.html.SafeStyleSheet');
+goog.require('goog.html.SafeUrl');
+goog.require('goog.html.TrustedResourceUrl');
+goog.require('goog.string');
+goog.require('goog.string.Const');
+
+
+/**
+ * Performs an "unchecked conversion" to SafeHtml from a plain string that is
+ * known to satisfy the SafeHtml type contract.
+ *
+ * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
+ * that the value of {@code html} satisfies the SafeHtml type contract in all
+ * possible program states.
+ *
+ *
+ * @param {!goog.string.Const} justification A constant string explaining why
+ *     this use of this method is safe. May include a security review ticket
+ *     number.
+ * @param {string} html A string that is claimed to adhere to the SafeHtml
+ *     contract.
+ * @param {?goog.i18n.bidi.Dir=} opt_dir The optional directionality of the
+ *     SafeHtml to be constructed. A null or undefined value signifies an
+ *     unknown directionality.
+ * @return {!goog.html.SafeHtml} The value of html, wrapped in a SafeHtml
+ *     object.
+ * @suppress {visibility} For access to SafeHtml.create...  Note that this
+ *     use is appropriate since this method is intended to be "package private"
+ *     within goog.html.  DO NOT call SafeHtml.create... from outside this
+ *     package; use appropriate wrappers instead.
+ */
+goog.html.uncheckedconversions.safeHtmlFromStringKnownToSatisfyTypeContract =
+    function(justification, html, opt_dir) {
+  // unwrap() called inside an assert so that justification can be optimized
+  // away in production code.
+  goog.asserts.assertString(
+      goog.string.Const.unwrap(justification), 'must provide justification');
+  goog.asserts.assert(
+      !goog.string.isEmptyOrWhitespace(goog.string.Const.unwrap(justification)),
+      'must provide non-empty justification');
+  return goog.html.SafeHtml.createSafeHtmlSecurityPrivateDoNotAccessOrElse(
+      html, opt_dir || null);
+};
+
+
+/**
+ * Performs an "unchecked conversion" to SafeScript from a plain string that is
+ * known to satisfy the SafeScript type contract.
+ *
+ * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
+ * that the value of {@code script} satisfies the SafeScript type contract in
+ * all possible program states.
+ *
+ *
+ * @param {!goog.string.Const} justification A constant string explaining why
+ *     this use of this method is safe. May include a security review ticket
+ *     number.
+ * @param {string} script The string to wrap as a SafeScript.
+ * @return {!goog.html.SafeScript} The value of {@code script}, wrapped in a
+ *     SafeScript object.
+ */
+goog.html.uncheckedconversions.safeScriptFromStringKnownToSatisfyTypeContract =
+    function(justification, script) {
+  // unwrap() called inside an assert so that justification can be optimized
+  // away in production code.
+  goog.asserts.assertString(
+      goog.string.Const.unwrap(justification), 'must provide justification');
+  goog.asserts.assert(
+      !goog.string.isEmpty(goog.string.Const.unwrap(justification)),
+      'must provide non-empty justification');
+  return goog.html.SafeScript.createSafeScriptSecurityPrivateDoNotAccessOrElse(
+      script);
+};
+
+
+/**
+ * Performs an "unchecked conversion" to SafeStyle from a plain string that is
+ * known to satisfy the SafeStyle type contract.
+ *
+ * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
+ * that the value of {@code style} satisfies the SafeUrl type contract in all
+ * possible program states.
+ *
+ *
+ * @param {!goog.string.Const} justification A constant string explaining why
+ *     this use of this method is safe. May include a security review ticket
+ *     number.
+ * @param {string} style The string to wrap as a SafeStyle.
+ * @return {!goog.html.SafeStyle} The value of {@code style}, wrapped in a
+ *     SafeStyle object.
+ */
+goog.html.uncheckedconversions.safeStyleFromStringKnownToSatisfyTypeContract =
+    function(justification, style) {
+  // unwrap() called inside an assert so that justification can be optimized
+  // away in production code.
+  goog.asserts.assertString(
+      goog.string.Const.unwrap(justification), 'must provide justification');
+  goog.asserts.assert(
+      !goog.string.isEmptyOrWhitespace(goog.string.Const.unwrap(justification)),
+      'must provide non-empty justification');
+  return goog.html.SafeStyle.createSafeStyleSecurityPrivateDoNotAccessOrElse(
+      style);
+};
+
+
+/**
+ * Performs an "unchecked conversion" to SafeStyleSheet from a plain string
+ * that is known to satisfy the SafeStyleSheet type contract.
+ *
+ * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
+ * that the value of {@code styleSheet} satisfies the SafeUrl type contract in
+ * all possible program states.
+ *
+ *
+ * @param {!goog.string.Const} justification A constant string explaining why
+ *     this use of this method is safe. May include a security review ticket
+ *     number.
+ * @param {string} styleSheet The string to wrap as a SafeStyleSheet.
+ * @return {!goog.html.SafeStyleSheet} The value of {@code styleSheet}, wrapped
+ *     in a SafeStyleSheet object.
+ */
+goog.html.uncheckedconversions
+    .safeStyleSheetFromStringKnownToSatisfyTypeContract = function(
+    justification, styleSheet) {
+  // unwrap() called inside an assert so that justification can be optimized
+  // away in production code.
+  goog.asserts.assertString(
+      goog.string.Const.unwrap(justification), 'must provide justification');
+  goog.asserts.assert(
+      !goog.string.isEmptyOrWhitespace(goog.string.Const.unwrap(justification)),
+      'must provide non-empty justification');
+  return goog.html.SafeStyleSheet
+      .createSafeStyleSheetSecurityPrivateDoNotAccessOrElse(styleSheet);
+};
+
+
+/**
+ * Performs an "unchecked conversion" to SafeUrl from a plain string that is
+ * known to satisfy the SafeUrl type contract.
+ *
+ * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
+ * that the value of {@code url} satisfies the SafeUrl type contract in all
+ * possible program states.
+ *
+ *
+ * @param {!goog.string.Const} justification A constant string explaining why
+ *     this use of this method is safe. May include a security review ticket
+ *     number.
+ * @param {string} url The string to wrap as a SafeUrl.
+ * @return {!goog.html.SafeUrl} The value of {@code url}, wrapped in a SafeUrl
+ *     object.
+ */
+goog.html.uncheckedconversions.safeUrlFromStringKnownToSatisfyTypeContract =
+    function(justification, url) {
+  // unwrap() called inside an assert so that justification can be optimized
+  // away in production code.
+  goog.asserts.assertString(
+      goog.string.Const.unwrap(justification), 'must provide justification');
+  goog.asserts.assert(
+      !goog.string.isEmptyOrWhitespace(goog.string.Const.unwrap(justification)),
+      'must provide non-empty justification');
+  return goog.html.SafeUrl.createSafeUrlSecurityPrivateDoNotAccessOrElse(url);
+};
+
+
+/**
+ * Performs an "unchecked conversion" to TrustedResourceUrl from a plain string
+ * that is known to satisfy the TrustedResourceUrl type contract.
+ *
+ * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
+ * that the value of {@code url} satisfies the TrustedResourceUrl type contract
+ * in all possible program states.
+ *
+ *
+ * @param {!goog.string.Const} justification A constant string explaining why
+ *     this use of this method is safe. May include a security review ticket
+ *     number.
+ * @param {string} url The string to wrap as a TrustedResourceUrl.
+ * @return {!goog.html.TrustedResourceUrl} The value of {@code url}, wrapped in
+ *     a TrustedResourceUrl object.
+ */
+goog.html.uncheckedconversions
+    .trustedResourceUrlFromStringKnownToSatisfyTypeContract = function(
+    justification, url) {
+  // unwrap() called inside an assert so that justification can be optimized
+  // away in production code.
+  goog.asserts.assertString(
+      goog.string.Const.unwrap(justification), 'must provide justification');
+  goog.asserts.assert(
+      !goog.string.isEmptyOrWhitespace(goog.string.Const.unwrap(justification)),
+      'must provide non-empty justification');
+  return goog.html.TrustedResourceUrl
+      .createTrustedResourceUrlSecurityPrivateDoNotAccessOrElse(url);
+};
+
 // Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26809,12 +27297,16 @@ goog.require('goog.dom.NodeType');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.safe');
 goog.require('goog.html.SafeHtml');
+goog.require('goog.html.uncheckedconversions');
 goog.require('goog.math.Coordinate');
 goog.require('goog.math.Size');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('goog.string.Unicode');
 goog.require('goog.userAgent');
+
+
+goog.forwardDeclare('goog.dom.TypedTagName');
 
 
 /**
@@ -27446,6 +27938,8 @@ goog.dom.getWindow_ = function(doc) {
 };
 
 
+// TODO(jakubvrana): Disallow {string} in tagName and change the return type to
+// {T}.
 /**
  * Returns a dom node with a set of attributes.  This function accepts varargs
  * for subsequent nodes to be added.  Subsequent nodes will be added to the
@@ -27455,7 +27949,7 @@ goog.dom.getWindow_ = function(doc) {
  * <code>createDom('div', null, createDom('p'), createDom('p'));</code>
  * would return a div with two child paragraphs
  *
- * @param {string} tagName Tag to create.
+ * @param {string|!goog.dom.TypedTagName<T>} tagName Tag to create.
  * @param {(Object|Array<string>|string)=} opt_attributes If object, then a map
  *     of name-value pairs for attributes. If a string, then this is the
  *     className of the new element. If an array, the elements will be joined
@@ -27464,6 +27958,7 @@ goog.dom.getWindow_ = function(doc) {
  *     strings for text nodes. If one of the var_args is an array or NodeList,
  *     its elements will be added as childNodes instead.
  * @return {!Element} Reference to a DOM node.
+ * @template T
  */
 goog.dom.createDom = function(tagName, opt_attributes, var_args) {
   return goog.dom.createDom_(document, arguments);
@@ -27479,7 +27974,7 @@ goog.dom.createDom = function(tagName, opt_attributes, var_args) {
  * @private
  */
 goog.dom.createDom_ = function(doc, args) {
-  var tagName = args[0];
+  var tagName = String(args[0]);
   var attributes = args[1];
 
   // Internet Explorer is dumb:
@@ -27580,11 +28075,12 @@ goog.dom.$dom = goog.dom.createDom;
 
 /**
  * Creates a new element.
- * @param {string} name Tag name.
+ * @param {string|!goog.dom.TypedTagName<T>} name Tag name.
  * @return {!Element} The new element.
+ * @template T
  */
 goog.dom.createElement = function(name) {
-  return document.createElement(name);
+  return document.createElement(String(name));
 };
 
 
@@ -27642,6 +28138,26 @@ goog.dom.createTable_ = function(doc, rows, columns, fillWithNbsp) {
     tbody.appendChild(tr);
   }
   return table;
+};
+
+
+
+/**
+ * Creates a new Node from constant strings of HTML markup.
+ * @param {...!goog.string.Const} var_args The HTML strings to concatenate then
+ *     convert into a node.
+ * @return {!Node}
+ */
+goog.dom.constHtmlToNode = function(var_args) {
+  var stringArray = goog.array.map(arguments, goog.string.Const.unwrap);
+  var safeHtml =
+      goog.html.uncheckedconversions
+          .safeHtmlFromStringKnownToSatisfyTypeContract(
+              goog.string.Const.from(
+                  'Constant HTML string, that gets turned into a ' +
+                  'Node later, so it will be automatically balanced.'),
+              stringArray.join(''));
+  return goog.dom.safeHtmlToNode(safeHtml);
 };
 
 
@@ -29183,7 +29699,7 @@ goog.dom.Appendable;
  * which will remove all child nodes from the old element and add them as
  * child nodes of the new DIV.
  *
- * @param {string} tagName Tag to create.
+ * @param {string|!goog.dom.TypedTagName<T>} tagName Tag to create.
  * @param {Object|string=} opt_attributes If object, then a map of name-value
  *     pairs for attributes. If a string, then this is the className of the new
  *     element.
@@ -29191,6 +29707,7 @@ goog.dom.Appendable;
  *     strings for text nodes. If one of the var_args is an array or
  *     NodeList, its elements will be added as childNodes instead.
  * @return {!Element} Reference to a DOM node.
+ * @template T
  */
 goog.dom.DomHelper.prototype.createDom = function(
     tagName, opt_attributes, var_args) {
@@ -29215,11 +29732,12 @@ goog.dom.DomHelper.prototype.$dom = goog.dom.DomHelper.prototype.createDom;
 
 /**
  * Creates a new element.
- * @param {string} name Tag name.
+ * @param {string|!goog.dom.TypedTagName<T>} name Tag name.
  * @return {!Element} The new element.
+ * @template T
  */
 goog.dom.DomHelper.prototype.createElement = function(name) {
-  return this.document_.createElement(name);
+  return this.document_.createElement(String(name));
 };
 
 
@@ -109414,8 +109932,27 @@ goog.events.EventType = {
   READYSTATECHANGE: 'readystatechange',
   RESIZE: 'resize',
   SCROLL: 'scroll',
-  TIMEUPDATE: 'timeupdate',
   UNLOAD: 'unload',
+
+  // Media events
+  CANPLAY: 'canplay',
+  CANPLAYTHROUGH: 'canplaythrough',
+  DURATIONCHANGE: 'durationchange',
+  EMPTIED: 'emptied',
+  ENDED: 'ended',
+  LOADEDDATA: 'loadeddata',
+  LOADEDMETADATA: 'loadedmetadata',
+  PAUSE: 'pause',
+  PLAY: 'play',
+  PLAYING: 'playing',
+  RATECHANGE: 'ratechange',
+  SEEKED: 'seeked',
+  SEEKING: 'seeking',
+  STALLED: 'stalled',
+  SUSPEND: 'suspend',
+  TIMEUPDATE: 'timeupdate',
+  VOLUMECHANGE: 'volumechange',
+  WAITING: 'waiting',
 
   // HTML 5 History events
   // See http://www.w3.org/TR/html5/browsers.html#event-definitions-0
@@ -109570,6 +110107,25 @@ goog.reflect.object = function(type, object) {
   return object;
 };
 
+/**
+ * Syntax for renaming property strings.
+ * @see http://go/jscompiler-renaming
+ * @see https://goo.gl/CRs09P
+ *
+ * Use this if you have an need to access a property as a string, but want
+ * to also have the property renamed by the compiler. In contrast to
+ * goog.reflect.object, this method takes an instance of an object.
+ *
+ * Properties must be simple names (not qualified names).
+ *
+ * @param {string} prop Name of the property
+ * @param {!Object} object Instance of the object whose type will be used
+ *     for renaming
+ * @return {string} The renamed property.
+ */
+goog.reflect.objectProperty = function(prop, object) {
+  return prop;
+};
 
 /**
  * To assert to the compiler that an operation is needed when it would
@@ -111754,7 +112310,7 @@ goog.events.uniqueIdCounter_ = 0;
  *
  * @param {string} identifier The identifier.
  * @return {string} A unique identifier.
- * @idGenerator
+ * @idGenerator {unique}
  */
 goog.events.getUniqueId = function(identifier) {
   return identifier + '_' + goog.events.uniqueIdCounter_++;
@@ -113841,6 +114397,52 @@ goog.math.Box.prototype.scale = function(sx, opt_sy) {
   return this;
 };
 
+// Copyright 2016 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview A record declaration to allow ClientRect and other rectangle
+ * like objects to be used with goog.math.Rect.
+ */
+
+goog.provide('goog.math.IRect');
+
+
+/**
+ * Record for representing rectangular regions, allows compatibility between
+ * things like ClientRect and goog.math.Rect.
+ *
+ * @record
+ */
+goog.math.IRect = function() {};
+
+
+/** @type {number} */
+goog.math.IRect.prototype.left;
+
+
+/** @type {number} */
+goog.math.IRect.prototype.top;
+
+
+/** @type {number} */
+goog.math.IRect.prototype.width;
+
+
+/** @type {number} */
+goog.math.IRect.prototype.height;
+
 // Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -113856,7 +114458,8 @@ goog.math.Box.prototype.scale = function(sx, opt_sy) {
 // limitations under the License.
 
 /**
- * @fileoverview A utility class for representing rectangles.
+ * @fileoverview A utility class for representing rectangles. Some of these
+ * functions should be migrated over to non-nullable params.
  */
 
 goog.provide('goog.math.Rect');
@@ -113864,6 +114467,7 @@ goog.provide('goog.math.Rect');
 goog.require('goog.asserts');
 goog.require('goog.math.Box');
 goog.require('goog.math.Coordinate');
+goog.require('goog.math.IRect');
 goog.require('goog.math.Size');
 
 
@@ -113876,6 +114480,7 @@ goog.require('goog.math.Size');
  * @param {number} h Height.
  * @struct
  * @constructor
+ * @implements {goog.math.IRect}
  */
 goog.math.Rect = function(x, y, w, h) {
   /** @type {number} */
@@ -113952,8 +114557,8 @@ if (goog.DEBUG) {
 
 /**
  * Compares rectangles for equality.
- * @param {goog.math.Rect} a A Rectangle.
- * @param {goog.math.Rect} b A Rectangle.
+ * @param {goog.math.IRect} a A Rectangle.
+ * @param {goog.math.IRect} b A Rectangle.
  * @return {boolean} True iff the rectangles have the same left, top, width,
  *     and height, or if both are null.
  */
@@ -113972,7 +114577,7 @@ goog.math.Rect.equals = function(a, b) {
 /**
  * Computes the intersection of this rectangle and the rectangle parameter.  If
  * there is no intersection, returns false and leaves this rectangle as is.
- * @param {goog.math.Rect} rect A Rectangle.
+ * @param {goog.math.IRect} rect A Rectangle.
  * @return {boolean} True iff this rectangle intersects with the parameter.
  */
 goog.math.Rect.prototype.intersection = function(rect) {
@@ -114000,8 +114605,8 @@ goog.math.Rect.prototype.intersection = function(rect) {
  * Returns the intersection of two rectangles. Two rectangles intersect if they
  * touch at all, for example, two zero width and height rectangles would
  * intersect if they had the same top and left.
- * @param {goog.math.Rect} a A Rectangle.
- * @param {goog.math.Rect} b A Rectangle.
+ * @param {goog.math.IRect} a A Rectangle.
+ * @param {goog.math.IRect} b A Rectangle.
  * @return {goog.math.Rect} A new intersection rect (even if width and height
  *     are 0), or null if there is no intersection.
  */
@@ -114029,8 +114634,8 @@ goog.math.Rect.intersection = function(a, b) {
  * Returns whether two rectangles intersect. Two rectangles intersect if they
  * touch at all, for example, two zero width and height rectangles would
  * intersect if they had the same top and left.
- * @param {goog.math.Rect} a A Rectangle.
- * @param {goog.math.Rect} b A Rectangle.
+ * @param {goog.math.IRect} a A Rectangle.
+ * @param {goog.math.IRect} b A Rectangle.
  * @return {boolean} Whether a and b intersect.
  */
 goog.math.Rect.intersects = function(a, b) {
@@ -114042,7 +114647,7 @@ goog.math.Rect.intersects = function(a, b) {
 
 /**
  * Returns whether a rectangle intersects this rectangle.
- * @param {goog.math.Rect} rect A rectangle.
+ * @param {goog.math.IRect} rect A rectangle.
  * @return {boolean} Whether rect intersects this rectangle.
  */
 goog.math.Rect.prototype.intersects = function(rect) {
@@ -114055,7 +114660,7 @@ goog.math.Rect.prototype.intersects = function(rect) {
  * an array of 0 to 4 rectangles defining the remaining regions of the first
  * rectangle after the second has been subtracted.
  * @param {goog.math.Rect} a A Rectangle.
- * @param {goog.math.Rect} b A Rectangle.
+ * @param {goog.math.IRect} b A Rectangle.
  * @return {!Array<!goog.math.Rect>} An array with 0 to 4 rectangles which
  *     together define the difference area of rectangle a minus rectangle b.
  */
@@ -114105,7 +114710,7 @@ goog.math.Rect.difference = function(a, b) {
  * Computes the difference regions between this rectangle and {@code rect}. The
  * return value is an array of 0 to 4 rectangles defining the remaining regions
  * of this rectangle after the other has been subtracted.
- * @param {goog.math.Rect} rect A Rectangle.
+ * @param {goog.math.IRect} rect A Rectangle.
  * @return {!Array<!goog.math.Rect>} An array with 0 to 4 rectangles which
  *     together define the difference area of rectangle a minus rectangle b.
  */
@@ -114116,7 +114721,7 @@ goog.math.Rect.prototype.difference = function(rect) {
 
 /**
  * Expand this rectangle to also include the area of the given rectangle.
- * @param {goog.math.Rect} rect The other rectangle.
+ * @param {goog.math.IRect} rect The other rectangle.
  */
 goog.math.Rect.prototype.boundingRect = function(rect) {
   // We compute right and bottom before we change left and top below.
@@ -114133,8 +114738,8 @@ goog.math.Rect.prototype.boundingRect = function(rect) {
 
 /**
  * Returns a new rectangle which completely contains both input rectangles.
- * @param {goog.math.Rect} a A rectangle.
- * @param {goog.math.Rect} b A rectangle.
+ * @param {goog.math.IRect} a A rectangle.
+ * @param {goog.math.IRect} b A rectangle.
  * @return {goog.math.Rect} A new bounding rect, or null if either rect is
  *     null.
  */
@@ -114143,10 +114748,10 @@ goog.math.Rect.boundingRect = function(a, b) {
     return null;
   }
 
-  var clone = a.clone();
-  clone.boundingRect(b);
+  var newRect = new goog.math.Rect(a.left, a.top, a.width, a.height);
+  newRect.boundingRect(b);
 
-  return clone;
+  return newRect;
 };
 
 
@@ -114154,20 +114759,20 @@ goog.math.Rect.boundingRect = function(a, b) {
  * Tests whether this rectangle entirely contains another rectangle or
  * coordinate.
  *
- * @param {goog.math.Rect|goog.math.Coordinate} another The rectangle or
+ * @param {goog.math.IRect|goog.math.Coordinate} another The rectangle or
  *     coordinate to test for containment.
  * @return {boolean} Whether this rectangle contains given rectangle or
  *     coordinate.
  */
 goog.math.Rect.prototype.contains = function(another) {
-  if (another instanceof goog.math.Rect) {
+  if (another instanceof goog.math.Coordinate) {
+    return another.x >= this.left && another.x <= this.left + this.width &&
+        another.y >= this.top && another.y <= this.top + this.height;
+  } else {  // (another instanceof goog.math.IRect)
     return this.left <= another.left &&
         this.left + this.width >= another.left + another.width &&
         this.top <= another.top &&
         this.top + this.height >= another.top + another.height;
-  } else {  // (another instanceof goog.math.Coordinate)
-    return another.x >= this.left && another.x <= this.left + this.width &&
-        another.y >= this.top && another.y <= this.top + this.height;
   }
 };
 
@@ -115968,11 +116573,10 @@ goog.style.setSafeStyleSheet = function(element, safeStyleSheet) {
     // selector was invalid or there were CSS comments.  Setting the cssText of
     // the style node works fine and ignores CSS that IE doesn't understand.
     // However IE >= 11 doesn't support cssText any more, so we make sure that
-    // cssText is a defined property and otherwise fall back to setTextContent.
+    // cssText is a defined property and otherwise fall back to innerHTML.
     element.cssText = stylesString;
   } else {
-    // NOTE: We could also set textContent directly here.
-    goog.dom.setTextContent(/** @type {!Element} */ (element), stylesString);
+    element.innerHTML = stylesString;
   }
 };
 
