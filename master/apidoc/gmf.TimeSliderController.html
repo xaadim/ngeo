@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: measureazimutDirective <small>directive:ngeoDrawpoint</small></title>
+    <title>JSDoc: Class: TimeSliderController <small>controller:gmfTimeSliderController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: measureazimutDirective <small>directive:ngeoDrawpoint</small></h1>
+    <h1 class="page-title">Class: TimeSliderController <small>controller:gmfTimeSliderController</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="measureazimutDirective">
-            <span class="ancestors">ngeo.</span>measureazimutDirective
+        <h2 id="TimeSliderController">
+            <span class="ancestors">gmf.</span>TimeSliderController
         </h2>
         
     
@@ -42,11 +42,709 @@
 
     
 
-    <h4 class="name" id="measureazimutDirective"><span class="type-signature"></span>new measureazimutDirective<span class="signature">($compile, gettext)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TimeSliderController"><span class="type-signature"></span>new TimeSliderController<span class="signature">($scope, gmfWMSTime)</span><span class="type-signature"></span></h4>
 
     
 
 
+
+<div class="description">
+    <p>TimeSliderController - directive controller</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular scope.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmfWMSTime</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>WMSTime service.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="dates"><span class="type-signature"></span>dates<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Model for the ui-slider directive (date in ms format)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L161">line 161</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="isModeRange"><span class="type-signature"></span>isModeRange<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>If the component is used to select a date range</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L118">line 118</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="maxValue"><span class="type-signature"></span>maxValue<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Maximal value of the slider (time in ms)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="minValue"><span class="type-signature"></span>minValue<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Minimal value of the slider (time in ms)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="sliderOptions"><span class="type-signature"></span>sliderOptions<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Default Slider options (used by ui-slider directive)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L150">line 150</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="time"><span class="type-signature"></span>time<span class="type-signature"> :<a href="gmfx.html#TimeProperty">gmfx.TimeProperty</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>A time object for directive initialization</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="gmfx.html#TimeProperty">gmfx.TimeProperty</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L111">line 111</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="timeValueList"><span class="type-signature"></span>timeValueList<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Used when WMS time object has a property 'values' instead of an interval</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>></span>
+|
+
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L139">line 139</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="onDateSelected"><span class="type-signature"></span>onDateSelected<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Function called after date(s) changed/selected</p>
+</div>
 
 
 
@@ -92,8 +790,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/src/directives/measureazimut.js">src/directives/measureazimut.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/src/directives/measureazimut.js#L18">line 18</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js">contribs/gmf/src/directives/timeslider.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/bf8c00d656b4c5c4c138106817bec90ed4054ce0/contribs/gmf/src/directives/timeslider.js#L103">line 103</a>
     </li></ul></dd>
     
 
@@ -119,21 +817,7 @@
 
 
 
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
+        
     
 
     
