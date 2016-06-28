@@ -103419,7 +103419,7 @@ ngeo.module.filter('ngeoScalify', ngeo.Scalify);
  *
  * Examples:
  *
- *      {{0.1234 | ngeoNumbrer}} => 0.123
+ *      {{0.1234 | ngeoNumber}} => 0.123
  *      {{1.234 | ngeoNumber}} => 1.23
  *      {{12.34 | ngeoNumber}} => 12.3
  *      {{123.4 | ngeoNumber}} => 123
@@ -103494,7 +103494,7 @@ ngeo.Number = function($locale) {
 ngeo.module.filter('ngeoNumber', ngeo.Number);
 
 /**
- * A filter used tormat a number with the prefix and unit
+ * A filter used to format a number with the prefix and unit
  *
  * Arguments:
  * - opt_unit: The unit to used, default is ''.
