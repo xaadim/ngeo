@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: measurelengthDirective <small>directive:ngeoDrawpoint</small></title>
+    <title>JSDoc: Class: AttributesController <small>controller:ngeoAttributesController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: measurelengthDirective <small>directive:ngeoDrawpoint</small></h1>
+    <h1 class="page-title">Class: AttributesController <small>controller:ngeoAttributesController</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="measurelengthDirective">
-            <span class="ancestors">ngeo.</span>measurelengthDirective
+        <h2 id="AttributesController">
+            <span class="ancestors">ngeo.</span>AttributesController
         </h2>
         
     
@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="measurelengthDirective"><span class="type-signature"></span>new measurelengthDirective<span class="signature">($compile, gettext)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AttributesController"><span class="type-signature"></span>new AttributesController<span class="signature">($scope, ngeoEventHelper)</span><span class="type-signature"></span></h4>
 
     
 
@@ -54,6 +54,68 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular scope.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoEventHelper</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ngeo event helper service</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -92,8 +154,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/measurelength.js">src/directives/measurelength.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/measurelength.js#L16">line 16</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js#L49">line 49</a>
     </li></ul></dd>
     
 
@@ -133,7 +195,368 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
 
+        
+            
+<h4 class="name" id="attributes"><span class="type-signature"></span>attributes<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="ngeox.html#Attribute">ngeox.Attribute</a>></span></h4>
+
+
+
+
+<div class="description">
+    <p>The list of attributes to create the form with.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="ngeox.html#Attribute">ngeox.Attribute</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js#L56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="feature"><span class="type-signature"></span>feature<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>The feature containing the values.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js#L63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="properties"><span class="type-signature"></span>properties<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, *></span></h4>
+
+
+
+
+<div class="description">
+    <p>The properties bound to the form, initialized with the inner properties
+of the feature.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, *></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js#L71">line 71</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleInputChange"><span class="type-signature"></span>handleInputChange<span class="signature">(name)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Called when an input node value changes</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attribute name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js#L120">line 120</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

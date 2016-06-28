@@ -94622,6 +94622,263 @@ ngeo.GeometryType = {
   TEXT: 'Text'
 };
 
+goog.provide('ngeo.EventHelper');
+
+goog.require('ngeo');
+
+
+/**
+ * Provides methods to manage the listening/unlistening of all sorts of
+ * events:
+ * - events from OpenLayers
+ * - events from Closure Library
+ *
+ * @constructor
+ * @ngdoc service
+ * @ngname ngeoEventHelper
+ * @ngInject
+ */
+ngeo.EventHelper = function() {
+
+  /**
+   * @type {Object.<number, ngeo.EventHelper.ListenerKeys>}
+   * @private
+   */
+  this.listenerKeys_ = {};
+
+};
+
+
+/**
+ * Utility method to add a listener key bound to a unique id. The key can
+ * come from an `ol.events` (default) or `goog.events`.
+ * @param {number} uid Unique id.
+ * @param {ol.EventsKey|goog.events.Key} key Key.
+ * @param {boolean=} opt_isol Whether it's an OpenLayers event or not. Defaults
+ *     to true.
+ * @export
+ */
+ngeo.EventHelper.prototype.addListenerKey = function(uid, key, opt_isol) {
+  if (!this.listenerKeys_[uid]) {
+    this.initListenerKey_(uid);
+  }
+
+  var isol = opt_isol !== undefined ? opt_isol : true;
+  if (isol) {
+    this.listenerKeys_[uid].ol.push(/** @type {ol.EventsKey} */ (key));
+  } else {
+    this.listenerKeys_[uid].goog.push(/** @type {goog.events.Key} */ (key));
+  }
+};
+
+
+/**
+ * Clear all listener keys from the given unique id.
+ * @param {number} uid Unique id.
+ * @export
+ */
+ngeo.EventHelper.prototype.clearListenerKey = function(uid) {
+  this.initListenerKey_(uid);
+};
+
+
+/**
+ * Utility method that does 2 things:
+ * - initialize the listener keys of a given uid with an array (if that key
+ *   has not array set yet)
+ * - unlisten any events if the array already exists for the given uid and
+ *   empty the array.
+ * @param {number} uid Unique id.
+ * @private
+ */
+ngeo.EventHelper.prototype.initListenerKey_ = function(uid) {
+  if (!this.listenerKeys_[uid]) {
+    this.listenerKeys_[uid] = {
+      goog: [],
+      ol: []
+    };
+  } else {
+    if (this.listenerKeys_[uid].goog.length) {
+      this.listenerKeys_[uid].goog.forEach(function(key) {
+        goog.events.unlistenByKey(key);
+      }, this);
+      this.listenerKeys_[uid].goog.length = 0;
+    }
+    if (this.listenerKeys_[uid].ol.length) {
+      this.listenerKeys_[uid].ol.forEach(function(key) {
+        ol.events.unlistenByKey(key);
+      }, this);
+      this.listenerKeys_[uid].ol.length = 0;
+    }
+  }
+};
+
+
+/**
+ * @typedef {{
+ *     goog: (Array.<goog.events.Key>),
+ *     ol: (Array.<ol.EventsKey>)
+ * }}
+ */
+ngeo.EventHelper.ListenerKeys;
+
+
+ngeo.module.service('ngeoEventHelper', ngeo.EventHelper);
+
+goog.provide('ngeo.AttributesController');
+goog.provide('ngeo.attributesDirective');
+
+goog.require('ngeo');
+goog.require('ngeo.EventHelper');
+
+
+/**
+ * Directive used to render the attributes of a feature into a form.
+ * Example:
+ *
+ *     <ngeo-attributes
+ *       ngeo-attributes-attributes="::ctrl.attributes"
+ *       ngeo-attributes-feature="::ctrl.feature">
+ *     </ngeo-attributes>
+ *
+ * @htmlAttribute {Array.<ngeox.Attribute>} ngeo-attributes-attributes The
+ *     list of attributes to use.
+ * @htmlAttribute {ol.Feature} ngeo-attributes-feature The feature.
+ * @return {angular.Directive} The directive specs.
+ * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoAttributes
+ */
+ngeo.attributesDirective = function() {
+  return {
+    controller: 'ngeoAttributesController',
+    scope: true,
+    bindToController: {
+      'attributes': '=ngeoAttributesAttributes',
+      'feature': '=ngeoAttributesFeature'
+    },
+    controllerAs: 'attrCtrl',
+    templateUrl: ngeo.baseTemplateUrl + '/attributes.html'
+  };
+};
+
+ngeo.module.directive('ngeoAttributes', ngeo.attributesDirective);
+
+
+/**
+ * @param {!angular.Scope} $scope Angular scope.
+ * @param {ngeo.EventHelper} ngeoEventHelper Ngeo event helper service
+ * @constructor
+ * @ngInject
+ * @ngdoc controller
+ * @ngname ngeoAttributesController
+ */
+ngeo.AttributesController = function($scope, ngeoEventHelper) {
+
+  /**
+   * The list of attributes to create the form with.
+   * @type {Array.<ngeox.Attribute>}
+   * @export
+   */
+  this.attributes;
+
+  /**
+   * The feature containing the values.
+   * @type {ol.Feature}
+   * @export
+   */
+  this.feature;
+
+  /**
+   * The properties bound to the form, initialized with the inner properties
+   * of the feature.
+   * @type {Object.<string, *>}
+   * @export
+   */
+  this.properties = this.feature.getProperties();
+
+  /**
+   * @type {!angular.Scope}
+   * @private
+   */
+  this.scope_ = $scope;
+
+  /**
+   * @type {ngeo.EventHelper}
+   * @private
+   */
+  this.ngeoEventHelper_ = ngeoEventHelper;
+
+  // Listen to the feature inner properties change and apply them to the form
+  var uid = goog.getUid(this);
+  this.ngeoEventHelper_.addListenerKey(
+    uid,
+    ol.events.listen(
+      this.feature,
+      ol.ObjectEventType.PROPERTYCHANGE,
+      this.handleFeaturePropertyChange_,
+      this
+    ),
+    true
+  );
+
+  /**
+   * While changes happen from the form (from the template), they are applied
+   * to the feature inner properties. The 'propertychange' event registered
+   * above does the opposite, i.e. it listens to the feature inner properties
+   * changes and apply them to the form. To prevent circular issues, while
+   * applying changes coming from the form, this flag is set. While set, changes
+   * from the feature inner properties are ignored.
+   * @type {boolean}
+   * @private
+   */
+  this.updating_ = false;
+
+  $scope.$on('$destroy', this.handleDestroy_.bind(this));
+
+};
+
+
+/**
+ * Called when an input node value changes
+ * @param {string} name Attribute name
+ * @export
+ */
+ngeo.AttributesController.prototype.handleInputChange = function(name) {
+  this.updating_ = true;
+  var value = this.properties[name];
+  this.feature.set(name, value);
+  this.updating_ = false;
+};
+
+
+/**
+ * Cleanup event listeners.
+ * @private
+ */
+ngeo.AttributesController.prototype.handleDestroy_ = function() {
+  var uid = goog.getUid(this);
+  this.ngeoEventHelper_.clearListenerKey(uid);
+};
+
+
+/**
+ * @param {ol.ObjectEvent} evt Event.
+ * @private
+ */
+ngeo.AttributesController.prototype.handleFeaturePropertyChange_ = function(
+  evt
+) {
+  if (this.updating_) {
+    return;
+  }
+  this.properties[evt.key] = evt.target.get(evt.key);
+  this.scope_.$apply();
+};
+
+
+ngeo.module.controller('ngeoAttributesController', ngeo.AttributesController);
+
 goog.provide('ngeo.BtnGroupController');
 goog.provide('ngeo.btnDirective');
 goog.provide('ngeo.btngroupDirective');
@@ -125372,109 +125629,6 @@ ngeo.Disclaimer.prototype.closeMessage_ = function(message) {
 
 ngeo.module.service('ngeoDisclaimer', ngeo.Disclaimer);
 
-goog.provide('ngeo.EventHelper');
-
-goog.require('ngeo');
-
-
-/**
- * Provides methods to manage the listening/unlistening of all sorts of
- * events:
- * - events from OpenLayers
- * - events from Closure Library
- *
- * @constructor
- * @ngdoc service
- * @ngname ngeoEventHelper
- * @ngInject
- */
-ngeo.EventHelper = function() {
-
-  /**
-   * @type {Object.<number, ngeo.EventHelper.ListenerKeys>}
-   * @private
-   */
-  this.listenerKeys_ = {};
-
-};
-
-
-/**
- * Utility method to add a listener key bound to a unique id. The key can
- * come from an `ol.events` (default) or `goog.events`.
- * @param {number} uid Unique id.
- * @param {ol.EventsKey|goog.events.Key} key Key.
- * @param {boolean=} opt_isol Whether it's an OpenLayers event or not. Defaults
- *     to true.
- * @export
- */
-ngeo.EventHelper.prototype.addListenerKey = function(uid, key, opt_isol) {
-  if (!this.listenerKeys_[uid]) {
-    this.initListenerKey_(uid);
-  }
-
-  var isol = opt_isol !== undefined ? opt_isol : true;
-  if (isol) {
-    this.listenerKeys_[uid].ol.push(/** @type {ol.EventsKey} */ (key));
-  } else {
-    this.listenerKeys_[uid].goog.push(/** @type {goog.events.Key} */ (key));
-  }
-};
-
-
-/**
- * Clear all listener keys from the given unique id.
- * @param {number} uid Unique id.
- * @export
- */
-ngeo.EventHelper.prototype.clearListenerKey = function(uid) {
-  this.initListenerKey_(uid);
-};
-
-
-/**
- * Utility method that does 2 things:
- * - initialize the listener keys of a given uid with an array (if that key
- *   has not array set yet)
- * - unlisten any events if the array already exists for the given uid and
- *   empty the array.
- * @param {number} uid Unique id.
- * @private
- */
-ngeo.EventHelper.prototype.initListenerKey_ = function(uid) {
-  if (!this.listenerKeys_[uid]) {
-    this.listenerKeys_[uid] = {
-      goog: [],
-      ol: []
-    };
-  } else {
-    if (this.listenerKeys_[uid].goog.length) {
-      this.listenerKeys_[uid].goog.forEach(function(key) {
-        goog.events.unlistenByKey(key);
-      }, this);
-      this.listenerKeys_[uid].goog.length = 0;
-    }
-    if (this.listenerKeys_[uid].ol.length) {
-      this.listenerKeys_[uid].ol.forEach(function(key) {
-        ol.events.unlistenByKey(key);
-      }, this);
-      this.listenerKeys_[uid].ol.length = 0;
-    }
-  }
-};
-
-
-/**
- * @typedef {{
- *     goog: (Array.<goog.events.Key>),
- *     ol: (Array.<ol.EventsKey>)
- * }}
- */
-ngeo.EventHelper.ListenerKeys;
-
-
-ngeo.module.service('ngeoEventHelper', ngeo.EventHelper);
-
 goog.provide('ngeo.Features');
 goog.require('ngeo');
 
@@ -128823,10 +128977,11 @@ goog.require('ngeo');
    * @ngInject
    */
   var runner = function($templateCache) {
+    $templateCache.put('ngeo/attributes.html', '<form class=form> <div class=form-group ng-repeat="attribute in ::attrCtrl.attributes"> <label>{{ attribute.name }}:</label> <div ng-switch=attribute.type> <select ng-switch-when=select ng-model=attrCtrl.properties[attribute.name] ng-change=attrCtrl.handleInputChange(attribute.name); class=form-control type=text> <option ng-repeat="attribute in ::attribute.choices" value="{{ ::attribute }}"> {{ ::attribute }} </option> </select> <input ng-switch-default ng-model=attrCtrl.properties[attribute.name] ng-change=attrCtrl.handleInputChange(attribute.name); class=form-control type=text> </div> </div> </form> ');
     $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span ng-bind-html=title></span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
-    $templateCache.put('ngeo/scaleselector.html', '<div class="btn-group btn-block" ng-class="::{\'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-default btn-sm dropdown-toggle" data-toggle=dropdown aria-expanded=false> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<i class=caret></i> </button> <ul class="dropdown-menu btn-block" role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
     $templateCache.put('ngeo/layertree.html', '<span ng-if=::!layertreeCtrl.isRoot>{{::layertreeCtrl.node.name}}</span> <input type=checkbox ng-if="::layertreeCtrl.node && !layertreeCtrl.node.children" ng-model=layertreeCtrl.getSetActive ng-model-options="{getterSetter: true}"> <ul ng-if=::layertreeCtrl.node.children> <li ng-repeat="node in ::layertreeCtrl.node.children" ngeo-layertree=::node ngeo-layertree-notroot ngeo-layertree-map=layertreeCtrl.map ngeo-layertree-nodelayerexpr=layertreeCtrl.nodelayerExpr ngeo-layertree-listenersexpr=layertreeCtrl.listenersExpr> </li> </ul> ');
     $templateCache.put('ngeo/colorpicker.html', '<table class=palette> <tr ng-repeat="colors in ::ctrl.colors"> <td ng-repeat="color in ::colors" ng-click=ctrl.setColor(color) ng-class="{\'selected\': color == ctrl.color}"> <div ng-style="::{\'background-color\': color}"></div> </td> </tr> </table> ');
+    $templateCache.put('ngeo/scaleselector.html', '<div class="btn-group btn-block" ng-class="::{\'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-default btn-sm dropdown-toggle" data-toggle=dropdown aria-expanded=false> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<i class=caret></i> </button> <ul class="dropdown-menu btn-block" role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
   };
 
   ngeo.module.run(runner);

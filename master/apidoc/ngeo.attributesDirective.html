@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: measurelengthDirective <small>directive:ngeoDrawpoint</small></title>
+    <title>JSDoc: Class: attributesDirective <small>directive:ngeoAttributes</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: measurelengthDirective <small>directive:ngeoDrawpoint</small></h1>
+    <h1 class="page-title">Class: attributesDirective <small>directive:ngeoAttributes</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="measurelengthDirective">
-            <span class="ancestors">ngeo.</span>measurelengthDirective
+        <h2 id="attributesDirective">
+            <span class="ancestors">ngeo.</span>attributesDirective
         </h2>
         
     
@@ -42,12 +42,20 @@
 
     
 
-    <h4 class="name" id="measurelengthDirective"><span class="type-signature"></span>new measurelengthDirective<span class="signature">($compile, gettext)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="attributesDirective"><span class="type-signature"></span>new attributesDirective<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
+<div class="description">
+    <p>Directive used to render the attributes of a feature into a form.
+Example:</p>
+<pre class="prettyprint source"><code>&lt;ngeo-attributes
+  ngeo-attributes-attributes=&quot;::ctrl.attributes&quot;
+  ngeo-attributes-feature=&quot;::ctrl.feature&quot;>
+&lt;/ngeo-attributes></code></pre>
+</div>
 
 
 
@@ -56,6 +64,80 @@
 
 
 
+
+
+
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-attributes-attributes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="ngeox.html#Attribute">ngeox.Attribute</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The
+    list of attributes to use.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-attributes-feature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The feature.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -92,8 +174,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/measurelength.js">src/directives/measurelength.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/measurelength.js#L16">line 16</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/038a9bc4dd38815300177c759f05d5a8dde2e942/src/directives/attributes.js#L25">line 25</a>
     </li></ul></dd>
     
 
