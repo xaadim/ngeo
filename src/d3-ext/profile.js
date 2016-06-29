@@ -205,17 +205,15 @@ ngeo.profile = function(options) {
       var extractor = elevationExtractor;
 
       width = Math.max(this.clientWidth - margin.right - margin.left, 0);
-      x = d3.scale.linear().range([0, width]);
+      x = d3.scaleLinear().range([0, width]);
 
       height = Math.max(this.clientHeight - margin.top - margin.bottom, 0);
-      y = d3.scale.linear().range([height, 0]);
+      y = d3.scaleLinear().range([height, 0]);
 
-      var xAxis = d3.svg.axis().scale(x).orient('bottom');
-      var yAxis = d3.svg.axis()
-          .scale(y)
-          .orient('left');
+      var xAxis = d3.axisBottom(x);
+      var yAxis = d3.axisLeft(y);
 
-      var area = d3.svg.area()
+      var area = d3.area()
           .x(function(d) {
             return x(extractor.dist(d));
           })
@@ -223,7 +221,7 @@ ngeo.profile = function(options) {
           .y1(function(d) {
             return y(extractor.z(d));
           });
-      var line = d3.svg.line()
+      var line = d3.line()
           .x(function(d) {
             return x(extractor.dist(d));
           })

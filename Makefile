@@ -31,7 +31,7 @@ GMF_APPS_LIBS_JS_FILES += \
 	node_modules/angular-ui-date/dist/date.js \
 	node_modules/bootstrap/dist/js/bootstrap.min.js \
 	node_modules/proj4/dist/proj4.js \
-	node_modules/d3/d3.min.js \
+	node_modules/d3/build/d3.min.js \
 	node_modules/typeahead.js/dist/typeahead.bundle.min.js
 
 BUILD_EXAMPLES_CHECK_TIMESTAMP_FILES := $(patsubst examples/%.html,.build/%.check.timestamp,$(EXAMPLES_HTML_FILES)) \
@@ -386,7 +386,7 @@ dist/gmf.js.map: dist/gmf.js
 	mkdir -p $@
 	cp -r $</* $@
 
-.build/examples-hosted/lib/d3.min.js: node_modules/d3/d3.min.js
+.build/examples-hosted/lib/d3.min.js: node_modules/d3/build/d3.min.js
 	mkdir -p $(dir $@)
 	cp $< $@
 
