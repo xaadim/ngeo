@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: printDirective <small>directive:gmfPrint</small></title>
+    <title>JSDoc: Class: AttributesController <small>controller:ngeoAttributesController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: printDirective <small>directive:gmfPrint</small></h1>
+    <h1 class="page-title">Class: AttributesController <small>controller:ngeoAttributesController</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="printDirective">
-            <span class="ancestors">gmf.</span>printDirective
+        <h2 id="AttributesController">
+            <span class="ancestors">ngeo.</span>AttributesController
         </h2>
         
     
@@ -42,24 +42,12 @@
 
     
 
-    <h4 class="name" id="printDirective"><span class="type-signature"></span>new printDirective<span class="signature">(gmfPrintTemplateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AttributesController"><span class="type-signature"></span>new AttributesController<span class="signature">($scope, ngeoEventHelper)</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>Provide a directive that display a print panel. This panel is populated with
-a form corresponding to the capabilities delivered by a GMF print v3 server.
-If you want to use another template for your print panel, you can see the
-available fields in the 'gmfx.PrintFields' classes.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code> &lt;gmf-print
-   gmf-print-map=&quot;mainCtrl.map&quot;
-   gmf-print-active=&quot;printActive&quot;
-   gmf-print-rotatemask=&quot;true&quot;>
- &lt;/gmf-print></code></pre>
-</div>
 
 
 
@@ -68,10 +56,7 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
 
 
-
-
-
-    <h5>HTML attributes:</h5>
+    <h5>Parameters:</h5>
     
 
 <table class="params">
@@ -96,15 +81,10 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
         <tr>
             
-                <td class="name"><code>gmf-print-map</code></td>
+                <td class="name"><code>$scope</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-
-
             
             </td>
 
@@ -112,22 +92,17 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
             
 
-            <td class="description last">The map.</td>
+            <td class="description last"><p>Angular scope.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>gmf-print-active</code></td>
+                <td class="name"><code>ngeoEventHelper</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
             
             </td>
 
@@ -135,37 +110,14 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
             
 
-            <td class="description last">A boolean that informs if the
-    panel is open or not.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-print-rotatemask</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Optional. True to apply
-    rotation on the mask instead of the map. By default, the map rotates.</td>
+            <td class="description last"><p>Ngeo event helper service</p></td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -202,8 +154,8 @@ available fields in the 'gmfx.PrintFields' classes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/contribs/gmf/src/directives/print.js">contribs/gmf/src/directives/print.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/contribs/gmf/src/directives/print.js#L89">line 89</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js#L49">line 49</a>
     </li></ul></dd>
     
 
@@ -243,7 +195,368 @@ available fields in the 'gmfx.PrintFields' classes.</p>
     
 
     
+        <h3 class="subsection-title">Members</h3>
 
+        
+            
+<h4 class="name" id="attributes"><span class="type-signature"></span>attributes<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="ngeox.html#Attribute">ngeox.Attribute</a>></span></h4>
+
+
+
+
+<div class="description">
+    <p>The list of attributes to create the form with.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="ngeox.html#Attribute">ngeox.Attribute</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js#L56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="feature"><span class="type-signature"></span>feature<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>The feature containing the values.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js#L63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="properties"><span class="type-signature"></span>properties<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, *></span></h4>
+
+
+
+
+<div class="description">
+    <p>The properties bound to the form, initialized with the inner properties
+of the feature.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, *></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js#L71">line 71</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleInputChange"><span class="type-signature"></span>handleInputChange<span class="signature">(name)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Called when an input node value changes</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attribute name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js">src/directives/attributes.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/directives/attributes.js#L120">line 120</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

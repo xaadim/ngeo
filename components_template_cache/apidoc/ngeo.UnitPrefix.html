@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: printDirective <small>directive:gmfPrint</small></title>
+    <title>JSDoc: Class: UnitPrefix <small>filter:ngeoUnitPrefix</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: printDirective <small>directive:gmfPrint</small></h1>
+    <h1 class="page-title">Class: UnitPrefix <small>filter:ngeoUnitPrefix</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="printDirective">
-            <span class="ancestors">gmf.</span>printDirective
+        <h2 id="UnitPrefix">
+            <span class="ancestors">ngeo.</span>UnitPrefix
         </h2>
         
     
@@ -42,23 +42,25 @@
 
     
 
-    <h4 class="name" id="printDirective"><span class="type-signature"></span>new printDirective<span class="signature">(gmfPrintTemplateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="UnitPrefix"><span class="type-signature"></span>new UnitPrefix<span class="signature">($filter)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provide a directive that display a print panel. This panel is populated with
-a form corresponding to the capabilities delivered by a GMF print v3 server.
-If you want to use another template for your print panel, you can see the
-available fields in the 'gmfx.PrintFields' classes.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code> &lt;gmf-print
-   gmf-print-map=&quot;mainCtrl.map&quot;
-   gmf-print-active=&quot;printActive&quot;
-   gmf-print-rotatemask=&quot;true&quot;>
- &lt;/gmf-print></code></pre>
+    <p>A filter used to format a number with the prefix and unit</p>
+<p>Arguments:</p>
+<ul>
+<li>opt_unit: The unit to used, default is ''.</li>
+<li>opt_type: (unit|square|binary) the type of units, default is 'unit'.</li>
+<li>opt_precision: The used precision, default is 3.</li>
+</ul>
+<p>Examples:</p>
+<pre class="prettyprint source"><code> {{25000 | ngeoUnitPrefix}} => 25 k
+ {{25000 | ngeoUnitPrefix:m}} => 25 km
+ {{25000000 | ngeoUnitPrefix:m²:square}} => 25 km²
+ {{2048 | ngeoUnitPrefix:o:binary}} => 2 Kio</code></pre>
 </div>
 
 
@@ -69,9 +71,7 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
 
 
-
-
-    <h5>HTML attributes:</h5>
+    <h5>Parameters:</h5>
     
 
 <table class="params">
@@ -96,15 +96,10 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
         <tr>
             
-                <td class="name"><code>gmf-print-map</code></td>
+                <td class="name"><code>$filter</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-
-
             
             </td>
 
@@ -112,60 +107,14 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
             
 
-            <td class="description last">The map.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-print-active</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A boolean that informs if the
-    panel is open or not.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-print-rotatemask</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Optional. True to apply
-    rotation on the mask instead of the map. By default, the map rotates.</td>
+            <td class="description last"><p>Angular filter</p></td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -202,8 +151,8 @@ available fields in the 'gmfx.PrintFields' classes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/contribs/gmf/src/directives/print.js">contribs/gmf/src/directives/print.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/contribs/gmf/src/directives/print.js#L89">line 89</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js#L137">line 137</a>
     </li></ul></dd>
     
 
@@ -244,6 +193,230 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~result"><span class="type-signature">(inner) </span>result<span class="signature">(number, [opt_unit]<span class="signature-attributes">opt</span>, [opt_type]<span class="signature-attributes">opt</span>, [opt_precision]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The number to format.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_unit]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The unit to used, default is ''.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_type]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>(unit|square|binary) the type of units, default is 'unit'.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_precision]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The used precision, default is 3.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js#L148">line 148</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

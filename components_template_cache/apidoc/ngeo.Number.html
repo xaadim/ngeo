@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: printDirective <small>directive:gmfPrint</small></title>
+    <title>JSDoc: Class: Number <small>filter:ngeoNumber</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: printDirective <small>directive:gmfPrint</small></h1>
+    <h1 class="page-title">Class: Number <small>filter:ngeoNumber</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="printDirective">
-            <span class="ancestors">gmf.</span>printDirective
+        <h2 id="Number">
+            <span class="ancestors">ngeo.</span>Number
         </h2>
         
     
@@ -42,23 +42,24 @@
 
     
 
-    <h4 class="name" id="printDirective"><span class="type-signature"></span>new printDirective<span class="signature">(gmfPrintTemplateUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Number"><span class="type-signature"></span>new Number<span class="signature">($locale)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provide a directive that display a print panel. This panel is populated with
-a form corresponding to the capabilities delivered by a GMF print v3 server.
-If you want to use another template for your print panel, you can see the
-available fields in the 'gmfx.PrintFields' classes.</p>
-<p>Example:</p>
-<pre class="prettyprint source"><code> &lt;gmf-print
-   gmf-print-map=&quot;mainCtrl.map&quot;
-   gmf-print-active=&quot;printActive&quot;
-   gmf-print-rotatemask=&quot;true&quot;>
- &lt;/gmf-print></code></pre>
+    <p>A filter used to format a number with a precision, using the locale.</p>
+<p>Arguments:</p>
+<ul>
+<li>opt_precision: The used precision, default is 3.</li>
+</ul>
+<p>Examples:</p>
+<pre class="prettyprint source"><code> {{0.1234 | ngeoNumber}} => 0.123
+ {{1.234 | ngeoNumber}} => 1.23
+ {{12.34 | ngeoNumber}} => 12.3
+ {{123.4 | ngeoNumber}} => 123
+ {{1234 | ngeoNumber}} => 1230</code></pre>
 </div>
 
 
@@ -69,9 +70,7 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
 
 
-
-
-    <h5>HTML attributes:</h5>
+    <h5>Parameters:</h5>
     
 
 <table class="params">
@@ -96,15 +95,10 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
         <tr>
             
-                <td class="name"><code>gmf-print-map</code></td>
+                <td class="name"><code>$locale</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
-
-
             
             </td>
 
@@ -112,60 +106,14 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
             
 
-            <td class="description last">The map.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-print-active</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A boolean that informs if the
-    panel is open or not.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gmf-print-rotatemask</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Optional. True to apply
-    rotation on the mask instead of the map. By default, the map rotates.</td>
+            <td class="description last"><p>Angular locale</p></td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -202,8 +150,8 @@ available fields in the 'gmfx.PrintFields' classes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/contribs/gmf/src/directives/print.js">contribs/gmf/src/directives/print.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/contribs/gmf/src/directives/print.js#L89">line 89</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js#L53">line 53</a>
     </li></ul></dd>
     
 
@@ -244,6 +192,174 @@ available fields in the 'gmfx.PrintFields' classes.</p>
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~result"><span class="type-signature">(inner) </span>result<span class="signature">(number, [opt_precision]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The number to format.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_precision]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The used precision, default is 3.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/dd36e974c156a679c3558995543dcf6eecb7baba/src/services/filters.js#L63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
