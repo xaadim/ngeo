@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Altitude <small>service:gmfAltitude</small></title>
+    <title>JSDoc: Class: EditFeature</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Altitude <small>service:gmfAltitude</small></h1>
+    <h1 class="page-title">Class: EditFeature</h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="Altitude">
-            <span class="ancestors">gmf.</span>Altitude
+        <h2 id="EditFeature">
+            <span class="ancestors">gmf.</span>EditFeature
         </h2>
         
     
@@ -42,16 +42,16 @@
 
     
 
-    <h4 class="name" id="Altitude"><span class="type-signature"></span>new Altitude<span class="signature">($http, gmfRasterUrl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="EditFeature"><span class="type-signature"></span>new EditFeature<span class="signature">($http, gmfLayersUrl)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>The Altitude service, uses the
-c2cgeoportal's raster to obtain different kinds of altitude information
-at a specific coordinate.</p>
+    <p>Service that provides methods to get, insert, update and delete vector
+features with the use of a GeoMapFish server as back-end.</p>
+<p>The GeoJSON format is used when obtaining or sending features.</p>
 </div>
 
 
@@ -105,7 +105,7 @@ at a specific coordinate.</p>
 
         <tr>
             
-                <td class="name"><code>gmfRasterUrl</code></td>
+                <td class="name"><code>gmfLayersUrl</code></td>
             
 
             <td class="type">
@@ -116,7 +116,7 @@ at a specific coordinate.</p>
 
             
 
-            <td class="description last"><p>URL to a raster service with altitude layers.</p></td>
+            <td class="description last"><p>Url to the GeoMapFish layers service.</p></td>
         </tr>
 
     
@@ -160,8 +160,8 @@ at a specific coordinate.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/altitude.js">contribs/gmf/src/services/altitude.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/altitude.js#L26">line 26</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js">contribs/gmf/src/services/editfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js#L19">line 19</a>
     </li></ul></dd>
     
 
@@ -210,7 +210,7 @@ at a specific coordinate.</p>
 
     
 
-    <h4 class="name" id="getAltitude"><span class="type-signature"></span>getAltitude<span class="signature">(coordinate, [opt_params]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="deleteFeature"><span class="type-signature"></span>deleteFeature<span class="signature">(layerId, feature)</span><span class="type-signature"></span></h4>
 
     
 
@@ -237,8 +237,6 @@ at a specific coordinate.</p>
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -251,7 +249,7 @@ at a specific coordinate.</p>
 
         <tr>
             
-                <td class="name"><code>coordinate</code></td>
+                <td class="name"><code>layerId</code></td>
             
 
             <td class="type">
@@ -259,25 +257,17 @@ at a specific coordinate.</p>
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>Coordinate.</p></td>
+            <td class="description last"><p>The layer id that contains the feature.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>[opt_params]</code></td>
+                <td class="name"><code>feature</code></td>
             
 
             <td class="type">
@@ -285,20 +275,10 @@ at a specific coordinate.</p>
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>Optional parameters for the request.</p></td>
+            <td class="description last"><p>The feature to delete.</p></td>
         </tr>
 
     
@@ -342,8 +322,440 @@ at a specific coordinate.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/altitude.js">contribs/gmf/src/services/altitude.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/altitude.js#L48">line 48</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js">contribs/gmf/src/services/editfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js#L104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getFeatures"><span class="type-signature"></span>getFeatures<span class="signature">(layerIds, extent)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layerIds</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>List of layer ids to get the features from.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>extent</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The extent where to get the features from.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js">contribs/gmf/src/services/editfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js#L42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="insertFeatures"><span class="type-signature"></span>insertFeatures<span class="signature">(layerId, features)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layerId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer id that contains the feature.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>features</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>List of features to insert.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js">contribs/gmf/src/services/editfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js#L69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="updateFeature"><span class="type-signature"></span>updateFeature<span class="signature">(layerId, feature)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layerId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer id that contains the feature.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>feature</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The feature to update.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js">contribs/gmf/src/services/editfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/5e3ec52de734e3038b711a3d1d7548c33819c6bc/contribs/gmf/src/services/editfeature.js#L85">line 85</a>
     </li></ul></dd>
     
 
