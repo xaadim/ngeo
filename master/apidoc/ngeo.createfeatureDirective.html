@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: measureareaDirective <small>directive:ngeoDrawpoint</small></title>
+    <title>JSDoc: Class: createfeatureDirective <small>directive:ngeoCreatefeature</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: measureareaDirective <small>directive:ngeoDrawpoint</small></h1>
+    <h1 class="page-title">Class: createfeatureDirective <small>directive:ngeoCreatefeature</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="measureareaDirective">
-            <span class="ancestors">ngeo.</span>measureareaDirective
+        <h2 id="createfeatureDirective">
+            <span class="ancestors">ngeo.</span>createfeatureDirective
         </h2>
         
     
@@ -42,12 +42,37 @@
 
     
 
-    <h4 class="name" id="measureareaDirective"><span class="type-signature"></span>new measureareaDirective<span class="signature">($compile, gettext, $filter)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createfeatureDirective"><span class="type-signature"></span>new createfeatureDirective<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
+<div class="description">
+    <p>A directive used to draw vector features of a single geometry type using
+either a 'draw' or 'measure' interaction. Once a feature is finished being
+drawn, it is added to a collection of features.</p>
+<p>The geometry types supported are:</p>
+<ul>
+<li>Point</li>
+<li>LineString</li>
+<li>Polygon</li>
+</ul>
+<p>Example:</p>
+<pre class="prettyprint source"><code>&lt;a
+  href
+  translate
+  ngeo-btn
+  ngeo-createfeature
+  ngeo-createfeature-active=&quot;ctrl.createPointActive&quot;
+  ngeo-createfeature-features=&quot;ctrl.features&quot;
+  ngeo-createfeature-geom-type=&quot;ctrl.pointGeomType&quot;
+  ngeo-createfeature-map=&quot;::ctrl.map&quot;
+  class=&quot;btn btn-default ngeo-createfeature-point&quot;
+  ng-class=&quot;{active: ctrl.createPointActive}&quot;
+  ng-model=&quot;ctrl.createPointActive&quot;>
+&lt;/a></code></pre>
+</div>
 
 
 
@@ -56,6 +81,128 @@
 
 
 
+
+
+
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-createfeature-active</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Whether the directive is
+    active or not.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-createfeature-features</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Collection.html">ol.Collection</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The collection of
+    features where to add those created by this directive.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-createfeature-geom-type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Determines the type
+    of geometry this directive should draw.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeo-createfeature-map</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The map.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -92,8 +239,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/measurearea.js">src/directives/measurearea.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/measurearea.js#L19">line 19</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L54">line 54</a>
     </li></ul></dd>
     
 

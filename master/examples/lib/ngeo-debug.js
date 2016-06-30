@@ -95221,956 +95221,6 @@ ngeo.controlDirective = function() {
 
 ngeo.module.directive('ngeoControl', ngeo.controlDirective);
 
-goog.provide('ngeo.DecorateGeolocation');
-
-goog.require('goog.asserts');
-goog.require('ngeo');
-
-
-/**
- * Provides a function that adds a "tracking" property (using
- * `Object.defineProperty`) to the `ol.Geolocation` instance, making it
- * possible to activate/deactivate the tracking mode.
- *
- * Example:
- *
- *      <input type="checkbox" ngModel="geolocation.tracking" />
- *
- * See our live example: {@link ../examples/geolocation.html}
- *
- * @typedef {function(ol.Geolocation)}
- * @ngdoc service
- * @ngname ngeoDecorateGeolocation
- */
-ngeo.DecorateGeolocation;
-
-
-/**
- * @param {ol.Geolocation} geolocation Geolocation to decorate.
- * @ngInject
- */
-ngeo.decorateGeolocation = function(geolocation) {
-  goog.asserts.assertInstanceof(geolocation, ol.Geolocation);
-
-  Object.defineProperty(geolocation, 'tracking', {
-    get: function() {
-      return geolocation.getTracking();
-    },
-    set: function(val) {
-      geolocation.setTracking(val);
-    }
-  });
-};
-
-
-ngeo.module.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
-
-goog.provide('ngeo.FeatureOverlay');
-goog.provide('ngeo.FeatureOverlayMgr');
-
-goog.require('goog.object');
-goog.require('ngeo');
-goog.require('ol.Collection');
-goog.require('ol.CollectionEvent');
-goog.require('ol.CollectionEventType');
-goog.require('ol.Feature');
-goog.require('ol.layer.Vector');
-goog.require('ol.source.Vector');
-goog.require('ol.style.Style');
-
-
-/**
- * @typedef {{
- *  styleFunction: ol.StyleFunction,
- *  features: Object.<string, ol.Feature>
- * }}
- */
-ngeo.FeatureOverlayGroup;
-
-
-/**
- * Provides a service that wraps an "unmanaged" vector layer,
- * used as a shared vector layer accross the application.
- *
- * Example:
- *
- * The application's main component/controller initializes the feature
- * overlay manager with the map:
- *
- *     ngeoFeatureOverlayMgr.init(map);
- *
- * Once initialized, components of the application can use the manager to
- * create a feature overlay, configuring it with specific styles:
- *
- *     var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
- *     featureOverlay.setStyle(myStyle);
- *     featureOverlay.addFeature(myFeature);
- *
- * @constructor
- * @ngdoc service
- * @ngname ngeoFeatureOverlayMgr
- */
-ngeo.FeatureOverlayMgr = function() {
-
-  /**
-   * @type {Object.<string, number>}
-   * @private
-   */
-  this.featureUidToGroupIndex_ = {};
-
-  /**
-   * @type {Array.<ngeo.FeatureOverlayGroup>}
-   * @private
-   */
-  this.groups_ = [];
-
-  /**
-   * @type {ol.source.Vector}
-   * @private
-   */
-  this.source_ = new ol.source.Vector({
-    useSpatialIndex: false
-  });
-
-  /**
-   * @type {ol.layer.Vector}
-   * @private
-   */
-  this.layer_ = new ol.layer.Vector({
-    source: this.source_,
-    style: this.styleFunction_.bind(this),
-    updateWhileAnimating: true,
-    updateWhileInteracting: true
-  });
-
-};
-
-
-/**
- * @param {ol.Feature} feature The feature to add.
- * @param {number} groupIndex The group groupIndex.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.addFeature = function(feature, groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  var featureUid = goog.getUid(feature).toString();
-  this.featureUidToGroupIndex_[featureUid] = groupIndex;
-  this.groups_[groupIndex].features[featureUid] = feature;
-  this.source_.addFeature(feature);
-};
-
-
-/**
- * @param {ol.Feature} feature The feature to add.
- * @param {number} groupIndex The group groupIndex.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.removeFeature = function(feature, groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  var featureUid = goog.getUid(feature).toString();
-  delete this.featureUidToGroupIndex_[featureUid];
-  delete this.groups_[groupIndex].features[featureUid];
-  this.source_.removeFeature(feature);
-};
-
-
-/**
- * @param {number} groupIndex The group groupIndex.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.clear = function(groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  var group = this.groups_[groupIndex];
-  for (var featureUid in group.features) {
-    this.removeFeature(group.features[featureUid], groupIndex);
-  }
-  goog.asserts.assert(goog.object.isEmpty(group.features));
-};
-
-
-/**
- * @return {ol.layer.Vector} The vector layer used internally.
- * @export
- */
-ngeo.FeatureOverlayMgr.prototype.getLayer = function() {
-  return this.layer_;
-};
-
-
-/**
- * @return {ngeo.FeatureOverlay} Feature overlay.
- * @export
- */
-ngeo.FeatureOverlayMgr.prototype.getFeatureOverlay = function() {
-  var groupIndex = this.groups_.length;
-  this.groups_.push({
-    styleFunction: ol.style.defaultStyleFunction,
-    features: {}
-  });
-  return new ngeo.FeatureOverlay(this, groupIndex);
-};
-
-
-/**
- * @param {ol.Map} map Map.
- * @export
- */
-ngeo.FeatureOverlayMgr.prototype.init = function(map) {
-  this.layer_.setMap(map);
-};
-
-
-/**
- * @param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction} style
- * Style.
- * @param {number} groupIndex Group index.
- * @protected
- */
-ngeo.FeatureOverlayMgr.prototype.setStyle = function(style, groupIndex) {
-  goog.asserts.assert(groupIndex >= 0);
-  goog.asserts.assert(groupIndex < this.groups_.length);
-  this.groups_[groupIndex].styleFunction = style === null ?
-      ol.style.defaultStyleFunction : ol.style.createStyleFunction(style);
-};
-
-
-/**
- * @param {ol.Feature|ol.render.Feature} feature Feature.
- * @param {number} resolution Resolution.
- * @return {Array.<ol.style.Style>|ol.style.Style} Styles.
- * @private
- */
-ngeo.FeatureOverlayMgr.prototype.styleFunction_ = function(feature, resolution) {
-  var featureUid = goog.getUid(feature).toString();
-  goog.asserts.assert(featureUid in this.featureUidToGroupIndex_);
-  var groupIndex = this.featureUidToGroupIndex_[featureUid];
-  var group = this.groups_[groupIndex];
-  return group.styleFunction(feature, resolution);
-};
-
-
-/**
- * @constructor
- * @param {ngeo.FeatureOverlayMgr} manager The feature overlay manager.
- * @param {number} index This feature overlay's index.
- */
-ngeo.FeatureOverlay = function(manager, index) {
-
-  /**
-   * @type {ngeo.FeatureOverlayMgr}
-   * @private
-   */
-  this.manager_ = manager;
-
-  /**
-   * @type {ol.Collection.<ol.Feature>}
-   * @private
-   */
-  this.features_ = null;
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.index_ = index;
-};
-
-
-/**
- * Add a feature to the feature overlay.
- * @param {ol.Feature} feature The feature to add.
- * @export
- */
-ngeo.FeatureOverlay.prototype.addFeature = function(feature) {
-  this.manager_.addFeature(feature, this.index_);
-};
-
-
-/**
- * Remove a feature from the feature overlay.
- * @param {ol.Feature} feature The feature to remove.
- * @export
- */
-ngeo.FeatureOverlay.prototype.removeFeature = function(feature) {
-  this.manager_.removeFeature(feature, this.index_);
-};
-
-
-/**
- * Remove all the features from the feature overlay.
- * @export
- */
-ngeo.FeatureOverlay.prototype.clear = function() {
-  this.manager_.clear(this.index_);
-};
-
-
-/**
- * Configure this feature overlay with a feature collection. Features added
- * to the collection are also added to the overlay. Same for removal. If you
- * configure the feature overlay with a feature collection you will use the
- * collection to add and remove features instead of using the overlay's
- * `addFeature`, `removeFeature` and `clear` functions.
- * @param {ol.Collection.<ol.Feature>} features Feature collection.
- * @export
- */
-ngeo.FeatureOverlay.prototype.setFeatures = function(features) {
-  if (this.features_ !== null) {
-    this.features_.clear();
-    ol.events.unlisten(this.features_, ol.CollectionEventType.ADD,
-        this.handleFeatureAdd_, this);
-    ol.events.unlisten(this.features_, ol.CollectionEventType.REMOVE,
-        this.handleFeatureRemove_, this);
-  }
-  if (features !== null) {
-    features.forEach(function(feature) {
-      this.addFeature(feature);
-    }, this);
-    ol.events.listen(features, ol.CollectionEventType.ADD,
-        this.handleFeatureAdd_, this);
-    ol.events.listen(features, ol.CollectionEventType.REMOVE,
-        this.handleFeatureRemove_, this);
-  }
-  this.features_ = features;
-};
-
-
-/**
- * Set a style for the feature overlay.
- * @param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction} style
- * Style.
- * @export
- */
-ngeo.FeatureOverlay.prototype.setStyle = function(style) {
-  this.manager_.setStyle(style, this.index_);
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Feature collection event.
- * @private
- */
-ngeo.FeatureOverlay.prototype.handleFeatureAdd_ = function(evt) {
-  var feature = /** @type {ol.Feature} */ (evt.element);
-  this.addFeature(feature);
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Feature collection event.
- * @private
- */
-ngeo.FeatureOverlay.prototype.handleFeatureRemove_ = function(evt) {
-  var feature = /** @type {ol.Feature} */ (evt.element);
-  this.removeFeature(feature);
-};
-
-
-ngeo.module.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
-
-goog.provide('ngeo.Message');
-
-
-/**
- * @enum {string}
- * @export
- */
-ngeo.MessageType = {
-  /**
-   * @type {string}
-   * @export
-   */
-  ERROR: 'error',
-  /**
-   * @type {string}
-   * @export
-   */
-  INFORMATION: 'information',
-  /**
-   * @type {string}
-   * @export
-   */
-  SUCCESS: 'success',
-  /**
-   * @type {string}
-   * @export
-   */
-  WARNING: 'warning'
-};
-
-
-/**
- * Abstract class for services that display messages.
- *
- * @constructor
- */
-ngeo.Message = function() {};
-
-
-/**
- * Show the message.
- * @param {ngeox.Message} message Message.
- * @protected
- */
-ngeo.Message.prototype.showMessage = goog.abstractMethod;
-
-
-/**
- * Show disclaimer message string or object or list of disclame message
- * strings or objects.
- * @param {string|Array.<string>|ngeox.Message|Array.<ngeox.Message>}
- *     object A message or list of messages as text or configuration objects.
- * @export
- */
-ngeo.Message.prototype.show = function(object) {
-  var msgObjects = this.getMessageObjects(object);
-  msgObjects.forEach(this.showMessage, this);
-};
-
-
-/**
- * Display the given error message or list of error messages.
- * @param {string|Array.<string>} message Message or list of messages.
- * @export
- */
-ngeo.Message.prototype.error = function(message) {
-  this.show(this.getMessageObjects(message, ngeo.MessageType.ERROR));
-};
-
-
-/**
- * Display the given info message or list of info messages.
- * @param {string|Array.<string>} message Message or list of messages.
- * @export
- */
-ngeo.Message.prototype.info = function(message) {
-  this.show(this.getMessageObjects(message, ngeo.MessageType.INFORMATION));
-};
-
-
-/**
- * Display the given success message or list of success messages.
- * @param {string|Array.<string>} message Message or list of messages.
- * @export
- */
-ngeo.Message.prototype.success = function(message) {
-  this.show(this.getMessageObjects(message, ngeo.MessageType.SUCCESS));
-};
-
-
-/**
- * Display the given warning message or list of warning messages.
- * @param {string|Array.<string>} message Message or list of messages.
- * @export
- */
-ngeo.Message.prototype.warn = function(message) {
-  this.show(this.getMessageObjects(message, ngeo.MessageType.WARNING));
-};
-
-
-/**
- * Returns an array of message object from any given message string, list of
- * message strings, message object or list message objects. The type can be
- * overriden here as well OR defined (if the message(s) is/are string(s),
- * defaults to 'information').
- * @param {string|Array.<string>|ngeox.Message|Array.<ngeox.Message>}
- *     object A message or list of messages as text or configuration objects.
- * @param {string=} opt_type The type of message to override the messages with.
- * @return {Array.<ngeox.Message>} List of message objects.
- * @protected
- */
-ngeo.Message.prototype.getMessageObjects = function(object, opt_type) {
-  var msgObjects = [];
-  var msgObject = null;
-  var defaultType = ngeo.MessageType.INFORMATION;
-
-  if (typeof object === 'string') {
-    msgObjects.push({
-      msg: object,
-      type: opt_type !== undefined ? opt_type : defaultType
-    });
-  } else if (Array.isArray(object)) {
-    object.forEach(function(msg) {
-      if (typeof object === 'string') {
-        msgObject = {
-          msg: msg,
-          type: opt_type !== undefined ? opt_type : defaultType
-        };
-      } else {
-        msgObject = msg;
-        if (opt_type !== undefined) {
-          msgObject.type = opt_type;
-        }
-      }
-      msgObjects.push(msgObject);
-    }, this);
-  } else {
-    msgObject = object;
-    if (opt_type !== undefined) {
-      msgObject.type = opt_type;
-    }
-    if (msgObject.type === undefined) {
-      msgObject.type = defaultType;
-    }
-    msgObjects.push(msgObject);
-  }
-
-  return msgObjects;
-};
-
-goog.provide('ngeo.Notification');
-
-goog.require('goog.asserts');
-goog.require('ngeo');
-goog.require('ngeo.Message');
-
-
-/**
- * Provides methods to display any sort of messages, notifications, errors,
- * etc. Requires Bootstrap library (both CSS and JS) to display the alerts
- * properly.
- *
- * @constructor
- * @extends {ngeo.Message}
- * @param {angular.$timeout} $timeout Angular timeout service.
- * @ngdoc service
- * @ngname ngeoNotification
- * @ngInject
- */
-ngeo.Notification = function($timeout) {
-
-  goog.base(this);
-
-  /**
-   * @type {angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
-
-  var container = angular.element('<div class="ngeo-notification"></div>');
-  angular.element(document.body).append(container);
-
-  /**
-   * @type {angular.JQLite}
-   * @private
-   */
-  this.container_ = container;
-
-  /**
-   * @type {Object.<number, ngeo.Notification.CacheItem>}
-   * @private
-   */
-  this.cache_ = {};
-
-};
-goog.inherits(ngeo.Notification, ngeo.Message);
-
-
-/**
- * Default delay (in milliseconds) a message should be displayed.
- * @type {number}
- * @private
- */
-ngeo.Notification.DEFAULT_DELAY_ = 7000;
-
-
-// MAIN API METHODS
-
-
-/**
- * Display the given message string or object or list of message strings or
- * objects.
- * @param {string|Array.<string>|ngeox.Message|Array.<ngeox.Message>}
- *     object A message or list of messages as text or configuration objects.
- * @export
- */
-ngeo.Notification.prototype.notify = function(object) {
-  this.show(object);
-};
-
-
-/**
- * Clears all messages that are currently being shown.
- * @export
- */
-ngeo.Notification.prototype.clear = function() {
-  for (var uid in this.cache_) {
-    this.clearMessageByCacheItem_(this.cache_[parseInt(uid, 10)]);
-  }
-};
-
-
-/**
- * Show the message.
- * @param {ngeox.Message} message Message.
- * @protected
- */
-ngeo.Notification.prototype.showMessage = function(message) {
-  var type = message.type;
-  goog.asserts.assertString(type, 'Type should be set.');
-
-  var classNames = ['alert', 'fade'];
-  switch (type) {
-    case ngeo.MessageType.ERROR:
-      classNames.push('alert-danger');
-      break;
-    case ngeo.MessageType.INFORMATION:
-      classNames.push('alert-info');
-      break;
-    case ngeo.MessageType.SUCCESS:
-      classNames.push('alert-success');
-      break;
-    case ngeo.MessageType.WARNING:
-      classNames.push('alert-warning');
-      break;
-    default:
-      break;
-  }
-
-  var el = angular.element('<div class="' + classNames.join(' ') + '"></div>');
-  var container;
-
-  if (message.target) {
-    container = angular.element(message.target);
-  } else {
-    container = this.container_;
-  }
-
-  container.append(el);
-  el.html(message.msg).addClass('in');
-
-  var delay = message.delay !== undefined ? message.delay :
-      ngeo.Notification.DEFAULT_DELAY_;
-
-  var item = /** @type {ngeo.Notification.CacheItem} */ ({
-    el: el
-  });
-
-  // Keep a reference to the promise, in case we want to manually cancel it
-  // before the delay
-  var uid = goog.getUid(el);
-  item.promise = this.timeout_(function() {
-    el.alert('close');
-    delete this.cache_[uid];
-  }.bind(this), delay);
-
-  this.cache_[uid] = item;
-};
-
-
-/**
- * Clear a message using its cache item.
- * @param {ngeo.Notification.CacheItem} item Cache item.
- * @private
- */
-ngeo.Notification.prototype.clearMessageByCacheItem_ = function(item) {
-  var el = item.el;
-  var promise = item.promise;
-  var uid = goog.getUid(el);
-
-  // Close the message
-  el.alert('close');
-
-  // Cancel timeout in case we want to stop before delay. If called by the
-  // timeout itself, then this has no consequence.
-  this.timeout_.cancel(promise);
-
-  // Delete the cache item
-  delete this.cache_[uid];
-};
-
-
-/**
- * @typedef {{
- *     el: angular.JQLite,
- *     promise: angular.$q.Promise
- * }}
- */
-ngeo.Notification.CacheItem;
-
-
-ngeo.module.service('ngeoNotification', ngeo.Notification);
-
-goog.provide('ngeo.DesktopGeolocationController');
-goog.provide('ngeo.desktopGeolocationDirective');
-
-goog.require('ngeo');
-goog.require('ngeo.DecorateGeolocation');
-goog.require('ngeo.FeatureOverlay');
-goog.require('ngeo.FeatureOverlayMgr');
-goog.require('ngeo.Notification');
-goog.require('ol.Feature');
-goog.require('ol.Geolocation');
-goog.require('ol.Map');
-goog.require('ol.geom.Point');
-
-
-/**
- * @enum {string}
- * @export
- */
-ngeo.DesktopGeolocationEventType = {
-  /**
-   * Triggered when an error occures.
-   */
-  ERROR: 'desktop-geolocation-error'
-};
-
-
-/**
- * Provide a "desktop geolocation" directive.
- *
- * Example:
- *
- *      <button ngeo-desktop-geolocation=""
- *        ngeo-desktop-geolocation-map="ctrl.map"
- *        ngeo-desktop-geolocation-options="ctrl.desktopGeolocationOptions">
- *      </button>
- *
- * See our live example: {@link ../examples/desktopgeolocation.html}
- *
- * @htmlAttribute {ol.Map} gmf-geolocation-map The map.
- * @htmlAttribute {ngeox.DesktopGeolocationDirectiveOptions} gmf-geolocation-options The options.
- * @return {angular.Directive} The Directive Definition Object.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoDesktopGeolocation
- */
-ngeo.desktopGeolocationDirective = function() {
-  return {
-    restrict: 'A',
-    scope: {
-      'getDesktopMapFn': '&ngeoDesktopGeolocationMap',
-      'getDesktopGeolocationOptionsFn': '&ngeoDesktopGeolocationOptions'
-    },
-    controller: 'NgeoDesktopGeolocationController',
-    controllerAs: 'ctrl'
-  };
-};
-
-
-ngeo.module.directive('ngeoDesktopGeolocation',
-    ngeo.desktopGeolocationDirective);
-
-
-/**
- * @constructor
- * @param {angular.Scope} $scope The directive's scope.
- * @param {angular.JQLite} $element Element.
- * @param {ngeo.DecorateGeolocation} ngeoDecorateGeolocation Decorate
- *     Geolocation service.
- * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
- *     overlay manager service.
- * @param {ngeo.Notification} ngeoNotification Ngeo notification service.
- * @export
- * @ngInject
- * @ngdoc controller
- * @ngname NgeoDesktopGeolocationController
- */
-ngeo.DesktopGeolocationController = function($scope, $element,
-    ngeoDecorateGeolocation, ngeoFeatureOverlayMgr, ngeoNotification) {
-
-  $element.on('click', this.toggle.bind(this));
-
-  var map = $scope['getDesktopMapFn']();
-  goog.asserts.assertInstanceof(map, ol.Map);
-
-  /**
-   * @type {!ol.Map}
-   * @private
-   */
-  this.map_ = map;
-
-  var options = $scope['getDesktopGeolocationOptionsFn']() || {};
-  goog.asserts.assertObject(options);
-
-  /**
-   * @type {!angular.Scope}
-   * @private
-   */
-  this.$scope_ = $scope;
-
-  /**
-   * @type {ngeo.Notification}
-   * @private
-   */
-  this.notification_ = ngeoNotification;
-
-  /**
-   * @type {ngeo.FeatureOverlay}
-   * @private
-   */
-  this.featureOverlay_ = ngeoFeatureOverlayMgr.getFeatureOverlay();
-
-  /**
-   * @type {ol.Geolocation}
-   * @private
-   */
-  this.geolocation_ = new ol.Geolocation({
-    projection: map.getView().getProjection()
-  });
-
-  // handle geolocation error.
-  this.geolocation_.on('error', function(error) {
-    this.deactivate_();
-    this.notification_.error(error.message);
-    $scope.$emit(ngeo.DesktopGeolocationEventType.ERROR, error);
-  }, this);
-
-  /**
-   * @type {ol.Feature}
-   * @private
-   */
-  this.positionFeature_ = new ol.Feature();
-
-  if (options.positionFeatureStyle) {
-    this.positionFeature_.setStyle(options.positionFeatureStyle);
-  }
-
-  /**
-   * @type {ol.Feature}
-   * @private
-   */
-  this.accuracyFeature_ = new ol.Feature();
-
-  if (options.accuracyFeatureStyle) {
-    this.accuracyFeature_.setStyle(options.accuracyFeatureStyle);
-  }
-
-  /**
-   * @type {number|undefined}
-   * @private
-   */
-  this.zoom_ = options.zoom;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.active_ = false;
-
-  ol.events.listen(
-      this.geolocation_,
-      ol.Object.getChangeEventType(ol.GeolocationProperty.ACCURACY_GEOMETRY),
-      function() {
-        this.accuracyFeature_.setGeometry(
-            this.geolocation_.getAccuracyGeometry());
-      },
-      this);
-
-  ol.events.listen(
-      this.geolocation_,
-      ol.Object.getChangeEventType(ol.GeolocationProperty.POSITION),
-      function(e) {
-        this.setPosition_(e);
-      },
-      this);
-
-  ngeoDecorateGeolocation(this.geolocation_);
-};
-
-
-/**
- * @export
- */
-ngeo.DesktopGeolocationController.prototype.toggle = function() {
-  if (this.active_) {
-    this.deactivate_();
-  } else {
-    this.activate_();
-  }
-};
-
-
-/**
- * @private
- */
-ngeo.DesktopGeolocationController.prototype.activate_ = function() {
-  this.featureOverlay_.addFeature(this.positionFeature_);
-  this.featureOverlay_.addFeature(this.accuracyFeature_);
-  this.geolocation_.setTracking(true);
-  this.active_ = true;
-};
-
-
-/**
- * @private
- */
-ngeo.DesktopGeolocationController.prototype.deactivate_ = function() {
-  this.featureOverlay_.clear();
-  this.active_ = false;
-  this.notification_.clear();
-};
-
-
-/**
- * @param {ol.ObjectEvent} event Event.
- * @private
- */
-ngeo.DesktopGeolocationController.prototype.setPosition_ = function(event) {
-  var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
-  var point = new ol.geom.Point(position);
-
-  this.positionFeature_.setGeometry(point);
-  this.map_.getView().setCenter(position);
-
-  if (this.zoom_ !== undefined) {
-    this.map_.getView().setZoom(this.zoom_);
-  }
-
-  this.geolocation_.setTracking(false);
-};
-
-
-ngeo.module.controller('NgeoDesktopGeolocationController',
-    ngeo.DesktopGeolocationController);
-
-goog.provide('ngeo.DecorateInteraction');
-
-goog.require('goog.asserts');
-goog.require('ngeo');
-
-
-/**
- * Provides a function that adds an "active" property (using
- * `Object.defineProperty`) to an interaction, making it possible to use ngModel
- * to activate/deactivate interactions.
- *
- * Example:
- *
- *      <input type="checkbox" ngModel="interaction.active" />
- *
- * See our live example: {@link ../examples/interactiontoggle.html}
- *
- * @typedef {function(ol.interaction.Interaction)}
- * @ngdoc service
- * @ngname ngeoDecorateInteraction
- */
-ngeo.DecorateInteraction;
-
-
-/**
- * @param {ol.interaction.Interaction} interaction Interaction to decorate.
- */
-ngeo.decorateInteraction = function(interaction) {
-  goog.asserts.assertInstanceof(interaction, ol.interaction.Interaction);
-
-  Object.defineProperty(interaction, 'active', {
-    get: function() {
-      return interaction.getActive();
-    },
-    set: function(val) {
-      interaction.setActive(val);
-    }
-  });
-};
-
-
-ngeo.module.value('ngeoDecorateInteraction', ngeo.decorateInteraction);
-
 goog.provide('ngeo.filters');
 
 goog.require('ngeo');
@@ -105303,6 +104353,1345 @@ ngeo.interaction.Measure.prototype.handleDrawInteractionActiveChange_ =
       }
     };
 
+goog.provide('ngeo.interaction.MeasureArea');
+
+goog.require('ngeo.interaction.Measure');
+goog.require('ol.geom.Polygon');
+goog.require('ol.interaction.Draw');
+
+
+/**
+ * @classdesc
+ * Interaction dedicated to measure length.
+ *
+ * See our live example: {@link ../examples/measure.html}
+ *
+ * @constructor
+ * @extends {ngeo.interaction.Measure}
+ * @param {ngeox.unitPrefix} format The format function
+ * @param {ngeox.interaction.MeasureOptions=} opt_options Options
+ * @export
+ */
+ngeo.interaction.MeasureArea = function(format, opt_options) {
+
+  var options = opt_options !== undefined ? opt_options : {};
+
+  goog.base(this, options);
+
+
+  /**
+   * Message to show after the first point is clicked.
+   * @type {Element}
+   */
+  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
+      goog.dom.createDom(goog.dom.TagName.SPAN, {},
+          'Click to continue drawing the polygon.',
+          goog.dom.createDom(goog.dom.TagName.BR),
+          'Double-click or click starting point to finish.');
+
+  /**
+   * The format function
+   * @type {ngeox.unitPrefix}
+   */
+  this.format = format;
+
+};
+goog.inherits(ngeo.interaction.MeasureArea, ngeo.interaction.Measure);
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasureArea.prototype.createDrawInteraction = function(style,
+    source) {
+
+  return new ol.interaction.Draw(
+      /** @type {olx.interaction.DrawOptions} */ ({
+        type: 'Polygon',
+        source: source,
+        style: style
+      }));
+
+};
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
+  var geom = /** @type {ol.geom.Polygon} */
+      (this.sketchFeature.getGeometry());
+  var proj = this.getMap().getView().getProjection();
+  var dec = this.decimals;
+  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj, dec, this.format);
+  var verticesCount = geom.getCoordinates()[0].length;
+  var coord = null;
+  if (verticesCount > 2) {
+    coord = geom.getInteriorPoint().getCoordinates();
+  }
+  callback(output, coord);
+};
+
+goog.provide('ngeo.interaction.MeasureLength');
+
+goog.require('ngeo.interaction.Measure');
+goog.require('ol.geom.LineString');
+goog.require('ol.interaction.Draw');
+
+
+/**
+ * @classdesc
+ * Interaction dedicated to measure length.
+ *
+ * See our live example: {@link ../examples/measure.html}
+ *
+ * @constructor
+ * @extends {ngeo.interaction.Measure}
+ * @param {ngeox.unitPrefix} format The format function
+ * @param {ngeox.interaction.MeasureOptions=} opt_options Options
+ * @export
+ */
+ngeo.interaction.MeasureLength = function(format, opt_options) {
+
+  var options = opt_options !== undefined ? opt_options : {};
+
+  goog.base(this, options);
+
+
+  /**
+   * Message to show after the first point is clicked.
+   * @type {Element}
+   */
+  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
+      goog.dom.createDom(goog.dom.TagName.SPAN, {},
+          'Click to continue drawing the line.',
+          goog.dom.createDom(goog.dom.TagName.BR),
+          'Double-click or click last point to finish.');
+
+  /**
+   * The format function
+   * @type {ngeox.unitPrefix}
+   */
+  this.format = format;
+
+};
+goog.inherits(ngeo.interaction.MeasureLength, ngeo.interaction.Measure);
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasureLength.prototype.createDrawInteraction = function(style,
+    source) {
+
+  return new ol.interaction.Draw(
+      /** @type {olx.interaction.DrawOptions} */ ({
+        type: 'LineString',
+        source: source,
+        style: style
+      }));
+
+};
+
+
+/**
+ * @inheritDoc
+ */
+ngeo.interaction.MeasureLength.prototype.handleMeasure = function(callback) {
+  var geom = /** @type {ol.geom.LineString} */
+      (this.sketchFeature.getGeometry());
+  var proj = this.getMap().getView().getProjection();
+  var dec = this.decimals;
+  var output = ngeo.interaction.Measure.getFormattedLength(geom, proj, dec, this.format);
+  var coord = geom.getLastCoordinate();
+  callback(output, coord);
+};
+
+goog.provide('ngeo.CreatefeatureController');
+goog.provide('ngeo.createfeatureDirective');
+
+goog.require('ngeo');
+goog.require('ngeo.EventHelper');
+/** @suppress {extraRequire} */
+goog.require('ngeo.filters');
+goog.require('ngeo.interaction.MeasureArea');
+goog.require('ngeo.interaction.MeasureLength');
+goog.require('ol.Feature');
+goog.require('ol.geom.GeometryType');
+goog.require('ol.interaction.Draw');
+goog.require('ol.style.Style');
+
+
+/**
+ * A directive used to draw vector features of a single geometry type using
+ * either a 'draw' or 'measure' interaction. Once a feature is finished being
+ * drawn, it is added to a collection of features.
+ *
+ * The geometry types supported are:
+ *  - Point
+ *  - LineString
+ *  - Polygon
+ *
+ * Example:
+ *
+ *     <a
+ *       href
+ *       translate
+ *       ngeo-btn
+ *       ngeo-createfeature
+ *       ngeo-createfeature-active="ctrl.createPointActive"
+ *       ngeo-createfeature-features="ctrl.features"
+ *       ngeo-createfeature-geom-type="ctrl.pointGeomType"
+ *       ngeo-createfeature-map="::ctrl.map"
+ *       class="btn btn-default ngeo-createfeature-point"
+ *       ng-class="{active: ctrl.createPointActive}"
+ *       ng-model="ctrl.createPointActive">
+ *     </a>
+ *
+ * @htmlAttribute {boolean} ngeo-createfeature-active Whether the directive is
+ *     active or not.
+ * @htmlAttribute {ol.Collection} ngeo-createfeature-features The collection of
+ *     features where to add those created by this directive.
+ * @htmlAttribute {string} ngeo-createfeature-geom-type Determines the type
+ *     of geometry this directive should draw.
+ * @htmlAttribute {ol.Map} ngeo-createfeature-map The map.
+ * @return {angular.Directive} The directive specs.
+ * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoCreatefeature
+ */
+ngeo.createfeatureDirective = function() {
+  return {
+    controller: 'ngeoCreatefeatureController',
+    bindToController: true,
+    scope: {
+      'active': '=ngeoCreatefeatureActive',
+      'features': '=ngeoCreatefeatureFeatures',
+      'geomType': '=ngeoCreatefeatureGeomType',
+      'map': '=ngeoCreatefeatureMap'
+    },
+    controllerAs: 'cfCtrl'
+  };
+};
+
+ngeo.module.directive('ngeoCreatefeature', ngeo.createfeatureDirective);
+
+
+/**
+ * @param {gettext} gettext Gettext service.
+ * @param {angular.$compile} $compile Angular compile service.
+ * @param {angular.$filter} $filter Angular filter
+ * @param {!angular.Scope} $scope Scope.
+ * @param {ngeo.EventHelper} ngeoEventHelper Ngeo event helper service
+ * @constructor
+ * @ngInject
+ * @ngdoc controller
+ * @ngname ngeoCreatefeatureController
+ */
+ngeo.CreatefeatureController = function(gettext, $compile, $filter, $scope,
+    ngeoEventHelper) {
+
+  /**
+   * @type {boolean}
+   * @export
+   */
+  this.active = this.active === true;
+
+  /**
+   * @type {ol.Collection.<ol.Feature>}
+   * @export
+   */
+  this.features;
+
+  /**
+   * @type {string}
+   * @export
+   */
+  this.geomType;
+
+  /**
+   * @type {ol.Map}
+   * @export
+   */
+  this.map;
+
+  /**
+   * @type {ngeo.EventHelper}
+   * @private
+   */
+  this.ngeoEventHelper_ = ngeoEventHelper;
+
+  // Create the draw or measure interaction depending on the geometry type
+  var interaction;
+  var helpMsg;
+  var contMsg;
+  if (this.geomType === ngeo.GeometryType.POINT) {
+    interaction = new ol.interaction.Draw({
+      type: ol.geom.GeometryType.POINT
+    });
+  } else if (this.geomType === ngeo.GeometryType.LINE_STRING) {
+    helpMsg = gettext('Click to start drawing length');
+    contMsg = gettext(
+      'Click to continue drawing<br/>' +
+      'Double-click or click last point to finish'
+    );
+
+    interaction = new ngeo.interaction.MeasureLength(
+      $filter('ngeoUnitPrefix'),
+      {
+        style: new ol.style.Style(),
+        startMsg: $compile('<div translate>' + helpMsg + '</div>')($scope)[0],
+        continueMsg: $compile('<div translate>' + contMsg + '</div>')($scope)[0]
+      }
+    );
+  } else if (this.geomType === ngeo.GeometryType.POLYGON) {
+    helpMsg = gettext('Click to start drawing area');
+    contMsg = gettext(
+      'Click to continue drawing<br/>' +
+      'Double-click or click last starting point to finish'
+    );
+
+    interaction = new ngeo.interaction.MeasureArea(
+      $filter('ngeoUnitPrefix'),
+      {
+        style: new ol.style.Style(),
+        startMsg: $compile('<div translate>' + helpMsg + '</div>')($scope)[0],
+        continueMsg: $compile('<div translate>' + contMsg + '</div>')($scope)[0]
+      }
+    );
+  }
+
+  goog.asserts.assert(interaction);
+
+  interaction.setActive(this.active);
+  this.map.addInteraction(interaction);
+
+  /**
+   * The draw or measure interaction responsible of drawing the vector feature.
+   * The actual type depends on the geometry type.
+   * @type {ol.interaction.Interaction}
+   * @private
+   */
+  this.interaction_ = interaction;
+
+
+  // == Event listeners ==
+  $scope.$watch(
+    function() {
+      return this.active;
+    }.bind(this),
+    function(newVal) {
+      this.interaction_.setActive(newVal);
+    }.bind(this)
+  );
+
+  var uid = goog.getUid(this);
+  if (interaction instanceof ol.interaction.Draw) {
+    this.ngeoEventHelper_.addListenerKey(
+      uid,
+      ol.events.listen(
+        interaction,
+        ol.interaction.DrawEventType.DRAWEND,
+        this.handleDrawEnd_,
+        this
+      ),
+      true
+    );
+  } else if (interaction instanceof ngeo.interaction.MeasureLength ||
+     interaction instanceof ngeo.interaction.MeasureArea) {
+    this.ngeoEventHelper_.addListenerKey(
+      uid,
+      ol.events.listen(
+        interaction,
+        ngeo.MeasureEventType.MEASUREEND,
+        this.handleDrawEnd_,
+        this
+      ),
+      true
+    );
+  }
+
+  $scope.$on('$destroy', this.handleDestroy_.bind(this));
+
+};
+
+
+/**
+ * Called when a feature is finished being drawn. Add the feature to the
+ * collection.
+ * @param {ol.interaction.DrawEvent|ngeo.MeasureEvent} event Event.
+ * @export
+ */
+ngeo.CreatefeatureController.prototype.handleDrawEnd_ = function(event) {
+  var feature = new ol.Feature(event.feature.getGeometry());
+  this.features.push(feature);
+};
+
+
+/**
+ * Cleanup event listeners and remove the interaction from the map.
+ * @private
+ */
+ngeo.CreatefeatureController.prototype.handleDestroy_ = function() {
+  var uid = goog.getUid(this);
+  this.ngeoEventHelper_.clearListenerKey(uid);
+  this.map.removeInteraction(this.interaction_);
+};
+
+
+ngeo.module.controller(
+  'ngeoCreatefeatureController', ngeo.CreatefeatureController);
+
+goog.provide('ngeo.DecorateGeolocation');
+
+goog.require('goog.asserts');
+goog.require('ngeo');
+
+
+/**
+ * Provides a function that adds a "tracking" property (using
+ * `Object.defineProperty`) to the `ol.Geolocation` instance, making it
+ * possible to activate/deactivate the tracking mode.
+ *
+ * Example:
+ *
+ *      <input type="checkbox" ngModel="geolocation.tracking" />
+ *
+ * See our live example: {@link ../examples/geolocation.html}
+ *
+ * @typedef {function(ol.Geolocation)}
+ * @ngdoc service
+ * @ngname ngeoDecorateGeolocation
+ */
+ngeo.DecorateGeolocation;
+
+
+/**
+ * @param {ol.Geolocation} geolocation Geolocation to decorate.
+ * @ngInject
+ */
+ngeo.decorateGeolocation = function(geolocation) {
+  goog.asserts.assertInstanceof(geolocation, ol.Geolocation);
+
+  Object.defineProperty(geolocation, 'tracking', {
+    get: function() {
+      return geolocation.getTracking();
+    },
+    set: function(val) {
+      geolocation.setTracking(val);
+    }
+  });
+};
+
+
+ngeo.module.value('ngeoDecorateGeolocation', ngeo.decorateGeolocation);
+
+goog.provide('ngeo.FeatureOverlay');
+goog.provide('ngeo.FeatureOverlayMgr');
+
+goog.require('goog.object');
+goog.require('ngeo');
+goog.require('ol.Collection');
+goog.require('ol.CollectionEvent');
+goog.require('ol.CollectionEventType');
+goog.require('ol.Feature');
+goog.require('ol.layer.Vector');
+goog.require('ol.source.Vector');
+goog.require('ol.style.Style');
+
+
+/**
+ * @typedef {{
+ *  styleFunction: ol.StyleFunction,
+ *  features: Object.<string, ol.Feature>
+ * }}
+ */
+ngeo.FeatureOverlayGroup;
+
+
+/**
+ * Provides a service that wraps an "unmanaged" vector layer,
+ * used as a shared vector layer accross the application.
+ *
+ * Example:
+ *
+ * The application's main component/controller initializes the feature
+ * overlay manager with the map:
+ *
+ *     ngeoFeatureOverlayMgr.init(map);
+ *
+ * Once initialized, components of the application can use the manager to
+ * create a feature overlay, configuring it with specific styles:
+ *
+ *     var featureOverlay = ngeoFeatureOverlayMgr.getFeatureOverlay();
+ *     featureOverlay.setStyle(myStyle);
+ *     featureOverlay.addFeature(myFeature);
+ *
+ * @constructor
+ * @ngdoc service
+ * @ngname ngeoFeatureOverlayMgr
+ */
+ngeo.FeatureOverlayMgr = function() {
+
+  /**
+   * @type {Object.<string, number>}
+   * @private
+   */
+  this.featureUidToGroupIndex_ = {};
+
+  /**
+   * @type {Array.<ngeo.FeatureOverlayGroup>}
+   * @private
+   */
+  this.groups_ = [];
+
+  /**
+   * @type {ol.source.Vector}
+   * @private
+   */
+  this.source_ = new ol.source.Vector({
+    useSpatialIndex: false
+  });
+
+  /**
+   * @type {ol.layer.Vector}
+   * @private
+   */
+  this.layer_ = new ol.layer.Vector({
+    source: this.source_,
+    style: this.styleFunction_.bind(this),
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
+  });
+
+};
+
+
+/**
+ * @param {ol.Feature} feature The feature to add.
+ * @param {number} groupIndex The group groupIndex.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.addFeature = function(feature, groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  var featureUid = goog.getUid(feature).toString();
+  this.featureUidToGroupIndex_[featureUid] = groupIndex;
+  this.groups_[groupIndex].features[featureUid] = feature;
+  this.source_.addFeature(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature The feature to add.
+ * @param {number} groupIndex The group groupIndex.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.removeFeature = function(feature, groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  var featureUid = goog.getUid(feature).toString();
+  delete this.featureUidToGroupIndex_[featureUid];
+  delete this.groups_[groupIndex].features[featureUid];
+  this.source_.removeFeature(feature);
+};
+
+
+/**
+ * @param {number} groupIndex The group groupIndex.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.clear = function(groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  var group = this.groups_[groupIndex];
+  for (var featureUid in group.features) {
+    this.removeFeature(group.features[featureUid], groupIndex);
+  }
+  goog.asserts.assert(goog.object.isEmpty(group.features));
+};
+
+
+/**
+ * @return {ol.layer.Vector} The vector layer used internally.
+ * @export
+ */
+ngeo.FeatureOverlayMgr.prototype.getLayer = function() {
+  return this.layer_;
+};
+
+
+/**
+ * @return {ngeo.FeatureOverlay} Feature overlay.
+ * @export
+ */
+ngeo.FeatureOverlayMgr.prototype.getFeatureOverlay = function() {
+  var groupIndex = this.groups_.length;
+  this.groups_.push({
+    styleFunction: ol.style.defaultStyleFunction,
+    features: {}
+  });
+  return new ngeo.FeatureOverlay(this, groupIndex);
+};
+
+
+/**
+ * @param {ol.Map} map Map.
+ * @export
+ */
+ngeo.FeatureOverlayMgr.prototype.init = function(map) {
+  this.layer_.setMap(map);
+};
+
+
+/**
+ * @param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction} style
+ * Style.
+ * @param {number} groupIndex Group index.
+ * @protected
+ */
+ngeo.FeatureOverlayMgr.prototype.setStyle = function(style, groupIndex) {
+  goog.asserts.assert(groupIndex >= 0);
+  goog.asserts.assert(groupIndex < this.groups_.length);
+  this.groups_[groupIndex].styleFunction = style === null ?
+      ol.style.defaultStyleFunction : ol.style.createStyleFunction(style);
+};
+
+
+/**
+ * @param {ol.Feature|ol.render.Feature} feature Feature.
+ * @param {number} resolution Resolution.
+ * @return {Array.<ol.style.Style>|ol.style.Style} Styles.
+ * @private
+ */
+ngeo.FeatureOverlayMgr.prototype.styleFunction_ = function(feature, resolution) {
+  var featureUid = goog.getUid(feature).toString();
+  goog.asserts.assert(featureUid in this.featureUidToGroupIndex_);
+  var groupIndex = this.featureUidToGroupIndex_[featureUid];
+  var group = this.groups_[groupIndex];
+  return group.styleFunction(feature, resolution);
+};
+
+
+/**
+ * @constructor
+ * @param {ngeo.FeatureOverlayMgr} manager The feature overlay manager.
+ * @param {number} index This feature overlay's index.
+ */
+ngeo.FeatureOverlay = function(manager, index) {
+
+  /**
+   * @type {ngeo.FeatureOverlayMgr}
+   * @private
+   */
+  this.manager_ = manager;
+
+  /**
+   * @type {ol.Collection.<ol.Feature>}
+   * @private
+   */
+  this.features_ = null;
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.index_ = index;
+};
+
+
+/**
+ * Add a feature to the feature overlay.
+ * @param {ol.Feature} feature The feature to add.
+ * @export
+ */
+ngeo.FeatureOverlay.prototype.addFeature = function(feature) {
+  this.manager_.addFeature(feature, this.index_);
+};
+
+
+/**
+ * Remove a feature from the feature overlay.
+ * @param {ol.Feature} feature The feature to remove.
+ * @export
+ */
+ngeo.FeatureOverlay.prototype.removeFeature = function(feature) {
+  this.manager_.removeFeature(feature, this.index_);
+};
+
+
+/**
+ * Remove all the features from the feature overlay.
+ * @export
+ */
+ngeo.FeatureOverlay.prototype.clear = function() {
+  this.manager_.clear(this.index_);
+};
+
+
+/**
+ * Configure this feature overlay with a feature collection. Features added
+ * to the collection are also added to the overlay. Same for removal. If you
+ * configure the feature overlay with a feature collection you will use the
+ * collection to add and remove features instead of using the overlay's
+ * `addFeature`, `removeFeature` and `clear` functions.
+ * @param {ol.Collection.<ol.Feature>} features Feature collection.
+ * @export
+ */
+ngeo.FeatureOverlay.prototype.setFeatures = function(features) {
+  if (this.features_ !== null) {
+    this.features_.clear();
+    ol.events.unlisten(this.features_, ol.CollectionEventType.ADD,
+        this.handleFeatureAdd_, this);
+    ol.events.unlisten(this.features_, ol.CollectionEventType.REMOVE,
+        this.handleFeatureRemove_, this);
+  }
+  if (features !== null) {
+    features.forEach(function(feature) {
+      this.addFeature(feature);
+    }, this);
+    ol.events.listen(features, ol.CollectionEventType.ADD,
+        this.handleFeatureAdd_, this);
+    ol.events.listen(features, ol.CollectionEventType.REMOVE,
+        this.handleFeatureRemove_, this);
+  }
+  this.features_ = features;
+};
+
+
+/**
+ * Set a style for the feature overlay.
+ * @param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction} style
+ * Style.
+ * @export
+ */
+ngeo.FeatureOverlay.prototype.setStyle = function(style) {
+  this.manager_.setStyle(style, this.index_);
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Feature collection event.
+ * @private
+ */
+ngeo.FeatureOverlay.prototype.handleFeatureAdd_ = function(evt) {
+  var feature = /** @type {ol.Feature} */ (evt.element);
+  this.addFeature(feature);
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Feature collection event.
+ * @private
+ */
+ngeo.FeatureOverlay.prototype.handleFeatureRemove_ = function(evt) {
+  var feature = /** @type {ol.Feature} */ (evt.element);
+  this.removeFeature(feature);
+};
+
+
+ngeo.module.service('ngeoFeatureOverlayMgr', ngeo.FeatureOverlayMgr);
+
+goog.provide('ngeo.Message');
+
+
+/**
+ * @enum {string}
+ * @export
+ */
+ngeo.MessageType = {
+  /**
+   * @type {string}
+   * @export
+   */
+  ERROR: 'error',
+  /**
+   * @type {string}
+   * @export
+   */
+  INFORMATION: 'information',
+  /**
+   * @type {string}
+   * @export
+   */
+  SUCCESS: 'success',
+  /**
+   * @type {string}
+   * @export
+   */
+  WARNING: 'warning'
+};
+
+
+/**
+ * Abstract class for services that display messages.
+ *
+ * @constructor
+ */
+ngeo.Message = function() {};
+
+
+/**
+ * Show the message.
+ * @param {ngeox.Message} message Message.
+ * @protected
+ */
+ngeo.Message.prototype.showMessage = goog.abstractMethod;
+
+
+/**
+ * Show disclaimer message string or object or list of disclame message
+ * strings or objects.
+ * @param {string|Array.<string>|ngeox.Message|Array.<ngeox.Message>}
+ *     object A message or list of messages as text or configuration objects.
+ * @export
+ */
+ngeo.Message.prototype.show = function(object) {
+  var msgObjects = this.getMessageObjects(object);
+  msgObjects.forEach(this.showMessage, this);
+};
+
+
+/**
+ * Display the given error message or list of error messages.
+ * @param {string|Array.<string>} message Message or list of messages.
+ * @export
+ */
+ngeo.Message.prototype.error = function(message) {
+  this.show(this.getMessageObjects(message, ngeo.MessageType.ERROR));
+};
+
+
+/**
+ * Display the given info message or list of info messages.
+ * @param {string|Array.<string>} message Message or list of messages.
+ * @export
+ */
+ngeo.Message.prototype.info = function(message) {
+  this.show(this.getMessageObjects(message, ngeo.MessageType.INFORMATION));
+};
+
+
+/**
+ * Display the given success message or list of success messages.
+ * @param {string|Array.<string>} message Message or list of messages.
+ * @export
+ */
+ngeo.Message.prototype.success = function(message) {
+  this.show(this.getMessageObjects(message, ngeo.MessageType.SUCCESS));
+};
+
+
+/**
+ * Display the given warning message or list of warning messages.
+ * @param {string|Array.<string>} message Message or list of messages.
+ * @export
+ */
+ngeo.Message.prototype.warn = function(message) {
+  this.show(this.getMessageObjects(message, ngeo.MessageType.WARNING));
+};
+
+
+/**
+ * Returns an array of message object from any given message string, list of
+ * message strings, message object or list message objects. The type can be
+ * overriden here as well OR defined (if the message(s) is/are string(s),
+ * defaults to 'information').
+ * @param {string|Array.<string>|ngeox.Message|Array.<ngeox.Message>}
+ *     object A message or list of messages as text or configuration objects.
+ * @param {string=} opt_type The type of message to override the messages with.
+ * @return {Array.<ngeox.Message>} List of message objects.
+ * @protected
+ */
+ngeo.Message.prototype.getMessageObjects = function(object, opt_type) {
+  var msgObjects = [];
+  var msgObject = null;
+  var defaultType = ngeo.MessageType.INFORMATION;
+
+  if (typeof object === 'string') {
+    msgObjects.push({
+      msg: object,
+      type: opt_type !== undefined ? opt_type : defaultType
+    });
+  } else if (Array.isArray(object)) {
+    object.forEach(function(msg) {
+      if (typeof object === 'string') {
+        msgObject = {
+          msg: msg,
+          type: opt_type !== undefined ? opt_type : defaultType
+        };
+      } else {
+        msgObject = msg;
+        if (opt_type !== undefined) {
+          msgObject.type = opt_type;
+        }
+      }
+      msgObjects.push(msgObject);
+    }, this);
+  } else {
+    msgObject = object;
+    if (opt_type !== undefined) {
+      msgObject.type = opt_type;
+    }
+    if (msgObject.type === undefined) {
+      msgObject.type = defaultType;
+    }
+    msgObjects.push(msgObject);
+  }
+
+  return msgObjects;
+};
+
+goog.provide('ngeo.Notification');
+
+goog.require('goog.asserts');
+goog.require('ngeo');
+goog.require('ngeo.Message');
+
+
+/**
+ * Provides methods to display any sort of messages, notifications, errors,
+ * etc. Requires Bootstrap library (both CSS and JS) to display the alerts
+ * properly.
+ *
+ * @constructor
+ * @extends {ngeo.Message}
+ * @param {angular.$timeout} $timeout Angular timeout service.
+ * @ngdoc service
+ * @ngname ngeoNotification
+ * @ngInject
+ */
+ngeo.Notification = function($timeout) {
+
+  goog.base(this);
+
+  /**
+   * @type {angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
+
+  var container = angular.element('<div class="ngeo-notification"></div>');
+  angular.element(document.body).append(container);
+
+  /**
+   * @type {angular.JQLite}
+   * @private
+   */
+  this.container_ = container;
+
+  /**
+   * @type {Object.<number, ngeo.Notification.CacheItem>}
+   * @private
+   */
+  this.cache_ = {};
+
+};
+goog.inherits(ngeo.Notification, ngeo.Message);
+
+
+/**
+ * Default delay (in milliseconds) a message should be displayed.
+ * @type {number}
+ * @private
+ */
+ngeo.Notification.DEFAULT_DELAY_ = 7000;
+
+
+// MAIN API METHODS
+
+
+/**
+ * Display the given message string or object or list of message strings or
+ * objects.
+ * @param {string|Array.<string>|ngeox.Message|Array.<ngeox.Message>}
+ *     object A message or list of messages as text or configuration objects.
+ * @export
+ */
+ngeo.Notification.prototype.notify = function(object) {
+  this.show(object);
+};
+
+
+/**
+ * Clears all messages that are currently being shown.
+ * @export
+ */
+ngeo.Notification.prototype.clear = function() {
+  for (var uid in this.cache_) {
+    this.clearMessageByCacheItem_(this.cache_[parseInt(uid, 10)]);
+  }
+};
+
+
+/**
+ * Show the message.
+ * @param {ngeox.Message} message Message.
+ * @protected
+ */
+ngeo.Notification.prototype.showMessage = function(message) {
+  var type = message.type;
+  goog.asserts.assertString(type, 'Type should be set.');
+
+  var classNames = ['alert', 'fade'];
+  switch (type) {
+    case ngeo.MessageType.ERROR:
+      classNames.push('alert-danger');
+      break;
+    case ngeo.MessageType.INFORMATION:
+      classNames.push('alert-info');
+      break;
+    case ngeo.MessageType.SUCCESS:
+      classNames.push('alert-success');
+      break;
+    case ngeo.MessageType.WARNING:
+      classNames.push('alert-warning');
+      break;
+    default:
+      break;
+  }
+
+  var el = angular.element('<div class="' + classNames.join(' ') + '"></div>');
+  var container;
+
+  if (message.target) {
+    container = angular.element(message.target);
+  } else {
+    container = this.container_;
+  }
+
+  container.append(el);
+  el.html(message.msg).addClass('in');
+
+  var delay = message.delay !== undefined ? message.delay :
+      ngeo.Notification.DEFAULT_DELAY_;
+
+  var item = /** @type {ngeo.Notification.CacheItem} */ ({
+    el: el
+  });
+
+  // Keep a reference to the promise, in case we want to manually cancel it
+  // before the delay
+  var uid = goog.getUid(el);
+  item.promise = this.timeout_(function() {
+    el.alert('close');
+    delete this.cache_[uid];
+  }.bind(this), delay);
+
+  this.cache_[uid] = item;
+};
+
+
+/**
+ * Clear a message using its cache item.
+ * @param {ngeo.Notification.CacheItem} item Cache item.
+ * @private
+ */
+ngeo.Notification.prototype.clearMessageByCacheItem_ = function(item) {
+  var el = item.el;
+  var promise = item.promise;
+  var uid = goog.getUid(el);
+
+  // Close the message
+  el.alert('close');
+
+  // Cancel timeout in case we want to stop before delay. If called by the
+  // timeout itself, then this has no consequence.
+  this.timeout_.cancel(promise);
+
+  // Delete the cache item
+  delete this.cache_[uid];
+};
+
+
+/**
+ * @typedef {{
+ *     el: angular.JQLite,
+ *     promise: angular.$q.Promise
+ * }}
+ */
+ngeo.Notification.CacheItem;
+
+
+ngeo.module.service('ngeoNotification', ngeo.Notification);
+
+goog.provide('ngeo.DesktopGeolocationController');
+goog.provide('ngeo.desktopGeolocationDirective');
+
+goog.require('ngeo');
+goog.require('ngeo.DecorateGeolocation');
+goog.require('ngeo.FeatureOverlay');
+goog.require('ngeo.FeatureOverlayMgr');
+goog.require('ngeo.Notification');
+goog.require('ol.Feature');
+goog.require('ol.Geolocation');
+goog.require('ol.Map');
+goog.require('ol.geom.Point');
+
+
+/**
+ * @enum {string}
+ * @export
+ */
+ngeo.DesktopGeolocationEventType = {
+  /**
+   * Triggered when an error occures.
+   */
+  ERROR: 'desktop-geolocation-error'
+};
+
+
+/**
+ * Provide a "desktop geolocation" directive.
+ *
+ * Example:
+ *
+ *      <button ngeo-desktop-geolocation=""
+ *        ngeo-desktop-geolocation-map="ctrl.map"
+ *        ngeo-desktop-geolocation-options="ctrl.desktopGeolocationOptions">
+ *      </button>
+ *
+ * See our live example: {@link ../examples/desktopgeolocation.html}
+ *
+ * @htmlAttribute {ol.Map} gmf-geolocation-map The map.
+ * @htmlAttribute {ngeox.DesktopGeolocationDirectiveOptions} gmf-geolocation-options The options.
+ * @return {angular.Directive} The Directive Definition Object.
+ * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoDesktopGeolocation
+ */
+ngeo.desktopGeolocationDirective = function() {
+  return {
+    restrict: 'A',
+    scope: {
+      'getDesktopMapFn': '&ngeoDesktopGeolocationMap',
+      'getDesktopGeolocationOptionsFn': '&ngeoDesktopGeolocationOptions'
+    },
+    controller: 'NgeoDesktopGeolocationController',
+    controllerAs: 'ctrl'
+  };
+};
+
+
+ngeo.module.directive('ngeoDesktopGeolocation',
+    ngeo.desktopGeolocationDirective);
+
+
+/**
+ * @constructor
+ * @param {angular.Scope} $scope The directive's scope.
+ * @param {angular.JQLite} $element Element.
+ * @param {ngeo.DecorateGeolocation} ngeoDecorateGeolocation Decorate
+ *     Geolocation service.
+ * @param {ngeo.FeatureOverlayMgr} ngeoFeatureOverlayMgr The ngeo feature
+ *     overlay manager service.
+ * @param {ngeo.Notification} ngeoNotification Ngeo notification service.
+ * @export
+ * @ngInject
+ * @ngdoc controller
+ * @ngname NgeoDesktopGeolocationController
+ */
+ngeo.DesktopGeolocationController = function($scope, $element,
+    ngeoDecorateGeolocation, ngeoFeatureOverlayMgr, ngeoNotification) {
+
+  $element.on('click', this.toggle.bind(this));
+
+  var map = $scope['getDesktopMapFn']();
+  goog.asserts.assertInstanceof(map, ol.Map);
+
+  /**
+   * @type {!ol.Map}
+   * @private
+   */
+  this.map_ = map;
+
+  var options = $scope['getDesktopGeolocationOptionsFn']() || {};
+  goog.asserts.assertObject(options);
+
+  /**
+   * @type {!angular.Scope}
+   * @private
+   */
+  this.$scope_ = $scope;
+
+  /**
+   * @type {ngeo.Notification}
+   * @private
+   */
+  this.notification_ = ngeoNotification;
+
+  /**
+   * @type {ngeo.FeatureOverlay}
+   * @private
+   */
+  this.featureOverlay_ = ngeoFeatureOverlayMgr.getFeatureOverlay();
+
+  /**
+   * @type {ol.Geolocation}
+   * @private
+   */
+  this.geolocation_ = new ol.Geolocation({
+    projection: map.getView().getProjection()
+  });
+
+  // handle geolocation error.
+  this.geolocation_.on('error', function(error) {
+    this.deactivate_();
+    this.notification_.error(error.message);
+    $scope.$emit(ngeo.DesktopGeolocationEventType.ERROR, error);
+  }, this);
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.positionFeature_ = new ol.Feature();
+
+  if (options.positionFeatureStyle) {
+    this.positionFeature_.setStyle(options.positionFeatureStyle);
+  }
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.accuracyFeature_ = new ol.Feature();
+
+  if (options.accuracyFeatureStyle) {
+    this.accuracyFeature_.setStyle(options.accuracyFeatureStyle);
+  }
+
+  /**
+   * @type {number|undefined}
+   * @private
+   */
+  this.zoom_ = options.zoom;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.active_ = false;
+
+  ol.events.listen(
+      this.geolocation_,
+      ol.Object.getChangeEventType(ol.GeolocationProperty.ACCURACY_GEOMETRY),
+      function() {
+        this.accuracyFeature_.setGeometry(
+            this.geolocation_.getAccuracyGeometry());
+      },
+      this);
+
+  ol.events.listen(
+      this.geolocation_,
+      ol.Object.getChangeEventType(ol.GeolocationProperty.POSITION),
+      function(e) {
+        this.setPosition_(e);
+      },
+      this);
+
+  ngeoDecorateGeolocation(this.geolocation_);
+};
+
+
+/**
+ * @export
+ */
+ngeo.DesktopGeolocationController.prototype.toggle = function() {
+  if (this.active_) {
+    this.deactivate_();
+  } else {
+    this.activate_();
+  }
+};
+
+
+/**
+ * @private
+ */
+ngeo.DesktopGeolocationController.prototype.activate_ = function() {
+  this.featureOverlay_.addFeature(this.positionFeature_);
+  this.featureOverlay_.addFeature(this.accuracyFeature_);
+  this.geolocation_.setTracking(true);
+  this.active_ = true;
+};
+
+
+/**
+ * @private
+ */
+ngeo.DesktopGeolocationController.prototype.deactivate_ = function() {
+  this.featureOverlay_.clear();
+  this.active_ = false;
+  this.notification_.clear();
+};
+
+
+/**
+ * @param {ol.ObjectEvent} event Event.
+ * @private
+ */
+ngeo.DesktopGeolocationController.prototype.setPosition_ = function(event) {
+  var position = /** @type {ol.Coordinate} */ (this.geolocation_.getPosition());
+  var point = new ol.geom.Point(position);
+
+  this.positionFeature_.setGeometry(point);
+  this.map_.getView().setCenter(position);
+
+  if (this.zoom_ !== undefined) {
+    this.map_.getView().setZoom(this.zoom_);
+  }
+
+  this.geolocation_.setTracking(false);
+};
+
+
+ngeo.module.controller('NgeoDesktopGeolocationController',
+    ngeo.DesktopGeolocationController);
+
+goog.provide('ngeo.DecorateInteraction');
+
+goog.require('goog.asserts');
+goog.require('ngeo');
+
+
+/**
+ * Provides a function that adds an "active" property (using
+ * `Object.defineProperty`) to an interaction, making it possible to use ngModel
+ * to activate/deactivate interactions.
+ *
+ * Example:
+ *
+ *      <input type="checkbox" ngModel="interaction.active" />
+ *
+ * See our live example: {@link ../examples/interactiontoggle.html}
+ *
+ * @typedef {function(ol.interaction.Interaction)}
+ * @ngdoc service
+ * @ngname ngeoDecorateInteraction
+ */
+ngeo.DecorateInteraction;
+
+
+/**
+ * @param {ol.interaction.Interaction} interaction Interaction to decorate.
+ */
+ngeo.decorateInteraction = function(interaction) {
+  goog.asserts.assertInstanceof(interaction, ol.interaction.Interaction);
+
+  Object.defineProperty(interaction, 'active', {
+    get: function() {
+      return interaction.getActive();
+    },
+    set: function(val) {
+      interaction.setActive(val);
+    }
+  });
+};
+
+
+ngeo.module.value('ngeoDecorateInteraction', ngeo.decorateInteraction);
+
 goog.provide('ngeo.FeatureHelper');
 
 goog.require('ngeo');
@@ -106259,85 +106648,6 @@ ngeo.drawtextDirective = function() {
 
 ngeo.module.directive('ngeoDrawtext', ngeo.drawtextDirective);
 
-goog.provide('ngeo.interaction.MeasureArea');
-
-goog.require('ngeo.interaction.Measure');
-goog.require('ol.geom.Polygon');
-goog.require('ol.interaction.Draw');
-
-
-/**
- * @classdesc
- * Interaction dedicated to measure length.
- *
- * See our live example: {@link ../examples/measure.html}
- *
- * @constructor
- * @extends {ngeo.interaction.Measure}
- * @param {ngeox.unitPrefix} format The format function
- * @param {ngeox.interaction.MeasureOptions=} opt_options Options
- * @export
- */
-ngeo.interaction.MeasureArea = function(format, opt_options) {
-
-  var options = opt_options !== undefined ? opt_options : {};
-
-  goog.base(this, options);
-
-
-  /**
-   * Message to show after the first point is clicked.
-   * @type {Element}
-   */
-  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
-      goog.dom.createDom(goog.dom.TagName.SPAN, {},
-          'Click to continue drawing the polygon.',
-          goog.dom.createDom(goog.dom.TagName.BR),
-          'Double-click or click starting point to finish.');
-
-  /**
-   * The format function
-   * @type {ngeox.unitPrefix}
-   */
-  this.format = format;
-
-};
-goog.inherits(ngeo.interaction.MeasureArea, ngeo.interaction.Measure);
-
-
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureArea.prototype.createDrawInteraction = function(style,
-    source) {
-
-  return new ol.interaction.Draw(
-      /** @type {olx.interaction.DrawOptions} */ ({
-        type: 'Polygon',
-        source: source,
-        style: style
-      }));
-
-};
-
-
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureArea.prototype.handleMeasure = function(callback) {
-  var geom = /** @type {ol.geom.Polygon} */
-      (this.sketchFeature.getGeometry());
-  var proj = this.getMap().getView().getProjection();
-  var dec = this.decimals;
-  var output = ngeo.interaction.Measure.getFormattedArea(geom, proj, dec, this.format);
-  var verticesCount = geom.getCoordinates()[0].length;
-  var coord = null;
-  if (verticesCount > 2) {
-    coord = geom.getInteriorPoint().getCoordinates();
-  }
-  callback(output, coord);
-};
-
 goog.provide('ngeo.measureareaDirective');
 
 goog.require('ngeo');
@@ -106886,81 +107196,6 @@ ngeo.measureazimutDirective = function($compile, gettext, $filter) {
 
 
 ngeo.module.directive('ngeoMeasureazimut', ngeo.measureazimutDirective);
-
-goog.provide('ngeo.interaction.MeasureLength');
-
-goog.require('ngeo.interaction.Measure');
-goog.require('ol.geom.LineString');
-goog.require('ol.interaction.Draw');
-
-
-/**
- * @classdesc
- * Interaction dedicated to measure length.
- *
- * See our live example: {@link ../examples/measure.html}
- *
- * @constructor
- * @extends {ngeo.interaction.Measure}
- * @param {ngeox.unitPrefix} format The format function
- * @param {ngeox.interaction.MeasureOptions=} opt_options Options
- * @export
- */
-ngeo.interaction.MeasureLength = function(format, opt_options) {
-
-  var options = opt_options !== undefined ? opt_options : {};
-
-  goog.base(this, options);
-
-
-  /**
-   * Message to show after the first point is clicked.
-   * @type {Element}
-   */
-  this.continueMsg = options.continueMsg !== undefined ? options.continueMsg :
-      goog.dom.createDom(goog.dom.TagName.SPAN, {},
-          'Click to continue drawing the line.',
-          goog.dom.createDom(goog.dom.TagName.BR),
-          'Double-click or click last point to finish.');
-
-  /**
-   * The format function
-   * @type {ngeox.unitPrefix}
-   */
-  this.format = format;
-
-};
-goog.inherits(ngeo.interaction.MeasureLength, ngeo.interaction.Measure);
-
-
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureLength.prototype.createDrawInteraction = function(style,
-    source) {
-
-  return new ol.interaction.Draw(
-      /** @type {olx.interaction.DrawOptions} */ ({
-        type: 'LineString',
-        source: source,
-        style: style
-      }));
-
-};
-
-
-/**
- * @inheritDoc
- */
-ngeo.interaction.MeasureLength.prototype.handleMeasure = function(callback) {
-  var geom = /** @type {ol.geom.LineString} */
-      (this.sketchFeature.getGeometry());
-  var proj = this.getMap().getView().getProjection();
-  var dec = this.decimals;
-  var output = ngeo.interaction.Measure.getFormattedLength(geom, proj, dec, this.format);
-  var coord = geom.getLastCoordinate();
-  callback(output, coord);
-};
 
 goog.provide('ngeo.measurelengthDirective');
 

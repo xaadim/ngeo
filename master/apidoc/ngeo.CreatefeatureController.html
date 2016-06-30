@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: measureareaDirective <small>directive:ngeoDrawpoint</small></title>
+    <title>JSDoc: Class: CreatefeatureController <small>controller:ngeoCreatefeatureController</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: measureareaDirective <small>directive:ngeoDrawpoint</small></h1>
+    <h1 class="page-title">Class: CreatefeatureController <small>controller:ngeoCreatefeatureController</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="measureareaDirective">
-            <span class="ancestors">ngeo.</span>measureareaDirective
+        <h2 id="CreatefeatureController">
+            <span class="ancestors">ngeo.</span>CreatefeatureController
         </h2>
         
     
@@ -42,7 +42,7 @@
 
     
 
-    <h4 class="name" id="measureareaDirective"><span class="type-signature"></span>new measureareaDirective<span class="signature">($compile, gettext, $filter)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="CreatefeatureController"><span class="type-signature"></span>new CreatefeatureController<span class="signature">(gettext, $compile, $filter, $scope, ngeoEventHelper)</span><span class="type-signature"></span></h4>
 
     
 
@@ -54,6 +54,122 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gettext</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Gettext service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$compile</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular compile service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$filter</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular filter</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Scope.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ngeoEventHelper</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ngeo event helper service</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -92,8 +208,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/measurearea.js">src/directives/measurearea.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/measurearea.js#L19">line 19</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L82">line 82</a>
     </li></ul></dd>
     
 
@@ -133,7 +249,426 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
 
+        
+            
+<h4 class="name" id="active"><span class="type-signature"></span>active<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="features"><span class="type-signature"></span>features<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Collection.html">ol.Collection</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Collection.html">ol.Collection</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.Feature.html">ol.Feature</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L95">line 95</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="geomType"><span class="type-signature"></span>geomType<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="map"><span class="type-signature"></span>map<span class="type-signature"> :<a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleDrawEnd_"><span class="type-signature"></span>handleDrawEnd_<span class="signature">(event)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Called when a feature is finished being drawn. Add the feature to the
+collection.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Event.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js">src/directives/createfeature.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/9f00702c8646303359f28ecab0ac04c9de90e976/src/directives/createfeature.js#L216">line 216</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
