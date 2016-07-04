@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: AsitVD</title>
+    <title>JSDoc: Class: profileDirective <small>directive:gmfProfile</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: AsitVD</h1>
+    <h1 class="page-title">Class: profileDirective <small>directive:gmfProfile</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="AsitVD">
-            <span class="ancestors">gmf.source.</span>AsitVD
+        <h2 id="profileDirective">
+            <span class="ancestors">gmf.</span>profileDirective
         </h2>
         
     
@@ -42,14 +42,27 @@
 
     
 
-    <h4 class="name" id="AsitVD"><span class="type-signature"></span>new AsitVD<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="profileDirective"><span class="type-signature"></span>new profileDirective<span class="signature">(gmfProfileTemplateUrl)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Layer source for the ASIT VD tile server.</p>
+    <p>Provide a directive that display a profile panel. This profile use the given
+LineString geometry to request the c2cgeoportal profile.json service. The
+raster used in the request are the keys of the 'linesconfiguration' object.
+The 'profileActive' and 'map' attributes are optionals and are only used to
+display on the map the informations that concerne the hovered
+point (in the profile and on the map) of the line.
+This profile relies on the ngeo.profile (d3) and ngeo.ProfileDirective.</p>
+<p>Example:</p>
+<pre class="prettyprint source"><code> &lt;gmf-profile
+   gmf-profile-active=&quot;ctrl.profileActive&quot;
+   gmf-profile-line=&quot;ctrl.profileLine&quot;
+   gmf-profile-map=&quot;::ctrl.map&quot;
+   gmf-profile-linesconfiguration=&quot;::ctrl.profileLinesconfiguration&quot;>
+ &lt;/gmf-profile></code></pre>
 </div>
 
 
@@ -60,7 +73,9 @@
 
 
 
-    <h5>Parameters:</h5>
+
+
+    <h5>HTML attributes:</h5>
     
 
 <table class="params">
@@ -72,6 +87,8 @@
 
         <th>Type</th>
 
+        
+        <th>Attributes</th>
         
 
         
@@ -85,25 +102,238 @@
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>gmf-profile-active</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>WMTS options.</p></td>
+            <td class="description last">Optional to active the hover
+    functions.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-profile-line</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.geom.LineString.html">ol.geom.LineString</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The linestring geometry
+    to use to draw the profile.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-profile-map</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.Map.html">ol.Map</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An optional map.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-profile-linesconfiguration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="gmfx.html#ProfileLineConfiguration">gmfx.ProfileLineConfiguration</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The configuration of the lines. Each keys
+    will be used to request elevation layers.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-profile-hoverpointstyle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Optional style
+    for the 'on Hover' point on the line.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-profile-numberofpoints</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Optional maximum limit of
+    points to request. Default to 100.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-profile-css</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Inline Optional CSS style definition
+    to inject in the SVG.</td>
         </tr>
 
     
     </tbody>
 </table>
-
-
 
 
 
@@ -140,20 +370,13 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/2fd865319325e26c66cf473f13e132b560cdb5eb/contribs/gmf/src/source/asitvdsource.js">contribs/gmf/src/source/asitvdsource.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/2fd865319325e26c66cf473f13e132b560cdb5eb/contribs/gmf/src/source/asitvdsource.js#L40">line 40</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/2fd865319325e26c66cf473f13e132b560cdb5eb/contribs/gmf/src/directives/profile.js">contribs/gmf/src/directives/profile.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/2fd865319325e26c66cf473f13e132b560cdb5eb/contribs/gmf/src/directives/profile.js#L69">line 69</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://www.asitvd.ch/chercher/geoservices/fond-de-plan-asit-vd.html">https://www.asitvd.ch/chercher/geoservices/fond-de-plan-asit-vd.html</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -176,17 +399,6 @@
 
     
     </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="http://openlayers.org/en/master/apidoc/ol.source.WMTS.html">ol.source.WMTS</a></li>
-    </ul>
-
 
     
 
