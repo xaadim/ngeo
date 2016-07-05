@@ -49,7 +49,7 @@
             data-toggle="tooltip" data-placement="left" data-original-title="{{'Print'|translate}}">
             <span class="fa fa-print"></span>
           </button>
-          <button ngeo-btn class="btn btn-default" ng-model="measureActive"
+          <button ngeo-btn class="btn btn-default" ng-model="mainCtrl.drawFeatureActive"
             data-toggle="tooltip" data-placement="left" data-original-title="{{'Draw & Measure'|translate}}">
             <span class="fa fa-pencil"></span>
           </button>
@@ -77,14 +77,14 @@
               </gmf-print>
             </div>
           </div>
-          <div ng-show="measureActive" class="row">
+          <div ng-show="mainCtrl.drawFeatureActive" class="row">
             <div class="col-sm-12">
               <div class="tools-content-heading">
                 {{'Draw & Measure'|translate}}
-                <a class="btn close" ng-click="measureActive = false">&times;</a>
+                <a class="btn close" ng-click="mainCtrl.drawFeatureActive = false">&times;</a>
               </div>
               <gmf-drawfeature
-                  gmf-drawfeature-active="measureActive"
+                  gmf-drawfeature-active="mainCtrl.drawFeatureActive"
                   gmf-drawfeature-layer="::mainCtrl.drawFeatureLayer"
                   gmf-drawfeature-map="::mainCtrl.map">
               </gmf-drawfeature>
@@ -147,7 +147,7 @@
     <script src="../../../../lib/watchwatchers.js"></script>
     <script>
       (function() {
-        var cacheVersion = 'bec0a387c0b264618d73a09081e7b6e30c8f934c';
+        var cacheVersion = '51a05e337d46790b47238c9854269de1ca865b68';
         var urlElements = window.location.pathname.split('/');
 
         var angularLocaleScriptUrlElements = urlElements.slice(0, urlElements.length - 3);
