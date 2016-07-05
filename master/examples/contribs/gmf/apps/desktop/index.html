@@ -124,7 +124,10 @@
         <gmf-map class="gmf-map" gmf-map-map="mainCtrl.map"
           ngeo-map-query=""
           ngeo-map-query-map="::mainCtrl.map"
-          ngeo-map-query-active="mainCtrl.queryActive"></gmf-map>
+          ngeo-map-query-active="mainCtrl.queryActive"
+          ngeo-bbox-query=""
+          ngeo-bbox-query-map="::mainCtrl.map"
+          ngeo-bbox-query-active="mainCtrl.queryActive"></gmf-map>
 
         <!--infobar-->
         <div class="footer" ng-class="{'active': mainCtrl.showInfobar}">
@@ -155,7 +158,7 @@
     <script src="../../../../lib/watchwatchers.js"></script>
     <script>
       (function() {
-        var cacheVersion = 'c2ef41feeee1f8f0abad65f22de1d61980cb8274';
+        var cacheVersion = 'b68c720a6a4c99b698edfbd08d061c7e7914523f';
         var urlElements = window.location.pathname.split('/');
 
         var angularLocaleScriptUrlElements = urlElements.slice(0, urlElements.length - 3);
