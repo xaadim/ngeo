@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: ngeo.interaction</title>
+    <title>JSDoc: Class: displayquerywindowDirective <small>directive:gmfDisplayquerywindow</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: ngeo.interaction</h1>
+    <h1 class="page-title">Class: displayquerywindowDirective <small>directive:gmfDisplayquerywindow</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="MeasureBaseOptions">
-            <span class="ancestors">ngeo.interaction.</span>MeasureBaseOptions
+        <h2 id="displayquerywindowDirective">
+            <span class="ancestors">gmf.</span>displayquerywindowDirective
         </h2>
         
     
@@ -39,19 +39,43 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Interactions for measure tools base class.</p></div>
-        
-
-        
-
-
-    
-    <h5 class="subsection-title">Properties:</h5>
-    
 
     
 
-<table class="props">
+    <h4 class="name" id="displayquerywindowDirective"><span class="type-signature"></span>new displayquerywindowDirective<span class="signature">(gmfDisplayquerywindowTemplateUrl)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Provide a directive to display results of the <code>ngeo.queryResult</code>
+and shows related features on the map using the <a href="ngeo.FeatureOverlayMgr.html"><code>ngeo.FeatureOverlayMgr</code></a>.</p>
+<p>You can override the default directive's template by setting the
+value <code>gmfDisplayquerywindowTemplateUrl</code>.</p>
+<p>Features displayed on the map use a default style but you can override these
+styles by passing ol.style.Style objects as attributes of this directive.</p>
+<p>Example:</p>
+<pre class="prettyprint source"><code> &lt;gmf-displayquerywindow
+   gmf-displayquerywindow-featuresstyle=&quot;ctrl.styleForAllFeatures&quot;
+   gmf-displayquerywindow-selectedfeaturestyle=&quot;ctrl.styleForTheCurrentFeature&quot;>
+ &lt;/gmf-displayquerywindow></code></pre>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
     <thead>
     <tr>
         
@@ -64,7 +88,7 @@
 
         
 
-        
+        <th class="last">Description</th>
     </tr>
     </thead>
 
@@ -73,16 +97,13 @@
 
         <tr>
             
-                <td class="name"><code>decimals</code></td>
+                <td class="name"><code>gmf-displayquerywindow-featuresstyle</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
 
 
             
@@ -92,23 +113,45 @@
 
             
 
-            </td>
+            <td class="description last">A style
+    object for all features from the result of the query.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>displayHelpTooltip</code></td>
+                <td class="name"><code>selectedfeaturestyle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A style
+    object for the current displayed feature.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>desktop</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
 
 
             
@@ -118,23 +161,21 @@
 
             
 
-            </td>
+            <td class="description last">If the directive is used in the desktop
+    application.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>startMsg</code></td>
+                <td class="name"><code>showunqueriedlayers</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Element</span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
 
 
             
@@ -144,76 +185,15 @@
 
             
 
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>style</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a>></span>
-|
-
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.StyleFunction">ol.StyleFunction</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>sketchStyle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="http://openlayers.org/en/master/apidoc/ol.style.Style.html">ol.style.Style</a>></span>
-|
-
-<span class="param-type"><a href="http://openlayers.org/en/master/apidoc/ol.html#.StyleFunction">ol.StyleFunction</a></span>
-|
-
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            </td>
+            <td class="description last">If also layers, that have not
+    been queried for the last query, should be shown in the filter.</td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -248,8 +228,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/211e68a9cc7e744e214d18aa34db07c7136beca1/src/ol-ext/interaction/measure.js">src/ol-ext/interaction/measure.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/211e68a9cc7e744e214d18aa34db07c7136beca1/src/ol-ext/interaction/measure.js#L33">line 33</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/211e68a9cc7e744e214d18aa34db07c7136beca1/contribs/gmf/src/directives/displayquerywindow.js">contribs/gmf/src/directives/displayquerywindow.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/211e68a9cc7e744e214d18aa34db07c7136beca1/contribs/gmf/src/directives/displayquerywindow.js#L58">line 58</a>
     </li></ul></dd>
     
 
@@ -261,208 +241,20 @@
 </dl>
 
 
-        
-    
-    </div>
 
-    
 
-    
 
-    
 
-     
 
-    
 
-    
 
-    
 
-    
 
-    
-</article>
 
-</section>
 
 
 
 
-
-
-
-<section>
-
-<header>
-    
-        <h2 id="MobileDrawProperty">
-            <span class="ancestors">ngeo.interaction.</span>MobileDrawProperty
-        </h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-
-
-    
-    <h5 class="subsection-title">Enumeration:</h5>
-    
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        
-        <th class="last">Description</th>
-        
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>DIRTY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            
-            <td class="description last"></td>
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DRAWING</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            
-            <td class="description last"></td>
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>VALID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            
-            <td class="description last"></td>
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-    
-        <a href="https://github.com/camptocamp/ngeo/blob/211e68a9cc7e744e214d18aa34db07c7136beca1/src/ol-ext/interaction/mobiledraw.js">src/ol-ext/interaction/mobiledraw.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/211e68a9cc7e744e214d18aa34db07c7136beca1/src/ol-ext/interaction/mobiledraw.js#L16">line 16</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
     
     </div>
 

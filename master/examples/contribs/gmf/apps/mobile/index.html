@@ -16,9 +16,9 @@
         ngeo-map-query=""
         ngeo-map-query-map="::mainCtrl.map"
         ngeo-map-query-active="mainCtrl.queryActive"></gmf-map>
-      <gmf-displayqueries
-        gmf-displayqueries-featuresstyle="::mainCtrl.queryFeatureStyle">
-      </gmf-displayqueries>
+      <gmf-displayquerywindow
+        gmf-displayquerywindow-featuresstyle="::mainCtrl.queryFeatureStyle">
+      </gmf-displayquerywindow>
       <div
         class="measure-tools-control"
         gmf-mobile-measurelength
@@ -140,7 +140,7 @@
     <script src="../../../../lib/watchwatchers.js"></script>
     <script>
       (function() {
-        var cacheVersion = '5f38e59fdb5a92dda3b32b17f58de02f85f33073';
+        var cacheVersion = '211e68a9cc7e744e214d18aa34db07c7136beca1';
         var urlElements = window.location.pathname.split('/');
 
         var angularLocaleScriptUrlElements = urlElements.slice(0, urlElements.length - 3);
