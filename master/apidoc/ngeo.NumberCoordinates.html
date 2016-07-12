@@ -56,15 +56,15 @@
 <pre class="prettyprint source"><code> &lt;p>{{[7.1234, 46.9876] | ngeoNumberCoordinates:2:co {x} E; {y} N}}&lt;/p>
  &lt;!-- will Become co 7.12 E; 46.99 N --></code></pre><p>Example without fractionDigits but with defined template and localize:</p>
 <pre class="prettyprint source"><code> &lt;!-- With en-US localization (opt_localize can be true or undefined) -->
- &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}:true}}&lt;/p>
+ &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}}}&lt;/p>
  &lt;!-- will Become 2,600,000, 1,600,000 -->
  &lt;br/>
  &lt;!-- With fr-CH localization (opt_localize can be true or undefined) -->
- &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}:true}}&lt;/p>
+ &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}}}&lt;/p>
  &lt;!-- will Become 2'600'000, 1'600'000 -->
  &lt;br/>
  &lt;!-- With en-US localization but with localization to false -->
- &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}:false}}&lt;/p>
+ &lt;p>{{[2600000, 1600000] | ngeoNumberCoordinates::{x}, {y}}}&lt;/p>
  &lt;!-- will Become 2'600'000, 1'600'000 --></code></pre>
 </div>
 
@@ -156,8 +156,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/cc5f13ff1bbb31c467f9d75c57712090452b5ee2/src/services/filters.js">src/services/filters.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/cc5f13ff1bbb31c467f9d75c57712090452b5ee2/src/services/filters.js#L212">line 212</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/31738be7f9e9e0a11aa8bb8ecdca4e672e772588/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/31738be7f9e9e0a11aa8bb8ecdca4e672e772588/src/services/filters.js#L212">line 212</a>
     </li></ul></dd>
     
 
@@ -206,7 +206,7 @@
 
     
 
-    <h4 class="name" id="~filterFn"><span class="type-signature">(inner) </span>filterFn<span class="signature">(coordinates, [opt_fractionDigits]<span class="signature-attributes">opt</span>, [opt_template]<span class="signature-attributes">opt</span>, [opt_localize]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~filterFn"><span class="type-signature">(inner) </span>filterFn<span class="signature">(coordinates, [opt_fractionDigits]<span class="signature-attributes">opt</span>, [opt_template]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -330,37 +330,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>[opt_localize]</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Optional. If true or not defined,
-    format number as the current local system (see Angular number filter).
-    Set it explicitely to false to use always &quot;.&quot; as the decimal separator
-    and include &quot;'&quot; group separators after each third digit.</p></td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -401,8 +370,8 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/cc5f13ff1bbb31c467f9d75c57712090452b5ee2/src/services/filters.js">src/services/filters.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/cc5f13ff1bbb31c467f9d75c57712090452b5ee2/src/services/filters.js#L227">line 227</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/31738be7f9e9e0a11aa8bb8ecdca4e672e772588/src/services/filters.js">src/services/filters.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/31738be7f9e9e0a11aa8bb8ecdca4e672e772588/src/services/filters.js#L223">line 223</a>
     </li></ul></dd>
     
 
