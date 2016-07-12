@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SyncArrays <small>service:ngeoSyncArrays</small></title>
+    <title>JSDoc: Class: ShareService</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SyncArrays <small>service:ngeoSyncArrays</small></h1>
+    <h1 class="page-title">Class: ShareService</h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="SyncArrays">
-            <span class="ancestors">ngeo.</span>SyncArrays
+        <h2 id="ShareService">
+            <span class="ancestors">gmf.</span>ShareService
         </h2>
         
     
@@ -42,26 +42,14 @@
 
     
 
-    <h4 class="name" id="SyncArrays"><span class="type-signature"></span>new SyncArrays<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ShareService"><span class="type-signature"></span>new ShareService<span class="signature">($http, gmfShortenerCreateUrl)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provides a function that synchronizes two arrays, arr1 and
-arr2. arr2 is a subset of arr1, it includes the elements of arr1 that passes
-the filter. When elements are added to/removed from arr1, arr2 is updated to
-include the elements of arr1 that pass the filter. When the order of
-elements in arr2 changes, arr1 is reordered to have the same order as arr2.</p>
-<p>This can for example be used to synchronize the array of layers in the map
-with the array of selected layers, where layers may be added to/removed from
-the map, and the order of selected layers may change.</p>
-<pre class="prettyprint source"><code>var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
-    true, scope, function(layer) {
-      // exclude the layer at index 0 in the map
-      return map.getLayers().indexOf(layer) !== 0;
-    });</code></pre><p>This will return a function that can be called to cancel synchronization.</p>
+    <p>Service to handle the sharing of the permalink.</p>
 </div>
 
 
@@ -70,6 +58,68 @@ the map, and the order of selected layers may change.</p>
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$http</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Angular http service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gmfShortenerCreateUrl</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>URL for the shortener API</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -108,8 +158,8 @@ the map, and the order of selected layers may change.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/src/services/syncarrays.js">src/services/syncarrays.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/src/services/syncarrays.js#L31">line 31</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js">contribs/gmf/src/services/share.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js#L15">line 15</a>
     </li></ul></dd>
     
 
@@ -149,7 +199,507 @@ the map, and the order of selected layers may change.</p>
     
 
     
+        <h3 class="subsection-title">Members</h3>
 
+        
+            
+<h4 class="name" id=".URL_MAX_LEN"><span class="type-signature">(static, constant) </span>URL_MAX_LEN<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Max length defined for the complete url</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js">contribs/gmf/src/services/share.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js#L100">line 100</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://support.microsoft.com/kb/208427">http://support.microsoft.com/kb/208427</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".URL_PATH_MAX_LEN"><span class="type-signature">(static, constant) </span>URL_PATH_MAX_LEN<span class="type-signature"> :<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Max length defined for the url parth section</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js">contribs/gmf/src/services/share.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js#L109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://support.microsoft.com/kb/208427">http://support.microsoft.com/kb/208427</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="getShortUrl"><span class="type-signature"></span>getShortUrl<span class="signature">(url)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get a short URL of the permalink by calling the url shortener service.</p>
+<ul>
+<li>If no shortener API url have been specified, it returns the permalink itself.</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the permalink</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js">contribs/gmf/src/services/share.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js#L40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="sendShortUrl"><span class="type-signature"></span>sendShortUrl<span class="signature">(shortUrl, email, [opt_message]<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Send the short permalink to the email provided</p>
+<ul>
+<li>If email is provided, the short permalink will be sent to this email</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>shortUrl</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>the short permalink to send</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>the email to which the short url must be send</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>[opt_message]</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>message for the email</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+    
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js">contribs/gmf/src/services/share.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/services/share.js#L66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

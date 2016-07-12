@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SyncArrays <small>service:ngeoSyncArrays</small></title>
+    <title>JSDoc: Class: shareDirective <small>directive:gmfShare</small></title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SyncArrays <small>service:ngeoSyncArrays</small></h1>
+    <h1 class="page-title">Class: shareDirective <small>directive:gmfShare</small></h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2 id="SyncArrays">
-            <span class="ancestors">ngeo.</span>SyncArrays
+        <h2 id="shareDirective">
+            <span class="ancestors">gmf.</span>shareDirective
         </h2>
         
     
@@ -42,26 +42,18 @@
 
     
 
-    <h4 class="name" id="SyncArrays"><span class="type-signature"></span>new SyncArrays<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="shareDirective"><span class="type-signature"></span>new shareDirective<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Provides a function that synchronizes two arrays, arr1 and
-arr2. arr2 is a subset of arr1, it includes the elements of arr1 that passes
-the filter. When elements are added to/removed from arr1, arr2 is updated to
-include the elements of arr1 that pass the filter. When the order of
-elements in arr2 changes, arr1 is reordered to have the same order as arr2.</p>
-<p>This can for example be used to synchronize the array of layers in the map
-with the array of selected layers, where layers may be added to/removed from
-the map, and the order of selected layers may change.</p>
-<pre class="prettyprint source"><code>var dereg = ngeoSyncArrays(map.getLayers().getArray(), selectedLayers,
-    true, scope, function(layer) {
-      // exclude the layer at index 0 in the map
-      return map.getLayers().indexOf(layer) !== 0;
-    });</code></pre><p>This will return a function that can be called to cancel synchronization.</p>
+    <p>Directive to display a shortened permalink and share it by email
+Example:</p>
+<pre class="prettyprint source"><code> &lt;gmf-share
+   gmf-share-email=&quot;true&quot;>
+ &lt;/gmf-share></code></pre>
 </div>
 
 
@@ -72,6 +64,55 @@ the map, and the order of selected layers may change.</p>
 
 
 
+
+
+    <h5>HTML attributes:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gmf-share-email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Enable emailing capability.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -108,8 +149,8 @@ the map, and the order of selected layers may change.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
     
-        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/src/services/syncarrays.js">src/services/syncarrays.js</a>,
-        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/src/services/syncarrays.js#L31">line 31</a>
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/directives/share.js">contribs/gmf/src/directives/share.js</a>,
+        <a href="https://github.com/camptocamp/ngeo/blob/b3f7064ddaebf5168659e8378968ce5f34f6a13a/contribs/gmf/src/directives/share.js#L22">line 22</a>
     </li></ul></dd>
     
 
