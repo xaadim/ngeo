@@ -122559,14 +122559,18 @@ ngeo.format.XSDAttribute.prototype.readFromElementNode_ = function(node) {
 
   var type = node.getAttribute('type');
   if (type) {
-    // Skip attribute of any 'geometry' type
     var geomRegex =
       /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
     if (geomRegex.exec(type)) {
-      return null;
-    }
-
-    if (type === 'xsd:string') {
+      attribute.type = ngeo.format.XSDAttributeType.GEOMETRY;
+      if (/^gml:Point/.exec(type)) {
+        attribute.geomType = ol.geom.GeometryType.POINT;
+      } else if (/^gml:LineString/.exec(type)) {
+        attribute.geomType = ol.geom.GeometryType.LINE_STRING;
+      } else if (/^gml:Polygon/.exec(type)) {
+        attribute.geomType = ol.geom.GeometryType.POLYGON;
+      }
+    } else if (type === 'xsd:string') {
       attribute.type = ngeo.format.XSDAttributeType.TEXT;
     } else if (type === 'xsd:date') {
       attribute.type = ngeo.format.XSDAttributeType.DATE;
@@ -122596,6 +122600,24 @@ ngeo.format.XSDAttribute.prototype.readFromElementNode_ = function(node) {
 
 
 /**
+ * Returns the first geometry attribute among a given list of attributes.
+ * @param {Array.<ngeox.Attribute>} attributes The list of attributes.
+ * @return {?ngeox.Attribute} A geometry attribute object.
+ * @export
+ */
+ngeo.format.XSDAttribute.getGeometryAttribute = function(attributes) {
+  var geomAttribute = null;
+  for (var i = 0, ii = attributes.length; i < ii; i++) {
+    if (attributes[i].type === ngeo.format.XSDAttributeType.GEOMETRY) {
+      geomAttribute = attributes[i];
+      break;
+    }
+  }
+  return geomAttribute;
+};
+
+
+/**
  * @enum {string}
  */
 ngeo.format.XSDAttributeType = {
@@ -122607,6 +122629,10 @@ ngeo.format.XSDAttributeType = {
    * @type {string}
    */
   DATETIME: 'datetime',
+  /**
+   * @type {string}
+   */
+  GEOMETRY: 'geometry',
   /**
    * @type {string}
    */
@@ -130088,7 +130114,7 @@ goog.require('ngeo');
    * @ngInject
    */
   var runner = function($templateCache) {
-    $templateCache.put('ngeo/attributes.html', '<form class=form> <div class=form-group ng-repeat="attribute in ::attrCtrl.attributes"> <label>{{ attribute.name }}:</label> <div ng-switch=attribute.type> <select ng-switch-when=select ng-model=attrCtrl.properties[attribute.name] ng-change=attrCtrl.handleInputChange(attribute.name); class=form-control type=text> <option ng-repeat="attribute in ::attribute.choices" value="{{ ::attribute }}"> {{ ::attribute }} </option> </select> <input ng-switch-default ng-model=attrCtrl.properties[attribute.name] ng-change=attrCtrl.handleInputChange(attribute.name); class=form-control type=text> </div> </div> </form> ');
+    $templateCache.put('ngeo/attributes.html', '<form class=form> <div class=form-group ng-repeat="attribute in ::attrCtrl.attributes"> <div ng-if="attribute.type !== \'geometry\'"> <label>{{ attribute.name }}:</label> <div ng-switch=attribute.type> <select ng-switch-when=select ng-model=attrCtrl.properties[attribute.name] ng-change=attrCtrl.handleInputChange(attribute.name); class=form-control type=text> <option ng-repeat="attribute in ::attribute.choices" value="{{ ::attribute }}"> {{ ::attribute }} </option> </select> <input ng-switch-default ng-model=attrCtrl.properties[attribute.name] ng-change=attrCtrl.handleInputChange(attribute.name); class=form-control type=text> </div> </div> </div> </form> ');
     $templateCache.put('ngeo/popup.html', '<h4 class="popover-title ngeo-popup-title"> <span ng-bind-html=title></span> <button type=button class=close ng-click="open = false"> &times;</button> </h4> <div class=popover-content ng-bind-html=content></div> ');
     $templateCache.put('ngeo/scaleselector.html', '<div class="btn-group btn-block" ng-class="::{\'dropup\': scaleselectorCtrl.options.dropup}"> <button type=button class="btn btn-default dropdown-toggle" data-toggle=dropdown aria-expanded=false> <span ng-bind-html=scaleselectorCtrl.currentScale></span>&nbsp;<i class=caret></i> </button> <ul class="dropdown-menu btn-block" role=menu> <li ng-repeat="zoomLevel in ::scaleselectorCtrl.zoomLevels"> <a href ng-click=scaleselectorCtrl.changeZoom(zoomLevel) ng-bind-html=scaleselectorCtrl.getScale(zoomLevel)> </a> </li> </ul> </div> ');
     $templateCache.put('ngeo/datepicker.html', '<div class=gmf-datepicker> <form name=dateForm class=datepicker-form novalidate> <div ng-if="::datepickerCtrl.time.widget === \'datepicker\'"> <div class=start-date> <span ng-if="::datepickerCtrl.time.mode === \'range\'" translate>From:</span> <span ng-if="::datepickerCtrl.time.mode !== \'range\'" translate>Date:</span> <input name=sdate ui-date=datepickerCtrl.sdateOptions ng-model=datepickerCtrl.sdate required> </div> <div class=end-date ng-if="::datepickerCtrl.time.mode === \'range\'"> <span translate>To:</span> <input name=edate ui-date=datepickerCtrl.edateOptions ng-model=datepickerCtrl.edate required> </div> </div> </form> </div> ');
