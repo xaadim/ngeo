@@ -110476,198 +110476,90 @@ ngeo.popupDirective = function(ngeoPopupTemplateUrl) {
 
 ngeo.module.directive('ngeoPopup', ngeo.popupDirective);
 
-goog.provide('ngeo.profileDirective');
+// Copyright 2010 The Closure Library Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS-IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-goog.require('goog.asserts');
-goog.require('ngeo');
-goog.require('ngeo.profile');
+/**
+ * @fileoverview Browser capability checks for the events package.
+ *
+ */
+
+
+goog.provide('goog.events.BrowserFeature');
+
+goog.require('goog.userAgent');
 
 
 /**
- * Provides a directive used to insert an elevation profile chart
- * in the DOM.
- *
- * Example:
- *
- *      <div ngeo-profile="ctrl.profileData"
- *        ngeo-profile-options="ctrl.profileOptions"
- *        ngeo-profile-pois="ctrl.profilePois">
- *      </div>
- *
- * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions};
- * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
- * processed by {@link ngeox.profile.ElevationExtractor} and
- * {@link ngeox.profile.PoiExtractor}.
- *
- * See our live example: {@link ../examples/profile.html}
- *
- * @htmlAttribute {?Object} ngeo-profile The profile data.
- * @htmlAttribute {ngeox.profile.ProfileOptions} ngeo-profile-options The options.
- * @htmlAttribute {?Array} ngeo-profile-pois The data for POIs.
- * @htmlAttribute {*} ngeo-profile-highlight Any property on the scope which
- * evaluated value may correspond to distance from origin.
- * @return {angular.Directive} Directive Definition Object.
- * @ngInject
- * @ngdoc directive
- * @ngname ngeoProfile
+ * Enum of browser capabilities.
+ * @enum {boolean}
  */
-ngeo.profileDirective = function() {
-  return {
-    restrict: 'A',
-    link:
-        /**
-         * @param {angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         */
-        function(scope, element, attrs) {
+goog.events.BrowserFeature = {
+  /**
+   * Whether the button attribute of the event is W3C compliant.  False in
+   * Internet Explorer prior to version 9; document-version dependent.
+   */
+  HAS_W3C_BUTTON:
+      !goog.userAgent.IE || goog.userAgent.isDocumentModeOrHigher(9),
 
-          var optionsAttr = attrs['ngeoProfileOptions'];
-          goog.asserts.assert(optionsAttr !== undefined);
+  /**
+   * Whether the browser supports full W3C event model.
+   */
+  HAS_W3C_EVENT_SUPPORT:
+      !goog.userAgent.IE || goog.userAgent.isDocumentModeOrHigher(9),
 
-          var selection = d3.select(element[0]);
-          var profile, elevationData, poiData;
+  /**
+   * To prevent default in IE7-8 for certain keydown events we need set the
+   * keyCode to -1.
+   */
+  SET_KEY_CODE_TO_PREVENT_DEFAULT:
+      goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('9'),
 
-          scope.$watchCollection(optionsAttr, function(newVal) {
+  /**
+   * Whether the {@code navigator.onLine} property is supported.
+   */
+  HAS_NAVIGATOR_ONLINE_PROPERTY:
+      !goog.userAgent.WEBKIT || goog.userAgent.isVersionOrHigher('528'),
 
-            var options = /** @type {ngeox.profile.ProfileOptions} */
-                (goog.object.clone(newVal));
+  /**
+   * Whether HTML5 network online/offline events are supported.
+   */
+  HAS_HTML5_NETWORK_EVENT_SUPPORT:
+      goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher('1.9b') ||
+      goog.userAgent.IE && goog.userAgent.isVersionOrHigher('8') ||
+      goog.userAgent.OPERA && goog.userAgent.isVersionOrHigher('9.5') ||
+      goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher('528'),
 
-            if (options !== undefined) {
+  /**
+   * Whether HTML5 network events fire on document.body, or otherwise the
+   * window.
+   */
+  HTML5_NETWORK_EVENTS_FIRE_ON_BODY:
+      goog.userAgent.GECKO && !goog.userAgent.isVersionOrHigher('8') ||
+      goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('9'),
 
-              // proxy the hoverCallback and outCallbackin order to be able to
-              // call $applyAsync
-              //
-              // We're using $applyAsync here because the callback may be
-              // called inside the Angular context. For example, it's the case
-              // when the user hover's the line geometry on the map and the
-              // profileHighlight property is changed.
-              //
-              // For that reason we use $applyAsync instead of $apply here.
-
-              if (options.hoverCallback !== undefined) {
-                var origHoverCallback = options.hoverCallback;
-                options.hoverCallback = function() {
-                  origHoverCallback.apply(null, arguments);
-                  scope.$applyAsync();
-                };
-              }
-
-              if (options.outCallback !== undefined) {
-                var origOutCallback = options.outCallback;
-                options.outCallback = function() {
-                  origOutCallback();
-                  scope.$applyAsync();
-                };
-              }
-
-              profile = ngeo.profile(options);
-              refreshData();
-            }
-          });
-
-          scope.$watch(attrs['ngeoProfile'], function(newVal, oldVal) {
-            elevationData = newVal;
-            refreshData();
-          });
-
-          scope.$watch(attrs['ngeoProfilePois'], function(newVal, oldVal) {
-            poiData = newVal;
-            refreshData();
-          });
-
-          scope.$watch(attrs['ngeoProfileHighlight'],
-              function(newVal, oldVal) {
-                if (newVal === undefined) {
-                  return;
-                }
-                if (newVal > 0) {
-                  profile.highlight(newVal);
-                } else {
-                  profile.clearHighlight();
-                }
-              });
-
-          function refreshData() {
-            if (profile !== undefined) {
-              selection.datum(elevationData).call(profile);
-              if (elevationData !== undefined) {
-                profile.showPois(poiData);
-              }
-            }
-          }
-        }
-  };
+  /**
+   * Whether touch is enabled in the browser.
+   */
+  TOUCH_ENABLED:
+      ('ontouchstart' in goog.global ||
+       !!(goog.global['document'] && document.documentElement &&
+          'ontouchstart' in document.documentElement) ||
+       // IE10 uses non-standard touch events, so it has a different check.
+       !!(goog.global['navigator'] &&
+          goog.global['navigator']['msMaxTouchPoints']))
 };
-
-ngeo.module.directive('ngeoProfile', ngeo.profileDirective);
-
-goog.provide('ngeo.recenterDirective');
-
-goog.require('ngeo');
-
-
-/**
- * Provides the "ngeoRecenter" directive, a widget for recentering a map
- * to a specific extent (by using `ngeo-extent`) or a specific zoom level
- * (by using `ngeo-zoom`).
- *
- * Example:
- *
- *      <div ngeo-recenter ngeo-recenter-map="::ctrl.map">
- *        <a href="#" ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</a>
- *        <a href="#" ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</a>
- *        <a href="#" ngeo-zoom="1">Zoom to level 1</a>
- *      </div>
- *
- * Or with a select:
- *
- *      <select ngeo-recenter ngeo-recenter-map="::ctrl.map">
- *        <option ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</option>
- *        <option ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</option>
- *      </select>
- *
- * See our live example: {@link ../examples/locationchooser.html}
- *
- * @htmlAttribute {ol.Map} ngeo-recenter-map The map.
- * @return {angular.Directive} Directive Definition Object.
- * @ngdoc directive
- * @ngname ngeoRecenter
- */
-ngeo.recenterDirective = function() {
-  return {
-    restrict: 'A',
-    link: function($scope, $element, $attrs) {
-      var mapExpr = $attrs['ngeoRecenterMap'];
-      var map = /** @type {ol.Map} */ ($scope.$eval(mapExpr));
-
-      function recenter(element) {
-        var extent = element.attr('ngeo-extent');
-        if (extent !== undefined) {
-          var mapSize = /** @type {ol.Size} */ (map.getSize());
-          map.getView().fit($scope.$eval(extent), mapSize);
-        }
-        var zoom = element.attr('ngeo-zoom');
-        if (zoom !== undefined) {
-          map.getView().setZoom($scope.$eval(zoom));
-        }
-      }
-
-      // if the children is a link or button
-      $element.on('click', '*', function(event) {
-        recenter(angular.element($(this)));
-      });
-
-      // if the children is an option inside a select
-      $element.on('change', function(event) {
-        var selected = event.target.options[event.target.selectedIndex];
-        recenter(angular.element(selected));
-      });
-
-    }
-  };
-};
-ngeo.module.directive('ngeoRecenter', ngeo.recenterDirective);
 
 // Copyright 2011 The Closure Library Authors. All Rights Reserved.
 //
@@ -111022,91 +110914,6 @@ goog.disposeAll = function(var_args) {
       goog.dispose(disposable);
     }
   }
-};
-
-// Copyright 2010 The Closure Library Authors. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS-IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-/**
- * @fileoverview Browser capability checks for the events package.
- *
- */
-
-
-goog.provide('goog.events.BrowserFeature');
-
-goog.require('goog.userAgent');
-
-
-/**
- * Enum of browser capabilities.
- * @enum {boolean}
- */
-goog.events.BrowserFeature = {
-  /**
-   * Whether the button attribute of the event is W3C compliant.  False in
-   * Internet Explorer prior to version 9; document-version dependent.
-   */
-  HAS_W3C_BUTTON:
-      !goog.userAgent.IE || goog.userAgent.isDocumentModeOrHigher(9),
-
-  /**
-   * Whether the browser supports full W3C event model.
-   */
-  HAS_W3C_EVENT_SUPPORT:
-      !goog.userAgent.IE || goog.userAgent.isDocumentModeOrHigher(9),
-
-  /**
-   * To prevent default in IE7-8 for certain keydown events we need set the
-   * keyCode to -1.
-   */
-  SET_KEY_CODE_TO_PREVENT_DEFAULT:
-      goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('9'),
-
-  /**
-   * Whether the {@code navigator.onLine} property is supported.
-   */
-  HAS_NAVIGATOR_ONLINE_PROPERTY:
-      !goog.userAgent.WEBKIT || goog.userAgent.isVersionOrHigher('528'),
-
-  /**
-   * Whether HTML5 network online/offline events are supported.
-   */
-  HAS_HTML5_NETWORK_EVENT_SUPPORT:
-      goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher('1.9b') ||
-      goog.userAgent.IE && goog.userAgent.isVersionOrHigher('8') ||
-      goog.userAgent.OPERA && goog.userAgent.isVersionOrHigher('9.5') ||
-      goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher('528'),
-
-  /**
-   * Whether HTML5 network events fire on document.body, or otherwise the
-   * window.
-   */
-  HTML5_NETWORK_EVENTS_FIRE_ON_BODY:
-      goog.userAgent.GECKO && !goog.userAgent.isVersionOrHigher('8') ||
-      goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('9'),
-
-  /**
-   * Whether touch is enabled in the browser.
-   */
-  TOUCH_ENABLED:
-      ('ontouchstart' in goog.global ||
-       !!(goog.global['document'] && document.documentElement &&
-          'ontouchstart' in document.documentElement) ||
-       // IE10 uses non-standard touch events, so it has a different check.
-       !!(goog.global['navigator'] &&
-          goog.global['navigator']['msMaxTouchPoints']))
 };
 
 // Copyright 2013 The Closure Library Authors. All Rights Reserved.
@@ -113870,6 +113677,264 @@ goog.debug.entryPointRegistry.register(
       goog.events.handleBrowserEvent_ =
           transformer(goog.events.handleBrowserEvent_);
     });
+
+goog.provide('ngeo.Debounce');
+
+goog.require('ngeo');
+
+/* eslint-disable valid-jsdoc */
+// FIXME: eslint can't detect that the function returns a function
+
+/**
+ * Provides a debounce service. That service is a function
+ * used to debounce calls to a user-provided function.
+ *
+ * See our live example: {@link ../examples/permalink.html}
+ *
+ * @typedef {function(function(?), number, boolean):function()}
+ * @ngdoc service
+ * @ngname ngeoDebounce
+ */
+ngeo.Debounce;
+
+
+/**
+ * @param {angular.$timeout} $timeout Angular timeout service.
+ * @return {ngeo.Debounce} The debounce function.
+ * @ngInject
+ */
+ngeo.debounceServiceFactory = function($timeout) {
+  return (
+      /**
+       * @param {function(?)} func The function to debounce.
+       * @param {number} wait The wait time in ms.
+       * @param {boolean} invokeApply Whether the call to `func` is wrapped
+       *    into an `$apply` call.
+       * @return {function()} The wrapper function.
+       */
+      function(func, wait, invokeApply) {
+        /**
+         * @type {?angular.$q.Promise}
+         */
+        var timeout = null;
+        return (
+            function() {
+              var context = this;
+              var args = arguments;
+              var later = function() {
+                timeout = null;
+                func.apply(context, args);
+              };
+              if (timeout !== null) {
+                $timeout.cancel(timeout);
+              }
+              timeout = $timeout(later, wait, invokeApply);
+            });
+      });
+};
+
+
+ngeo.module.factory('ngeoDebounce', ngeo.debounceServiceFactory);
+
+goog.provide('ngeo.profileDirective');
+
+goog.require('goog.asserts');
+goog.require('goog.events');
+goog.require('ngeo');
+goog.require('ngeo.profile');
+goog.require('ngeo.Debounce');
+
+
+/**
+ * Provides a directive used to insert an elevation profile chart
+ * in the DOM.
+ *
+ * Example:
+ *
+ *      <div ngeo-profile="ctrl.profileData"
+ *        ngeo-profile-options="ctrl.profileOptions"
+ *        ngeo-profile-pois="ctrl.profilePois">
+ *      </div>
+ *
+ * Where "ctrl.profileOptions" is of type {@link ngeox.profile.ProfileOptions};
+ * "ctrl.profileData" and "ctrl.profilePois" are arrays which will be
+ * processed by {@link ngeox.profile.ElevationExtractor} and
+ * {@link ngeox.profile.PoiExtractor}.
+ *
+ * See our live example: {@link ../examples/profile.html}
+ *
+ * @htmlAttribute {?Object} ngeo-profile The profile data.
+ * @htmlAttribute {ngeox.profile.ProfileOptions} ngeo-profile-options The options.
+ * @htmlAttribute {?Array} ngeo-profile-pois The data for POIs.
+ * @htmlAttribute {*} ngeo-profile-highlight Any property on the scope which
+ * evaluated value may correspond to distance from origin.
+ * @param {ngeo.Debounce} ngeoDebounce ngeo Debounce service.
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngInject
+ * @ngdoc directive
+ * @ngname ngeoProfile
+ */
+ngeo.profileDirective = function(ngeoDebounce) {
+  return {
+    restrict: 'A',
+    link:
+        /**
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
+         */
+        function(scope, element, attrs) {
+
+          var optionsAttr = attrs['ngeoProfileOptions'];
+          goog.asserts.assert(optionsAttr !== undefined);
+
+          var selection = d3.select(element[0]);
+          var profile, elevationData, poiData;
+
+          scope.$watchCollection(optionsAttr, function(newVal) {
+
+            var options = /** @type {ngeox.profile.ProfileOptions} */
+                (goog.object.clone(newVal));
+
+            if (options !== undefined) {
+
+              // proxy the hoverCallback and outCallbackin order to be able to
+              // call $applyAsync
+              //
+              // We're using $applyAsync here because the callback may be
+              // called inside the Angular context. For example, it's the case
+              // when the user hover's the line geometry on the map and the
+              // profileHighlight property is changed.
+              //
+              // For that reason we use $applyAsync instead of $apply here.
+
+              if (options.hoverCallback !== undefined) {
+                var origHoverCallback = options.hoverCallback;
+                options.hoverCallback = function() {
+                  origHoverCallback.apply(null, arguments);
+                  scope.$applyAsync();
+                };
+              }
+
+              if (options.outCallback !== undefined) {
+                var origOutCallback = options.outCallback;
+                options.outCallback = function() {
+                  origOutCallback();
+                  scope.$applyAsync();
+                };
+              }
+
+              profile = ngeo.profile(options);
+              refreshData();
+            }
+          });
+
+          scope.$watch(attrs['ngeoProfile'], function(newVal, oldVal) {
+            elevationData = newVal;
+            refreshData();
+          });
+
+          scope.$watch(attrs['ngeoProfilePois'], function(newVal, oldVal) {
+            poiData = newVal;
+            refreshData();
+          });
+
+          scope.$watch(attrs['ngeoProfileHighlight'],
+              function(newVal, oldVal) {
+                if (newVal === undefined) {
+                  return;
+                }
+                if (newVal > 0) {
+                  profile.highlight(newVal);
+                } else {
+                  profile.clearHighlight();
+                }
+              });
+
+          goog.events.listen(window, goog.events.EventType.RESIZE,
+              ngeoDebounce(refreshData, 50, true),
+              false, this);
+
+          function refreshData() {
+            if (profile !== undefined) {
+              selection.datum(elevationData).call(profile);
+              if (elevationData !== undefined) {
+                profile.showPois(poiData);
+              }
+            }
+          }
+        }
+  };
+};
+
+ngeo.module.directive('ngeoProfile', ngeo.profileDirective);
+
+goog.provide('ngeo.recenterDirective');
+
+goog.require('ngeo');
+
+
+/**
+ * Provides the "ngeoRecenter" directive, a widget for recentering a map
+ * to a specific extent (by using `ngeo-extent`) or a specific zoom level
+ * (by using `ngeo-zoom`).
+ *
+ * Example:
+ *
+ *      <div ngeo-recenter ngeo-recenter-map="::ctrl.map">
+ *        <a href="#" ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</a>
+ *        <a href="#" ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</a>
+ *        <a href="#" ngeo-zoom="1">Zoom to level 1</a>
+ *      </div>
+ *
+ * Or with a select:
+ *
+ *      <select ngeo-recenter ngeo-recenter-map="::ctrl.map">
+ *        <option ngeo-extent="[-1898084, 4676723, 3972279, 8590299]">A</option>
+ *        <option ngeo-extent="[727681, 5784754, 1094579, 6029353]">B</option>
+ *      </select>
+ *
+ * See our live example: {@link ../examples/locationchooser.html}
+ *
+ * @htmlAttribute {ol.Map} ngeo-recenter-map The map.
+ * @return {angular.Directive} Directive Definition Object.
+ * @ngdoc directive
+ * @ngname ngeoRecenter
+ */
+ngeo.recenterDirective = function() {
+  return {
+    restrict: 'A',
+    link: function($scope, $element, $attrs) {
+      var mapExpr = $attrs['ngeoRecenterMap'];
+      var map = /** @type {ol.Map} */ ($scope.$eval(mapExpr));
+
+      function recenter(element) {
+        var extent = element.attr('ngeo-extent');
+        if (extent !== undefined) {
+          var mapSize = /** @type {ol.Size} */ (map.getSize());
+          map.getView().fit($scope.$eval(extent), mapSize);
+        }
+        var zoom = element.attr('ngeo-zoom');
+        if (zoom !== undefined) {
+          map.getView().setZoom($scope.$eval(zoom));
+        }
+      }
+
+      // if the children is a link or button
+      $element.on('click', '*', function(event) {
+        recenter(angular.element($(this)));
+      });
+
+      // if the children is an option inside a select
+      $element.on('change', function(event) {
+        var selected = event.target.options[event.target.selectedIndex];
+        recenter(angular.element(selected));
+      });
+
+    }
+  };
+};
+ngeo.module.directive('ngeoRecenter', ngeo.recenterDirective);
 
 // Copyright 2012 The Closure Library Authors. All Rights Reserved.
 //
@@ -126311,64 +126376,6 @@ ngeo.createGeoJSONBloodhound = function(url, opt_filter, opt_featureProjection,
 
 
 ngeo.module.value('ngeoCreateGeoJSONBloodhound', ngeo.createGeoJSONBloodhound);
-
-goog.provide('ngeo.Debounce');
-
-goog.require('ngeo');
-
-/* eslint-disable valid-jsdoc */
-// FIXME: eslint can't detect that the function returns a function
-
-/**
- * Provides a debounce service. That service is a function
- * used to debounce calls to a user-provided function.
- *
- * See our live example: {@link ../examples/permalink.html}
- *
- * @typedef {function(function(?), number, boolean):function()}
- * @ngdoc service
- * @ngname ngeoDebounce
- */
-ngeo.Debounce;
-
-
-/**
- * @param {angular.$timeout} $timeout Angular timeout service.
- * @return {ngeo.Debounce} The debounce function.
- * @ngInject
- */
-ngeo.debounceServiceFactory = function($timeout) {
-  return (
-      /**
-       * @param {function(?)} func The function to debounce.
-       * @param {number} wait The wait time in ms.
-       * @param {boolean} invokeApply Whether the call to `func` is wrapped
-       *    into an `$apply` call.
-       * @return {function()} The wrapper function.
-       */
-      function(func, wait, invokeApply) {
-        /**
-         * @type {?angular.$q.Promise}
-         */
-        var timeout = null;
-        return (
-            function() {
-              var context = this;
-              var args = arguments;
-              var later = function() {
-                timeout = null;
-                func.apply(context, args);
-              };
-              if (timeout !== null) {
-                $timeout.cancel(timeout);
-              }
-              timeout = $timeout(later, wait, invokeApply);
-            });
-      });
-};
-
-
-ngeo.module.factory('ngeoDebounce', ngeo.debounceServiceFactory);
 
 goog.provide('ngeo.CreatePopup');
 goog.provide('ngeo.Popup');
