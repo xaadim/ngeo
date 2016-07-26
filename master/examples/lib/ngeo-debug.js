@@ -94677,7 +94677,7 @@ goog.require('ngeo');
 ngeo.EventHelper = function() {
 
   /**
-   * @type {Object.<number, ngeo.EventHelper.ListenerKeys>}
+   * @type {Object.<number|string, ngeo.EventHelper.ListenerKeys>}
    * @private
    */
   this.listenerKeys_ = {};
@@ -94688,7 +94688,7 @@ ngeo.EventHelper = function() {
 /**
  * Utility method to add a listener key bound to a unique id. The key can
  * come from an `ol.events` (default) or `goog.events`.
- * @param {number} uid Unique id.
+ * @param {number|string} uid Unique id.
  * @param {ol.EventsKey|goog.events.Key} key Key.
  * @param {boolean=} opt_isol Whether it's an OpenLayers event or not. Defaults
  *     to true.
@@ -94710,7 +94710,7 @@ ngeo.EventHelper.prototype.addListenerKey = function(uid, key, opt_isol) {
 
 /**
  * Clear all listener keys from the given unique id.
- * @param {number} uid Unique id.
+ * @param {number|string} uid Unique id.
  * @export
  */
 ngeo.EventHelper.prototype.clearListenerKey = function(uid) {
@@ -94724,7 +94724,7 @@ ngeo.EventHelper.prototype.clearListenerKey = function(uid) {
  *   has not array set yet)
  * - unlisten any events if the array already exists for the given uid and
  *   empty the array.
- * @param {number} uid Unique id.
+ * @param {number|string} uid Unique id.
  * @private
  */
 ngeo.EventHelper.prototype.initListenerKey_ = function(uid) {
@@ -94957,6 +94957,12 @@ ngeo.LayerHelper = function($q, $http) {
  * @const
  */
 ngeo.LayerHelper.GROUP_KEY = 'groupName';
+
+
+/**
+ * @const
+ */
+ngeo.LayerHelper.REFRESH_PARAM = 'random';
 
 
 /**
@@ -95212,6 +95218,22 @@ ngeo.LayerHelper.prototype.isLayerVisible = function(layer, map) {
   var currentResolution = map.getView().getResolution();
   return currentResolution > layer.getMinResolution() &&
       currentResolution < layer.getMaxResolution();
+};
+
+
+/**
+ * Force a WMS layer to refresh using a random value.
+ * @param {ol.layer.Image|ol.layer.Tile} layer Layer to refresh.
+ */
+ngeo.LayerHelper.prototype.refreshWMSLayer = function(layer) {
+  var source = layer.getSource();
+  goog.asserts.assert(
+    source instanceof ol.source.ImageWMS ||
+    source instanceof ol.source.TileWMS
+  );
+  var params = source.getParams();
+  params[ngeo.LayerHelper.REFRESH_PARAM] = Math.random();
+  source.updateParams(params);
 };
 
 
