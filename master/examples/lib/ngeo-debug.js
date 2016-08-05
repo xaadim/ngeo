@@ -122848,6 +122848,9 @@ ngeo.format.XSDAttribute.prototype.readFromNode = function(node) {
       'localName should be schema');
 
   var elements = node.getElementsByTagName('element');
+  if (!elements.length) {
+    elements = node.getElementsByTagName('xsd:element');
+  }
   var attributes = [];
 
   var attribute;
@@ -122904,6 +122907,9 @@ ngeo.format.XSDAttribute.prototype.readFromElementNode_ = function(node) {
     }
   } else {
     var enumerations = node.getElementsByTagName('enumeration');
+    if (!enumerations.length) {
+      enumerations = node.getElementsByTagName('xsd:enumeration');
+    }
     if (enumerations.length) {
       attribute.type = ngeo.format.XSDAttributeType.SELECT;
       var choices = [];
